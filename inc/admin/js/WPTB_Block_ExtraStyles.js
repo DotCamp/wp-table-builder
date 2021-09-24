@@ -117,29 +117,138 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../WPTB_ExtraStyles.js":[function(require,module,exports) {
+})({"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":[function(require,module,exports) {
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":[function(require,module,exports) {
+var arrayLikeToArray = require("./arrayLikeToArray");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js":[function(require,module,exports) {
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js":[function(require,module,exports) {
+var arrayWithHoles = require("./arrayWithHoles");
+
+var iterableToArrayLimit = require("./iterableToArrayLimit");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray");
+
+var nonIterableRest = require("./nonIterableRest");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+},{"./arrayWithHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit":"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest":"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js":[function(require,module,exports) {
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+module.exports = _defineProperty;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/typeof.js":[function(require,module,exports) {
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+},{}],"../WPTB_ExtraStyles.js":[function(require,module,exports) {
 var global = arguments[3];
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+"use strict";
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Extra styles module to add custom css rules defined for individual tables.
  */
 (function UMD(key, context, factory) {
-  if (typeof module !== 'undefined' && (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object') {
+  if (typeof module !== 'undefined' && (typeof exports === "undefined" ? "undefined" : (0, _typeof2.default)(exports)) === 'object') {
     module.exports = factory();
   } else {
     // eslint-disable-next-line no-param-reassign
@@ -196,7 +305,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * @type {Object}
      */
 
-    var tableQueries = (_tableQueries = {}, _defineProperty(_tableQueries, this.modes.builder, '.wptb-table-setup .wptb-preview-table'), _defineProperty(_tableQueries, this.modes.block, '.wptb-block-table-setup .wptb-preview-table'), _defineProperty(_tableQueries, this.modes.frontEnd, '.wptb-table-container .wptb-preview-table'), _tableQueries);
+    var tableQueries = (_tableQueries = {}, (0, _defineProperty2.default)(_tableQueries, this.modes.builder, '.wptb-table-setup .wptb-preview-table'), (0, _defineProperty2.default)(_tableQueries, this.modes.block, '.wptb-block-table-setup .wptb-preview-table'), (0, _defineProperty2.default)(_tableQueries, this.modes.frontEnd, '.wptb-table-container .wptb-preview-table'), _tableQueries);
     /**
      * Format styles.
      *
@@ -274,7 +383,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         var extraStyles = atob(extraStylesRaw);
 
         var _tableElement$getAttr = tableElement.getAttribute('class').match(/wptb-element-main-table_setting-(?:startedid-)?(\d+)/),
-            _tableElement$getAttr2 = _slicedToArray(_tableElement$getAttr, 2),
+            _tableElement$getAttr2 = (0, _slicedToArray2.default)(_tableElement$getAttr, 2),
             tableId = _tableElement$getAttr2[1];
 
         var styleId = styleIdPrefix + tableId;
@@ -341,7 +450,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   return new WPTB_ExtraStyles();
 });
-},{}],"WPTB_Block_ExtraStyles.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js"}],"WPTB_Block_ExtraStyles.js":[function(require,module,exports) {
 "use strict";
 
 var _WPTB_ExtraStyles = _interopRequireDefault(require("../WPTB_ExtraStyles"));

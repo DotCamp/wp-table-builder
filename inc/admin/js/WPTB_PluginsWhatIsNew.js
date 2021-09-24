@@ -11988,6 +11988,44 @@ function getOuterHTML(el) {
 Vue.compile = compileToFunctions;
 var _default = Vue;
 exports.default = _default;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/asyncToGenerator.js":[function(require,module,exports) {
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+
+      _next(undefined);
+    });
+  };
+}
+
+module.exports = _asyncToGenerator;
 },{}],"../../../../../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
 var define;
 /**
@@ -12739,7 +12777,10 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],"containers/WhatIsNew.vue":[function(require,module,exports) {
+},{}],"../../../../../node_modules/@babel/runtime/regenerator/index.js":[function(require,module,exports) {
+module.exports = require("regenerator-runtime");
+
+},{"regenerator-runtime":"../../../../../node_modules/regenerator-runtime/runtime.js"}],"containers/WhatIsNew.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12747,12 +12788,73 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
 require("regenerator-runtime/runtime");
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     notes: {
@@ -12781,8 +12883,8 @@ var _default = {
   mounted: function mounted() {
     var _this = this;
 
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-      return regeneratorRuntime.wrap(function _callee$(_context) {
+    return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -13057,7 +13159,7 @@ render._withStripped = true
           };
         })());
       
-},{"regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js"}],"mountPoints/WhatIsNewBase.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/asyncToGenerator":"../../../../../node_modules/@babel/runtime/helpers/asyncToGenerator.js","@babel/runtime/regenerator":"../../../../../node_modules/@babel/runtime/regenerator/index.js","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js"}],"mountPoints/WhatIsNewBase.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

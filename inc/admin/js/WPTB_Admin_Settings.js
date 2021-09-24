@@ -117,7 +117,24 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../../../../../node_modules/vue/dist/vue.esm.js":[function(require,module,exports) {
+})({"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js":[function(require,module,exports) {
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+module.exports = _defineProperty;
+},{}],"../../../../../node_modules/vue/dist/vue.esm.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -12606,7 +12623,105 @@ exports.MountingPortal = MountingPortal;
 exports.Wormhole = wormhole;
 
 
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"mixins/withStore.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":[function(require,module,exports) {
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":[function(require,module,exports) {
+var arrayLikeToArray = require("./arrayLikeToArray");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js":[function(require,module,exports) {
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js":[function(require,module,exports) {
+var arrayWithHoles = require("./arrayWithHoles");
+
+var iterableToArrayLimit = require("./iterableToArrayLimit");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray");
+
+var nonIterableRest = require("./nonIterableRest");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+},{"./arrayWithHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit":"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest":"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"../../../../../node_modules/@babel/runtime/helpers/typeof.js":[function(require,module,exports) {
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+},{}],"mixins/withStore.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12614,11 +12729,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // global data provided from backend
 var store = _objectSpread({}, wptbAdminSettingsData.options);
@@ -12657,7 +12774,7 @@ var withStore = {
 
 var _default = withStore;
 exports.default = _default;
-},{}],"mixins/withMessage.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js"}],"mixins/withMessage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12665,11 +12782,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var messageData = {
   withMessageData: {
@@ -12713,7 +12832,7 @@ var withMessage = {
 };
 var _default = withMessage;
 exports.default = _default;
-},{}],"components/MenuHeader.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js"}],"components/MenuHeader.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12955,6 +13074,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _SectionItem = _interopRequireDefault(require("./SectionItem"));
 
 var _ActiveSectionIndicator = _interopRequireDefault(require("./ActiveSectionIndicator"));
@@ -12963,9 +13084,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var _default = {
   model: {
@@ -13100,7 +13219,7 @@ render._withStripped = true
           };
         })());
       
-},{"./SectionItem":"components/SectionItem.vue","./ActiveSectionIndicator":"components/ActiveSectionIndicator.vue"}],"components/BusyRotate.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","./SectionItem":"components/SectionItem.vue","./ActiveSectionIndicator":"components/ActiveSectionIndicator.vue"}],"components/BusyRotate.vue":[function(require,module,exports) {
 
         var $ac8ef1 = exports.default || module.exports;
       
@@ -14313,6 +14432,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
 var _vueFragment = require("vue-fragment");
 
 var _MenuContent = _interopRequireDefault(require("./MenuContent"));
@@ -14333,8 +14454,66 @@ var _SettingsMenuSection = _interopRequireDefault(require("../mixins/SettingsMen
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   components: {
     FooterButtons: _FooterButtons.default,
@@ -14427,7 +14606,7 @@ var _default = {
 
             throw new Error('an error occurred, try again later');
           }).then(function (resp) {
-            if (_typeof(resp) === 'object') {
+            if ((0, _typeof2.default)(resp) === 'object') {
               if (resp.error) {
                 throw new Error(resp.error);
               } else {
@@ -14671,7 +14850,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./MenuContent":"components/MenuContent.vue","./MenuButton":"components/MenuButton.vue","./VersionControlRow":"components/VersionControlRow.vue","./VersionIndicator":"components/VersionIndicator.vue","./Changelog":"components/Changelog.vue","../mixins/withMessage":"mixins/withMessage.js","./Settings/FooterButtons":"components/Settings/FooterButtons.vue","../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js"}],"../../../../../node_modules/codemirror/lib/codemirror.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./MenuContent":"components/MenuContent.vue","./MenuButton":"components/MenuButton.vue","./VersionControlRow":"components/VersionControlRow.vue","./VersionIndicator":"components/VersionIndicator.vue","./Changelog":"components/Changelog.vue","../mixins/withMessage":"mixins/withMessage.js","./Settings/FooterButtons":"components/Settings/FooterButtons.vue","../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js"}],"../../../../../node_modules/codemirror/lib/codemirror.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -25460,6 +25639,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _codemirror = _interopRequireDefault(require("codemirror"));
 
 require("codemirror/lib/codemirror.css");
@@ -25474,9 +25655,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var _default = {
   components: {
@@ -25574,7 +25753,7 @@ render._withStripped = true
           };
         })());
       
-},{"codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js","codemirror/lib/codemirror.css":"../../../../../node_modules/codemirror/lib/codemirror.css","codemirror/addon/selection/active-line":"../../../../../node_modules/codemirror/addon/selection/active-line.js","codemirror/mode/css/css":"../../../../../node_modules/codemirror/mode/css/css.js","./EmptyCover":"components/EmptyCover.vue"}],"components/Settings/GeneralStylesSettings.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js","codemirror/lib/codemirror.css":"../../../../../node_modules/codemirror/lib/codemirror.css","codemirror/addon/selection/active-line":"../../../../../node_modules/codemirror/addon/selection/active-line.js","codemirror/mode/css/css":"../../../../../node_modules/codemirror/mode/css/css.js","./EmptyCover":"components/EmptyCover.vue"}],"components/Settings/GeneralStylesSettings.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25806,6 +25985,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
 var _withStore = _interopRequireDefault(require("../mixins/withStore.js"));
 
 var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
@@ -25826,25 +26011,9 @@ var _GeneralStylesSettings = _interopRequireDefault(require("../components/Setti
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var _default = {
   props: ['sectionsData', 'settings', 'pluginInfo'],
@@ -25896,7 +26065,7 @@ var _default = {
           _this.parsedFields[section] = [];
         }
 
-        if (_this.sectionsData[section].fields !== undefined && _typeof(_this.sectionsData[section].fields) === 'object') {
+        if (_this.sectionsData[section].fields !== undefined && (0, _typeof2.default)(_this.sectionsData[section].fields) === 'object') {
           // eslint-disable-next-line array-callback-return
           Object.keys(_this.sectionsData[section].fields).map(function (field) {
             if (Object.prototype.hasOwnProperty.call(_this.sectionsData[section].fields, field)) {
@@ -25915,7 +26084,7 @@ var _default = {
       }
     });
 
-    var _Object$keys$map2 = _slicedToArray(_Object$keys$map, 1);
+    var _Object$keys$map2 = (0, _slicedToArray2.default)(_Object$keys$map, 1);
 
     this.currentSection = _Object$keys$map2[0];
   },
@@ -26061,7 +26230,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/withStore.js":"mixins/withStore.js","../mixins/withMessage":"mixins/withMessage.js","../components/MenuHeader.vue":"components/MenuHeader.vue","../components/Sections.vue":"components/Sections.vue","../components/MenuFooter.vue":"components/MenuFooter.vue","../components/MenuButton.vue":"components/MenuButton.vue","./GeneralSettings":"containers/GeneralSettings.vue","../components/VersionControlSettings":"components/VersionControlSettings.vue","../components/Settings/GeneralStylesSettings":"components/Settings/GeneralStylesSettings.vue"}],"plugins/strings.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","../mixins/withStore.js":"mixins/withStore.js","../mixins/withMessage":"mixins/withMessage.js","../components/MenuHeader.vue":"components/MenuHeader.vue","../components/Sections.vue":"components/Sections.vue","../components/MenuFooter.vue":"components/MenuFooter.vue","../components/MenuButton.vue":"components/MenuButton.vue","./GeneralSettings":"containers/GeneralSettings.vue","../components/VersionControlSettings":"components/VersionControlSettings.vue","../components/Settings/GeneralStylesSettings":"components/Settings/GeneralStylesSettings.vue"}],"plugins/strings.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26099,6 +26268,8 @@ exports.default = _default;
 },{}],"WPTB_Admin_Settings.js":[function(require,module,exports) {
 "use strict";
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _vue = _interopRequireDefault(require("vue"));
 
 var _portalVue = _interopRequireDefault(require("portal-vue"));
@@ -26111,9 +26282,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var frontendData = _objectSpread({}, wptbAdminSettingsData); // remove main data from global space
 
@@ -26139,5 +26308,5 @@ new _vue.default({
     pluginInfo: frontendData.pluginInfo
   }
 }).$mount(frontendData.data.mountId);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","./containers/SettingsApp.vue":"containers/SettingsApp.vue","./plugins/strings.js":"plugins/strings.js"}]},{},["WPTB_Admin_Settings.js"], null)
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","./containers/SettingsApp.vue":"containers/SettingsApp.vue","./plugins/strings.js":"plugins/strings.js"}]},{},["WPTB_Admin_Settings.js"], null)
 //# sourceMappingURL=/WPTB_Admin_Settings.js.map

@@ -117,7 +117,42 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../../../../../node_modules/vuex/dist/vuex.esm.js":[function(require,module,exports) {
+})({"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js":[function(require,module,exports) {
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+module.exports = _defineProperty;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/typeof.js":[function(require,module,exports) {
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+},{}],"../../../../../node_modules/vuex/dist/vuex.esm.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -1619,6 +1654,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.mutationWatchFunction = exports.createBasicStore = exports.objectDeepMerge = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
 var _vuex = _interopRequireDefault(require("vuex"));
 
 var _deepmerge = _interopRequireDefault(require("deepmerge"));
@@ -1627,11 +1666,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
  * Deep merge object.
@@ -1646,7 +1681,7 @@ var objectDeepMerge = function objectDeepMerge(source, target) {
   Object.keys(target).map(function (k) {
     if (Object.prototype.hasOwnProperty.call(target, k)) {
       if (Object.prototype.hasOwnProperty.call(source, k)) {
-        if (_typeof(source[k]) === 'object') {
+        if ((0, _typeof2.default)(source[k]) === 'object') {
           // eslint-disable-next-line no-param-reassign
           source[k] = _objectSpread(_objectSpread({}, source[k]), target[k]);
         } else {
@@ -1701,17 +1736,19 @@ var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
 };
 
 exports.mutationWatchFunction = mutationWatchFunction;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"WPTB_Store.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"WPTB_Store.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _general = require("./stores/general");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
  * Wptb store UMD module.
@@ -1857,5 +1894,5 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   return new WptbStore(appStore);
 });
-},{"./stores/general":"stores/general.js"}]},{},["WPTB_Store.js"], null)
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","./stores/general":"stores/general.js"}]},{},["WPTB_Store.js"], null)
 //# sourceMappingURL=/WPTB_Store.js.map

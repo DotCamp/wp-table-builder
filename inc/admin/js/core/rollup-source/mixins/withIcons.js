@@ -27,12 +27,10 @@ export default function (iconList) {
 		mounted() {
 			this.$nextTick(() => {
 				// eslint-disable-next-line array-callback-return
-				Object.keys(this.icons).map((name) => {
-					if (Object.prototype.hasOwnProperty.call(this.icons, name)) {
-						WPTB_IconManager.getIcon(name, 'wptb-svg-inherit-color', true).then((icon) => {
-							this.icons[name] = icon;
-						});
-					}
+				Object.entries(this.icons).map(([name]) => {
+					WPTB_IconManager.getIcon(name, 'wptb-svg-inherit-color', true).then((icon) => {
+						this.icons[name] = icon;
+					});
 				});
 			});
 		},
