@@ -2,8 +2,12 @@
 
 namespace WP_Table_Builder\Inc\Admin;
 
+use WP_Table_Builder\Inc\Admin\Managers\Addon_Manager;
 use WP_Table_Builder\Inc\Core\Init;
+use WP_Table_Builder as NS;
 use function apply_filters;
+use function esc_attr;
+use function get_plugin_data;
 
 /**
  * All the table stuffs.
@@ -202,11 +206,10 @@ class Tables {
 			$after_table = '<div class="wptb-frontend-table-after">' . $post_edit_link . $post_give_credit . '</div>';
 		}
 
-		$html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix" id="wptb-table-id-' . esc_attr( $args['id'] ) . '">' . $html . '</div></div>' . $after_table;
+		$html = sprintf( '<div class="wptb-table-container wptb-table-%1$d"><div class="wptb-table-container-matrix" id="wptb-table-id-%1$d" data-wptb-version="%4$s" data-wptb-pro-status="%5$s">%2$s</div></div>%3$s', esc_attr( $args['id'] ), $html, $after_table, esc_attr( get_plugin_data( NS\PLUGIN__FILE__ )['Version'] ), esc_attr( Addon_Manager::check_pro_status() ? 'true' : 'false' ) );
 
 		$html = apply_filters( 'wp-table-builder/filter/table_html_shortcode', $html );
 
 		return ( $html );
 	}
-
 }

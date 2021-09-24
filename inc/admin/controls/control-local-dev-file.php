@@ -76,7 +76,7 @@ class Control_Local_Dev_File extends Base_Control {
 	 *
 	 * @return array images
 	 */
-	public final static function get_plugin_images() {
+	public static function get_plugin_images() {
 		$path               = trailingslashit( WPTBNS\WP_TABLE_BUILDER_PRO_DIR ) . self::RELATIVE_IMAGE_LOCATION;
 		$url                = trailingslashit( WPTBNS\WP_TABLE_BUILDER_PRO_URL ) . self::RELATIVE_IMAGE_LOCATION;
 		$allowed_extensions = self::SUPPORTED_EXTENSIONS;
