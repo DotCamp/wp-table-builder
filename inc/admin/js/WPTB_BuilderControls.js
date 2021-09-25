@@ -14628,6 +14628,8 @@ var _vueFragment = require("vue-fragment");
 //
 //
 //
+//
+//
 var _default = {
   props: {
     visibility: {
@@ -14671,27 +14673,37 @@ exports.default = _default;
     "transition",
     { attrs: { name: "wptb-fade", mode: "out-in" } },
     [
-      _c(
-        "fragment",
-        [
-          _vm.visibility ? _vm._t("default") : _vm._e(),
-          _vm._v(" "),
-          _vm.compatibilityMode
-            ? _c("input", {
-                staticClass: "wptb-element-property",
-                class: _vm.uniqueId,
-                staticStyle: { display: "none" },
-                attrs: {
-                  type: "text",
-                  "data-element": _vm.elemContainer,
-                  disabled: "true"
-                },
-                domProps: { value: _vm.mainValue }
-              })
-            : _vm._e()
-        ],
-        2
-      )
+      _c("fragment", [
+        _c(
+          "span",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.visibility,
+                expression: "visibility"
+              }
+            ]
+          },
+          [_vm._t("default")],
+          2
+        ),
+        _vm._v(" "),
+        _vm.compatibilityMode
+          ? _c("input", {
+              staticClass: "wptb-element-property",
+              class: _vm.uniqueId,
+              staticStyle: { display: "none" },
+              attrs: {
+                type: "text",
+                "data-element": _vm.elemContainer,
+                disabled: "true"
+              },
+              domProps: { value: _vm.mainValue }
+            })
+          : _vm._e()
+      ])
     ],
     1
   )
@@ -42982,6 +42994,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _withTranslation = _interopRequireDefault(require("../mixins/withTranslation"));
 
 var _withIcons = _interopRequireDefault(require("../mixins/withIcons"));
@@ -42990,51 +43004,10 @@ var _Size2ControlColumn = _interopRequireDefault(require("./Size2ControlColumn")
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 var _default = {
   components: {
     Size2ControlColumn: _Size2ControlColumn.default
@@ -43079,7 +43052,11 @@ var _default = {
     return {
       aspectLocked: true,
       fractionDigits: 0,
-      mountedState: false
+      mountedState: false,
+      availableUnits: {
+        percent: '%',
+        pixel: 'px'
+      }
     };
   },
   mounted: function mounted() {
@@ -43090,19 +43067,29 @@ var _default = {
     });
   },
   watch: {
+    originals: {
+      handler: function handler() {
+        this.calculatePreciseValues();
+      },
+      deep: true
+    },
+    size: {
+      handler: function handler() {
+        this.calculatePreciseValues();
+      },
+      deep: true
+    },
     'size.width': {
       handler: function handler() {
         this.size.height = this.calculateHeight();
-      },
-      deep: true
+      }
     },
     'size.unit': {
       handler: function handler(n) {
         if (this.mountedState) {
           this.convertToUnit(n);
         }
-      },
-      deep: true
+      }
     },
     aspectLocked: function aspectLocked(n) {
       if (n) {
@@ -43119,11 +43106,14 @@ var _default = {
     }
   },
   methods: {
+    currentUnitCheck: function currentUnitCheck(unit) {
+      return this.size.unit === unit;
+    },
     calculateHeight: function calculateHeight() {
       var calculatedHeight = this.size.height;
 
       if (this.aspectLocked && this.aspectRatio !== 0) {
-        calculatedHeight = this.toFixed(this.size.unit === '%' ? this.size.width : this.size.width / this.aspectRatio);
+        calculatedHeight = this.toFixed(this.currentUnitCheck(this.availableUnits.percent) ? this.size.width : this.size.width / this.aspectRatio);
       }
 
       return calculatedHeight;
@@ -43132,8 +43122,8 @@ var _default = {
       this.aspectLocked = !this.aspectLocked;
     },
     resetToOriginalSize: function resetToOriginalSize() {
-      this.size.width = this.size.unit === 'px' ? this.originals.width : 100;
-      this.size.height = this.size.unit === 'px' ? this.originals.height : 100;
+      this.size.width = this.currentUnitCheck(this.availableUnits.pixel) ? this.originals.width : 100;
+      this.size.height = this.currentUnitCheck(this.availableUnits.pixel) ? this.originals.height : 100;
     },
     toFixed: function toFixed(val) {
       return val.toFixed ? val.toFixed(this.fractionDigits) : val;
@@ -43152,6 +43142,23 @@ var _default = {
           this.size.height = this.toFixed(this.originals.height / 100 * this.size.height);
         }
       }
+    },
+    calculatePreciseValues: function calculatePreciseValues() {
+      var precise = {
+        width: this.size.width,
+        height: this.size.height,
+        unit: 'px'
+      };
+
+      if (this.currentUnitCheck(this.availableUnits.percent)) {
+        precise.width = this.toFixed(this.originals.width / 100 * this.size.width);
+        precise.height = this.toFixed(this.originals.height / 100 * this.size.height);
+      }
+
+      this.$emit('sizeUpdate', {
+        raw: _objectSpread({}, this.size),
+        precise: precise
+      });
     }
   }
 };
@@ -43306,11 +43313,12 @@ exports.default = _default;
                 }
               }
             },
-            [
-              _c("option", { attrs: { value: "px" } }, [_vm._v("px")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "%" } }, [_vm._v("%")])
-            ]
+            _vm._l(_vm.availableUnits, function(value, key) {
+              return _c("option", { key: key, domProps: { value: value } }, [
+                _vm._v(_vm._s(value))
+              ])
+            }),
+            0
           )
         ]),
         _vm._v(" "),
@@ -43345,7 +43353,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/withTranslation":"mixins/withTranslation.js","../mixins/withIcons":"mixins/withIcons.js","./Size2ControlColumn":"components/Size2ControlColumn.vue"}],"containers/Size2Control.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","../mixins/withTranslation":"mixins/withTranslation.js","../mixins/withIcons":"mixins/withIcons.js","./Size2ControlColumn":"components/Size2ControlColumn.vue"}],"containers/Size2Control.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -43383,7 +43391,7 @@ var _default = {
     },
     defaultValue: {
       type: String,
-      default: '100px:100px'
+      default: '100px:100px||100px:100px'
     },
     defaultUnit: {
       type: String,
@@ -43424,14 +43432,15 @@ var _default = {
   },
   watch: {
     size: {
-      handler: function handler(n) {
-        this.elementMainValue = "".concat(n.width).concat(n.unit, ":").concat(n.height).concat(n.unit);
-        this.basicValueUpdate(this.elementMainValue, true);
+      handler: function handler(n) {// @deprecated
+        // this.elementMainValue = `${n.width}${n.unit}:${n.height}${n.unit}`;
+        //
+        // this.basicValueUpdate(this.elementMainValue, true);
       },
       deep: true
     },
     elementMainValue: function elementMainValue(n) {
-      var match = n.match( /*#__PURE__*/_wrapRegExp(/([0-9]+\.?[0-9]*)(.+)(?::)([0-9]+\.?[0-9]*)/, {
+      var match = n.match( /*#__PURE__*/_wrapRegExp(/([0-9]+\.?[0-9]*)(.+)(?::)([0-9]+\.?[0-9]*).+\|\|/, {
         width: 1,
         unit: 2,
         height: 3
@@ -43447,19 +43456,24 @@ var _default = {
           this.size.width = width;
           this.size.height = height;
           this.size.unit = unit;
+          this.basicValueUpdate(this.elementMainValue, true);
         }
       }
     }
   },
   methods: {
     genericCalculationProcess: function genericCalculationProcess() {
+      var observe = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       this.calculateAspectRatio();
       this.updateOriginals();
-      this.observeTarget();
+
+      if (observe) {
+        this.observeTarget();
+      }
     },
     calculateStartupProcessVariables: function calculateStartupProcessVariables() {
       this.findTargetElement();
-      this.genericCalculationProcess();
+      this.genericCalculationProcess(true);
     },
     imageSourceChanged: function imageSourceChanged() {
       this.updateNewSizeValues();
@@ -43516,6 +43530,11 @@ var _default = {
       if (this.observer) {
         this.observer.disconnect();
       }
+    },
+    handleSizeUpdate: function handleSizeUpdate(_ref2) {
+      var raw = _ref2.raw,
+          precise = _ref2.precise;
+      this.elementMainValue = "".concat(raw.width).concat(raw.unit, ":").concat(raw.height).concat(raw.unit, "||").concat(precise.width).concat(precise.unit, ":").concat(precise.height).concat(precise.unit);
     }
   },
   beforeDestroy: function beforeDestroy() {
@@ -43554,7 +43573,8 @@ exports.default = _default;
           size: _vm.size,
           strings: _vm.strings,
           label: _vm.label
-        }
+        },
+        on: { sizeUpdate: _vm.handleSizeUpdate }
       })
     ],
     1

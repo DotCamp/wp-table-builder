@@ -1,7 +1,9 @@
 <template>
 	<transition name="wptb-fade" mode="out-in">
 		<fragment>
-			<slot v-if="visibility"></slot>
+			<span v-show="visibility">
+				<slot></slot>
+			</span>
 			<input
 				v-if="compatibilityMode"
 				class="wptb-element-property"

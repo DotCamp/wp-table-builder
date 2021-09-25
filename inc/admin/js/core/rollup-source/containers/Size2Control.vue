@@ -12,6 +12,7 @@
 			:size="size"
 			:strings="strings"
 			:label="label"
+			@sizeUpdate="handleSizeUpdate"
 		></size-control>
 	</control-wrapper>
 </template>
@@ -30,7 +31,7 @@ export default {
 		},
 		defaultValue: {
 			type: String,
-			default: '100px:100px',
+			default: '100px:100px||100px:100px',
 		},
 		defaultUnit: {
 			type: String,
@@ -68,14 +69,15 @@ export default {
 	watch: {
 		size: {
 			handler(n) {
-				this.elementMainValue = `${n.width}${n.unit}:${n.height}${n.unit}`;
-
-				this.basicValueUpdate(this.elementMainValue, true);
+				// @deprecated
+				// this.elementMainValue = `${n.width}${n.unit}:${n.height}${n.unit}`;
+				//
+				// this.basicValueUpdate(this.elementMainValue, true);
 			},
 			deep: true,
 		},
 		elementMainValue(n) {
-			const match = n.match(/(?<width>\d+\.?\d*)(?<unit>.+)(?::)(?<height>\d+\.?\d*)/);
+			const match = n.match(/(?<width>\d+\.?\d*)(?<unit>.+)(?::)(?<height>\d+\.?\d*).+\|\|/);
 
 			if (match) {
 				const { width, height, unit } = match.groups;
@@ -84,19 +86,23 @@ export default {
 					this.size.width = width;
 					this.size.height = height;
 					this.size.unit = unit;
+
+					this.basicValueUpdate(this.elementMainValue, true);
 				}
 			}
 		},
 	},
 	methods: {
-		genericCalculationProcess() {
+		genericCalculationProcess(observe = false) {
 			this.calculateAspectRatio();
 			this.updateOriginals();
-			this.observeTarget();
+			if (observe) {
+				this.observeTarget();
+			}
 		},
 		calculateStartupProcessVariables() {
 			this.findTargetElement();
-			this.genericCalculationProcess();
+			this.genericCalculationProcess(true);
 		},
 		imageSourceChanged() {
 			this.updateNewSizeValues();
@@ -144,6 +150,9 @@ export default {
 			if (this.observer) {
 				this.observer.disconnect();
 			}
+		},
+		handleSizeUpdate({ raw, precise }) {
+			this.elementMainValue = `${raw.width}${raw.unit}:${raw.height}${raw.unit}||${precise.width}${precise.unit}:${precise.height}${precise.unit}`;
 		},
 	},
 	beforeDestroy() {

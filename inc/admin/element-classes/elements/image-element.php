@@ -105,20 +105,20 @@ class Image_Element extends Element_Base {
 			]
 		);
         
-		$this->add_control(
-			'imageAlignmentCheckbox',
-			[
-				'label' => __( 'Image Alignment', 'wp_table_builder' ),
-				'type' => Controls_Manager::ALIGNMENT,
-                'selected' => 1,
-                'selectors' => [
-                    '{{{data.container}}} .wptb-image-wrapper a' => 'float',
-                ]
-			]
-		);
+//		$this->add_control(
+//			'imageAlignmentCheckbox',
+//			[
+//				'label' => __( 'Image Alignment', 'wp_table_builder' ),
+//				'type' => Controls_Manager::ALIGNMENT,
+//                'selected' => 1,
+//                'selectors' => [
+//                    '{{{data.container}}} .wptb-image-wrapper a' => 'float',
+//                ]
+//			]
+//		);
 
 		$this->add_control(
-			'imageAlignmentCheckboxTest',
+			'imageAlignment',
 			[
 				'label' => __( 'Image Alignment', 'wp_table_builder' ),
 				'type' => Controls_Manager::NAMED_TOGGLE,

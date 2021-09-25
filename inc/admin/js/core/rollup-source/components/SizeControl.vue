@@ -31,8 +31,7 @@
 			</size2-control-column>
 			<size2-control-column>
 				<select class="wptb-size2-unit-dropdown" v-model="size.unit">
-					<option value="px">px</option>
-					<option value="%">%</option>
+					<option :key="key" v-for="(value, key) in availableUnits" :value="value">{{ value }}</option>
 				</select>
 			</size2-control-column>
 			<div class="wptb-size-control-aspect-ratio-info-container">
@@ -91,6 +90,10 @@ export default {
 			aspectLocked: true,
 			fractionDigits: 0,
 			mountedState: false,
+			availableUnits: {
+				percent: '%',
+				pixel: 'px',
+			},
 		};
 	},
 	mounted() {
@@ -99,11 +102,22 @@ export default {
 		});
 	},
 	watch: {
+		originals: {
+			handler() {
+				this.calculatePreciseValues();
+			},
+			deep: true,
+		},
+		size: {
+			handler() {
+				this.calculatePreciseValues();
+			},
+			deep: true,
+		},
 		'size.width': {
 			handler() {
 				this.size.height = this.calculateHeight();
 			},
-			deep: true,
 		},
 		'size.unit': {
 			handler(n) {
@@ -111,7 +125,6 @@ export default {
 					this.convertToUnit(n);
 				}
 			},
-			deep: true,
 		},
 		aspectLocked(n) {
 			if (n) {
@@ -128,11 +141,16 @@ export default {
 		},
 	},
 	methods: {
+		currentUnitCheck(unit) {
+			return this.size.unit === unit;
+		},
 		calculateHeight() {
 			let calculatedHeight = this.size.height;
 			if (this.aspectLocked && this.aspectRatio !== 0) {
 				calculatedHeight = this.toFixed(
-					this.size.unit === '%' ? this.size.width : this.size.width / this.aspectRatio
+					this.currentUnitCheck(this.availableUnits.percent)
+						? this.size.width
+						: this.size.width / this.aspectRatio
 				);
 			}
 
@@ -142,8 +160,8 @@ export default {
 			this.aspectLocked = !this.aspectLocked;
 		},
 		resetToOriginalSize() {
-			this.size.width = this.size.unit === 'px' ? this.originals.width : 100;
-			this.size.height = this.size.unit === 'px' ? this.originals.height : 100;
+			this.size.width = this.currentUnitCheck(this.availableUnits.pixel) ? this.originals.width : 100;
+			this.size.height = this.currentUnitCheck(this.availableUnits.pixel) ? this.originals.height : 100;
 		},
 		toFixed(val) {
 			return val.toFixed ? val.toFixed(this.fractionDigits) : val;
@@ -162,6 +180,23 @@ export default {
 					this.size.height = this.toFixed((this.originals.height / 100) * this.size.height);
 				}
 			}
+		},
+		calculatePreciseValues() {
+			const precise = {
+				width: this.size.width,
+				height: this.size.height,
+				unit: 'px',
+			};
+
+			if (this.currentUnitCheck(this.availableUnits.percent)) {
+				precise.width = this.toFixed((this.originals.width / 100) * this.size.width);
+				precise.height = this.toFixed((this.originals.height / 100) * this.size.height);
+			}
+
+			this.$emit('sizeUpdate', {
+				raw: { ...this.size },
+				precise,
+			});
 		},
 	},
 };

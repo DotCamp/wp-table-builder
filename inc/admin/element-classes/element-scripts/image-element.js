@@ -105,4 +105,17 @@ function controlsChange(inputs, element) {
 	}
 }
 
+function imageElementBackwardCompatibility() {
+	const imageAnchor = element.querySelector('a');
+
+	if (imageAnchor) {
+		const floatVal = imageAnchor.style.float;
+
+		// TODO [erdembircan] remove for production
+		console.log(floatVal);
+	}
+}
+
+imageElementBackwardCompatibility();
+
 WPTB_Helper.controlsInclude(element, controlsChange);
