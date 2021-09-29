@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.3.11 =
+
+* IMPROVE: HTML indicators for tables to support more operations via extra/general styling controls
+
 = 1.3.10 =
 
 * NEW: Disable theme styles for all tables setting.

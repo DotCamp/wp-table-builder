@@ -1286,6 +1286,18 @@
 		};
 
 		/**
+		 * Add html related indicators for responsive operation.
+		 *
+		 * @param {Node} tableElement target table element
+		 * @param {string} breakpointId current breakpoint for responsive process
+		 */
+		const htmlResponsiveIndicators = (tableElement, breakpointId) => {
+			if (tableElement && breakpointId) {
+				tableElement.dataset.wptbBreakpoint = breakpointId;
+			}
+		};
+
+		/**
 		 * Rebuild table according to its responsive directives.
 		 *
 		 * @private
@@ -1336,6 +1348,9 @@
 						},
 					});
 					el.dispatchEvent(tabEvent);
+
+                    // add html indicators to target table
+                    htmlResponsiveIndicators(el,sizeRangeId);
 				} else {
 					throw new Error(`No build mode named as [${mode}] found.`);
 				}
