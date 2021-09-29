@@ -1,4 +1,5 @@
 <?php
+
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base;
@@ -11,16 +12,16 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 class Image_Element extends Element_Base {
-    
-    /**
+
+	/**
 	 * Get element name.
 	 *
 	 * Retrieve image editor element name.
 	 *
+	 * @return string element name.
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return string element name.
 	 */
 	public function get_name() {
 		return 'image';
@@ -31,10 +32,10 @@ class Image_Element extends Element_Base {
 	 *
 	 * Retrieve image editor element.
 	 *
+	 * @return string Element title.
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return string Element title.
 	 */
 	public function get_title() {
 		return esc_html_e( 'Image', 'wp-table-builder' );
@@ -45,40 +46,40 @@ class Image_Element extends Element_Base {
 	 *
 	 * Retrieve directory image editor element icon.
 	 *
+	 * @return string Directory Element icon.
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return string Directory Element icon.
 	 */
 	public function get_directory_icon() {
 		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.svg';
 	}
-    
-    /**
+
+	/**
 	 * Get url icon.
 	 *
 	 * Return url image icon
 	 *
+	 * @return string Url Element icon.
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return string Url Element icon.
 	 */
 	public function get_url_icon() {
-		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/image.svg' );
+		return wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/image.svg' );
 	}
-    
-    /**
+
+	/**
 	 * Include file with js script for element image
 	 *
 	 * @since 1.1.2
 	 * @access protected
 	 */
-    public function element_script() {
-        return wp_normalize_path ( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/image-element.js' );
-    }
-    
-    /**
+	public function element_script() {
+		return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/image-element.js' );
+	}
+
+	/**
 	 * Register the element controls.
 	 *
 	 * Adds different fields to allow the user to change and customize the element settings.
@@ -91,91 +92,81 @@ class Image_Element extends Element_Base {
 		$this->add_control(
 			'section_header',
 			[
-				'label' => __( 'Image Options', 'wp_table_builder' ),
-				'type' => Controls_Manager::SECTION_HEADER,
-                'buttonBack' => true
+				'label'      => __( 'Image Options', 'wp_table_builder' ),
+				'type'       => Controls_Manager::SECTION_HEADER,
+				'buttonBack' => true
 			]
 		);
-        
-        $this->add_control(
+
+		$this->add_control(
 			'imageReplaceButton',
 			[
 				'label' => __( 'Replace Image', 'wp_table_builder' ),
-				'type' => Controls_Manager::BUTTON,
+				'type'  => Controls_Manager::BUTTON,
 			]
 		);
-        
-//		$this->add_control(
-//			'imageAlignmentCheckbox',
-//			[
-//				'label' => __( 'Image Alignment', 'wp_table_builder' ),
-//				'type' => Controls_Manager::ALIGNMENT,
-//                'selected' => 1,
-//                'selectors' => [
-//                    '{{{data.container}}} .wptb-image-wrapper a' => 'float',
-//                ]
-//			]
-//		);
+
+		$icon_manager = NS\Inc\Core\Init::instance()->get_icon_manager();
 
 		$this->add_control(
 			'imageAlignment',
 			[
-				'label' => __( 'Image Alignment', 'wp_table_builder' ),
-				'type' => Controls_Manager::NAMED_TOGGLE,
-                'items' => [
-                        'left' =>  esc_html__('Left', 'wp-table-builder'),
-                        'center' =>  esc_html__('Center', 'wp-table-builder'),
-                        'right' =>  esc_html__('Right', 'wp-table-builder'),
-                ],
-                'selectors' => [
-                        [
-	                        'query'  => '{{{data.container}}}',
-	                        'type'   => Controls_Manager::DATASET,
-	                        'key'    => 'wptbImageAlignment',
-                        ]
-                ],
-                'defaultValue' => 'center'
+				'label'        => __( 'Image Alignment', 'wp_table_builder' ),
+				'type'         => Controls_Manager::NAMED_TOGGLE,
+				'items'        => [
+					'left'   => $icon_manager->get_icon( 'align-left', false, 'svg', '<span class="wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-svg-14px wptb-svg-inherit-color"></span>' ),
+					'center' => $icon_manager->get_icon( 'align-center', false, 'svg', '<span class="wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-svg-14px wptb-svg-inherit-color"></span>' ),
+					'right'  => $icon_manager->get_icon( 'align-right', false, 'svg', '<span class="wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-svg-14px wptb-svg-inherit-color"></span>' ),
+				],
+				'selectors'    => [
+					[
+						'query' => '{{{data.container}}}',
+						'type'  => Controls_Manager::DATASET,
+						'key'   => 'wptbImageAlignment',
+					]
+				],
+				'defaultValue' => 'center'
 			]
 		);
 
 		$this->add_control(
 			'imageSize',
 			[
-				'label' => __( 'Image Size', 'wp_table_builder' ),
-				'type' => Controls_Manager::SIZE,
-                'selectors' => [
-                    '{{{data.container}}} .wptb-image-wrapper a' => 'width',
-                ],
-                'min' => 10, 
-                'max' => 100,
-                'defaultValue' => 100,
-                'dimension' => '%'
+				'label'        => __( 'Image Size', 'wp_table_builder' ),
+				'type'         => Controls_Manager::SIZE,
+				'selectors'    => [
+					'{{{data.container}}} .wptb-image-wrapper a' => 'width',
+				],
+				'min'          => 10,
+				'max'          => 100,
+				'defaultValue' => 100,
+				'dimension'    => '%'
 			]
 		);
-        
-        $this->add_control(
+
+		$this->add_control(
 			'imageLink',
 			[
-				'label' => __( 'Image Link', 'wp_table_builder' ),
-				'type' => Controls_Manager::URL,
-                'selector' => '{{{data.container}}} .wptb-image-wrapper a'
+				'label'    => __( 'Image Link', 'wp_table_builder' ),
+				'type'     => Controls_Manager::URL,
+				'selector' => '{{{data.container}}} .wptb-image-wrapper a'
 			]
 		);
 
 		$this->add_control(
 			'imageAlternativeText',
 			[
-				'label' => __( 'Image Alternative Text', 'wp_table_builder' ),
-				'type' => Controls_Manager::TEXT,
-                'selectors' => [
-                    '{{{data.container}}} .wptb-image-wrapper a img' => 'alt',
-                ],
-                'placeholder' => __( 'Image Alt Text', 'wp_table_builder' ),
+				'label'       => __( 'Image Alternative Text', 'wp_table_builder' ),
+				'type'        => Controls_Manager::TEXT,
+				'selectors'   => [
+					'{{{data.container}}} .wptb-image-wrapper a img' => 'alt',
+				],
+				'placeholder' => __( 'Image Alt Text', 'wp_table_builder' ),
 			]
 		);
 	}
-    
-    /**
+
+	/**
 	 * Render text editor element output in the editor.
 	 *
 	 * Written as a wp js template and used to generate the live preview.
@@ -188,7 +179,7 @@ class Image_Element extends Element_Base {
         <div class="wptb-image-wrapper">
             <a style="display: block;">
                 <span class="wptb-icon-image-button">
-                    <svg class="wptb-draggable-prototype" xmlns="http://www.w3.org/2000/svg" 
+                    <svg class="wptb-draggable-prototype" xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 489.4 489.4" width="40px" height="50px">
                         <path d="M0 437.8c0 28.5 23.2 51.6 51.6 51.6h386.2c28.5 0 51.6-23.2 
                               51.6-51.6V51.6c0-28.5-23.2-51.6-51.6-51.6H51.6C23.1 0 0 23.2 0 

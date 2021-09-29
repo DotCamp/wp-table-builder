@@ -21517,13 +21517,64 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/SidesControl":"containers/SidesControl.vue","../plugins/filters":"plugins/filters.js"}],"components/NamedToggleItem.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/SidesControl":"containers/SidesControl.vue","../plugins/filters":"plugins/filters.js"}],"components/HtmlFriendlySpan.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+//
+//
+//
+//
+var _default = {
+  props: {
+    content: {
+      type: String,
+      default: ''
+    }
+  }
+};
+exports.default = _default;
+        var $4d5089 = exports.default || module.exports;
+      
+      if (typeof $4d5089 === 'function') {
+        $4d5089 = $4d5089.options;
+      }
+    
+        /* template */
+        Object.assign($4d5089, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("span", { domProps: { innerHTML: _vm._s(_vm.content) } })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/NamedToggleItem.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _HtmlFriendlySpan = _interopRequireDefault(require("./HtmlFriendlySpan"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 //
 //
 //
@@ -21535,6 +21586,9 @@ exports.default = void 0;
 //
 //
 var _default = {
+  components: {
+    HtmlFriendlySpan: _HtmlFriendlySpan.default
+  },
   props: {
     title: {
       type: String,
@@ -21588,7 +21642,8 @@ exports.default = _default;
         }
       }
     },
-    [_vm._v("\n\t" + _vm._s(_vm.title) + "\n")]
+    [_c("html-friendly-span", { attrs: { content: _vm.title } })],
+    1
   )
 }
 var staticRenderFns = []
@@ -21603,7 +21658,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/NamedToggleActiveIndicator.vue":[function(require,module,exports) {
+},{"./HtmlFriendlySpan":"components/HtmlFriendlySpan.vue"}],"components/NamedToggleActiveIndicator.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21616,7 +21671,7 @@ exports.default = void 0;
 var _default = {
   props: {
     refElement: {
-      type: HTMLElement,
+      type: Node,
       default: null
     }
   },

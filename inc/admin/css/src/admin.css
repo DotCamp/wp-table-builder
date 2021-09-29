@@ -1792,6 +1792,7 @@ table.wptb-table {
     padding: 0;
     max-width: 100%;
     height: auto;
+    transition: all 0.2s ease-out;
 }
 
 .wptb-image-wrapper a {
@@ -6556,4 +6557,8 @@ wptb_shortcode_container_element {
     width: 16px;
     height: 16px;
     cursor: pointer;
+}
+
+.wptb-svg-14px svg {
+    width: 14px;
 }
