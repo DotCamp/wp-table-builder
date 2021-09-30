@@ -77,6 +77,8 @@ const ControlBase = {
 
 			this.subscribeToDependentControls();
 		});
+
+		this.attachToElementChange();
 	},
 	methods: {
 		calculateComponentVisibilityOnDependentControls(valueToExpect) {
@@ -255,6 +257,14 @@ const ControlBase = {
 			this.setAllValues(val);
 			this.generateChangeEvent(val);
 			this.setTableDirty(checkMountedState);
+		},
+		attachToElementChange() {
+			// only attach to element changes if those controls are not belong to table itself
+			if (!this.elemContainer.includes('wptb-element-main-table') && this.elemContainer !== '') {
+				document.addEventListener('element:controls:prepare', () => {
+					this.$root.$destroy();
+				});
+			}
 		},
 	},
 };

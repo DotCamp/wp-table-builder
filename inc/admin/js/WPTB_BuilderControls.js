@@ -12600,6 +12600,16 @@ function ControlsManager() {
 
     return controlData[id];
   }
+  /**
+   * Update value of an element's control
+   *
+   * @param {string} elementId element control id
+   * @param {string} controlId element control id
+   * @param {any} value control value
+   */
+
+
+  function updateControlValue(elementId, controlId, value) {}
 
   return {
     getTableSettings: getTableSettings,
@@ -12611,7 +12621,10 @@ function ControlsManager() {
     subscribe: subscribe,
     subscribeToControl: subscribeToControl,
     subscribeToElementControl: subscribeToElementControl,
-    getElementControlValue: getElementControlValue
+    getElementControlValue: getElementControlValue,
+    updateControlValue: updateControlValue,
+    // TODO [erdembircan] remove for production
+    cachedElementControls: cachedElementControls
   };
 }
 /**
@@ -13348,6 +13361,7 @@ var ControlBase = {
 
       _this.subscribeToDependentControls();
     });
+    this.attachToElementChange();
   },
   methods: {
     calculateComponentVisibilityOnDependentControls: function calculateComponentVisibilityOnDependentControls(valueToExpect) {
@@ -13549,6 +13563,16 @@ var ControlBase = {
       this.setAllValues(val);
       this.generateChangeEvent(val);
       this.setTableDirty(checkMountedState);
+    },
+    attachToElementChange: function attachToElementChange() {
+      var _this8 = this;
+
+      // only attach to element changes if those controls are not belong to table itself
+      if (!this.elemContainer.includes('wptb-element-main-table') && this.elemContainer !== '') {
+        document.addEventListener('element:controls:prepare', function () {
+          _this8.$root.$destroy();
+        });
+      }
     }
   }
 };
@@ -43486,14 +43510,6 @@ var _default = {
     });
   },
   watch: {
-    size: {
-      handler: function handler(n) {// @deprecated
-        // this.elementMainValue = `${n.width}${n.unit}:${n.height}${n.unit}`;
-        //
-        // this.basicValueUpdate(this.elementMainValue, true);
-      },
-      deep: true
-    },
     elementMainValue: function elementMainValue(n) {
       var match = n.match( /*#__PURE__*/_wrapRegExp(/([0-9]+\.?[0-9]*)(.+)(?::)([0-9]+\.?[0-9]*).+\|\|/, {
         width: 1,

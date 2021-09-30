@@ -404,6 +404,15 @@ function ControlsManager() {
 		return controlData[id];
 	}
 
+	/**
+	 * Update value of an element's control
+	 *
+	 * @param {string} elementId element control id
+	 * @param {string} controlId element control id
+	 * @param {any} value control value
+	 */
+	function updateControlValue(elementId, controlId, value) {}
+
 	return {
 		getTableSettings,
 		init,
@@ -415,6 +424,9 @@ function ControlsManager() {
 		subscribeToControl,
 		subscribeToElementControl,
 		getElementControlValue,
+		updateControlValue,
+		// TODO [erdembircan] remove for production
+		cachedElementControls,
 	};
 }
 

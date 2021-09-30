@@ -1215,6 +1215,9 @@ var WPTB_Helper = {
 	},
 	//
 	elementOptionsSet(kind, element, valueDependOnControl, targetControlElementClass) {
+
+		WPTB_Helper.wptbDocumentEventGenerate('element:controls:prepare', element);
+
 		// get controls config for this element
 		const wptbContrlStacksConfigId = `wptb-${kind}-control-stack`;
 		const tmplControlsConfig = wp.template(wptbContrlStacksConfigId);

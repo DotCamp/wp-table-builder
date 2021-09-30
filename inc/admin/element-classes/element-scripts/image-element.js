@@ -111,8 +111,7 @@ function imageElementBackwardCompatibility() {
 	if (imageAnchor) {
 		const floatVal = imageAnchor.style.float;
 
-		// TODO [erdembircan] remove for production
-		console.log(floatVal);
+		WPTB_ControlsManager.updateControlValue(elementId, 'imageImageAlignment', floatVal);
 	}
 }
 
