@@ -64,6 +64,7 @@ export default {
 
 		this.$nextTick(() => {
 			this.calculateStartupProcessVariables();
+
 		});
 	},
 	watch: {

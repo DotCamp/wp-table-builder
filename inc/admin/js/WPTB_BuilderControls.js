@@ -12166,6 +12166,7 @@ function ControlsManager() {
     settings: {}
   };
   var subscribers = [];
+  var controlBases = [];
   /**
    * Subscribers for element controls.
    *
@@ -12535,7 +12536,9 @@ function ControlsManager() {
 
 
   function init() {
-    attachToSettingChanges();
+    attachToSettingChanges(); // eslint-disable-next-line no-use-before-define
+
+    attachToElementChange();
   }
   /**
    * Add a control element script to ControlsManager
@@ -12610,6 +12613,51 @@ function ControlsManager() {
 
 
   function updateControlValue(elementId, controlId, value) {}
+  /**
+   * Register a control base instance.
+   *
+   * @param {Object} controlBaseInstance control base instance
+   */
+
+
+  function registerControlBase(controlBaseInstance) {
+    if (!controlBases.some(function (base) {
+      return base.$props.uniqueId === controlBaseInstance.$props.uniqueId;
+    })) {
+      controlBases.push(controlBaseInstance);
+    }
+  }
+  /**
+   * Destroy registered element control instances.
+   */
+
+
+  function destroyControls() {
+    controlBases = controlBases.filter(function (base) {
+      var elemContainer = base.$root.$data.elemContainer;
+
+      if (!elemContainer.includes('wptb-element-main-table') && elemContainer !== '') {
+        base.$root.$destroy();
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  function getControlBases() {
+    return controlBases;
+  }
+  /**
+   * Attach listeners to builder element change events.
+   */
+
+
+  function attachToElementChange() {
+    document.addEventListener('element:controls:prepare', function () {
+      destroyControls();
+    });
+  }
 
   return {
     getTableSettings: getTableSettings,
@@ -12623,8 +12671,8 @@ function ControlsManager() {
     subscribeToElementControl: subscribeToElementControl,
     getElementControlValue: getElementControlValue,
     updateControlValue: updateControlValue,
-    // TODO [erdembircan] remove for production
-    cachedElementControls: cachedElementControls
+    registerControlBase: registerControlBase,
+    getControlBases: getControlBases
   };
 }
 /**
@@ -13360,8 +13408,9 @@ var ControlBase = {
       }
 
       _this.subscribeToDependentControls();
-    });
-    this.attachToElementChange();
+    }); // register control base instance to controls manager
+
+    WPTB_ControlsManager.registerControlBase(this);
   },
   methods: {
     calculateComponentVisibilityOnDependentControls: function calculateComponentVisibilityOnDependentControls(valueToExpect) {
@@ -13563,16 +13612,6 @@ var ControlBase = {
       this.setAllValues(val);
       this.generateChangeEvent(val);
       this.setTableDirty(checkMountedState);
-    },
-    attachToElementChange: function attachToElementChange() {
-      var _this8 = this;
-
-      // only attach to element changes if those controls are not belong to table itself
-      if (!this.elemContainer.includes('wptb-element-main-table') && this.elemContainer !== '') {
-        document.addEventListener('element:controls:prepare', function () {
-          _this8.$root.$destroy();
-        });
-      }
     }
   }
 };

@@ -14,6 +14,7 @@ function ControlsManager() {
 	let previousSettings = {};
 	const tableSettings = { settings: {} };
 	const subscribers = [];
+	let controlBases = [];
 
 	/**
 	 * Subscribers for element controls.
@@ -347,6 +348,8 @@ function ControlsManager() {
 	 */
 	function init() {
 		attachToSettingChanges();
+		// eslint-disable-next-line no-use-before-define
+		attachToElementChange();
 	}
 
 	/**
@@ -413,6 +416,50 @@ function ControlsManager() {
 	 */
 	function updateControlValue(elementId, controlId, value) {}
 
+	/**
+	 * Register a control base instance.
+	 *
+	 * @param {Object} controlBaseInstance control base instance
+	 */
+	function registerControlBase(controlBaseInstance) {
+		if (
+			!controlBases.some((base) => {
+				return base.$props.uniqueId === controlBaseInstance.$props.uniqueId;
+			})
+		) {
+			controlBases.push(controlBaseInstance);
+		}
+	}
+
+	/**
+	 * Destroy registered element control instances.
+	 */
+	function destroyControls() {
+		controlBases = controlBases.filter((base) => {
+			const { elemContainer } = base.$root.$data;
+
+			if (!elemContainer.includes('wptb-element-main-table') && elemContainer !== '') {
+				base.$root.$destroy();
+				return false;
+			}
+
+			return true;
+		});
+	}
+
+	function getControlBases() {
+		return controlBases;
+	}
+
+	/**
+	 * Attach listeners to builder element change events.
+	 */
+	function attachToElementChange() {
+		document.addEventListener('element:controls:prepare', () => {
+			destroyControls();
+		});
+	}
+
 	return {
 		getTableSettings,
 		init,
@@ -425,8 +472,8 @@ function ControlsManager() {
 		subscribeToElementControl,
 		getElementControlValue,
 		updateControlValue,
-		// TODO [erdembircan] remove for production
-		cachedElementControls,
+		registerControlBase,
+		getControlBases,
 	};
 }
 
