@@ -43,6 +43,7 @@ function ProxyArray(defaultArray = []) {
 	 */
 	const callSubscribers = (eventName, value) => {
 		if (Object.prototype.hasOwnProperty.call(eventQue, eventName)) {
+			// eslint-disable-next-line array-callback-return
 			eventQue[eventName].map((handler) => {
 				handler(value);
 			});

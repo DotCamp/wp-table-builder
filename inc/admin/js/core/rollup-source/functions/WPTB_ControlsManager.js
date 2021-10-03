@@ -406,7 +406,7 @@ function ControlsManager() {
 	}
 
 	/**
-	 * Retrieve data for a control item
+	 * Retrieve data for a control item.
 	 *
 	 * Data objects that are registered for specific control items can be fetched with the  correct id. With this way, components can reach their data with the correct unique keys.
 	 *
@@ -422,7 +422,7 @@ function ControlsManager() {
 	}
 
 	/**
-	 * Update value of an element's control
+	 * Update value of an element's control.
 	 *
 	 * @param {string} elementId element control id
 	 * @param {string} controlId element control id

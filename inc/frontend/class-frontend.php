@@ -109,12 +109,12 @@ class Frontend {
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		$dev_test_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-table-builder-frontend.js' );
+		//@deprecated
+//		$dev_test_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-table-builder-frontend.js' );
 
-		// TODO [erdembircan] uncomment for production
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
 
-		// TODO [erdembircan] comment for production
+		//@deprecated
 //		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $dev_test_version, false );
 
 		// prepare data for frontend script

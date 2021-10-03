@@ -97,24 +97,35 @@ if (iconImageButton && !element.classList.contains('wptb-elem-placeholder')) {
 	addMedia(element);
 }
 
+const watchList = {
+	imageReplaceButton(val, element) {
+		addMedia(element, true);
+	},
+};
+
 function controlsChange(inputs, element) {
-	if (inputs && typeof inputs === 'object') {
-		if (inputs.hasOwnProperty('imageReplaceButton')) {
-			addMedia(element, true);
+	Object.keys(inputs).map((input) => {
+		if (Object.prototype.hasOwnProperty.call(inputs, input)) {
+			if (Object.prototype.hasOwnProperty.call(watchList, input)) {
+				watchList[input](inputs[input].eventValue || inputs[input].targetValue, element);
+			}
 		}
-	}
+	});
 }
 
+/**
+ * Backward compatibility operations for tables created before.
+ */
 function imageElementBackwardCompatibility() {
 	const imageAnchor = element.querySelector('a');
 
 	if (imageAnchor) {
-		const floatVal = imageAnchor.style.float;
-
+		// compatibility update for new image alignment control
+		const floatVal = imageAnchor.style.float === 'none' ? 'center' : imageAnchor.style.float;
 		WPTB_ControlsManager.updateControlValue(elementId, 'imageAlignment', floatVal);
 	}
 }
 
 imageElementBackwardCompatibility();
 
-WPTB_Helper.controlsInclude(element, controlsChange);
+WPTB_Helper.controlsInclude(element, controlsChange, true);

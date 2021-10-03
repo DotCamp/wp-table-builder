@@ -12132,13 +12132,97 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 module.exports = deepmerge_1;
-},{}],"functions/ValueUpdateQue.js":[function(require,module,exports) {
+},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":[function(require,module,exports) {
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":[function(require,module,exports) {
+var arrayLikeToArray = require("./arrayLikeToArray");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js":[function(require,module,exports) {
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js":[function(require,module,exports) {
+var arrayWithHoles = require("./arrayWithHoles");
+
+var iterableToArrayLimit = require("./iterableToArrayLimit");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray");
+
+var nonIterableRest = require("./nonIterableRest");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+},{"./arrayWithHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit":"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest":"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"functions/ValueUpdateQue.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Value update que handler.
@@ -12148,13 +12232,77 @@ exports.default = void 0;
  */
 function ValueUpdateQue(controlBases) {
   /**
+   * Array to hold value updates in queue.
+   */
+  var queue = [];
+  /**
+   * Main update process.
+   */
+
+  var updateProcess = function updateProcess() {
+    var length = queue.length; // eslint-disable-next-line no-plusplus
+
+    var _loop = function _loop(_i) {
+      var _queue$_i = (0, _slicedToArray2.default)(queue[_i], 3),
+          elementId = _queue$_i[0],
+          controlId = _queue$_i[1],
+          value = _queue$_i[2];
+
+      try {
+        // eslint-disable-next-line array-callback-return,no-loop-func
+        controlBases.map(function (base) {
+          var _base$$root$$data = base.$root.$data,
+              elemContainer = _base$$root$$data.elemContainer,
+              cId = _base$$root$$data.name;
+
+          if (elemContainer === elementId && controlId === cId) {
+            // eslint-disable-next-line no-param-reassign
+            base.$data.elementMainValue = value;
+            queue.splice(_i, 1);
+            _i -= 1;
+            length = queue.length;
+            throw new Error('shortcut');
+          }
+        });
+      } catch (e) {// do nothing
+      }
+
+      i = _i;
+    };
+
+    for (var i = 0; i < length; i++) {
+      _loop(i);
+    }
+  };
+  /**
    * Add value update operation to que.
+   *
+   * @public
    *
    * @param {string} elementId element control id
    * @param {string} controlId element control id
    * @param {any} value control value
    */
-  this.addToUpdateQue = function (elementId, controlId, value) {};
+
+
+  this.addToUpdateQue = function (elementId, controlId, value) {
+    queue.push([elementId, controlId, value]);
+    updateProcess();
+  };
+  /**
+   * Initialize module.
+   *
+   * @private
+   */
+
+
+  var init = function init() {
+    controlBases.on('set', function () {
+      updateProcess();
+    });
+  };
+
+  init();
 }
 /**
  * @module ValueUpdateQue
@@ -12163,7 +12311,7 @@ function ValueUpdateQue(controlBases) {
 
 var _default = ValueUpdateQue;
 exports.default = _default;
-},{}],"functions/ProxyArray.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js"}],"functions/ProxyArray.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12217,6 +12365,7 @@ function ProxyArray() {
 
   var callSubscribers = function callSubscribers(eventName, value) {
     if (Object.prototype.hasOwnProperty.call(eventQue, eventName)) {
+      // eslint-disable-next-line array-callback-return
       eventQue[eventName].map(function (handler) {
         handler(value);
       });
@@ -13103,87 +13252,7 @@ function _wrapNativeSuper(Class) {
 }
 
 module.exports = _wrapNativeSuper;
-},{"./getPrototypeOf":"../../../../../node_modules/@babel/runtime/helpers/getPrototypeOf.js","./setPrototypeOf":"../../../../../node_modules/@babel/runtime/helpers/setPrototypeOf.js","./isNativeFunction":"../../../../../node_modules/@babel/runtime/helpers/isNativeFunction.js","./construct":"../../../../../node_modules/@babel/runtime/helpers/construct.js"}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-module.exports = _arrayWithHoles;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":[function(require,module,exports) {
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-module.exports = _iterableToArrayLimit;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-module.exports = _arrayLikeToArray;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":[function(require,module,exports) {
-var arrayLikeToArray = require("./arrayLikeToArray");
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-}
-
-module.exports = _unsupportedIterableToArray;
-},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js":[function(require,module,exports) {
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-module.exports = _nonIterableRest;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js":[function(require,module,exports) {
-var arrayWithHoles = require("./arrayWithHoles");
-
-var iterableToArrayLimit = require("./iterableToArrayLimit");
-
-var unsupportedIterableToArray = require("./unsupportedIterableToArray");
-
-var nonIterableRest = require("./nonIterableRest");
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
-}
-
-module.exports = _slicedToArray;
-},{"./arrayWithHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit":"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest":"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":[function(require,module,exports) {
+},{"./getPrototypeOf":"../../../../../node_modules/@babel/runtime/helpers/getPrototypeOf.js","./setPrototypeOf":"../../../../../node_modules/@babel/runtime/helpers/setPrototypeOf.js","./isNativeFunction":"../../../../../node_modules/@babel/runtime/helpers/isNativeFunction.js","./construct":"../../../../../node_modules/@babel/runtime/helpers/construct.js"}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":[function(require,module,exports) {
 var arrayLikeToArray = require("./arrayLikeToArray");
 
 function _arrayWithoutHoles(arr) {
@@ -13572,6 +13641,7 @@ var ControlBase = {
 
     // find and retrieve selector elements
     if (this.selectors.length > 0) {
+      // @deprecated
       // const operationObj = selectorOperations.getAllValues(this.selectors);
       // this.targetElements = operationObj.elements;
       var operationObj = this.getTargetElements();
@@ -13587,10 +13657,11 @@ var ControlBase = {
         _this.assignDefaultValue();
       }
 
-      _this.subscribeToDependentControls();
-    }); // register control base instance to controls manager
+      _this.subscribeToDependentControls(); // register control base instance to controls manager
 
-    WPTB_ControlsManager.registerControlBase(this);
+
+      WPTB_ControlsManager.registerControlBase(_this);
+    });
   },
   methods: {
     calculateComponentVisibilityOnDependentControls: function calculateComponentVisibilityOnDependentControls(valueToExpect) {
@@ -21991,6 +22062,8 @@ var _NamedToggleItem = _interopRequireDefault(require("../components/NamedToggle
 
 var _NamedToggleActiveIndicator = _interopRequireDefault(require("../components/NamedToggleActiveIndicator"));
 
+var _ControlWrapper = _interopRequireDefault(require("../components/ControlWrapper"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //
@@ -22017,6 +22090,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var _default = {
   components: {
+    ControlWrapper: _ControlWrapper.default,
     NamedToggleActiveIndicator: _NamedToggleActiveIndicator.default,
     NamedToggleItem: _NamedToggleItem.default
   },
@@ -22115,7 +22189,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/NamedToggleItem":"components/NamedToggleItem.vue","../components/NamedToggleActiveIndicator":"components/NamedToggleActiveIndicator.vue"}],"mountPoints/WPTB_NamedToggleControl.js":[function(require,module,exports) {
+},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/NamedToggleItem":"components/NamedToggleItem.vue","../components/NamedToggleActiveIndicator":"components/NamedToggleActiveIndicator.vue","../components/ControlWrapper":"components/ControlWrapper.vue"}],"mountPoints/WPTB_NamedToggleControl.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

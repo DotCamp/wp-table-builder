@@ -62,6 +62,7 @@ const ControlBase = {
 	mounted() {
 		// find and retrieve selector elements
 		if (this.selectors.length > 0) {
+			// @deprecated
 			// const operationObj = selectorOperations.getAllValues(this.selectors);
 			// this.targetElements = operationObj.elements;
 			const operationObj = this.getTargetElements();
@@ -76,10 +77,10 @@ const ControlBase = {
 			}
 
 			this.subscribeToDependentControls();
-		});
 
-		// register control base instance to controls manager
-		WPTB_ControlsManager.registerControlBase(this);
+			// register control base instance to controls manager
+			WPTB_ControlsManager.registerControlBase(this);
+		});
 	},
 	methods: {
 		calculateComponentVisibilityOnDependentControls(valueToExpect) {
