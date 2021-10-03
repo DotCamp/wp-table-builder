@@ -57,6 +57,7 @@
     "wptbPluginsWin": true,
     "ElementSubscriber": true,
     "CellObject": true,
+    "ProxyArray": true,
     "TableObject": true
   }
 }

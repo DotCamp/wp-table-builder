@@ -1,4 +1,6 @@
 import deepmerge from 'deepmerge';
+import ValueUpdateQue from './ValueUpdateQue';
+import ProxyArray from './ProxyArray';
 
 /**
  * Controls manager for builder element's control options
@@ -19,7 +21,14 @@ function ControlsManager() {
 	 * Registered control bases array.
 	 * This array will hold all active controls available at the moment.
 	 */
-	const controlBases = [];
+	const controlBases = new ProxyArray();
+
+	/**
+	 * ValueUpdateQue instance.
+	 *
+	 * @type {ValueUpdateQue}
+	 */
+	const valueUpdateQue = new ValueUpdateQue(controlBases);
 
 	/**
 	 * Subscribers for element controls.
@@ -420,8 +429,7 @@ function ControlsManager() {
 	 * @param {any} value control value
 	 */
 	function updateControlValue(elementId, controlId, value) {
-		// TODO [erdembircan] remove for production
-		console.log('update control value: ', elementId, controlId);
+		valueUpdateQue.addToUpdateQue(elementId, controlId, value);
 	}
 
 	/**

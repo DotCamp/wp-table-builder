@@ -12132,6 +12132,162 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 module.exports = deepmerge_1;
+},{}],"functions/ValueUpdateQue.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Value update que handler.
+ *
+ * @param {ProxyArray} controlBases control bases array. Always make sure this array is supplied as a reference.
+ * @class
+ */
+function ValueUpdateQue(controlBases) {
+  /**
+   * Add value update operation to que.
+   *
+   * @param {string} elementId element control id
+   * @param {string} controlId element control id
+   * @param {any} value control value
+   */
+  this.addToUpdateQue = function (elementId, controlId, value) {};
+}
+/**
+ * @module ValueUpdateQue
+ */
+
+
+var _default = ValueUpdateQue;
+exports.default = _default;
+},{}],"functions/ProxyArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Proxy array which you can hook into changes.
+ *
+ * @param {Array} defaultArray default array to use as base
+ * @class
+ */
+function ProxyArray() {
+  var defaultArray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  // supported module events
+  var supportedEvents = ['set']; // events waiting at que, keys for event name, values are array of handler functions assigned to it
+
+  var eventQue = {};
+  /**
+   * Internal logic for adding events.
+   *
+   * @private
+   *
+   * @param {string} eventName event name
+   * @param {Function} handler event handler
+   */
+
+  var addToEventQue = function addToEventQue(eventName, handler) {
+    if (typeof handler === 'function') {
+      if (supportedEvents.includes(eventName)) {
+        if (!Object.prototype.hasOwnProperty.call(eventQue, eventName)) {
+          eventQue[eventName] = [];
+        }
+
+        eventQue[eventName].push(handler);
+      } else {
+        throw new Error("[ProxyArray]: event name of ".concat(eventName, " is not supported"));
+      }
+    } else {
+      throw new Error("[ProxyArray]: provided handler is not a function");
+    }
+  };
+  /**
+   * Call event subscribers.
+   *
+   * @param {string} eventName event name
+   * @param {any} value event value
+   */
+
+
+  var callSubscribers = function callSubscribers(eventName, value) {
+    if (Object.prototype.hasOwnProperty.call(eventQue, eventName)) {
+      eventQue[eventName].map(function (handler) {
+        handler(value);
+      });
+    }
+  };
+  /**
+   * Attach a listener to proxy array events.
+   *
+   * @public
+   *
+   * @param {string} eventName event name
+   * @param {Function} handler event handler
+   */
+
+
+  var on = function on(eventName, handler) {
+    addToEventQue(eventName, handler);
+  };
+  /**
+   * Remove a listener from module events.
+   *
+   * @public
+   *
+   * @param {string} eventName event name
+   * @param {Function} handler event handler
+   */
+
+
+  var removeListener = function removeListener(eventName, handler) {
+    if (supportedEvents.includes(eventName)) {
+      if (Object.prototype.hasOwnProperty.call(eventQue, eventName)) {
+        var handlerIndex = eventQue[eventName].indexOf(handler);
+
+        if (handlerIndex >= 0) {
+          eventQue[eventName].splice(handlerIndex, 1);
+        }
+      }
+    }
+  }; // initialize proxy
+
+
+  var proxy = new Proxy(defaultArray, {
+    set: function set(target, property, value, receiver) {
+      var setStatus = Reflect.set(target, property, value, receiver);
+      callSubscribers('set', value);
+      return setStatus;
+    }
+  }); // define 'on' property for proxy
+
+  Object.defineProperty(proxy, 'on', {
+    configurable: false,
+    enumerable: false,
+    value: on,
+    writable: false
+  }); // define 'removeListener' property for proxy
+
+  Object.defineProperty(proxy, 'removeListener', {
+    configurable: false,
+    enumerable: false,
+    value: removeListener,
+    writable: false
+  });
+  return proxy;
+}
+/**
+ * @module ProxyArray
+ */
+
+
+var _default = ProxyArray;
+exports.default = _default;
 },{}],"functions/WPTB_ControlsManager.js":[function(require,module,exports) {
 "use strict";
 
@@ -12143,6 +12299,10 @@ exports.default = void 0;
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _ValueUpdateQue = _interopRequireDefault(require("./ValueUpdateQue"));
+
+var _ProxyArray = _interopRequireDefault(require("./ProxyArray"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12171,7 +12331,14 @@ function ControlsManager() {
    * This array will hold all active controls available at the moment.
    */
 
-  var controlBases = [];
+  var controlBases = new _ProxyArray.default();
+  /**
+   * ValueUpdateQue instance.
+   *
+   * @type {ValueUpdateQue}
+   */
+
+  var valueUpdateQue = new _ValueUpdateQue.default(controlBases);
   /**
    * Subscribers for element controls.
    *
@@ -12618,8 +12785,7 @@ function ControlsManager() {
 
 
   function updateControlValue(elementId, controlId, value) {
-    // TODO [erdembircan] remove for production
-    console.log('update control value: ', elementId, controlId);
+    valueUpdateQue.addToUpdateQue(elementId, controlId, value);
   }
   /**
    * Register a control base instance.
@@ -12697,7 +12863,7 @@ function ControlsManager() {
 var _default = ControlsManager();
 
 exports.default = _default;
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"components/IntersectionObserver.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./ValueUpdateQue":"functions/ValueUpdateQue.js","./ProxyArray":"functions/ProxyArray.js"}],"components/IntersectionObserver.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
