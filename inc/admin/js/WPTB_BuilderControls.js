@@ -12166,6 +12166,11 @@ function ControlsManager() {
     settings: {}
   };
   var subscribers = [];
+  /**
+   * Registered control bases array.
+   * This array will hold all active controls available at the moment.
+   */
+
   var controlBases = [];
   /**
    * Subscribers for element controls.
@@ -12612,7 +12617,10 @@ function ControlsManager() {
    */
 
 
-  function updateControlValue(elementId, controlId, value) {}
+  function updateControlValue(elementId, controlId, value) {
+    // TODO [erdembircan] remove for production
+    console.log('update control value: ', elementId, controlId);
+  }
   /**
    * Register a control base instance.
    *
@@ -12621,6 +12629,7 @@ function ControlsManager() {
 
 
   function registerControlBase(controlBaseInstance) {
+    // prevent already registered bases to end up in registered bases again
     if (!controlBases.some(function (base) {
       return base.$props.uniqueId === controlBaseInstance.$props.uniqueId;
     })) {
@@ -12633,17 +12642,22 @@ function ControlsManager() {
 
 
   function destroyControls() {
-    controlBases = controlBases.filter(function (base) {
+    var length = controlBases.length; // eslint-disable-next-line no-plusplus
+
+    for (var i = 0; i < length; i++) {
+      var base = controlBases[i];
       var elemContainer = base.$root.$data.elemContainer;
 
       if (!elemContainer.includes('wptb-element-main-table') && elemContainer !== '') {
         base.$root.$destroy();
-        return false;
-      }
+        controlBases.splice(i, 1); // modify `for` loop variables
 
-      return true;
-    });
-  }
+        i -= 1;
+        length = controlBases.length;
+      }
+    }
+  } // TODO [erdembircan] remove for production
+
 
   function getControlBases() {
     return controlBases;

@@ -111,7 +111,7 @@ function imageElementBackwardCompatibility() {
 	if (imageAnchor) {
 		const floatVal = imageAnchor.style.float;
 
-		WPTB_ControlsManager.updateControlValue(elementId, 'imageImageAlignment', floatVal);
+		WPTB_ControlsManager.updateControlValue(elementId, 'imageAlignment', floatVal);
 	}
 }
 
