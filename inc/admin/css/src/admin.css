@@ -1796,7 +1796,7 @@ table.wptb-table {
 }
 
 .wptb-image-wrapper a {
-    display: block !important;
+    display: block;
     max-width: 100%;
     position: relative;
     margin: auto;

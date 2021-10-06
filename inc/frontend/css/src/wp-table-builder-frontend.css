@@ -149,7 +149,7 @@ table.wptb-preview-table {
 }
 
 .wptb-image-wrapper a {
-    display: block !important;
+    display: block;
     max-width: 100%;
     position: relative;
     margin: auto;
@@ -711,3 +711,7 @@ table.wptb-preview-table {
 }
 
 /*sortable mode end*/
+
+.wptb-plugin-width-full {
+    width: 100% !important;
+}

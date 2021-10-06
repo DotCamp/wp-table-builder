@@ -104,6 +104,7 @@ const watchList = {
 };
 
 function controlsChange(inputs, element) {
+	// eslint-disable-next-line array-callback-return
 	Object.keys(inputs).map((input) => {
 		if (Object.prototype.hasOwnProperty.call(inputs, input)) {
 			if (Object.prototype.hasOwnProperty.call(watchList, input)) {
@@ -122,7 +123,12 @@ function imageElementBackwardCompatibility() {
 	if (imageAnchor) {
 		// compatibility update for new image alignment control
 		const floatVal = imageAnchor.style.float === 'none' ? 'center' : imageAnchor.style.float;
-		WPTB_ControlsManager.updateControlValue(elementId, 'imageAlignment', floatVal);
+
+		const imageSizeRelative = element.dataset.wptbImageSizeRelative;
+
+		if (!imageSizeRelative) {
+			WPTB_ControlsManager.updateControlValue(elementId, 'imageAlignment', floatVal);
+		}
 	}
 }
 
