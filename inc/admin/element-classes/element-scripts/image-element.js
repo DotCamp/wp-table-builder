@@ -125,7 +125,7 @@ function imageElementBackwardCompatibility() {
 
 	if (imageAnchor) {
 		// compatibility update for new image alignment control
-		const floatVal = imageAnchor.style.float === 'none' ? 'center' : imageAnchor.style.float;
+		const floatVal = (imageAnchor.style.float === 'none' ? 'center' : imageAnchor.style.float) || 'center';
 
 		const imageSizeRelative = element.dataset.wptbImageSizeRelative;
 
