@@ -5,7 +5,7 @@
 export default {
 	props: {
 		refElement: {
-			type: HTMLElement,
+			type: Node,
 			default: null,
 		},
 	},

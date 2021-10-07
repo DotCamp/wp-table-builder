@@ -1,19 +1,22 @@
 <template>
-	<range-input
-		:label="label"
-		:unique-id="uniqueId"
-		:elem-container="elemContainer"
-		:min="min"
-		:max="max"
-		:step="step"
-		v-model="elementMainValue"
-		:post-fix="postFix"
-		:clamp="true"
-	></range-input>
+	<control-wrapper :visibility="componentVisibility">
+		<range-input
+			:label="label"
+			:unique-id="uniqueId"
+			:elem-container="elemContainer"
+			:min="min"
+			:max="max"
+			:step="step"
+			v-model="elementMainValue"
+			:post-fix="postFix"
+			:clamp="true"
+		></range-input>
+	</control-wrapper>
 </template>
 <script>
 import ControlBase from '../mixins/ControlBase';
 import RangeInput from '../components/RangeInput';
+import ControlWrapper from '../components/ControlWrapper';
 
 export default {
 	props: {
@@ -43,7 +46,7 @@ export default {
 		},
 	},
 	mixins: [ControlBase],
-	components: { RangeInput },
+	components: { ControlWrapper, RangeInput },
 	mounted() {
 		this.assignDefaultValue();
 	},

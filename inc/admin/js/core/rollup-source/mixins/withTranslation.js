@@ -1,6 +1,7 @@
 /**
  * Mixin for adding easy translated strings sent from WordPress.
- * @type {{methods: {translation(*): (withTranslation.methods.strings.key|undefined)}, props: {strings: {default: (function(): []), type: ArrayConstructor}}}}
+ *
+ * @type {Object}
  */
 const withTranslation = {
 	props: {

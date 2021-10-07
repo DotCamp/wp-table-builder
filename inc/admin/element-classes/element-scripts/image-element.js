@@ -1,99 +1,140 @@
-let a = element.getElementsByTagName( 'a' );
-if( a.length > 0 ) {
-    a = a[0];
+let a = element.getElementsByTagName('a');
+if (a.length > 0) {
+	a = a[0];
 }
-a.onclick = function( e ) {
-    e.preventDefault();
+a.onclick = function (e) {
+	e.preventDefault();
 };
 
-let addMedia = function( element, imageChange = false ) {
-    let img = element.querySelector( 'img' );
+const addMedia = function (element, imageChange = false) {
+	const img = element.querySelector('img');
 
-    let src;
-    if( img && img.src ) {
-        src = img.src;
-    }
+	let src;
+	if (img && img.src) {
+		src = img.src;
+	}
 
-    file_frame = wp.media.frames.file_frame = wp.media({
-        title: 'Select a image to upload',
-        button: {
-            text: 'Use this image'
-        },
-        multiple: false,
-        frame: 'post'
-    });
+	file_frame = wp.media.frames.file_frame = wp.media({
+		title: 'Select a image to upload',
+		button: {
+			text: 'Use this image',
+		},
+		multiple: false,
+		frame: 'post',
+	});
 
-    let imageSetting = function( img, attachment ) {
-        if( ! img  ) {
-            img = document.createElement( 'img' );
-            
-            let a = element.getElementsByTagName( 'a' );
-            if( a.length > 0 ) {
-                a = a[0];
-                a.innerHTML = '';
-                
-                a.appendChild( img );
-            }
-        }
-        let imgSrc = attachment.url;
-        let linkArr = imgSrc.split( ':' ),
-            linkClean;
-        if ( Array.isArray( linkArr ) && linkArr.length > 0 ) {
-            linkClean = linkArr[linkArr.length - 1];
-        }
-        img.src = linkClean;
-        img.height = attachment.height;
-        img.width = attachment.width;
-        img.style.width = '100%';
+	const imageSetting = function (img, attachment) {
+		if (!img) {
+			img = document.createElement('img');
 
-        // add image element class for easy filtering
-        img.classList.add('wptb-image-element-target');
-        
-        element.classList.remove( 'wptb-elem-placeholder' );
+			let a = element.getElementsByTagName('a');
+			if (a.length > 0) {
+				a = a[0];
+				a.innerHTML = '';
 
-        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-    };
+				a.appendChild(img);
+			}
+		}
 
-    file_frame.on( 'select', function() {
-        attachment = file_frame.state().props.toJSON();
-        imageSetting( img, attachment );
-    });
+		const imageButton = a.querySelector('.wptb-icon-image-button');
 
-    file_frame.on( 'insert', function () {
-        attachment = file_frame.state().get( 'selection' ).first().toJSON();
-        imageSetting( img, attachment );
-    });
+		// remove image button that is present when image element is empty
+		if (imageButton) {
+			a.removeChild(imageButton);
+		}
 
-    if ( src == undefined || imageChange == true ) {
-        file_frame.open();
-        file_frame.menuItemVisibility( 'gallery', 'hide' );
-        file_frame.menuItemVisibility( 'playlist', 'hide' ), 
-        file_frame.menuItemVisibility( 'video-playlist', 'hide' ), 
-        file_frame.menuItemVisibility( 'audio-playlist', 'hide' )
-    } else {
-        img.src = src;
-    } 
+		// make img tag visible
+		img.classList.remove('wptb-image-element-dummy');
+
+		const imgSrc = attachment.url;
+		const linkArr = imgSrc.split(':');
+		let linkClean;
+		if (Array.isArray(linkArr) && linkArr.length > 0) {
+			linkClean = linkArr[linkArr.length - 1];
+		}
+
+		img.height = attachment.height;
+		img.width = attachment.width;
+		img.style.width = '100%';
+		img.src = linkClean;
+
+		// add image element class for easy filtering
+		img.classList.add('wptb-image-element-target');
+
+		element.classList.remove('wptb-elem-placeholder');
+
+		const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+		wptbTableStateSaveManager.tableStateSet();
+	};
+
+	file_frame.on('select', function () {
+		attachment = file_frame.state().props.toJSON();
+		imageSetting(img, attachment);
+	});
+
+	file_frame.on('insert', function () {
+		attachment = file_frame.state().get('selection').first().toJSON();
+		imageSetting(img, attachment);
+	});
+
+	if (src == undefined || imageChange == true) {
+		file_frame.open();
+		file_frame.menuItemVisibility('gallery', 'hide');
+		file_frame.menuItemVisibility('playlist', 'hide'),
+			file_frame.menuItemVisibility('video-playlist', 'hide'),
+			file_frame.menuItemVisibility('audio-playlist', 'hide');
+	} else {
+		img.src = src;
+	}
+};
+
+const iconImageButton = element.querySelector('.wptb-icon-image-button');
+if (iconImageButton) {
+	iconImageButton.onclick = function () {
+		addMedia(element, true);
+	};
 }
 
-let iconImageButton = element.querySelector( '.wptb-icon-image-button' );
-if( iconImageButton ) {
-    iconImageButton.onclick = function() {
-        addMedia( element, true );
-    }
-}
-    
-if( iconImageButton && ! element.classList.contains( 'wptb-elem-placeholder' ) ) {
-    element.classList.add( 'wptb-elem-placeholder' );
-    addMedia( element );
+if (iconImageButton && !element.classList.contains('wptb-elem-placeholder')) {
+	element.classList.add('wptb-elem-placeholder');
+	addMedia(element);
 }
 
-function controlsChange( inputs, element ) {
-    if( inputs && typeof inputs === 'object' ) {
-        if( inputs.hasOwnProperty( 'imageReplaceButton' ) ) {
-            addMedia( element, true );
-        }
-    } 
+const watchList = {
+	imageReplaceButton(val, element) {
+		addMedia(element, true);
+	},
+};
+
+function controlsChange(inputs, element) {
+	// eslint-disable-next-line array-callback-return
+	Object.keys(inputs).map((input) => {
+		if (Object.prototype.hasOwnProperty.call(inputs, input)) {
+			if (Object.prototype.hasOwnProperty.call(watchList, input)) {
+				watchList[input](inputs[input].eventValue || inputs[input].targetValue, element);
+			}
+		}
+	});
 }
 
-WPTB_Helper.controlsInclude( element, controlsChange );
+/**
+ * Backward compatibility operations for tables created before.
+ */
+function imageElementBackwardCompatibility() {
+	const imageAnchor = element.querySelector('a');
+
+	if (imageAnchor) {
+		// compatibility update for new image alignment control
+		const floatVal = imageAnchor.style.float === 'none' ? 'center' : imageAnchor.style.float;
+
+		const imageSizeRelative = element.dataset.wptbImageSizeRelative;
+
+		if (!imageSizeRelative) {
+			WPTB_ControlsManager.updateControlValue(elementId, 'imageAlignment', floatVal);
+		}
+	}
+}
+
+imageElementBackwardCompatibility();
+
+WPTB_Helper.controlsInclude(element, controlsChange, true);

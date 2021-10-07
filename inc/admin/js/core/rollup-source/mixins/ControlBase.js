@@ -62,6 +62,7 @@ const ControlBase = {
 	mounted() {
 		// find and retrieve selector elements
 		if (this.selectors.length > 0) {
+			// @deprecated
 			// const operationObj = selectorOperations.getAllValues(this.selectors);
 			// this.targetElements = operationObj.elements;
 			const operationObj = this.getTargetElements();
@@ -74,9 +75,35 @@ const ControlBase = {
 			if (this.assignDefaultValueAtMount) {
 				this.assignDefaultValue();
 			}
+
+			this.subscribeToDependentControls();
+
+			// register control base instance to controls manager
+			WPTB_ControlsManager.registerControlBase(this);
 		});
 	},
 	methods: {
+		calculateComponentVisibilityOnDependentControls(valueToExpect) {
+			return (controlId, value) => {
+				this.componentVisibility = valueToExpect === value;
+			};
+		},
+		subscribeToDependentControls() {
+			if (this.$root.$data.dependsOnElementControl) {
+				const dependsData = this.$root.$data.dependsOnElementControl;
+				// eslint-disable-next-line array-callback-return
+				Object.keys(dependsData).map((controlId) => {
+					if (Object.prototype.hasOwnProperty.call(dependsData, controlId)) {
+						WPTB_ControlsManager.subscribeToElementControl(
+							this.uniqueId,
+							this.$root.$data.elemContainer,
+							controlId,
+							this.calculateComponentVisibilityOnDependentControls(dependsData[controlId])
+						);
+					}
+				});
+			}
+		},
 		calculateComponentVisibility() {
 			// eslint-disable-next-line array-callback-return,consistent-return
 			this.componentVisibility = Object.keys(this.appearDependOnControl).every((controlName) => {
@@ -86,11 +113,13 @@ const ControlBase = {
 					}
 					return false;
 				}
+
+				return false;
 			});
 		},
 		getInputLoadedValues() {
 			const leftPanel = document.querySelector('.wptb-panel-left');
-			const allInputs = Array.from(leftPanel.querySelectorAll('input'));
+			const allInputs = Array.from(leftPanel.querySelectorAll('.wptb-element-property'));
 
 			// eslint-disable-next-line array-callback-return
 			allInputs.map((input) => {
@@ -124,7 +153,7 @@ const ControlBase = {
 		/**
 		 * Get target elements of the selector.
 		 *
-		 * @return {null|Object}} null if no selector is defined or operation object
+		 * @return {null|Object} null if no selector is defined or operation object
 		 */
 		getTargetElements() {
 			if (this.selectors.length > 0) {
@@ -149,6 +178,21 @@ const ControlBase = {
 					});
 				});
 			});
+
+			if (this.uniqueId && this.$root.$data.elemContainer) {
+				const parsedControlId = this.uniqueId.match(/^(?<elementId>.+)-(?<controlId>.+)$/);
+
+				if (parsedControlId) {
+					const { controlId } = parsedControlId.groups;
+					if (controlId) {
+						WPTB_Helper.wptbDocumentEventGenerate('wptb-element-control:update', document, {
+							elementId: this.$root.$data.elemContainer,
+							controlId,
+							value,
+						});
+					}
+				}
+			}
 		},
 		/**
 		 * Assign startup value of default selector to the main element value.

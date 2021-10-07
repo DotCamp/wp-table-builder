@@ -127,11 +127,11 @@ class Icon_Manager {
 	 *
 	 * @return string|void return a string representation of the icon or void depending on to chose to output to buffer
 	 */
-	public function get_icon( $icon_name, $echo_to_output = false, $extension = 'svg' ) {
+	public function get_icon( $icon_name, $echo_to_output = false, $extension = 'svg', $container = null ) {
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 
 		// @deprecated
-
+//
 //		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
 //
 //		// check for filesystem credentials
@@ -145,12 +145,34 @@ class Icon_Manager {
 
 		$file_path = path_join( $this->icon_dir_path, join( '.', [ $icon_name, $extension ] ) );
 		if ( $wp_filesystem->is_file( $file_path ) ) {
-			$icon_string = $wp_filesystem->get_contents( $file_path );
+			$icon_string = $this->add_container( $wp_filesystem->get_contents( $file_path ), $container );
 			if ( $echo_to_output ) {
 				echo $icon_string;
 			} else {
 				return $icon_string;
 			}
 		}
+	}
+
+	/**
+	 * Surround given icon with supplied container.
+	 *
+	 * @param string $icon_string icon string
+	 * @param string $container container string
+	 */
+	private function add_container( $icon_string, $container = null ) {
+		$final_container = $icon_string;
+
+		$match_array = [];
+
+		$match_status = preg_match( '/^(?<container><(?<tag>\w+).*?>)/', $container, $match_array );
+
+		if ( filter_var( $match_status, FILTER_VALIDATE_BOOLEAN ) ) {
+			if ( isset( $match_array['tag'] ) ) {
+				$final_container = sprintf( '%1$s%2$s</%3$s>', $match_array['container'], $icon_string, $match_array['tag'] );
+			}
+		}
+
+		return $final_container;
 	}
 }

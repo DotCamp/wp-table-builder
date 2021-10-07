@@ -367,7 +367,9 @@ var WPTB_Helper = {
 
 			//                element.parentNode.removeChild( scriptNew );
 			if (kind in WPTB_ElementsScriptsLauncher) {
-				WPTB_ElementsScriptsLauncher[kind](element);
+				const elementIdMatch = element.getAttribute('class').match(/(wptb-element-\D+-\d+\b)/);
+				const elementId = elementIdMatch ? elementIdMatch[0] : null;
+				WPTB_ElementsScriptsLauncher[kind](element, elementId);
 			}
 		}
 	},
@@ -1213,6 +1215,9 @@ var WPTB_Helper = {
 	},
 	//
 	elementOptionsSet(kind, element, valueDependOnControl, targetControlElementClass) {
+
+		WPTB_Helper.wptbDocumentEventGenerate('element:controls:prepare', element);
+
 		// get controls config for this element
 		const wptbContrlStacksConfigId = `wptb-${kind}-control-stack`;
 		const tmplControlsConfig = wp.template(wptbContrlStacksConfigId);

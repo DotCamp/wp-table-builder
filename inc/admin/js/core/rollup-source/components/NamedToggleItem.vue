@@ -5,11 +5,14 @@
 		@click.prevent.capture="activateItem"
 		:data-wptb-named-toggle-active="active"
 	>
-		{{ title }}
+		<html-friendly-span :content="title"></html-friendly-span>
 	</div>
 </template>
 <script>
+import HtmlFriendlySpan from './HtmlFriendlySpan';
+
 export default {
+	components: { HtmlFriendlySpan },
 	props: {
 		title: {
 			type: String,

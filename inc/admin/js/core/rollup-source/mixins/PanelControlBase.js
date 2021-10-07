@@ -21,6 +21,10 @@ const PanelControlBase = {
 				return c;
 			},
 		},
+		uniqueId: {
+			type: String,
+			default: '',
+		},
 	},
 	data() {
 		return {

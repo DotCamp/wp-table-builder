@@ -49,8 +49,6 @@ class Helpers {
 	 *
 	 */
 	static function wptb_get_table_preview_url( $table_id ) {
-
-
 		$url = add_query_arg(
 			array(
 				'post_type' => 'wptb-tables',
