@@ -1,9 +1,9 @@
 <template>
-	<panel2-column-template :disabled="disabled" :label="label"
-  <select :disabled="disabled" v-model="innerValue" class="wptb-element-property" :class="uniqueId">
-    <option v-for="(name, key) in options" :key="key" :value="key">{{ name | cap }}</option>
-  </select>
-  >
+	<panel2-column-template :disabled="disabled" :label="label">
+		<select :disabled="disabled" v-model="innerValue" class="wptb-element-property" :class="uniqueId">
+			<option v-for="(name, key) in options" :key="key" :value="key">{{ name | cap }}</option>
+		</select>
+	</panel2-column-template>
 </template>
 <script>
 import PanelControlBase from '$Mixins/PanelControlBase';

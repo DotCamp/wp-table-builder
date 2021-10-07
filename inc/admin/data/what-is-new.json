@@ -1,21 +1,9 @@
 {
-  "1.3.10": [
+  "1.3.11": [
     [
-      "New prebuilt tables.",
-      "new_prebuilts.png",
+      "Advanced image sizing controls.",
+      "advanced_image_size_controls.png",
       true
-    ],
-    [
-      "Search functionality for export menu table listing.",
-      "export_menu_search.png"
-    ],
-    [
-      "Disable theme styles for all tables setting.",
-      "disable_theme_styles_for_all_tables.png"
-    ],
-    [
-      "Sortable columns for table listing page.",
-      "table_listing_sortable_columns.png"
     ]
   ]
 }
