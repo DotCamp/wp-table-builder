@@ -4,6 +4,10 @@
       "Advanced image sizing controls.",
       "advanced_image_size_controls.png",
       true
+    ],
+    [
+      "JQuery removal and complete rewrite of frontend code to improve performance",
+      "jquery_removal.png"
     ]
   ]
 }

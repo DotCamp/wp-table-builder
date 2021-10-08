@@ -93,6 +93,8 @@ That's it. You're done!
 = 1.3.11 =
 
 * PRO: Advanced image size control.
+* IMPROVE: JQuery is completely removed.
+* IMPROVE: Tweaks to increase frontend performance.
 * IMPROVE: Tweaks to increase builder performance.
 * IMPROVE: HTML indicators for tables to support more operations via extra/general styling controls.
 
