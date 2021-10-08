@@ -2,12 +2,9 @@
 
 namespace WP_Table_Builder\Inc\Frontend;
 
-use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Common\Helpers;
 use function add_action;
 use function apply_filters;
-use function has_shortcode;
-use function is_a;
 use function wp_localize_script;
 
 /**
@@ -96,7 +93,7 @@ class Frontend {
 	}
 
 	public function unqueue_styles_start() {
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array( 'dashicons' ), $this->version, 'all' );
+		Helpers::enqueue_file( 'inc/frontend/css/wp-table-builder-frontend.css', [ 'dashicons' ], true, $this->plugin_name );
 	}
 
 	/**
@@ -110,7 +107,7 @@ class Frontend {
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		Helpers::enqueue_file(  'inc/frontend/js/wp-table-builder-frontend.js', [ 'jquery' ], true, $this->plugin_name );
+		Helpers::enqueue_file( 'inc/frontend/js/wp-table-builder-frontend.js', [], true, $this->plugin_name );
 
 		// prepare data for frontend script
 		$frontend_data = [];
