@@ -135,7 +135,7 @@ class Text_Element extends Element_Base {
 		);
 
 		$this->add_control(
-			'link_rel',
+			'linkRel',
 			[
 				'label' => __( 'Link Rel', 'wp_table_builder' ),
 				'type' => Controls_Manager::MULTI_CHECKBOX,

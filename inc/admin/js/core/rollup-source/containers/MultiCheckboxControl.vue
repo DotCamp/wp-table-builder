@@ -1,5 +1,5 @@
 <template>
-	<control-wrapper>
+	<control-wrapper :visibility="componentVisibility">
 		<multi-checkbox :checkboxes="checkboxes" v-model="selectedValues" :label="label"></multi-checkbox>
 	</control-wrapper>
 </template>

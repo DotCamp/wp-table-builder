@@ -40,14 +40,18 @@ class Control_Multi_Checkbox extends Base_Control {
 	 */
 	public function content_template() {
 		?>
-		<#
-		const uniqueItemClass = data.elementControlTargetUnicClass;
-		WPTB_ControlsManager.setControlData(uniqueItemClass, data);
-		const elemContainer = data.elemContainer;
-		#>
-		<div id="{{{uniqueItemClass}}}">
-            <multi-checkbox-control :checkboxes="checkboxes" :label="label"></multi-checkbox-control>
-		</div>
+        <#
+        const uniqueItemClass = data.elementControlTargetUnicClass;
+        WPTB_ControlsManager.setControlData(uniqueItemClass, data);
+        const elemContainer = data.elemContainer;
+        #>
+        <div id="{{{uniqueItemClass}}}">
+            <multi-checkbox-control :checkboxes="checkboxes" :label="label"
+
+                                    elem-container="{{{elemContainer}}}"
+                                    unique-id="{{{uniqueItemClass}}}"
+            ></multi-checkbox-control>
+        </div>
         <wptb-template-script>
             WPTB_ControlsManager.callControlScript('ControlMultiCheckbox', '{{{uniqueItemClass}}}');
         </wptb-template-script>

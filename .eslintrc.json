@@ -60,7 +60,7 @@
     "TableObject": true,
     "HTMLTableDataCellElement": true,
     "ElementSubscriber": true,
-    "ProxyArray": true
+    "ProxyArray": true,
     "tinyMCE": true
   }
 }

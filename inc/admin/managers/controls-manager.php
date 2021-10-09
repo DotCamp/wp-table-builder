@@ -248,8 +248,8 @@ class Controls_Manager {
 			self::DIFFERENT_BORDER,
 			self::LOCAL_DEV,
 			self::EXTRA_STYLES,
-			self::MULTI_CHECKBOX
-			self::SIZE2,
+			self::MULTI_CHECKBOX,
+			self::SIZE2
 		];
 	}
 

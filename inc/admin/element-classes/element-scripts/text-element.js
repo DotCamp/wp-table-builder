@@ -80,15 +80,23 @@ const tinyMceInitStart = function () {
 			window.currentEditor = editor;
 
 			editor.on('NodeChange', (e) => {
+				let multipleRelControlVisibility = false;
 				if (
 					e.element.nodeName.toLowerCase() === 'a' ||
 					e.parents.some((parent) => {
 						return parent.nodeName.toLowerCase() === 'a';
 					})
 				) {
-					// TODO [erdembircan] remove for production
-					console.log('link found');
+					multipleRelControlVisibility = true;
 				}
+
+				// update rel control visibility based on if there is an anchor element present inside text element
+				WPTB_ControlsManager.updateControlValue(
+					elementId,
+					'linkRel',
+					multipleRelControlVisibility,
+					'componentVisibility'
+				);
 			});
 
 			editor.on('focus', function (e) {

@@ -1,6 +1,6 @@
 import deepmerge from 'deepmerge';
-import ValueUpdateQue from './ValueUpdateQue';
-import ProxyArray from './ProxyArray';
+import ValueUpdateQue from '$Functions/ValueUpdateQue';
+import ProxyArray from '$Functions/ProxyArray';
 
 /**
  * Controls manager for builder element's control options
@@ -427,9 +427,10 @@ function ControlsManager() {
 	 * @param {string} elementId element control id
 	 * @param {string} controlId element control id
 	 * @param {any} value control value
+	 * @param {string} property property name to update
 	 */
-	function updateControlValue(elementId, controlId, value) {
-		valueUpdateQue.addToUpdateQue(elementId, controlId, value);
+	function updateControlValue(elementId, controlId, value, property) {
+		valueUpdateQue.addToUpdateQue(elementId, controlId, value, property);
 	}
 
 	/**
