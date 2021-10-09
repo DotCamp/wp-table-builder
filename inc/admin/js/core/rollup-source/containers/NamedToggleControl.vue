@@ -57,7 +57,7 @@ export default {
 	},
 	watch: {
 		elementMainValue(n) {
-			this.basicValueUpdate(n);
+			this.basicValueUpdate(n, true);
 		},
 	},
 	methods: {

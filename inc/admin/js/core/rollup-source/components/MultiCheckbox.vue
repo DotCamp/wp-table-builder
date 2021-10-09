@@ -49,8 +49,19 @@ export default {
 		});
 	},
 	watch: {
-		selectedValues(n) {
-			this.$emit('valueChanged', n);
+		selectedValues: {
+			handler(n, o) {
+				if (JSON.stringify(n) !== JSON.stringify(o)) {
+					this.$emit('valueChanged', n);
+				}
+			},
+			deep: true,
+		},
+		values: {
+			handler(n) {
+				this.selectedValues = [...n];
+			},
+			deep: true,
 		},
 	},
 };

@@ -21,7 +21,25 @@ export default {
 	data() {
 		return {
 			selectedValues: [],
+			assignDefaultValueAtMount: true,
 		};
+	},
+	watch: {
+		selectedValues: {
+			handler(n) {
+				this.elementMainValue = n.join(' ');
+			},
+			deep: true,
+		},
+	},
+	methods: {
+		processElementMainValue(val) {
+			if (val) {
+				this.selectedValues = val.trim === '' ? [] : val.split(' ');
+
+				this.basicValueUpdate(val, true);
+			}
+		},
 	},
 };
 </script>

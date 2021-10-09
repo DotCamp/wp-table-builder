@@ -13641,6 +13641,9 @@ var ControlBase = {
         this.calculateComponentVisibility();
       },
       deep: true
+    },
+    elementMainValue: function elementMainValue(n) {
+      this.processElementMainValue(n);
     }
   },
   mounted: function mounted() {
@@ -13652,7 +13655,7 @@ var ControlBase = {
       // const operationObj = selectorOperations.getAllValues(this.selectors);
       // this.targetElements = operationObj.elements;
       var operationObj = this.getTargetElements();
-      this.startupValue = operationObj.startupValue;
+      this.startupValue = operationObj === null || operationObj === void 0 ? void 0 : operationObj.startupValue;
     }
 
     this.$nextTick(function () {
@@ -13753,10 +13756,15 @@ var ControlBase = {
      */
     getTargetElements: function getTargetElements() {
       if (this.selectors.length > 0) {
-        var operationObj = _selector.default.getAllValues(this.selectors);
+        try {
+          var operationObj = _selector.default.getAllValues(this.selectors);
 
-        this.targetElements = operationObj.elements;
-        return operationObj;
+          this.targetElements = operationObj.elements;
+          return operationObj;
+        } catch (e) {
+          // in case operation target not ready on mount
+          return null;
+        }
       }
 
       return null;
@@ -13871,6 +13879,9 @@ var ControlBase = {
       this.setAllValues(val);
       this.generateChangeEvent(val);
       this.setTableDirty(checkMountedState);
+    },
+    // eslint-disable-next-line no-unused-vars
+    processElementMainValue: function processElementMainValue(val) {// override this method with processes to be called on element main value changes
     }
   }
 };
@@ -22429,7 +22440,7 @@ var _default = {
   },
   watch: {
     elementMainValue: function elementMainValue(n) {
-      this.basicValueUpdate(n);
+      this.basicValueUpdate(n, true);
     }
   },
   methods: {
@@ -43641,8 +43652,19 @@ var _default = {
     });
   },
   watch: {
-    selectedValues: function selectedValues(n) {
-      this.$emit('valueChanged', n);
+    selectedValues: {
+      handler: function handler(n, o) {
+        if (JSON.stringify(n) !== JSON.stringify(o)) {
+          this.$emit('valueChanged', n);
+        }
+      },
+      deep: true
+    },
+    values: {
+      handler: function handler(n) {
+        this.selectedValues = (0, _toConsumableArray2.default)(n);
+      },
+      deep: true
     }
   }
 };
@@ -43774,8 +43796,25 @@ var _default = {
   mixins: [_ControlBase.default],
   data: function data() {
     return {
-      selectedValues: []
+      selectedValues: [],
+      assignDefaultValueAtMount: true
     };
+  },
+  watch: {
+    selectedValues: {
+      handler: function handler(n) {
+        this.elementMainValue = n.join(' ');
+      },
+      deep: true
+    }
+  },
+  methods: {
+    processElementMainValue: function processElementMainValue(val) {
+      if (val) {
+        this.selectedValues = val.trim === '' ? [] : val.split(' ');
+        this.basicValueUpdate(val, true);
+      }
+    }
   }
 };
 exports.default = _default;

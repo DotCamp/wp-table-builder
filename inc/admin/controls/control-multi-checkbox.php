@@ -47,7 +47,7 @@ class Control_Multi_Checkbox extends Base_Control {
         #>
         <div id="{{{uniqueItemClass}}}">
             <multi-checkbox-control :checkboxes="checkboxes" :label="label"
-
+                                    :selectors="selectors"
                                     elem-container="{{{elemContainer}}}"
                                     unique-id="{{{uniqueItemClass}}}"
             ></multi-checkbox-control>

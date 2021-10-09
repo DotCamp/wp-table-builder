@@ -12,12 +12,6 @@ const tinyMceInitStart = function () {
 		fixed_toolbar_container: '#wpcd_fixed_toolbar',
 		paste_as_text: true,
 		toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-		rel_list: [
-			{ title: 'None', value: '' },
-			{ title: 'nofollow', value: 'nofollow' },
-			{ title: 'noreferrer', value: 'noreferrer' },
-			{ title: 'sponsored', value: 'sponsored' },
-		],
 		convert_urls: false,
 		setup(ed) {
 			ed.on('change', function () {

@@ -58,6 +58,9 @@ const ControlBase = {
 			},
 			deep: true,
 		},
+		elementMainValue(n) {
+			this.processElementMainValue(n);
+		},
 	},
 	mounted() {
 		// find and retrieve selector elements
@@ -66,7 +69,7 @@ const ControlBase = {
 			// const operationObj = selectorOperations.getAllValues(this.selectors);
 			// this.targetElements = operationObj.elements;
 			const operationObj = this.getTargetElements();
-			this.startupValue = operationObj.startupValue;
+			this.startupValue = operationObj?.startupValue;
 		}
 
 		this.$nextTick(() => {
@@ -157,9 +160,14 @@ const ControlBase = {
 		 */
 		getTargetElements() {
 			if (this.selectors.length > 0) {
-				const operationObj = selectorOperations.getAllValues(this.selectors);
-				this.targetElements = operationObj.elements;
-				return operationObj;
+				try {
+					const operationObj = selectorOperations.getAllValues(this.selectors);
+					this.targetElements = operationObj.elements;
+					return operationObj;
+				} catch (e) {
+					// in case operation target not ready on mount
+					return null;
+				}
 			}
 			return null;
 		},
@@ -260,6 +268,10 @@ const ControlBase = {
 			this.setAllValues(val);
 			this.generateChangeEvent(val);
 			this.setTableDirty(checkMountedState);
+		},
+		// eslint-disable-next-line no-unused-vars
+		processElementMainValue(val) {
+			// override this method with processes to be called on element main value changes
 		},
 	},
 };

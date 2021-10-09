@@ -1213,8 +1213,10 @@ var WPTB_Helper = {
 			}
 		}
 	},
-	//
+	activeElement : null,
 	elementOptionsSet(kind, element, valueDependOnControl, targetControlElementClass) {
+	// TODO [erdembircan] remove for production
+	console.log(element);
 
 		WPTB_Helper.wptbDocumentEventGenerate('element:controls:prepare', element);
 

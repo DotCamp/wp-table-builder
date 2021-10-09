@@ -143,12 +143,19 @@ class Text_Element extends Element_Base {
                         'sponsored' => 'sponsored',
                         'nofollow' => 'nofollow',
                         'noreferrer' => 'noreferrer',
-                ]
+                ],
+				'selectors' => [
+					[
+						'query' => '{{{data.container}}} a',
+						'type' => Controls_Manager::ATTRIBUTE,
+                        'key' => 'rel'
+					]
+				],
 			]
 		);
 	}
-    
-    /**
+
+	/**
 	 * Render text editor element output in the editor.
 	 *
 	 * Written as a wp js template and used to generate the live preview.
