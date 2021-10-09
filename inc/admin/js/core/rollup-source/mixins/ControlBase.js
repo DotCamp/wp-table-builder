@@ -232,6 +232,10 @@ const ControlBase = {
 		 * @param {any} value value to be assigned to all selector objects
 		 */
 		setAllValues(value) {
+			// get target elements if no target elements again in case those targets are not present at the time control is mounted
+			if (this.targetElements.length === 0) {
+				this.getTargetElements();
+			}
 			selectorOperations.setAllValues(this.targetElements, value);
 		},
 
