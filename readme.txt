@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.3.11 =
 
 * PRO: Advanced image size control.
+* NEW: Multiple selection rel attributes for text links.
 * IMPROVE: JQuery is completely removed from frontend.
 * IMPROVE: Tweaks to increase frontend performance.
 * IMPROVE: Tweaks to increase builder performance.

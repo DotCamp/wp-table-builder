@@ -1,5 +1,5 @@
 {
-  "1.3.11": [
+  "1.3.11-dev": [
     [
       "Advanced image sizing controls.",
       "advanced_image_size_controls.png",
@@ -8,6 +8,10 @@
     [
       "JQuery removal and complete rewrite of frontend code to improve performance",
       "jquery_removal.png"
+    ],
+    [
+      "Multiple selection text element link rel attributes",
+      "text_element_link_rel_control.png"
     ]
   ]
 }
