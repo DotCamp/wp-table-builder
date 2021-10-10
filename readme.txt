@@ -98,6 +98,7 @@ That's it. You're done!
 * IMPROVE: Tweaks to increase frontend performance.
 * IMPROVE: Tweaks to increase builder performance.
 * IMPROVE: HTML indicators for tables to support more operations via extra/general styling controls.
+* FIX: A bug affecting pro scripts not being loaded on frontend on some WordPress installations.
 
 = 1.3.10 =
 
