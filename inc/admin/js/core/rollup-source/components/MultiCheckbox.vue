@@ -4,9 +4,20 @@
 			{{ label }}
 		</div>
 		<div class="wptb-settings-row wptb-settings-middle-xs">
-			<div class="wptb-settings-checkbox-row" v-for="(label, key) in checkboxes" :key="key">
+			<div
+				class="wptb-settings-checkbox-row"
+				:data-wptb-checked="isChecked(key)"
+				v-for="(label, key) in checkboxes"
+				:key="key"
+			>
 				<div>
-					<input :id="key" type="checkbox" :value="key" v-model="selectedValues" />
+					<input
+						class="wptb-multi-checkbox-item"
+						:id="key"
+						type="checkbox"
+						:value="key"
+						v-model="selectedValues"
+					/>
 				</div>
 				<label :for="key">{{ label }}</label>
 			</div>
@@ -62,6 +73,11 @@ export default {
 				this.selectedValues = [...n];
 			},
 			deep: true,
+		},
+	},
+	methods: {
+		isChecked(key) {
+			return this.selectedValues.includes(key);
 		},
 	},
 };

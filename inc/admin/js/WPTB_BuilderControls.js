@@ -43619,6 +43619,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     label: {
@@ -43671,6 +43682,11 @@ var _default = {
       },
       deep: true
     }
+  },
+  methods: {
+    isChecked: function isChecked(key) {
+      return this.selectedValues.includes(key);
+    }
   }
 };
 exports.default = _default;
@@ -43702,7 +43718,11 @@ exports.default = _default;
       _vm._l(_vm.checkboxes, function(label, key) {
         return _c(
           "div",
-          { key: key, staticClass: "wptb-settings-checkbox-row" },
+          {
+            key: key,
+            staticClass: "wptb-settings-checkbox-row",
+            attrs: { "data-wptb-checked": _vm.isChecked(key) }
+          },
           [
             _c("div", [
               _c("input", {
@@ -43714,6 +43734,7 @@ exports.default = _default;
                     expression: "selectedValues"
                   }
                 ],
+                staticClass: "wptb-multi-checkbox-item",
                 attrs: { id: key, type: "checkbox" },
                 domProps: {
                   value: key,

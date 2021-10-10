@@ -7094,3 +7094,15 @@ label.wptb-control-row {
 .wptb-svg-14px svg {
     width: 14px;
 }
+
+/*region multi checkbox control*/
+.wptb-multi-checkbox-wrapper .wptb-settings-checkbox-row label {
+    transition: all 0.2s ease-out;
+}
+
+.wptb-multi-checkbox-wrapper .wptb-settings-checkbox-row[data-wptb-checked="true"] label {
+    /*font-weight: bold;*/
+    color: var(--wptb-plugin-logo-color);
+}
+
+/*endregion*/
