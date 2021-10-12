@@ -1215,10 +1215,16 @@ var WPTB_Helper = {
 	},
 	activeElement: null,
 	elementOptionsSet(kind, element, valueDependOnControl, targetControlElementClass) {
-		const elementIdClass = element.getAttribute('class').match(/(?<elementId>wptb-element-.+-\d+)/);
+		const elementIdClassMatch = element.getAttribute('class').match(/(?<elementId>wptb-element-.+-\d+)/);
+		const id = element.getAttribute('id');
 
-		if (this.activeElement !== elementIdClass.groups.elementId) {
-			this.activeElement = elementIdClass.groups.elementId;
+		const elementIdClass = elementIdClassMatch ? elementIdClassMatch.groups.elementId : null;
+
+		// use class match or id of target element for option set identification
+		const decisiveAttr = elementIdClass || id || null;
+
+		if (decisiveAttr && this.activeElement !== decisiveAttr) {
+			this.activeElement = decisiveAttr;
 
 			WPTB_Helper.wptbDocumentEventGenerate('element:controls:prepare', element);
 
