@@ -64,9 +64,9 @@ export default {
 				this.cloneInner = false;
 			}
 		},
-		tableDirectives(n) {
+		tableDirectives(n, o) {
 			if (n) {
-				this.addDirectivesToTable(n);
+				this.addDirectivesToTable(n, o);
 			}
 		},
 		'appOptions.identifyCells': {
@@ -126,8 +126,9 @@ export default {
 		 * Add directives to dataset of cloned table and main table.
 		 *
 		 * @param {string} n new directives
+		 * @param {string} o old directives
 		 */
-		addDirectivesToTable(n) {
+		addDirectivesToTable(n, o) {
 			if (this.clonedTable && this.mainTable) {
 				// add directives to clone
 				this.clonedTable.dataset[this.tableDirectiveDatasetId] = n;
@@ -135,8 +136,10 @@ export default {
 				// add directives to main table
 				this.mainTable.dataset[this.tableDirectiveDatasetId] = n;
 
+				const isChanged = o ? n !== o : false;
+
 				// emit an event signalling end of directive copy operation
-				this.$emit('directivesCopied', this.tableHaveDirectives);
+				this.$emit('directivesCopied', isChanged);
 
 				this.tableHaveDirectives = false;
 			}

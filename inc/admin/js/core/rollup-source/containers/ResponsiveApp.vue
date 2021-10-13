@@ -276,12 +276,12 @@ export default {
 			});
 		},
 		// handler for event that signals end of directive copy operation to table on DOM
-		directivesCopied(mainTableHaveDirectives) {
+		directivesCopied(directivesChanged) {
 			// rebuilt table according to its responsive directives
 			this.responsiveFrontend.rebuildTables(this.appOptions.currentSize);
 
 			// if main table have directives, it means that we are using them, so it is unnecessary to fire up save event for the table
-			if (!mainTableHaveDirectives) {
+			if (directivesChanged) {
 				new WPTB_TableStateSaveManager().tableStateSet();
 			}
 
