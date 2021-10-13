@@ -106,18 +106,11 @@ class Image_Element extends Element_Base {
 			]
 		);
 
-		$icon_manager = NS\Inc\Core\Init::instance()->get_icon_manager();
-
 		$this->add_control(
 			'imageAlignment',
 			[
 				'label'        => __( 'Image Alignment', 'wp_table_builder' ),
-				'type'         => Controls_Manager::NAMED_TOGGLE,
-				'items'        => [
-					'left'   => $icon_manager->get_icon( 'align-left', false, 'svg', '<span class="wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-svg-14px wptb-svg-inherit-color"></span>' ),
-					'center' => $icon_manager->get_icon( 'align-center', false, 'svg', '<span class="wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-svg-14px wptb-svg-inherit-color"></span>' ),
-					'right'  => $icon_manager->get_icon( 'align-right', false, 'svg', '<span class="wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-svg-14px wptb-svg-inherit-color"></span>' ),
-				],
+				'type'         => Controls_Manager::ALIGNMENT2,
 				'selectors'    => [
 					[
 						'query' => '{{{data.container}}}',

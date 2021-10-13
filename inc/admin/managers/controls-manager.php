@@ -185,6 +185,11 @@ class Controls_Manager {
 	 */
 	const MULTI_CHECKBOX = 'multi_checkbox';
 
+	/**
+	 * Adding improved alignment control.
+	 */
+	const ALIGNMENT2 = 'alignment2';
+
 	// Control elements query types
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
@@ -249,7 +254,8 @@ class Controls_Manager {
 			self::LOCAL_DEV,
 			self::EXTRA_STYLES,
 			self::MULTI_CHECKBOX,
-			self::SIZE2
+			self::SIZE2,
+			self::ALIGNMENT2,
 		];
 	}
 
