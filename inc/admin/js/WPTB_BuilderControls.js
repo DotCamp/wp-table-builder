@@ -15073,7 +15073,36 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js"}],"containers/RangeControl.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js"}],"mixins/ControlBaseBasicImplementation.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Basic implementation of control base for simple use cases.
+ *
+ * @type {Object}
+ */
+var ControlBaseBasicImplementation = {
+  mounted: function mounted() {
+    this.assignDefaultValue();
+  },
+  watch: {
+    elementMainValue: function elementMainValue(n) {
+      this.basicValueUpdate(n, true);
+    }
+  }
+};
+/**
+ * @module ControlBaseBasicImplementation
+ */
+
+var _default = ControlBaseBasicImplementation;
+exports.default = _default;
+},{}],"containers/RangeControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15086,6 +15115,8 @@ var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
 var _RangeInput = _interopRequireDefault(require("../components/RangeInput"));
 
 var _ControlWrapper = _interopRequireDefault(require("../components/ControlWrapper"));
+
+var _ControlBaseBasicImplementation = _interopRequireDefault(require("$Mixins/ControlBaseBasicImplementation"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15131,18 +15162,10 @@ var _default = {
       default: ''
     }
   },
-  mixins: [_ControlBase.default],
+  mixins: [_ControlBase.default, _ControlBaseBasicImplementation.default],
   components: {
     ControlWrapper: _ControlWrapper.default,
     RangeInput: _RangeInput.default
-  },
-  mounted: function mounted() {
-    this.assignDefaultValue();
-  },
-  watch: {
-    elementMainValue: function elementMainValue(n) {
-      this.basicValueUpdate(n, true);
-    }
   }
 };
 exports.default = _default;
@@ -15197,7 +15220,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/RangeInput":"components/RangeInput.vue","../components/ControlWrapper":"components/ControlWrapper.vue"}],"mountPoints/WPTB_RangeControl.js":[function(require,module,exports) {
+},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/RangeInput":"components/RangeInput.vue","../components/ControlWrapper":"components/ControlWrapper.vue","$Mixins/ControlBaseBasicImplementation":"mixins/ControlBaseBasicImplementation.js"}],"mountPoints/WPTB_RangeControl.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44674,7 +44697,129 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/Size2Control":"containers/Size2Control.vue","../plugins/filters":"plugins/filters.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/Size2Control":"containers/Size2Control.vue","../plugins/filters":"plugins/filters.js"}],"containers/ColorPaletteControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ControlBase = _interopRequireDefault(require("$Mixins/ControlBase"));
+
+var _ControlWrapper = _interopRequireDefault(require("$Components/ControlWrapper"));
+
+var _ColorPicker = _interopRequireDefault(require("$Components/ColorPicker"));
+
+var _ControlBaseBasicImplementation = _interopRequireDefault(require("$Mixins/ControlBaseBasicImplementation"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  mixins: [_ControlBase.default, _ControlBaseBasicImplementation.default],
+  components: {
+    ColorPicker: _ColorPicker.default,
+    ControlWrapper: _ControlWrapper.default
+  }
+};
+exports.default = _default;
+        var $24e6c4 = exports.default || module.exports;
+      
+      if (typeof $24e6c4 === 'function') {
+        $24e6c4 = $24e6c4.options;
+      }
+    
+        /* template */
+        Object.assign($24e6c4, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "control-wrapper",
+    {
+      attrs: {
+        "compatibility-mode": true,
+        visibility: _vm.componentVisibility,
+        "elem-container": _vm.elemContainer,
+        "main-value": _vm.elementMainValue,
+        "unique-id": _vm.uniqueId
+      }
+    },
+    [
+      _c("color-picker", {
+        attrs: { label: _vm.label },
+        model: {
+          value: _vm.elementMainValue,
+          callback: function($$v) {
+            _vm.elementMainValue = $$v
+          },
+          expression: "elementMainValue"
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$Mixins/ControlBase":"mixins/ControlBase.js","$Components/ControlWrapper":"components/ControlWrapper.vue","$Components/ColorPicker":"components/ColorPicker.vue","$Mixins/ControlBaseBasicImplementation":"mixins/ControlBaseBasicImplementation.js"}],"mountPoints/WPTB_ColorPaletteControl.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _ColorPaletteControl = _interopRequireDefault(require("$Containers/ColorPaletteControl"));
+
+var _WPTB_ControlsManager = _interopRequireDefault(require("$Functions/WPTB_ControlsManager"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Color Palette control.
+ */
+
+/* eslint-disable camelcase */
+var _default = {
+  name: 'ControlColorPalette',
+  handler: function colorPaletteControlJS(uniqueId) {
+    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
+
+    new _vue.default({
+      data: data,
+      components: {
+        ColorPaletteControl: _ColorPaletteControl.default
+      }
+    }).$mount("#".concat(uniqueId));
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ColorPaletteControl":"containers/ColorPaletteControl.vue","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -44716,6 +44861,8 @@ var _WPTB_MultiCheckboxControl = _interopRequireDefault(require("./mountPoints/W
 
 var _WPTB_Size2Control = _interopRequireDefault(require("./mountPoints/WPTB_Size2Control"));
 
+var _WPTB_ColorPaletteControl = _interopRequireDefault(require("./mountPoints/WPTB_ColorPaletteControl"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable camelcase */
@@ -44734,7 +44881,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default, _WPTB_ColorPaletteControl.default];
 /**
  * Register control element.
  *
@@ -44746,5 +44893,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","./mountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","./mountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","./mountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","./mountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","./mountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","./mountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","./mountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","./mountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","./mountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","./mountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","./mountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","./mountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","./mountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

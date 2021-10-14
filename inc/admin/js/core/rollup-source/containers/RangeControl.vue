@@ -17,6 +17,7 @@
 import ControlBase from '../mixins/ControlBase';
 import RangeInput from '../components/RangeInput';
 import ControlWrapper from '../components/ControlWrapper';
+import ControlBaseBasicImplementation from '$Mixins/ControlBaseBasicImplementation';
 
 export default {
 	props: {
@@ -45,15 +46,7 @@ export default {
 			default: '',
 		},
 	},
-	mixins: [ControlBase],
+	mixins: [ControlBase, ControlBaseBasicImplementation],
 	components: { ControlWrapper, RangeInput },
-	mounted() {
-		this.assignDefaultValue();
-	},
-	watch: {
-		elementMainValue(n) {
-			this.basicValueUpdate(n, true);
-		},
-	},
 };
 </script>

@@ -23,6 +23,7 @@ import WPTB_BackgroundMenu from './mountPoints/WPTB_BackgroundMenu';
 import WPTB_ExtraStylesControl from './mountPoints/WPTB_ExtraStylesControl';
 import WPTB_MultiCheckboxControl from './mountPoints/WPTB_MultiCheckboxControl';
 import WPTB_Size2Control from './mountPoints/WPTB_Size2Control';
+import WPTB_ColorPaletteControl from './mountPoints/WPTB_ColorPaletteControl';
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
@@ -54,6 +55,7 @@ const controls = [
 	WPTB_ExtraStylesControl,
 	WPTB_MultiCheckboxControl,
 	WPTB_Size2Control,
+	WPTB_ColorPaletteControl,
 ];
 
 /**

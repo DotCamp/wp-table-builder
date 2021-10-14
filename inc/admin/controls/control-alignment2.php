@@ -3,7 +3,6 @@
 namespace WP_Table_Builder\Inc\Admin\Controls;
 
 use WP_Table_Builder as NS;
-use function wp_kses_stripslashes;
 
 // if called directly, abort process
 if ( ! defined( 'WPINC' ) ) {
