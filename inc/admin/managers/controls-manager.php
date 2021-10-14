@@ -190,6 +190,11 @@ class Controls_Manager {
 	 */
 	const ALIGNMENT2 = 'alignment2';
 
+	/**
+	 * Adding color palette controls.
+	 */
+	const COLOR_PALETTE = 'color_palette';
+
 	// Control elements query types
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
@@ -256,6 +261,7 @@ class Controls_Manager {
 			self::MULTI_CHECKBOX,
 			self::SIZE2,
 			self::ALIGNMENT2,
+			self::COLOR_PALETTE,
 		];
 	}
 
