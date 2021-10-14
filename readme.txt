@@ -90,6 +90,11 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.3.12 =
+
+* FIX: An issue with styled list element alignment control not reflecting selected alignment value.
+* IMPROVE: Updates to control grouping of table elements.
+
 = 1.3.11 =
 
 * PRO: Advanced image size control.
