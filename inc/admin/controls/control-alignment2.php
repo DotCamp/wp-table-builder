@@ -20,6 +20,7 @@ if ( ! defined( 'WPINC' ) ) {
  *  label => label for control element
  *  selectors => selector array to get/set certain values to html elements
  *  defaultValue => a default value of the control
+ *  keysMaps => change default alignment key values to mapped ones
  */
 class Control_Alignment2 extends Base_Control {
 
@@ -59,6 +60,19 @@ class Control_Alignment2 extends Base_Control {
         WPTB_ControlsManager.setControlData(uniqueItemClass, data);
         const elemContainer = data.elemContainer;
         data.items = JSON.parse('<?php echo $encoded_align_options; ?>');
+
+        if(data.keyMaps){
+            data.items = Object.keys(data.items).reduce((carry, defaultKey) => {
+                if(Object.prototype.hasOwnProperty.call(data.items, defaultKey)){
+                    const finalKey = data.keyMaps[defaultKey] || defaultKey;
+
+                    carry[finalKey] = data.items[defaultKey]
+                }
+
+                return carry;
+            }, {});
+        }
+
         #>
         <div id="{{{uniqueItemClass}}}">
             <named-toggle-control :label="label" :items="items" :selectors="selectors" :default-value="defaultValue"
