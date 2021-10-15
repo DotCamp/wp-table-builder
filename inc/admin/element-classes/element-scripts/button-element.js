@@ -82,21 +82,6 @@ if (target) {
 	element.addEventListener('mouseover', tinyMceInitStart, false);
 }
 
-// function textControlsChange( inputs, element ) {
-//    if( inputs && typeof inputs === 'object' ) {
-//        if( inputs.hasOwnProperty( 'button-id' ) ) {
-//            let buttonIdValue = inputs['button-id'];
-//            let a = element.getElementsByTagName( 'a' );
-//            if( a.length > 0 ) {
-//                a = a[0];
-//                a.setAttribute( 'id', buttonIdValue );
-//            }
-//        }
-//    }
-// }
-//
-// WPTB_Helper.controlsInclude( element, textControlsChange );
-
 // for old elements which were before the change of structure of the plugin
 const infArr = element.className.match(/wptb-size-([A-Z]+)/i);
 if (infArr && Array.isArray(infArr)) {
@@ -161,6 +146,7 @@ function addHoverSupport() {
 function addIconSupport() {
 	const buttonElements = Array.from(element.querySelectorAll('.wptb-button'));
 
+	// eslint-disable-next-line array-callback-return
 	buttonElements.map((b) => {
 		if (!b.querySelector('.wptb-button-icon')) {
 			const range = document.createRange();

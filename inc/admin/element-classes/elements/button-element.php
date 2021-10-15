@@ -175,9 +175,9 @@ class Button_Element extends Element_Base {
 				],
 			'textColor'               =>
 				[
-					'label'     => __( 'Button Text Color', 'wp_table_builder' ),
-					'type'      => Controls_Manager::COLOR_PALETTE,
-					'selectors' => [
+					'label'        => __( 'Button Text Color', 'wp_table_builder' ),
+					'type'         => Controls_Manager::COLOR_PALETTE,
+					'selectors'    => [
 						[
 							'query' => '{{{data.container}}} .wptb-button-wrapper a > div',
 							'type'  => Controls_Manager::DATASET,

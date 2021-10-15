@@ -13844,7 +13844,10 @@ var ControlBase = {
         this.getTargetElements();
       }
 
-      _selector.default.setAllValues(this.targetElements, value);
+      _selector.default.setAllValues(this.targetElements, value); // empty target elements for next time if any element is invalidated or removed form DOM
+
+
+      this.targetElements.splice(0, this.targetElements.length);
     },
 
     /**

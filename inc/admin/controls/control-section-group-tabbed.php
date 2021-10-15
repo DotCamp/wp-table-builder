@@ -31,10 +31,9 @@ class Control_Section_Group_Tabbed {
 		static::add_start( $section_label, $section_id, $tab_labels, $control_call );
 
 		// add controls to related tabs
-		foreach ($section_controls as $tab => $controls){
-			static::add_controls($section_id, $tab , $controls , $control_call);
+		foreach ( $section_controls as $tab => $controls ) {
+			static::add_controls( $section_id, $tab, $controls, $control_call );
 		}
-
 	}
 
 	/**
@@ -46,25 +45,25 @@ class Control_Section_Group_Tabbed {
 	 * @param callable $control_call function to add controls to control manager instance
 	 */
 	private static function add_controls( $section_id, $tab_id, $section_controls, $control_call ) {
-		foreach($section_controls as $control_id => $control_options){
-            $control_pos = 0;
-            if( is_array( $control_options ) ) {
-                if( array_key_exists( 'control_pos', $control_options ) ) {
-                    $control_pos = $control_options['control_pos'];
-                }
-                if( array_key_exists( 'control_args', $control_options ) ) {
-                    $control_options = $control_options['control_args'];
-                }
-            }
-			call_user_func($control_call , $control_id , $control_options, $control_pos);
+		foreach ( $section_controls as $control_id => $control_options ) {
+			$control_pos = 0;
+			if ( is_array( $control_options ) ) {
+				if ( array_key_exists( 'control_pos', $control_options ) ) {
+					$control_pos = $control_options['control_pos'];
+				}
+				if ( array_key_exists( 'control_args', $control_options ) ) {
+					$control_options = $control_options['control_args'];
+				}
+			}
+			call_user_func( $control_call, $control_id, $control_options, $control_pos );
 		}
 
 		// end tab content end control
-		call_user_func($control_call, "${section_id}_${tab_id}_tab_content_end", [
-			'type'=> Controls_Manager::SECTION_GROUP_TAB_CONTENT_END,
+		call_user_func( $control_call, "${section_id}_${tab_id}_tab_content_end", [
+			'type'      => Controls_Manager::SECTION_GROUP_TAB_CONTENT_END,
 			'sectionId' => $section_id,
-			'groupId' => $tab_id,
-		]);
+			'groupId'   => $tab_id,
+		] );
 	}
 
 	/**
