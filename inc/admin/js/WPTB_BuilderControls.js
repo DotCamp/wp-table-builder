@@ -13301,11 +13301,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -13521,7 +13527,7 @@ function setAllValues(selectors, value) {
  * Get all values from an array of selectors.
  *
  * @param {Array} selectors an array of selector objects
- * @return {{startupValue: null, elements: []}} object with selector values
+ * @return {Object} object with selector values
  */
 
 
@@ -13532,12 +13538,28 @@ function getAllValues(selectors) {
   }; // eslint-disable-next-line array-callback-return
 
   selectors.map(function (s) {
-    var elementValue = getTargetValue(s);
-    allObj.elements.push(getTargetValue(s));
+    var innerSelectors = [s];
+    var key = s.key; // multiple key support
 
-    if (s.useAsStartup) {
-      allObj.startupValue = elementValue;
-    }
+    if (Array.isArray(key)) {
+      innerSelectors = []; // eslint-disable-next-line array-callback-return
+
+      key.map(function (k) {
+        innerSelectors.push(_objectSpread(_objectSpread({}, s), {
+          key: k
+        }));
+      });
+    } // eslint-disable-next-line array-callback-return
+
+
+    innerSelectors.map(function (selector, index) {
+      var elementValue = getTargetValue(selector);
+      allObj.elements.push(getTargetValue(selector));
+
+      if (selector.useAsStartup && index === 0) {
+        allObj.startupValue = elementValue;
+      }
+    });
   }); // if no startup value is defined, use the value of the first element
 
   if (!allObj.startupValue) {
@@ -13558,7 +13580,7 @@ var _default = {
   setAllValues: setAllValues
 };
 exports.default = _default;
-},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js"}],"mixins/ControlBase.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js"}],"mixins/ControlBase.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13844,10 +13866,7 @@ var ControlBase = {
         this.getTargetElements();
       }
 
-      _selector.default.setAllValues(this.targetElements, value); // empty target elements for next time if any element is invalidated or removed form DOM
-
-
-      this.targetElements.splice(0, this.targetElements.length);
+      _selector.default.setAllValues(this.targetElements, value);
     },
 
     /**

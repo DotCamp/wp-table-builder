@@ -65,9 +65,6 @@ const ControlBase = {
 	mounted() {
 		// find and retrieve selector elements
 		if (this.selectors.length > 0) {
-			// @deprecated
-			// const operationObj = selectorOperations.getAllValues(this.selectors);
-			// this.targetElements = operationObj.elements;
 			const operationObj = this.getTargetElements();
 			this.startupValue = operationObj?.startupValue;
 		}

@@ -19,6 +19,7 @@
  */
 function operationSelect(element, type) {
 	let operation = null;
+
 	switch (type) {
 		case 'dataset':
 			operation = element.dataset;
@@ -168,7 +169,7 @@ function setAllValues(selectors, value) {
  * Get all values from an array of selectors.
  *
  * @param {Array} selectors an array of selector objects
- * @return {{startupValue: null, elements: []}} object with selector values
+ * @return {Object} object with selector values
  */
 function getAllValues(selectors) {
 	const allObj = {
@@ -178,11 +179,28 @@ function getAllValues(selectors) {
 
 	// eslint-disable-next-line array-callback-return
 	selectors.map((s) => {
-		const elementValue = getTargetValue(s);
-		allObj.elements.push(getTargetValue(s));
-		if (s.useAsStartup) {
-			allObj.startupValue = elementValue;
+		let innerSelectors = [s];
+
+		const { key } = s;
+
+		// multiple key support
+		if (Array.isArray(key)) {
+			innerSelectors = [];
+
+			// eslint-disable-next-line array-callback-return
+			key.map((k) => {
+				innerSelectors.push({ ...s, ...{ key: k } });
+			});
 		}
+
+		// eslint-disable-next-line array-callback-return
+		innerSelectors.map((selector, index) => {
+			const elementValue = getTargetValue(selector);
+			allObj.elements.push(getTargetValue(selector));
+			if (selector.useAsStartup && index === 0) {
+				allObj.startupValue = elementValue;
+			}
+		});
 	});
 
 	// if no startup value is defined, use the value of the first element
