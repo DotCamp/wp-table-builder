@@ -121,11 +121,16 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'starColor',
 			[
-				'label'     => __( 'Star Color', 'wp_table_builder' ),
-				'type'      => Controls_Manager::COLOR,
-				'selectors' => [
-					'{{{data.container}}} .wptb-rating-star span svg' => 'fill',
-				]
+				'label'        => __( 'Star Color', 'wp_table_builder' ),
+				'type'         => Controls_Manager::COLOR_PALETTE,
+				'selectors'    => [
+					[
+						'query' => '{{{data.container}}} .wptb-rating-star span svg',
+						'type'  => Controls_Manager::STYLE,
+						'key'   => 'fill'
+					]
+				],
+				"defaultValue" => '#FFFFFF'
 			]
 		);
 
@@ -146,12 +151,16 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'ratingAlignmentCheckbox',
 			[
-				'label'     => __( 'Rating Alignment', 'wp_table_builder' ),
-				'type'      => Controls_Manager::ALIGNMENT,
-				'selected'  => 1,
-				'selectors' => [
-					'{{{data.container}}}' => 'text-align',
-				]
+				'label'        => __( 'Rating Alignment', 'wp_table_builder' ),
+				'type'         => Controls_Manager::ALIGNMENT2,
+				'selectors'    => [
+					[
+						'query' => '{{{data.container}}}',
+						'type'  => Controls_Manager::STYLE,
+						'key'   => 'textAlign'
+					]
+				],
+				'defaultValue' => 'center'
 			]
 		);
 
