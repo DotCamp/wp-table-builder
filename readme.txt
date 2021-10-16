@@ -94,6 +94,7 @@ That's it. You're done!
 
 * FIX: An issue with styled list element alignment control not reflecting selected alignment value.
 * IMPROVE: Updates to control grouping of table elements.
+* IMPROVE: Updates to element controls.
 
 = 1.3.11 =
 

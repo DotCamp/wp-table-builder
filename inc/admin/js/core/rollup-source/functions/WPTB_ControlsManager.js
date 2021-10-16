@@ -349,7 +349,8 @@ function ControlsManager() {
 				const { controlId, value, elementId } = detail;
 
 				if (!controlId || !value || !elementId) {
-					throw new Error('invalid control update event data generated');
+					// enable for debugging
+					// throw new Error('invalid control update event data generated');
 				}
 
 				updateCachedControls(elementId, controlId, value);

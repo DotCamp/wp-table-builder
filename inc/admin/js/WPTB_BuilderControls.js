@@ -12849,8 +12849,8 @@ function ControlsManager() {
             value = detail.value,
             elementId = detail.elementId;
 
-        if (!controlId || !value || !elementId) {
-          throw new Error('invalid control update event data generated');
+        if (!controlId || !value || !elementId) {// enable for debugging
+          // throw new Error('invalid control update event data generated');
         }
 
         updateCachedControls(elementId, controlId, value);
@@ -13673,9 +13673,6 @@ var ControlBase = {
 
     // find and retrieve selector elements
     if (this.selectors.length > 0) {
-      // @deprecated
-      // const operationObj = selectorOperations.getAllValues(this.selectors);
-      // this.targetElements = operationObj.elements;
       var operationObj = this.getTargetElements();
       this.startupValue = operationObj === null || operationObj === void 0 ? void 0 : operationObj.startupValue;
     }
@@ -13866,7 +13863,10 @@ var ControlBase = {
         this.getTargetElements();
       }
 
-      _selector.default.setAllValues(this.targetElements, value);
+      _selector.default.setAllValues(this.targetElements, value); // empty target elements for next time if any element is invalidated or removed form DOM
+
+
+      this.targetElements.splice(0, this.targetElements.length);
     },
 
     /**
