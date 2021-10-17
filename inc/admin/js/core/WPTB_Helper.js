@@ -1217,11 +1217,18 @@ var WPTB_Helper = {
 	elementOptionsSet(kind, element, valueDependOnControl, targetControlElementClass) {
 		const elementIdClassMatch = element.getAttribute('class').match(/(?<elementId>wptb-element-.+-\d+)/);
 		const id = element.getAttribute('id');
+		let cellId = null;
+
+		// prepare cell id if element is a table cell
+		if (element.getAttribute('class').includes('wptb-cell')) {
+			const { xIndex, yIndex } = element.dataset;
+			cellId = `cell_${xIndex}-${yIndex}`;
+		}
 
 		const elementIdClass = elementIdClassMatch ? elementIdClassMatch.groups.elementId : null;
 
 		// use class match or id of target element for option set identification
-		const decisiveAttr = elementIdClass || id || null;
+		const decisiveAttr = elementIdClass || id || cellId || null;
 
 		if (decisiveAttr && this.activeElement !== decisiveAttr) {
 			this.activeElement = decisiveAttr;

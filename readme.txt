@@ -92,9 +92,11 @@ That's it. You're done!
 
 = 1.3.12 =
 
-* FIX: An issue with styled list element alignment control not reflecting selected alignment value.
 * IMPROVE: Updates to control grouping of table elements.
 * IMPROVE: Updates to element controls.
+* FIX: An issue with styled list element alignment control not reflecting selected alignment value.
+* FIX: An issue with manage cells menu left control bar not loading.
+* FIX: An issue with sortable tables not working for some table layouts.
 
 = 1.3.11 =
 

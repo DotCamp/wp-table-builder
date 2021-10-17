@@ -12978,11 +12978,6 @@ function ControlsManager() {
         length = controlBases.length;
       }
     }
-  } // TODO [erdembircan] remove for production
-
-
-  function getControlBases() {
-    return controlBases;
   }
   /**
    * Attach listeners to builder element change events.
@@ -13007,8 +13002,7 @@ function ControlsManager() {
     subscribeToElementControl: subscribeToElementControl,
     getElementControlValue: getElementControlValue,
     updateControlValue: updateControlValue,
-    registerControlBase: registerControlBase,
-    getControlBases: getControlBases
+    registerControlBase: registerControlBase
   };
 }
 /**

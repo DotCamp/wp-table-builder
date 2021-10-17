@@ -472,11 +472,6 @@ function ControlsManager() {
 		}
 	}
 
-	// TODO [erdembircan] remove for production
-	function getControlBases() {
-		return controlBases;
-	}
-
 	/**
 	 * Attach listeners to builder element change events.
 	 */
@@ -499,7 +494,6 @@ function ControlsManager() {
 		getElementControlValue,
 		updateControlValue,
 		registerControlBase,
-		getControlBases,
 	};
 }
 
