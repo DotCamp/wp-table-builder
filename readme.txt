@@ -97,6 +97,7 @@ That's it. You're done!
 * FIX: An issue with styled list element alignment control not reflecting selected alignment value.
 * FIX: An issue with manage cells menu left control bar not loading.
 * FIX: An issue with sortable tables not working for some table layouts.
+* FIX: An issue with sticky top row option not working for some table layouts.
 
 = 1.3.11 =
 
