@@ -1,5 +1,5 @@
 <template>
-	<div class="wptb-range-input-wrapper">
+	<div class="wptb-range-input-wrapper" :disabled="disabled">
 		<div class="wptb-settings-item-header wptb-text-transform-cap" :data-wptb-text-disabled="disabled">
 			{{ label }}
 		</div>
@@ -18,7 +18,10 @@
 					:disabled="disabled"
 				/>
 			</div>
-			<div class="wptb-settings-col-xs-4">
+			<div
+				class="wptb-settings-col-xs-4 wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-range-text-input-wrapper"
+			>
+				<range-input-button position="up" @click="handleIncrementDecrement"></range-input-button>
 				<number-postfix-input
 					:disabled="disabled"
 					v-model="innerElementMainValue"
@@ -33,18 +36,21 @@
 					:step="step"
 					:enable-limit="clamp"
 					data-type="range"
+					ref="postfixInput"
 				>
 				</number-postfix-input>
+				<range-input-button position="down" @click="handleIncrementDecrement"></range-input-button>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import NumberPostfixInput from './NumberPostfixInput';
+import NumberPostfixInput from '$Components/NumberPostfixInput';
+import RangeInputButton from '$Components/RangeInputButton';
 
 export default {
-	components: { NumberPostfixInput },
+	components: { RangeInputButton, NumberPostfixInput },
 	props: {
 		label: {
 			type: String,
@@ -136,6 +142,9 @@ export default {
 				return this.max;
 			}
 			return val;
+		},
+		handleIncrementDecrement(direction) {
+			this.$refs.postfixInput.handleKeyPress(direction);
 		},
 	},
 };

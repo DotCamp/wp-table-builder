@@ -28174,7 +28174,71 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/RangeInput.vue":[function(require,module,exports) {
+},{}],"components/Icon.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+var _default = {
+  props: {
+    name: {
+      type: String,
+      default: ''
+    },
+    extraClasses: {
+      type: Array,
+      default: function _default() {
+        return ['wptb-svg-inherit-color'];
+      }
+    }
+  },
+  data: function data() {
+    return {
+      iconFragment: ''
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    WPTB_IconManager.getIcon(this.name, this.extraClasses, true).then(function (icon) {
+      _this.iconFragment = icon;
+    });
+  }
+};
+exports.default = _default;
+        var $fdfc7a = exports.default || module.exports;
+      
+      if (typeof $fdfc7a === 'function') {
+        $fdfc7a = $fdfc7a.options;
+      }
+    
+        /* template */
+        Object.assign($fdfc7a, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { domProps: { innerHTML: _vm._s(_vm.iconFragment) } })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/RangeInputButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28182,7 +28246,100 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
+var _Icon = _interopRequireDefault(require("$Components/Icon"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    position: {
+      type: String,
+      default: 'up'
+    }
+  },
+  components: {
+    Icon: _Icon.default
+  },
+  data: function data() {
+    return {
+      positionMap: {
+        up: 'caret-up',
+        down: 'caret-down'
+      }
+    };
+  },
+  computed: {
+    iconName: function iconName() {
+      return this.positionMap[this.position];
+    }
+  },
+  methods: {
+    handleIncrementDecrement: function handleIncrementDecrement() {
+      this.$emit('click', this.position);
+    }
+  }
+};
+exports.default = _default;
+        var $087c5a = exports.default || module.exports;
+      
+      if (typeof $087c5a === 'function') {
+        $087c5a = $087c5a.options;
+      }
+    
+        /* template */
+        Object.assign($087c5a, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("icon", {
+    staticClass: "wptb-range-input-operation-button",
+    attrs: {
+      "extra-classes": ["wptb-svg-inherit-color", "wptb-settings-generic-icon"],
+      name: _vm.iconName,
+      "data-wptb-button-position": _vm.position
+    },
+    nativeOn: {
+      click: function($event) {
+        $event.preventDefault()
+        return _vm.handleIncrementDecrement($event)
+      }
+    }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$Components/Icon":"components/Icon.vue"}],"components/RangeInput.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _NumberPostfixInput = _interopRequireDefault(require("$Components/NumberPostfixInput"));
+
+var _RangeInputButton = _interopRequireDefault(require("$Components/RangeInputButton"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28228,8 +28385,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
 var _default = {
   components: {
+    RangeInputButton: _RangeInputButton.default,
     NumberPostfixInput: _NumberPostfixInput.default
   },
   props: {
@@ -28327,6 +28490,9 @@ var _default = {
       }
 
       return val;
+    },
+    handleIncrementDecrement: function handleIncrementDecrement(direction) {
+      this.$refs.postfixInput.handleKeyPress(direction);
     }
   }
 };
@@ -28343,80 +28509,101 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wptb-range-input-wrapper" }, [
-    _c(
-      "div",
-      {
-        staticClass: "wptb-settings-item-header wptb-text-transform-cap",
-        attrs: { "data-wptb-text-disabled": _vm.disabled }
-      },
-      [_vm._v("\n\t\t" + _vm._s(_vm.label) + "\n\t")]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
-      _c("div", { staticClass: "wptb-settings-col-xs-8" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.innerElementMainValue,
-              expression: "innerElementMainValue"
-            }
-          ],
-          staticClass: "wptb-element-property wptb-size-slider",
-          class: _vm.uniqueId,
-          attrs: {
-            type: "range",
-            "data-element": _vm.elemContainer,
-            "data-type": "range",
-            min: _vm.min,
-            max: _vm.max,
-            step: _vm.step,
-            disabled: _vm.disabled
-          },
-          domProps: { value: _vm.innerElementMainValue },
-          on: {
-            __r: function($event) {
-              _vm.innerElementMainValue = $event.target.value
-            }
-          }
-        })
-      ]),
-      _vm._v(" "),
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-range-input-wrapper",
+      attrs: { disabled: _vm.disabled }
+    },
+    [
       _c(
         "div",
-        { staticClass: "wptb-settings-col-xs-4" },
-        [
-          _c("number-postfix-input", {
-            staticClass:
-              "wptb-size-number wptb-number-input wptb-element-property",
+        {
+          staticClass: "wptb-settings-item-header wptb-text-transform-cap",
+          attrs: { "data-wptb-text-disabled": _vm.disabled }
+        },
+        [_vm._v("\n\t\t" + _vm._s(_vm.label) + "\n\t")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c("div", { staticClass: "wptb-settings-col-xs-8" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.innerElementMainValue,
+                expression: "innerElementMainValue"
+              }
+            ],
+            staticClass: "wptb-element-property wptb-size-slider",
             class: _vm.uniqueId,
-            staticStyle: { "text-align": "center" },
             attrs: {
-              disabled: _vm.disabled,
-              "post-fix": _vm.postFix,
-              "only-enter": true,
+              type: "range",
+              "data-element": _vm.elemContainer,
+              "data-type": "range",
               min: _vm.min,
               max: _vm.max,
-              "data-element": _vm.elemContainer,
               step: _vm.step,
-              "enable-limit": _vm.clamp,
-              "data-type": "range"
+              disabled: _vm.disabled
             },
-            model: {
-              value: _vm.innerElementMainValue,
-              callback: function($$v) {
-                _vm.innerElementMainValue = $$v
-              },
-              expression: "innerElementMainValue"
+            domProps: { value: _vm.innerElementMainValue },
+            on: {
+              __r: function($event) {
+                _vm.innerElementMainValue = $event.target.value
+              }
             }
           })
-        ],
-        1
-      )
-    ])
-  ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "wptb-settings-col-xs-4 wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-range-text-input-wrapper"
+          },
+          [
+            _c("range-input-button", {
+              attrs: { position: "up" },
+              on: { click: _vm.handleIncrementDecrement }
+            }),
+            _vm._v(" "),
+            _c("number-postfix-input", {
+              ref: "postfixInput",
+              staticClass:
+                "wptb-size-number wptb-number-input wptb-element-property",
+              class: _vm.uniqueId,
+              staticStyle: { "text-align": "center" },
+              attrs: {
+                disabled: _vm.disabled,
+                "post-fix": _vm.postFix,
+                "only-enter": true,
+                min: _vm.min,
+                max: _vm.max,
+                "data-element": _vm.elemContainer,
+                step: _vm.step,
+                "enable-limit": _vm.clamp,
+                "data-type": "range"
+              },
+              model: {
+                value: _vm.innerElementMainValue,
+                callback: function($$v) {
+                  _vm.innerElementMainValue = $$v
+                },
+                expression: "innerElementMainValue"
+              }
+            }),
+            _vm._v(" "),
+            _c("range-input-button", {
+              attrs: { position: "down" },
+              on: { click: _vm.handleIncrementDecrement }
+            })
+          ],
+          1
+        )
+      ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -28430,7 +28617,7 @@ render._withStripped = true
           };
         })());
       
-},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"mixins/SectionGroup.js":[function(require,module,exports) {
+},{"$Components/NumberPostfixInput":"components/NumberPostfixInput.vue","$Components/RangeInputButton":"components/RangeInputButton.vue"}],"mixins/SectionGroup.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

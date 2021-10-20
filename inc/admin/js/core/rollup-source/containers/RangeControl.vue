@@ -14,9 +14,9 @@
 	</control-wrapper>
 </template>
 <script>
-import ControlBase from '../mixins/ControlBase';
-import RangeInput from '../components/RangeInput';
-import ControlWrapper from '../components/ControlWrapper';
+import ControlBase from '$Mixins/ControlBase';
+import RangeInput from '$Components/RangeInput';
+import ControlWrapper from '$Components/ControlWrapper';
 import ControlBaseBasicImplementation from '$Mixins/ControlBaseBasicImplementation';
 
 export default {

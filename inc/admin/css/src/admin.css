@@ -868,8 +868,7 @@ body > img {
 .wptb-number-input {
     max-width: 75px;
     width: 100%;
-    margin-left: 10px;
-    margin-top: 3px;
+    margin: 3px 10px;
 }
 
 input[type="number"] {
@@ -7103,6 +7102,44 @@ label.wptb-control-row {
 .wptb-multi-checkbox-wrapper .wptb-settings-checkbox-row[data-wptb-checked="true"] label {
     /*font-weight: bold;*/
     color: var(--wptb-plugin-logo-color);
+}
+
+/*endregion*/
+
+/*region range control input*/
+.wptb-range-input-wrapper[disabled] {
+    pointer-events: none;
+}
+
+.wptb-range-input-operation-button {
+    color: var(--wptb-plugin-gray-500) !important;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    transition: all 0.1s ease-out;
+    opacity: 0;
+}
+
+.wptb-range-input-operation-button svg {
+    fill: var(--wptb-plugin-gray-500) !important;
+}
+
+.wptb-range-input-operation-button:active {
+    transform: scale(0.8);
+}
+
+.wptb-range-input-operation-button[data-wptb-button-position="up"] {
+    top: -50%;
+}
+
+.wptb-range-input-operation-button[data-wptb-button-position="down"] {
+    bottom: -18%;
+}
+
+.wptb-range-text-input-wrapper:hover .wptb-range-input-operation-button {
+    opacity: 1;
 }
 
 /*endregion*/

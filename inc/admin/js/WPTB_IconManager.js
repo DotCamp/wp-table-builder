@@ -153,27 +153,37 @@ var global = arguments[3];
      * Prepare an icon with a wrapper.
      *
      * @param {string} iconSvgString string representation of icon
-     * @param {string | null} extraClass name of extra class to apply to icon wrapper
+     * @param {Array | string | null} extraClass name of extra class[es] to apply to icon wrapper
+     * @param {boolean} stringifiedVersion get stringified html version of icon
      * @return {HTMLDivElement} created icon wrapper
      */
 
     var prepareIcon = function prepareIcon(iconSvgString) {
       var extraClass = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var stringifiedVersion = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var iconWrapper = document.createElement('div'); // if an extra class is defined, add it to icon wrapper
 
       if (extraClass) {
-        iconWrapper.classList.add(extraClass);
+        if (!Array.isArray(extraClass)) {
+          // eslint-disable-next-line no-param-reassign
+          extraClass = [extraClass];
+        } // eslint-disable-next-line array-callback-return
+
+
+        extraClass.map(function (eClass) {
+          iconWrapper.classList.add(eClass);
+        });
       }
 
       iconWrapper.innerHTML = iconSvgString;
-      return iconWrapper;
+      return stringifiedVersion ? iconWrapper.outerHTML : iconWrapper;
     };
     /**
      * Get a cached icon.
      *
      * @param {string} iconName name of the icon
-     * @param {string | null} extraClass extra class name to add to icon wrapper
-     * @param {string | null} getStringifiedVersion get stringified version of the icon
+     * @param {string | Array | null} extraClass extra class name[s] to add to icon wrapper
+     * @param {boolean | null} getStringifiedVersion get stringified version of the icon
      * @return {null | Element} Prepared cached icon or null if no cached version is found
      */
 
@@ -183,7 +193,7 @@ var global = arguments[3];
       var getStringifiedVersion = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
       if (cachedIcons[iconName]) {
-        return getStringifiedVersion ? cachedIcons[iconName] : prepareIcon(cachedIcons[iconName], extraClass);
+        return prepareIcon(cachedIcons[iconName], extraClass, getStringifiedVersion);
       }
 
       return null;
@@ -215,8 +225,8 @@ var global = arguments[3];
      * Icons sent with this function are wrapped with a 'div' element.
      *
      * @param {string} iconName name of the icon
-     * @param {string} extraClass extra class to add to icon wrapper
-     * @param {string} getStringifiedVersion get stringified version of icon
+     * @param {string | Array | null} extraClass extra class[es] to add to icon wrapper
+     * @param {boolean} getStringifiedVersion get stringified version of icon
      * @return {Promise<void>} a Promise that will be resolved when icon is fetched from server
      */
 
@@ -247,7 +257,7 @@ var global = arguments[3];
 
 
             addToCache(iconName, iconString);
-            return res(getStringifiedVersion ? iconString : prepareIcon(iconString, extraClass));
+            return res(prepareIcon(iconString, extraClass, getStringifiedVersion));
           }).catch(function (err) {
             return rej(new Error(err));
           });

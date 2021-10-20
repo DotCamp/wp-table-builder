@@ -43,9 +43,9 @@
 </template>
 
 <script>
-import withTranslation from '../mixins/withTranslation';
-import withIcons from '../mixins/withIcons';
-import Size2ControlColumn from './Size2ControlColumn';
+import withTranslation from '$Mixins/withTranslation';
+import withIcons from '$Mixins/withIcons';
+import Size2ControlColumn from '$Components/Size2ControlColumn';
 
 export default {
 	components: { Size2ControlColumn },
