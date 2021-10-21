@@ -174,21 +174,22 @@ function ControlsManager() {
 	 *
 	 * This function is being used in ControlBase for component visibility changes. That functionality will be updated in the future and this function will be removed. Do not use this, use subscribe operations instead.
 	 *
-	 * @param {boolean} useEventValue whether to use event value instead of element value
 	 * @return {Object} current table settings
 	 */
-	function getTableSettings(useEventValue = false) {
-		return Object.keys(tableSettings.settings).reduce((carry, item) => {
-			const finalCarry = carry;
-
-			if (Object.prototype.hasOwnProperty.call(tableSettings.settings, item)) {
-				const valueKey = useEventValue ? 'eventValue' : 'targetValue';
-
-				finalCarry[item] = tableSettings.settings[item][valueKey];
-			}
-
-			return finalCarry;
-		}, {});
+	function getTableSettings() {
+		// deprecated
+		// return Object.keys(tableSettings.settings).reduce((carry, item) => {
+		// 	const finalCarry = carry;
+		//
+		// 	if (Object.prototype.hasOwnProperty.call(tableSettings.settings, item)) {
+		// 		const valueKey = useEventValue ? 'eventValue' : 'targetValue';
+		//
+		// 		finalCarry[item] = tableSettings.settings[item][valueKey];
+		// 	}
+		//
+		// 	return finalCarry;
+		// }, {});
+		return tableSettings;
 	}
 
 	/**

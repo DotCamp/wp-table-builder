@@ -3116,7 +3116,6 @@ wptb_shortcode_container_element {
     position: relative;
     display: flex;
     flex-direction: row;
-    margin-bottom: 10px;
     background-color: #ffffff;
     border-bottom: 1px solid #cbd5e0;
 }
@@ -3142,7 +3141,6 @@ wptb_shortcode_container_element {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-top: -10px;
 }
 
 .wptb-settings-section-item {

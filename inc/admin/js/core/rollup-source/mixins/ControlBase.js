@@ -1,4 +1,4 @@
-import selectorOperations from '../functions/selector';
+import selectorOperations from '$Functions/selector';
 
 /**
  * Base mixin for control items
@@ -109,7 +109,12 @@ const ControlBase = {
 			this.componentVisibility = Object.keys(this.appearDependOnControl).every((controlName) => {
 				if (Object.prototype.hasOwnProperty.call(this.appearDependOnControl, controlName)) {
 					if (Object.keys(this.cachedDependedValues).includes(controlName)) {
-						return this.cachedDependedValues[controlName] === this.appearDependOnControl[controlName];
+						const targetControlValue = this.cachedDependedValues[controlName];
+
+						const finalValue =
+							typeof targetControlValue === 'object' ? targetControlValue.eventValue : targetControlValue;
+
+						return finalValue === this.appearDependOnControl[controlName];
 					}
 					return false;
 				}

@@ -30,12 +30,12 @@
 </template>
 
 <script>
-import ControlBase from '../mixins/ControlBase';
-import TableCellSelect from '../components/TableCellSelect';
-import CellIndicator from '../components/CellIndicator';
-import RangeInput from '../components/RangeInput';
-import withTranslation from '../mixins/withTranslation';
-import ColorPicker from '../components/ColorPicker';
+import ControlBase from '$Mixins/ControlBase';
+import TableCellSelect from '$Components/TableCellSelect';
+import CellIndicator from '$Components/CellIndicator';
+import RangeInput from '$Components/RangeInput';
+import withTranslation from '$Mixins/withTranslation';
+import ColorPicker from '$Components/ColorPicker';
 
 export default {
 	mixins: [ControlBase, withTranslation],
@@ -90,24 +90,23 @@ export default {
 		this.table = document.querySelector('.wptb-management_table_container .wptb-table-setup table');
 	},
 	methods: {
+		/**
+		 * Transform a decimal into its hexadecimal equal.
+		 *
+		 * @param {string} val value
+		 * @return {string} changed hex value
+		 */
+		hexConvertor(val) {
+			const hex = Number.parseInt(val, 10).toString(16);
+			return hex.length === 1 ? `0${hex}` : hex;
+		},
 		toHex(rgbVal) {
 			if (!rgbVal.startsWith('#') && rgbVal !== '') {
 				const regExp = new RegExp(/rgb\(\s?(\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})\)/);
 				if (regExp) {
 					const [, red, green, blue] = regExp.exec(rgbVal);
 
-					/**
-					 * Transform a decimal into its hexadecimal equal.
-					 *
-					 * @param {string} val value
-					 * @return {string} changed hex value
-					 */
-					function hexConvertor(val) {
-						const hex = Number.parseInt(val, 10).toString(16);
-						return hex.length === 1 ? `0${hex}` : hex;
-					}
-
-					return `#${hexConvertor(red)}${hexConvertor(green)}${hexConvertor(blue)}`;
+					return `#${this.hexConvertor(red)}${this.hexConvertor(green)}${this.hexConvertor(blue)}`;
 				}
 			}
 			return rgbVal;
