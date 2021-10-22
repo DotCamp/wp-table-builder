@@ -53,6 +53,7 @@ import { objectDeepMerge } from './stores/general';
 		 */
 		const handleSubscription = (mutationName, value) => {
 			if (subscribeList[mutationName]) {
+				// eslint-disable-next-line array-callback-return
 				subscribeList[mutationName].map((callback) => {
 					callback(value, store.state);
 				});
@@ -105,6 +106,9 @@ import { objectDeepMerge } from './stores/general';
 		};
 	}
 
+	// eslint-disable-next-line camelcase
+	const { store: storeData } = wptb_admin_object;
+
 	/**
 	 * App store for builder.
 	 *
@@ -117,10 +121,14 @@ import { objectDeepMerge } from './stores/general';
 					activeId: null,
 				},
 			},
+			...storeData,
 		},
 		getters: {
 			getActiveColorPickerId(state) {
 				return state.controls.colorPicker.activeId;
+			},
+			proStatus(state) {
+				return state.pro;
 			},
 		},
 		mutations: {

@@ -13,6 +13,7 @@ export default {
 	handler: (uniqueId) => {
 		const extraStoreOptions = {
 			state: {
+				proStatus: WPTB_Store.get('proStatus'),
 				strings: {
 					generalRow: __('general row color options', 'wp-table-builder'),
 					evenRow: __('even row background', 'wp-table-builder'),

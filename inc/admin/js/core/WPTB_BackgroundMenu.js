@@ -674,7 +674,11 @@
 					}
 
 					selectorToolboxVisibility(true);
-					assignCellClickHandlers();
+
+					if (WPTB_Store.get('proStatus')) {
+						assignCellClickHandlers();
+					}
+
 					assignRowClickHandler();
 					clearTableIndicators();
 					calculateRailPositions();

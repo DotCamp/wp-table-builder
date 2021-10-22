@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Admin;
 
 use DOMDocument;
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Admin\Managers\Addon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Core\Init;
@@ -96,7 +97,7 @@ class Admin_Menu {
 
 				wp_die( json_encode( [ 'saved', $id ] ) );
 			} else {
-				if (Init::instance()->settings_manager->current_user_allowed_for_modifications(absint($params->id))) {
+				if ( Init::instance()->settings_manager->current_user_allowed_for_modifications( absint( $params->id ) ) ) {
 					wp_update_post( [
 						'ID'           => absint( $params->id ),
 						'post_title'   => sanitize_text_field( $params->title ),
@@ -391,7 +392,10 @@ class Admin_Menu {
 			$admin_object = [
 				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
-				'strings'       => $strings
+				'strings'       => $strings,
+				'store'         => [
+					'pro' => Addon_Manager::check_pro_status()
+				]
 			];
 
 			// filter for builder script data

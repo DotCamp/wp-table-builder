@@ -18,7 +18,7 @@
 					:label="translationM('oddRow')"
 				></color-picker>
 			</section-group-collapse>
-			<section-group-collapse :label="translationM('customSelection')" :start-collapsed="false">
+			<section-group-collapse v-if="proStatus" :label="translationM('customSelection')" :start-collapsed="false">
 				<panel-plain-message v-if="currentSelection.item === null">
 					<i>{{ translationM('emptySelectionMessage') }}</i>
 				</panel-plain-message>
@@ -39,12 +39,12 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
-import SectionGroupCollapse from '../components/leftPanel/SectionGroupCollapse';
-import ColorPicker from '../components/ColorPicker';
-import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
-import PanelPlainMessage from '../components/leftPanel/PanelPlainMessage';
-import PanelMessageRow from '../components/leftPanel/PanelMessageRow';
+import { mapGetters, mapMutations, mapState } from 'vuex';
+import SectionGroupCollapse from '$Components/leftPanel/SectionGroupCollapse';
+import ColorPicker from '$Components/ColorPicker';
+import withNativeTranslationStore from '$Mixins/withNativeTranslationStore';
+import PanelPlainMessage from '$Components/leftPanel/PanelPlainMessage';
+import PanelMessageRow from '$Components/leftPanel/PanelMessageRow';
 
 export default {
 	components: { PanelMessageRow, PanelPlainMessage, ColorPicker, SectionGroupCollapse },
@@ -117,6 +117,7 @@ export default {
 			return false;
 		},
 		...mapGetters(['generalOptions', 'currentSelection', 'types']),
+		...mapState(['proStatus']),
 	},
 	methods: {
 		columnItemSharesColor(columnItems) {

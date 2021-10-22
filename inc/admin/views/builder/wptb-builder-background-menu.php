@@ -9,7 +9,5 @@ if ( ! defined( 'WPINC' ) ) {
 }
 ?>
 <div class="wptb-settings-items">
-  <div id="wptb-background-menu">
-  </div>
+    <div id="wptb-background-menu"></div>
 </div>
-
