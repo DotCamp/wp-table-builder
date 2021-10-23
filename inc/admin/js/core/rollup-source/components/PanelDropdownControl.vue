@@ -8,7 +8,7 @@
 <script>
 import PanelControlBase from '$Mixins/PanelControlBase';
 import Panel2ColumnTemplate from '$LeftPanel/Panel2ColumnTemplate';
-import { cap } from '../plugins/filters';
+import { cap } from '$Plugins/filters';
 
 export default {
 	components: { Panel2ColumnTemplate },

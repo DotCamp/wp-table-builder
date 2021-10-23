@@ -31,9 +31,7 @@ export default {
 			},
 			deep: true,
 		},
-	},
-	methods: {
-		processElementMainValue(val) {
+		elementMainValue(val) {
 			if (val) {
 				this.selectedValues = val.trim === '' ? [] : val.split(' ');
 

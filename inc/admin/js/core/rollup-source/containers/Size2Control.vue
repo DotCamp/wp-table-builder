@@ -17,9 +17,9 @@
 	</control-wrapper>
 </template>
 <script>
-import ControlBase from '../mixins/ControlBase';
-import ControlWrapper from '../components/ControlWrapper';
-import SizeControl from '../components/SizeControl';
+import ControlBase from '$Mixins/ControlBase';
+import ControlWrapper from '$Components/ControlWrapper';
+import SizeControl from '$Components/SizeControl';
 
 export default {
 	props: {
@@ -64,7 +64,6 @@ export default {
 
 		this.$nextTick(() => {
 			this.calculateStartupProcessVariables();
-
 		});
 	},
 	watch: {

@@ -13658,9 +13658,6 @@ var ControlBase = {
         this.calculateComponentVisibility();
       },
       deep: true
-    },
-    elementMainValue: function elementMainValue(n) {
-      this.processElementMainValue(n);
     }
   },
   mounted: function mounted() {
@@ -13764,6 +13761,9 @@ var ControlBase = {
         });
       }
     },
+    clearTargetElements: function clearTargetElements() {
+      this.targetElements.splice(0, this.targetElements.length);
+    },
 
     /**
      * Get target elements of the selector.
@@ -13773,6 +13773,8 @@ var ControlBase = {
     getTargetElements: function getTargetElements() {
       if (this.selectors.length > 0) {
         try {
+          this.clearTargetElements();
+
           var operationObj = _selector.default.getAllValues(this.selectors);
 
           this.targetElements = operationObj.elements;
@@ -13794,7 +13796,8 @@ var ControlBase = {
     generateChangeEvent: function generateChangeEvent(value) {
       var _this7 = this;
 
-      // eslint-disable-next-line array-callback-return
+      this.getTargetElements(); // eslint-disable-next-line array-callback-return
+
       this.targetElements.map(function (t) {
         // eslint-disable-next-line array-callback-return
         t.elements.map(function (el) {
@@ -13860,10 +13863,7 @@ var ControlBase = {
         this.getTargetElements();
       }
 
-      _selector.default.setAllValues(this.targetElements, value); // empty target elements for next time if any element is invalidated or removed form DOM
-
-
-      this.targetElements.splice(0, this.targetElements.length);
+      _selector.default.setAllValues(this.targetElements, value);
     },
 
     /**
@@ -13904,6 +13904,12 @@ var ControlBase = {
       this.generateChangeEvent(val);
       this.setTableDirty(checkMountedState);
     },
+    // eslint-disable-next-line no-unused-vars
+
+    /**
+     * @param {any} val
+     * @deprecated
+     */
     // eslint-disable-next-line no-unused-vars
     processElementMainValue: function processElementMainValue(val) {// override this method with processes to be called on element main value changes
     }
@@ -15670,7 +15676,7 @@ var _PanelControlBase = _interopRequireDefault(require("$Mixins/PanelControlBase
 
 var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
 
-var _filters = require("../plugins/filters");
+var _filters = require("$Plugins/filters");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15765,7 +15771,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue","../plugins/filters":"plugins/filters.js"}],"containers/Select2Control.vue":[function(require,module,exports) {
+},{"$Mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue","$Plugins/filters":"plugins/filters.js"}],"containers/Select2Control.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15773,9 +15779,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
+var _ControlBase = _interopRequireDefault(require("$Mixins/ControlBase"));
 
-var _PanelDropdownControl = _interopRequireDefault(require("../components/PanelDropdownControl"));
+var _PanelDropdownControl = _interopRequireDefault(require("$Components/PanelDropdownControl"));
+
+var _ControlBaseBasicImplementation = _interopRequireDefault(require("$Mixins/ControlBaseBasicImplementation"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15794,17 +15802,7 @@ var _default = {
   props: {
     options: Object
   },
-  mixins: [_ControlBase.default],
-  mounted: function mounted() {
-    this.assignDefaultValue();
-  },
-  watch: {
-    elementMainValue: function elementMainValue(n) {
-      this.generateChangeEvent(n);
-      this.setAllValues(n);
-      this.setTableDirty(true);
-    }
-  }
+  mixins: [_ControlBase.default, _ControlBaseBasicImplementation.default]
 };
 exports.default = _default;
         var $72f762 = exports.default || module.exports;
@@ -15846,7 +15844,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/PanelDropdownControl":"components/PanelDropdownControl.vue"}],"mountPoints/WPTB_Select2Control.js":[function(require,module,exports) {
+},{"$Mixins/ControlBase":"mixins/ControlBase.js","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$Mixins/ControlBaseBasicImplementation":"mixins/ControlBaseBasicImplementation.js"}],"mountPoints/WPTB_Select2Control.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22609,13 +22607,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _ControlWrapper = _interopRequireDefault(require("../components/ControlWrapper"));
+var _ControlWrapper = _interopRequireDefault(require("$Components/ControlWrapper"));
 
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
+var _ControlBase = _interopRequireDefault(require("$Mixins/ControlBase"));
 
-var _NamedToggleItem = _interopRequireDefault(require("../components/NamedToggleItem"));
+var _NamedToggleItem = _interopRequireDefault(require("$Components/NamedToggleItem"));
 
-var _NamedToggleActiveIndicator = _interopRequireDefault(require("../components/NamedToggleActiveIndicator"));
+var _NamedToggleActiveIndicator = _interopRequireDefault(require("$Components/NamedToggleActiveIndicator"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22764,7 +22762,7 @@ render._withStripped = true
           };
         })());
       
-},{"../components/ControlWrapper":"components/ControlWrapper.vue","../mixins/ControlBase":"mixins/ControlBase.js","../components/NamedToggleItem":"components/NamedToggleItem.vue","../components/NamedToggleActiveIndicator":"components/NamedToggleActiveIndicator.vue"}],"mountPoints/WPTB_NamedToggleControl.js":[function(require,module,exports) {
+},{"$Components/ControlWrapper":"components/ControlWrapper.vue","$Mixins/ControlBase":"mixins/ControlBase.js","$Components/NamedToggleItem":"components/NamedToggleItem.vue","$Components/NamedToggleActiveIndicator":"components/NamedToggleActiveIndicator.vue"}],"mountPoints/WPTB_NamedToggleControl.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44069,10 +44067,8 @@ var _default = {
         this.elementMainValue = n.join(' ');
       },
       deep: true
-    }
-  },
-  methods: {
-    processElementMainValue: function processElementMainValue(val) {
+    },
+    elementMainValue: function elementMainValue(val) {
       if (val) {
         this.selectedValues = val.trim === '' ? [] : val.split(' ');
         this.basicValueUpdate(val, true);
@@ -44661,11 +44657,11 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _wrapNativeSuper2 = _interopRequireDefault(require("@babel/runtime/helpers/wrapNativeSuper"));
 
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
+var _ControlBase = _interopRequireDefault(require("$Mixins/ControlBase"));
 
-var _ControlWrapper = _interopRequireDefault(require("../components/ControlWrapper"));
+var _ControlWrapper = _interopRequireDefault(require("$Components/ControlWrapper"));
 
-var _SizeControl = _interopRequireDefault(require("../components/SizeControl"));
+var _SizeControl = _interopRequireDefault(require("$Components/SizeControl"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -44874,7 +44870,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","@babel/runtime/helpers/inherits":"../../../../../node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/helpers/possibleConstructorReturn":"../../../../../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"../../../../../node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/wrapNativeSuper":"../../../../../node_modules/@babel/runtime/helpers/wrapNativeSuper.js","../mixins/ControlBase":"mixins/ControlBase.js","../components/ControlWrapper":"components/ControlWrapper.vue","../components/SizeControl":"components/SizeControl.vue"}],"mountPoints/WPTB_Size2Control.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","@babel/runtime/helpers/inherits":"../../../../../node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/helpers/possibleConstructorReturn":"../../../../../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"../../../../../node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/wrapNativeSuper":"../../../../../node_modules/@babel/runtime/helpers/wrapNativeSuper.js","$Mixins/ControlBase":"mixins/ControlBase.js","$Components/ControlWrapper":"components/ControlWrapper.vue","$Components/SizeControl":"components/SizeControl.vue"}],"mountPoints/WPTB_Size2Control.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

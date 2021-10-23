@@ -27545,7 +27545,7 @@ var _PanelControlBase = _interopRequireDefault(require("$Mixins/PanelControlBase
 
 var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
 
-var _filters = require("../plugins/filters");
+var _filters = require("$Plugins/filters");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27640,7 +27640,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue","../plugins/filters":"plugins/filters.js"}],"components/leftPanel/PanelDirectionCadet.vue":[function(require,module,exports) {
+},{"$Mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue","$Plugins/filters":"plugins/filters.js"}],"components/leftPanel/PanelDirectionCadet.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

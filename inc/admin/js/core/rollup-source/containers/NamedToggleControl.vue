@@ -29,10 +29,10 @@
 	</control-wrapper>
 </template>
 <script>
-import ControlWrapper from '../components/ControlWrapper';
-import ControlBase from '../mixins/ControlBase';
-import NamedToggleItem from '../components/NamedToggleItem';
-import NamedToggleActiveIndicator from '../components/NamedToggleActiveIndicator';
+import ControlWrapper from '$Components/ControlWrapper';
+import ControlBase from '$Mixins/ControlBase';
+import NamedToggleItem from '$Components/NamedToggleItem';
+import NamedToggleActiveIndicator from '$Components/NamedToggleActiveIndicator';
 
 export default {
 	components: { NamedToggleActiveIndicator, NamedToggleItem, ControlWrapper },

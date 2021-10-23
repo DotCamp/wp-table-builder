@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.3.13 =
+
+* FIX: An issue with element control changes not reflected to associated targets.
+
 = 1.3.12 =
 
 * IMPROVE: Updates to control grouping of table elements.

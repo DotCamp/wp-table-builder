@@ -58,9 +58,6 @@ const ControlBase = {
 			},
 			deep: true,
 		},
-		elementMainValue(n) {
-			this.processElementMainValue(n);
-		},
 	},
 	mounted() {
 		// find and retrieve selector elements
@@ -155,6 +152,9 @@ const ControlBase = {
 				});
 			}
 		},
+		clearTargetElements() {
+			this.targetElements.splice(0, this.targetElements.length);
+		},
 		/**
 		 * Get target elements of the selector.
 		 *
@@ -163,6 +163,7 @@ const ControlBase = {
 		getTargetElements() {
 			if (this.selectors.length > 0) {
 				try {
+					this.clearTargetElements();
 					const operationObj = selectorOperations.getAllValues(this.selectors);
 					this.targetElements = operationObj.elements;
 					return operationObj;
@@ -179,6 +180,8 @@ const ControlBase = {
 		 * @param {any} value value to be emitted
 		 */
 		generateChangeEvent(value) {
+			this.getTargetElements();
+
 			// eslint-disable-next-line array-callback-return
 			this.targetElements.map((t) => {
 				// eslint-disable-next-line array-callback-return
@@ -239,9 +242,6 @@ const ControlBase = {
 				this.getTargetElements();
 			}
 			selectorOperations.setAllValues(this.targetElements, value);
-
-			// empty target elements for next time if any element is invalidated or removed form DOM
-			this.targetElements.splice(0, this.targetElements.length);
 		},
 
 		/**
@@ -278,6 +278,11 @@ const ControlBase = {
 			this.generateChangeEvent(val);
 			this.setTableDirty(checkMountedState);
 		},
+		// eslint-disable-next-line no-unused-vars
+		/**
+		 * @param {any} val
+		 * @deprecated
+		 */
 		// eslint-disable-next-line no-unused-vars
 		processElementMainValue(val) {
 			// override this method with processes to be called on element main value changes
