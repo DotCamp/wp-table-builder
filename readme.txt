@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.3.13 =
 
 * FIX: An issue with element control changes not reflected to associated targets.
+* FIX: Star rating element default color reverted to gold.
 
 = 1.3.12 =
 
