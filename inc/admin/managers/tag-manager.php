@@ -150,23 +150,25 @@ class Tag_Manager {
 	public static function table_tags_count( $terms, $tax ) {
 		if ( is_array( $tax ) && in_array( static::TAX_ID, $tax ) ) {
 			array_walk( $terms, function ( $term ) {
-				if ( $term->taxonomy === static::TAX_ID ) {
-					$count = ( new WP_Query( [
-						'post_type'    => 'wptb-tables',
-						'post_status'  => 'draft',
-						'tax_query'    => [
-							[
-								'taxonomy' => static::TAX_ID,
-								'field'    => 'slug',
-								'terms'    => $term->slug
-							]
-						],
-						'meta_key'     => '_wptb_content_',
-						'meta_compare' => 'EXISTS'
-					] ) )->found_posts;
+				if ( is_object( $term ) ) {
+					if ( $term->taxonomy === static::TAX_ID ) {
+						$count = ( new WP_Query( [
+							'post_type'    => 'wptb-tables',
+							'post_status'  => 'draft',
+							'tax_query'    => [
+								[
+									'taxonomy' => static::TAX_ID,
+									'field'    => 'slug',
+									'terms'    => $term->slug
+								]
+							],
+							'meta_key'     => '_wptb_content_',
+							'meta_compare' => 'EXISTS'
+						] ) )->found_posts;
 
-					wp_reset_query();
-					$term->count = $count;
+						wp_reset_query();
+						$term->count = $count;
+					}
 				}
 			} );
 		}
