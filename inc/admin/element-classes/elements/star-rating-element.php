@@ -130,7 +130,7 @@ class Star_Rating_Element extends Element_Base {
 						'key'   => 'fill'
 					]
 				],
-				"defaultValue" => '#FFFFFF'
+				"defaultValue" => '#FF912C'
 			]
 		);
 
