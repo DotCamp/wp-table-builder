@@ -24095,7 +24095,7 @@ var global = arguments[3];
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getMainBuilderTable = exports.generateUniqueId = void 0;
+exports.objectPropertyFromString = exports.getMainBuilderTable = exports.generateUniqueId = void 0;
 
 /**
  * Generate unique id.
@@ -24127,8 +24127,32 @@ exports.generateUniqueId = generateUniqueId;
 var getMainBuilderTable = function getMainBuilderTable() {
   return document.querySelector('.wptb-table-setup .wptb-preview-table');
 };
+/**
+ * Get a property value from an object with a string key.
+ 
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @return {*} property value
+ */
+// eslint-disable-next-line import/prefer-default-export
+
 
 exports.getMainBuilderTable = getMainBuilderTable;
+
+var objectPropertyFromString = function objectPropertyFromString(stringKey, target) {
+  // split string key for inner properties
+  var splitKey = stringKey.split('.');
+
+  if (!Array.isArray(splitKey)) {
+    splitKey = [splitKey];
+  }
+
+  return splitKey.reduce(function (carry, item) {
+    return carry[item];
+  }, target);
+};
+
+exports.objectPropertyFromString = objectPropertyFromString;
 },{}],"components/ColorPicker.vue":[function(require,module,exports) {
 "use strict";
 
@@ -24139,7 +24163,7 @@ exports.default = void 0;
 
 var _vueColor = require("vue-color");
 
-var _functions = require("../functions");
+var _index = require("$Functions/index");
 
 var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
 
@@ -24239,15 +24263,20 @@ var _default = {
         passive: true
       });
       ownerDocument.addEventListener('keyup', _this.handleHide);
-      _this.id = (0, _functions.generateUniqueId)();
+      _this.id = (0, _index.generateUniqueId)();
       WPTB_IconManager.getIcon('tint-slash', null, true).then(function (resp) {
         _this.icons.noColor = resp;
       });
       WPTB_IconManager.getIcon('palette', null, true).then(function (resp) {
         _this.icons.palette = resp;
       });
-      WPTB_Store.subscribe('setActiveColorPicker', function (activeId) {
-        _this.setVisibility(activeId === _this.id);
+      WPTB_Store.subscribe(function (_ref) {
+        var type = _ref.type,
+            activeId = _ref.payload;
+
+        if (type === 'colorPicker/setActiveColorPicker') {
+          _this.setVisibility(activeId === _this.id);
+        }
       });
     });
   },
@@ -24312,7 +24341,7 @@ var _default = {
         this.visibility = state;
 
         if (state) {
-          WPTB_Store.commit('setActiveColorPicker', this.id);
+          WPTB_Store.commit('colorPicker/setActiveColorPicker', this.id);
         }
       }
     },
@@ -24495,7 +24524,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-color":"../../../../../node_modules/vue-color/dist/vue-color.min.js","../functions":"functions/index.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"containers/DifferentBorderControl.vue":[function(require,module,exports) {
+},{"vue-color":"../../../../../node_modules/vue-color/dist/vue-color.min.js","$Functions/index":"functions/index.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"containers/DifferentBorderControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32177,7 +32206,7 @@ render._withStripped = true
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.mutationWatchFunction = exports.createBasicStore = exports.objectDeepMerge = void 0;
+exports.stateWatchFunction = exports.mutationWatchFunction = exports.createBasicStore = exports.objectDeepMerge = void 0;
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
@@ -32186,6 +32215,8 @@ var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 var _vuex = _interopRequireDefault(require("vuex"));
 
 var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _index = require("$Functions/index");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32259,9 +32290,52 @@ var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
     }
   };
 };
+/**
+ * State watch function.
+ *
+ * @param {Object} store vuex store object
+ * @param {Object} watchList watch list */
+
 
 exports.mutationWatchFunction = mutationWatchFunction;
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"stores/index.js":[function(require,module,exports) {
+
+var stateWatchFunction = function stateWatchFunction(store, watchList) {
+  // eslint-disable-next-line array-callback-return
+  Object.keys(watchList).map(function (k) {
+    if (Object.prototype.hasOwnProperty.call(watchList, k)) {
+      var _watchList$k = watchList[k],
+          watch = _watchList$k.watch,
+          callBack = _watchList$k.callBack,
+          callAtStart = _watchList$k.callAtStart;
+
+      if (!Array.isArray(watch)) {
+        watch = [watch];
+      }
+
+      var stateGetter = function stateGetter(keyString, storeObject) {
+        return function () {
+          return (0, _index.objectPropertyFromString)(keyString, storeObject.state);
+        };
+      }; // eslint-disable-next-line array-callback-return
+
+
+      watch.map(function (w) {
+        if (callAtStart) {
+          callBack(store)(stateGetter(w, store)());
+        }
+
+        store.watch(stateGetter(w, store), function (newVal, oldVal) {
+          return callBack(store, newVal, oldVal);
+        }, {
+          deep: true
+        });
+      });
+    }
+  });
+};
+
+exports.stateWatchFunction = stateWatchFunction;
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Functions/index":"functions/index.js"}],"stores/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32624,19 +32698,7 @@ var subscriptions = function subscriptions(store) {
     new WPTB_TableStateSaveManager().tableStateSet();
   }, {
     deep: true
-  }); // @deprecated dev option
-  // // TODO [erdembircan] remove for production
-  // store.watch(
-  // 	() => {
-  // 		return store.state;
-  // 	},
-  // 	() => {
-  // 		// TODO [erdembircan] remove for production
-  // 		console.log(store.state);
-  // 	},
-  // 	{ deep: true }
-  // );
-  // watch store mutations
+  }); // watch store mutations
 
   store.subscribe((0, _general.mutationWatchFunction)(mutationWatchList, store));
 };
@@ -32653,7 +32715,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _index = _interopRequireDefault(require("../index"));
+var _index = _interopRequireDefault(require("$Stores/index"));
 
 var _state = _interopRequireDefault(require("./state"));
 
@@ -32685,7 +32747,7 @@ var defaultStore = {
 var _default = (0, _index.default)(defaultStore);
 
 exports.default = _default;
-},{"../index":"stores/index.js","./state":"stores/backgroundMenu/state.js","./getters":"stores/backgroundMenu/getters.js","./mutations":"stores/backgroundMenu/mutations.js","./actions":"stores/backgroundMenu/actions.js","./plugin":"stores/backgroundMenu/plugin.js"}],"mountPoints/WPTB_BackgroundMenu.js":[function(require,module,exports) {
+},{"$Stores/index":"stores/index.js","./state":"stores/backgroundMenu/state.js","./getters":"stores/backgroundMenu/getters.js","./mutations":"stores/backgroundMenu/mutations.js","./actions":"stores/backgroundMenu/actions.js","./plugin":"stores/backgroundMenu/plugin.js"}],"mountPoints/WPTB_BackgroundMenu.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

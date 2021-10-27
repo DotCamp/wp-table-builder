@@ -45,7 +45,7 @@
 
 <script>
 import { Sketch } from 'vue-color';
-import { generateUniqueId } from '../functions';
+import { generateUniqueId } from '$Functions/index';
 import Panel2ColumnTemplate from '$LeftPanel/Panel2ColumnTemplate';
 
 export default {
@@ -99,8 +99,10 @@ export default {
 				this.icons.palette = resp;
 			});
 
-			WPTB_Store.subscribe('setActiveColorPicker', (activeId) => {
-				this.setVisibility(activeId === this.id);
+			WPTB_Store.subscribe(({ type, payload: activeId }) => {
+				if (type === 'colorPicker/setActiveColorPicker') {
+					this.setVisibility(activeId === this.id);
+				}
 			});
 		});
 	},
@@ -150,7 +152,7 @@ export default {
 				this.visibility = state;
 
 				if (state) {
-					WPTB_Store.commit('setActiveColorPicker', this.id);
+					WPTB_Store.commit('colorPicker/setActiveColorPicker', this.id);
 				}
 			}
 		},

@@ -28653,7 +28653,7 @@ var global = arguments[3];
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getMainBuilderTable = exports.generateUniqueId = void 0;
+exports.objectPropertyFromString = exports.getMainBuilderTable = exports.generateUniqueId = void 0;
 
 /**
  * Generate unique id.
@@ -28685,8 +28685,32 @@ exports.generateUniqueId = generateUniqueId;
 var getMainBuilderTable = function getMainBuilderTable() {
   return document.querySelector('.wptb-table-setup .wptb-preview-table');
 };
+/**
+ * Get a property value from an object with a string key.
+ 
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @return {*} property value
+ */
+// eslint-disable-next-line import/prefer-default-export
+
 
 exports.getMainBuilderTable = getMainBuilderTable;
+
+var objectPropertyFromString = function objectPropertyFromString(stringKey, target) {
+  // split string key for inner properties
+  var splitKey = stringKey.split('.');
+
+  if (!Array.isArray(splitKey)) {
+    splitKey = [splitKey];
+  }
+
+  return splitKey.reduce(function (carry, item) {
+    return carry[item];
+  }, target);
+};
+
+exports.objectPropertyFromString = objectPropertyFromString;
 },{}],"components/ColorPicker.vue":[function(require,module,exports) {
 "use strict";
 
@@ -28697,7 +28721,7 @@ exports.default = void 0;
 
 var _vueColor = require("vue-color");
 
-var _functions = require("../functions");
+var _index = require("$Functions/index");
 
 var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
 
@@ -28797,15 +28821,20 @@ var _default = {
         passive: true
       });
       ownerDocument.addEventListener('keyup', _this.handleHide);
-      _this.id = (0, _functions.generateUniqueId)();
+      _this.id = (0, _index.generateUniqueId)();
       WPTB_IconManager.getIcon('tint-slash', null, true).then(function (resp) {
         _this.icons.noColor = resp;
       });
       WPTB_IconManager.getIcon('palette', null, true).then(function (resp) {
         _this.icons.palette = resp;
       });
-      WPTB_Store.subscribe('setActiveColorPicker', function (activeId) {
-        _this.setVisibility(activeId === _this.id);
+      WPTB_Store.subscribe(function (_ref) {
+        var type = _ref.type,
+            activeId = _ref.payload;
+
+        if (type === 'colorPicker/setActiveColorPicker') {
+          _this.setVisibility(activeId === _this.id);
+        }
       });
     });
   },
@@ -28870,7 +28899,7 @@ var _default = {
         this.visibility = state;
 
         if (state) {
-          WPTB_Store.commit('setActiveColorPicker', this.id);
+          WPTB_Store.commit('colorPicker/setActiveColorPicker', this.id);
         }
       }
     },
@@ -29053,7 +29082,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-color":"../../../../../node_modules/vue-color/dist/vue-color.min.js","../functions":"functions/index.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"components/Settings/SettingsTransition.vue":[function(require,module,exports) {
+},{"vue-color":"../../../../../node_modules/vue-color/dist/vue-color.min.js","$Functions/index":"functions/index.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"components/Settings/SettingsTransition.vue":[function(require,module,exports) {
 
         var $c545e7 = exports.default || module.exports;
       
