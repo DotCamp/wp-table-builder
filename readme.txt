@@ -94,6 +94,7 @@ That's it. You're done!
 
 * FIX: An issue with element control changes not reflected to associated targets.
 * FIX: Star rating element default color reverted to gold.
+* FIX: Term object check for tag manager.
 
 = 1.3.12 =
 
