@@ -24,3 +24,24 @@ export const generateUniqueId = (length = 5) => {
 export const getMainBuilderTable = () => {
 	return document.querySelector('.wptb-table-setup .wptb-preview-table');
 };
+
+/**
+ * Get a property value from an object with a string key.
+ 
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @return {*} property value
+ */
+// eslint-disable-next-line import/prefer-default-export
+export const objectPropertyFromString = (stringKey, target) => {
+	// split string key for inner properties
+	let splitKey = stringKey.split('.');
+
+	if (!Array.isArray(splitKey)) {
+		splitKey = [splitKey];
+	}
+
+	return splitKey.reduce((carry, item) => {
+		return carry[item];
+	}, target);
+};

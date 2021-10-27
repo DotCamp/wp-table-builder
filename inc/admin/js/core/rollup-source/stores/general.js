@@ -1,5 +1,6 @@
 import Vuex from 'vuex';
 import merge from 'deepmerge';
+import { objectPropertyFromString } from '$Functions/index';
 /**
  * Deep merge object.
  *
@@ -53,4 +54,35 @@ export const mutationWatchFunction = (watchList, store) => (...args) => {
 	if (watchList[payload.type]) {
 		watchList[payload.type](...args, store);
 	}
+};
+
+/**
+ * State watch function.
+ *
+ * @param {Object} store vuex store object
+ * @param {Object} watchList watch list */
+export const stateWatchFunction = (store, watchList) => {
+	// eslint-disable-next-line array-callback-return
+	Object.keys(watchList).map((k) => {
+		if (Object.prototype.hasOwnProperty.call(watchList, k)) {
+			let { watch, callBack, callAtStart } = watchList[k];
+
+			if (!Array.isArray(watch)) {
+				watch = [watch];
+			}
+
+			const stateGetter = (keyString, storeObject) => () => {
+				return objectPropertyFromString(keyString, storeObject.state);
+			};
+
+			// eslint-disable-next-line array-callback-return
+			watch.map((w) => {
+				if (callAtStart) {
+					callBack(store)(stateGetter(w, store)());
+				}
+
+				store.watch(stateGetter(w, store), (newVal, oldVal) => callBack(store, newVal, oldVal), { deep: true });
+			});
+		}
+	});
 };

@@ -1,4 +1,4 @@
-import createStore from '../index';
+import createStore from '$Stores/index';
 import state from './state';
 import getters from './getters';
 import mutations from './mutations';

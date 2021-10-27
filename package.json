@@ -27,6 +27,7 @@
     "$LazyLoadSettings": "./inc/admin/js/core/rollup-source/components/lazyLoadSettings",
     "$Plugins": "./inc/admin/js/core/rollup-source/plugins",
     "$Containers": "./inc/admin/js/core/rollup-source/containers",
+    "$Stores": "./inc/admin/js/core/rollup-source/stores",
     "$FrontEndOnly": "./inc/frontend/js/frontend-only"
   },
   "babel": {
