@@ -253,7 +253,6 @@ class Settings_Manager {
 
 			// script and style enqueue
 			Init::instance()->get_icon_manager()->enqueue_icon_manager_assets( true );
-			Helpers::enqueue_file( 'inc/admin/js/WPTB_Store.js', [], true );
 			Helpers::enqueue_file( $script_path, [], true, $handler );
 			Helpers::enqueue_file( $style_path, [], false, 'wptb-settings-manager-style' );
 

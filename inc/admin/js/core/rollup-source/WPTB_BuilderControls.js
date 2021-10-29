@@ -25,6 +25,10 @@ import WPTB_MultiCheckboxControl from '$MountPoints/WPTB_MultiCheckboxControl';
 import WPTB_Size2Control from '$MountPoints/WPTB_Size2Control';
 import WPTB_ColorPaletteControl from '$MountPoints/WPTB_ColorPaletteControl';
 import WPTB_NightMode from '$MountPoints/WPTB_NightMode';
+import { setupGlobalStore } from '$Functions/globalStore';
+
+// setup up global store for builder
+setupGlobalStore();
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;

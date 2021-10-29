@@ -12891,12 +12891,16 @@ function ControlsManager() {
    */
 
 
-  function callControlScript(key, args) {
+  function callControlScript(key) {
     if (!controlScripts[key]) {
       throw new Error("Called control element not found: [".concat(key, "]"));
     }
 
-    controlScripts[key](args);
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    controlScripts[key].apply(null, args);
   }
   /**
    * Register data for a control item
@@ -24214,7 +24218,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-// import WPTB_Store from '$Stores/builderStore';
 var _default = {
   props: {
     label: {
@@ -45211,7 +45214,279 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/NightMode":"containers/NightMode.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/NightMode":"containers/NightMode.vue"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Color picker store module.
+ *
+ * @type {Object}
+ */
+var colorPickerModule = {
+  namespaced: true,
+  state: function state() {
+    return {
+      activeId: null
+    };
+  },
+  getters: {
+    /**
+     * Get active color picker id.
+     *
+     * @param {Object} state store state
+     * @return {null|string} active color picker id
+     */
+    getActiveColorPickerId: function getActiveColorPickerId(state) {
+      return state.activeId;
+    }
+  },
+  mutations: {
+    /**
+     * Set active color picker id.
+     *
+     * @param {Object} state store state
+     * @param {string} id new color picker id
+     */
+    setActiveColorPicker: function setActiveColorPicker(state, id) {
+      // eslint-disable-next-line no-param-reassign
+      state.activeId = id;
+    }
+  }
+};
+/**
+ * @module colorPickerModule
+ */
+
+var _default = colorPickerModule;
+exports.default = _default;
+},{}],"stores/builderStore/modules/nightMode/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Night mode store module.
+ *
+ * @type {Object}
+ */
+var nightMode = {
+  namespaced: true,
+  state: function state() {
+    return {
+      activated: false
+    };
+  },
+  getters: {
+    isActive: function isActive(state) {
+      return state.activated;
+    }
+  },
+  mutations: {
+    setNightMode: function setNightMode(state, status) {
+      // eslint-disable-next-line no-param-reassign
+      state.activated = status;
+    }
+  }
+};
+/**
+ * @module nightMode
+ */
+
+var _default = nightMode;
+exports.default = _default;
+},{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _colorPicker = _interopRequireDefault(require("$Stores/builderStore/modules/colorPicker"));
+
+var _nightMode = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Default modules for builder store.
+ *
+ * @type {Object}
+ */
+var modules = {
+  colorPicker: _colorPicker.default,
+  nightMode: _nightMode.default
+};
+/**
+ * @module modules
+ */
+
+var _default = modules;
+exports.default = _default;
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js"}],"stores/builderStore/plugin.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _general = require("$Stores/general");
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * State watch list.
+ *
+ * @type {Object}
+ */
+var stateWatchList = {
+  proStatus: {
+    watch: 'pro',
+    callBack: function callBack(store, n) {
+      if (n) {
+        // disable pro status changes from outside sources
+        store.state.pro = false;
+      }
+    }
+  }
+};
+/**
+ * Store subscriptions to watch various store events.
+ *
+ * @param {Object} store flux store
+ */
+
+var subscriptions = function subscriptions(store) {
+  (0, _general.stateWatchFunction)(store, stateWatchList);
+};
+/**
+ * @module subscriptions
+ */
+
+
+var _default = subscriptions;
+exports.default = _default;
+},{"$Stores/general":"stores/general.js"}],"stores/builderStore/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _vuex = _interopRequireDefault(require("vuex"));
+
+var _general = require("$Stores/general");
+
+var _modules = _interopRequireDefault(require("./modules"));
+
+var _plugin = _interopRequireDefault(require("$Stores/builderStore/plugin"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * Default store for builder.
+ *
+ * @type {Object}
+ */
+var defaultStore = {
+  strict: true,
+  modules: _modules.default,
+  plugins: [_plugin.default]
+};
+/**
+ * Create a store for builder.
+ *
+ * @param {Object} extraStoreOptions extra store options to add to default one
+ * @return {Object} vuex store for builder
+ */
+
+var createStore = function createStore(extraStoreOptions) {
+  return (0, _general.createBasicStore)(defaultStore, extraStoreOptions);
+};
+
+function BuilderStore() {
+  _vue.default.use(_vuex.default); // eslint-disable-next-line camelcase
+
+
+  var _wptb_admin_object = wptb_admin_object,
+      storeData = _wptb_admin_object.store;
+  var extraStoreOptions = {
+    state: _objectSpread({}, storeData),
+    getters: {
+      proStatus: function proStatus(state) {
+        return state.pro;
+      }
+    }
+  };
+  var builderStore = createStore(extraStoreOptions);
+  /**
+   * Compatibility function for store getters.
+   *
+   * @param {string} getterId getter id
+   * @return {any} getter operation result
+   */
+
+  builderStore.get = function (getterId) {
+    return builderStore.getters[getterId];
+  };
+
+  return builderStore;
+}
+/**
+ * @module createStore
+ */
+
+
+var _default = new BuilderStore();
+
+exports.default = _default;
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"functions/globalStore.js":[function(require,module,exports) {
+var global = arguments[3];
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setupGlobalStore = void 0;
+
+var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable import/prefer-default-export */
+
+/**
+ * Create and assign store to global context.
+ *
+ * @param {string} key context key to assign store
+ */
+var setupGlobalStore = function setupGlobalStore() {
+  var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'WPTB_Store';
+  // eslint-disable-next-line no-restricted-globals
+  var context = self || global;
+  context[key] = _builderStore.default;
+};
+
+exports.setupGlobalStore = setupGlobalStore;
+},{"$Stores/builderStore":"stores/builderStore/index.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -45257,6 +45532,8 @@ var _WPTB_ColorPaletteControl = _interopRequireDefault(require("$MountPoints/WPT
 
 var _WPTB_NightMode = _interopRequireDefault(require("$MountPoints/WPTB_NightMode"));
 
+var _globalStore = require("$Functions/globalStore");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable camelcase */
@@ -45266,7 +45543,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * This file is used to register defined builder controls to specified controls manager and let them be called by individual control elements dynamically. Instead of import/register the components automatically, explicitly specify the components that will be registered to keep track of them more easily.
  */
-// turn off Vue production message at console
+// setup up global store for builder
+(0, _globalStore.setupGlobalStore)(); // turn off Vue production message at console
+
 _vue.default.config.productionTip = false; // eslint-disable-next-line no-restricted-globals
 
 var global = self || void 0; // adding controls manager to global space
@@ -45287,5 +45566,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_NightMode":"mountPoints/WPTB_NightMode.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_NightMode":"mountPoints/WPTB_NightMode.js","$Functions/globalStore":"functions/globalStore.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

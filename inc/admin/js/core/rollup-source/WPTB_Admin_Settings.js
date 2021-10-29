@@ -8,6 +8,10 @@ import Fragment from 'vue-fragment';
 import SettingsApp from './containers/SettingsApp.vue';
 import withStrings from './plugins/strings.js';
 import filters from './plugins/filters';
+import { setupGlobalStore } from '$Functions/globalStore';
+
+// setup store for settings menu
+setupGlobalStore();
 
 const frontendData = { ...wptbAdminSettingsData };
 
