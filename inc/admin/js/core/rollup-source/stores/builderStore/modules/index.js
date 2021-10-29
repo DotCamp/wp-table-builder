@@ -1,4 +1,5 @@
-import colorPicker from './colorPicker';
+import colorPicker from '$Stores/builderStore/modules/colorPicker';
+import nightMode from '$Stores/builderStore/modules/nightMode';
 
 /**
  * Default modules for builder store.
@@ -7,6 +8,7 @@ import colorPicker from './colorPicker';
  */
 const modules = {
 	colorPicker,
+	nightMode,
 };
 
 /**

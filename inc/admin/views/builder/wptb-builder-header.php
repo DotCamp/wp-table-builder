@@ -75,6 +75,9 @@ do_action( 'wptb_before_header' );
                 </svg>
                         </div>
                     </div>
+                    <div class="wptb-panel-night-mode-container" >
+                        <div id="wptbPanelNightMode"></div>
+                    </div>
                     <div class="wptb-panel-sub-container-buttons">
                         <div class="wptb-embed">
                             <a href="#"

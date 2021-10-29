@@ -47,6 +47,7 @@
 import { Sketch } from 'vue-color';
 import { generateUniqueId } from '$Functions/index';
 import Panel2ColumnTemplate from '$LeftPanel/Panel2ColumnTemplate';
+// import WPTB_Store from '$Stores/builderStore';
 
 export default {
 	props: {

@@ -28772,6 +28772,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+// import WPTB_Store from '$Stores/builderStore';
 var _default = {
   props: {
     label: {

@@ -24214,6 +24214,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+// import WPTB_Store from '$Stores/builderStore';
 var _default = {
   props: {
     label: {
@@ -45089,49 +45090,172 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ColorPaletteControl":"containers/ColorPaletteControl.vue","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ColorPaletteControl":"containers/ColorPaletteControl.vue","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"containers/NightMode.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _vuex = require("vuex");
+
+var _Icon = _interopRequireDefault(require("$Components/Icon"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+var _createNamespacedHelp = (0, _vuex.createNamespacedHelpers)('nightMode'),
+    mapGetters = _createNamespacedHelp.mapGetters,
+    mapMutations = _createNamespacedHelp.mapMutations;
+
+var _default = {
+  components: {
+    Icon: _Icon.default
+  },
+  mounted: function mounted() {},
+  computed: _objectSpread({
+    currentMode: function currentMode() {
+      return this.isActive ? 'light' : 'dark';
+    },
+    currentIcon: function currentIcon() {
+      return this.isActive ? 'sun' : 'cloud-moon';
+    }
+  }, mapGetters(['isActive'])),
+  methods: _objectSpread({}, mapMutations(['setNightMode']))
+};
+exports.default = _default;
+        var $3016e8 = exports.default || module.exports;
+      
+      if (typeof $3016e8 === 'function') {
+        $3016e8 = $3016e8.options;
+      }
+    
+        /* template */
+        Object.assign($3016e8, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      attrs: { "data-wptb-mode": _vm.currentMode },
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.setNightMode(!_vm.isActive)
+        }
+      }
+    },
+    [
+      _c("icon", {
+        attrs: {
+          name: _vm.currentIcon,
+          "extra-classes": [
+            "wptb-svg-inherit-color",
+            "wptb-panel-night-mode-icon-container"
+          ]
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/Icon":"components/Icon.vue"}],"mountPoints/WPTB_NightMode.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _NightMode = _interopRequireDefault(require("$Containers/NightMode"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import BuilderStore from '$Stores/builderStore';
+
+/**
+ * Night mode component.
+ */
+var _default = {
+  name: 'NightMode',
+  handler: function nightModeJS(uniqueId) {
+    new _vue.default({
+      store: WPTB_Store,
+      components: {
+        NightMode: _NightMode.default
+      },
+      template: '<night-mode></night-mode>'
+    }).$mount("#".concat(uniqueId));
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/NightMode":"containers/NightMode.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));
 
-var _WPTB_IconSelectControl = _interopRequireDefault(require("./mountPoints/WPTB_IconSelectControl"));
+var _WPTB_IconSelectControl = _interopRequireDefault(require("$MountPoints/WPTB_IconSelectControl"));
 
-var _WPTB_RangeControl = _interopRequireDefault(require("./mountPoints/WPTB_RangeControl"));
+var _WPTB_RangeControl = _interopRequireDefault(require("$MountPoints/WPTB_RangeControl"));
 
-var _WPTB_Select2Control = _interopRequireDefault(require("./mountPoints/WPTB_Select2Control"));
+var _WPTB_Select2Control = _interopRequireDefault(require("$MountPoints/WPTB_Select2Control"));
 
-var _WPTB_MediaSelectControl = _interopRequireDefault(require("./mountPoints/WPTB_MediaSelectControl"));
+var _WPTB_MediaSelectControl = _interopRequireDefault(require("$MountPoints/WPTB_MediaSelectControl"));
 
-var _WPTB_ControlsManager = _interopRequireDefault(require("./functions/WPTB_ControlsManager"));
+var _WPTB_ControlsManager = _interopRequireDefault(require("$Functions/WPTB_ControlsManager"));
 
-var _WPTB_ResponsiveTable = _interopRequireDefault(require("./mountPoints/WPTB_ResponsiveTable"));
+var _WPTB_ResponsiveTable = _interopRequireDefault(require("$MountPoints/WPTB_ResponsiveTable"));
 
-var _WPTB_SidesControl = _interopRequireDefault(require("./mountPoints/WPTB_SidesControl"));
+var _WPTB_SidesControl = _interopRequireDefault(require("$MountPoints/WPTB_SidesControl"));
 
-var _WPTB_NamedToggleControl = _interopRequireDefault(require("./mountPoints/WPTB_NamedToggleControl"));
+var _WPTB_NamedToggleControl = _interopRequireDefault(require("$MountPoints/WPTB_NamedToggleControl"));
 
-var _WPTB_TagControl = _interopRequireDefault(require("./mountPoints/WPTB_TagControl"));
+var _WPTB_TagControl = _interopRequireDefault(require("$MountPoints/WPTB_TagControl"));
 
-var _WPTB_DifferentBorderControl = _interopRequireDefault(require("./mountPoints/WPTB_DifferentBorderControl"));
+var _WPTB_DifferentBorderControl = _interopRequireDefault(require("$MountPoints/WPTB_DifferentBorderControl"));
 
-var _WPTB_LocalDevFileControl = _interopRequireDefault(require("./mountPoints/WPTB_LocalDevFileControl"));
+var _WPTB_LocalDevFileControl = _interopRequireDefault(require("$MountPoints/WPTB_LocalDevFileControl"));
 
-var _WPTB_NotificationManagerView = _interopRequireDefault(require("./mountPoints/WPTB_NotificationManagerView"));
+var _WPTB_NotificationManagerView = _interopRequireDefault(require("$MountPoints/WPTB_NotificationManagerView"));
 
-var _WPTB_NotificationManagerDevTool = _interopRequireDefault(require("./mountPoints/WPTB_NotificationManagerDevTool"));
+var _WPTB_NotificationManagerDevTool = _interopRequireDefault(require("$MountPoints/WPTB_NotificationManagerDevTool"));
 
-var _WPTB_WhatIsNew = _interopRequireDefault(require("./mountPoints/WPTB_WhatIsNew"));
+var _WPTB_WhatIsNew = _interopRequireDefault(require("$MountPoints/WPTB_WhatIsNew"));
 
-var _WPTB_BackgroundMenu = _interopRequireDefault(require("./mountPoints/WPTB_BackgroundMenu"));
+var _WPTB_BackgroundMenu = _interopRequireDefault(require("$MountPoints/WPTB_BackgroundMenu"));
 
-var _WPTB_ExtraStylesControl = _interopRequireDefault(require("./mountPoints/WPTB_ExtraStylesControl"));
+var _WPTB_ExtraStylesControl = _interopRequireDefault(require("$MountPoints/WPTB_ExtraStylesControl"));
 
-var _WPTB_MultiCheckboxControl = _interopRequireDefault(require("./mountPoints/WPTB_MultiCheckboxControl"));
+var _WPTB_MultiCheckboxControl = _interopRequireDefault(require("$MountPoints/WPTB_MultiCheckboxControl"));
 
-var _WPTB_Size2Control = _interopRequireDefault(require("./mountPoints/WPTB_Size2Control"));
+var _WPTB_Size2Control = _interopRequireDefault(require("$MountPoints/WPTB_Size2Control"));
 
-var _WPTB_ColorPaletteControl = _interopRequireDefault(require("./mountPoints/WPTB_ColorPaletteControl"));
+var _WPTB_ColorPaletteControl = _interopRequireDefault(require("$MountPoints/WPTB_ColorPaletteControl"));
+
+var _WPTB_NightMode = _interopRequireDefault(require("$MountPoints/WPTB_NightMode"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -45151,7 +45275,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default, _WPTB_ColorPaletteControl.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default, _WPTB_ColorPaletteControl.default, _WPTB_NightMode.default];
 /**
  * Register control element.
  *
@@ -45163,5 +45287,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","./mountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","./mountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","./mountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","./mountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","./mountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","./mountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","./mountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_NightMode":"mountPoints/WPTB_NightMode.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

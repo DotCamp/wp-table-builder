@@ -333,6 +333,24 @@ class Admin_Menu {
 
 			wp_enqueue_script( 'wptb-controls-manager-js', plugin_dir_url( __FILE__ ) . 'js/WPTB_BuilderControls.js', [], filemtime( $builder_path ), false );
 
+			$strings = [
+				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
+			];
+
+			$admin_object = [
+				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
+				'strings'       => $strings,
+				'store'         => [
+					'pro' => Addon_Manager::check_pro_status()
+				]
+			];
+
+			// filter for builder script data
+			$admin_object = apply_filters( 'wp-table-builder/filter/builder_script_data', $admin_object );
+
+			wp_localize_script( 'wptb-controls-manager-js', 'wptb_admin_object', $admin_object );
+
 			// generate controls
 			$generate_path = plugin_dir_path( __FILE__ ) . 'js/WPTB_Generate.js';
 
@@ -385,23 +403,23 @@ class Admin_Menu {
 			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
 			wp_enqueue_script( 'wptb-admin-builder-js' );
 
-			$strings = [
-				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
-			];
-
-			$admin_object = [
-				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
-				'strings'       => $strings,
-				'store'         => [
-					'pro' => Addon_Manager::check_pro_status()
-				]
-			];
-
-			// filter for builder script data
-			$admin_object = apply_filters( 'wp-table-builder/filter/builder_script_data', $admin_object );
-
-			wp_localize_script( 'wptb-admin-builder-js', 'wptb_admin_object', $admin_object );
+//			$strings = [
+//				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
+//			];
+//
+//			$admin_object = [
+//				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+//				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
+//				'strings'       => $strings,
+//				'store'         => [
+//					'pro' => Addon_Manager::check_pro_status()
+//				]
+//			];
+//
+//			// filter for builder script data
+//			$admin_object = apply_filters( 'wp-table-builder/filter/builder_script_data', $admin_object );
+//
+//			wp_localize_script( 'wptb-admin-builder-js', 'wptb_admin_object', $admin_object );
 
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
 

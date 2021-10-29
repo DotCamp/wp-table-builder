@@ -5,25 +5,26 @@
  * This file is used to register defined builder controls to specified controls manager and let them be called by individual control elements dynamically. Instead of import/register the components automatically, explicitly specify the components that will be registered to keep track of them more easily.
  */
 import Vue from 'vue';
-import WPTB_IconSelectControl from './mountPoints/WPTB_IconSelectControl';
-import WPTB_RangeControl from './mountPoints/WPTB_RangeControl';
-import WPTB_Select2Control from './mountPoints/WPTB_Select2Control';
-import WPTB_MediaSelectControl from './mountPoints/WPTB_MediaSelectControl';
-import WPTB_ControlsManager from './functions/WPTB_ControlsManager';
-import WPTB_ResponsiveTable from './mountPoints/WPTB_ResponsiveTable';
-import WPTB_SidesControl from './mountPoints/WPTB_SidesControl';
-import WPTB_NamedToggleControl from './mountPoints/WPTB_NamedToggleControl';
-import WPTB_TagControl from './mountPoints/WPTB_TagControl';
-import WPTB_DifferentBorderControl from './mountPoints/WPTB_DifferentBorderControl';
-import WPTB_LocalDevFileControl from './mountPoints/WPTB_LocalDevFileControl';
-import WPTB_NotificationManagerView from './mountPoints/WPTB_NotificationManagerView';
-import WPTB_NotificationManagerDevTool from './mountPoints/WPTB_NotificationManagerDevTool';
-import WPTB_WhatIsNew from './mountPoints/WPTB_WhatIsNew';
-import WPTB_BackgroundMenu from './mountPoints/WPTB_BackgroundMenu';
-import WPTB_ExtraStylesControl from './mountPoints/WPTB_ExtraStylesControl';
-import WPTB_MultiCheckboxControl from './mountPoints/WPTB_MultiCheckboxControl';
-import WPTB_Size2Control from './mountPoints/WPTB_Size2Control';
-import WPTB_ColorPaletteControl from './mountPoints/WPTB_ColorPaletteControl';
+import WPTB_IconSelectControl from '$MountPoints/WPTB_IconSelectControl';
+import WPTB_RangeControl from '$MountPoints/WPTB_RangeControl';
+import WPTB_Select2Control from '$MountPoints/WPTB_Select2Control';
+import WPTB_MediaSelectControl from '$MountPoints/WPTB_MediaSelectControl';
+import WPTB_ControlsManager from '$Functions/WPTB_ControlsManager';
+import WPTB_ResponsiveTable from '$MountPoints/WPTB_ResponsiveTable';
+import WPTB_SidesControl from '$MountPoints/WPTB_SidesControl';
+import WPTB_NamedToggleControl from '$MountPoints/WPTB_NamedToggleControl';
+import WPTB_TagControl from '$MountPoints/WPTB_TagControl';
+import WPTB_DifferentBorderControl from '$MountPoints/WPTB_DifferentBorderControl';
+import WPTB_LocalDevFileControl from '$MountPoints/WPTB_LocalDevFileControl';
+import WPTB_NotificationManagerView from '$MountPoints/WPTB_NotificationManagerView';
+import WPTB_NotificationManagerDevTool from '$MountPoints/WPTB_NotificationManagerDevTool';
+import WPTB_WhatIsNew from '$MountPoints/WPTB_WhatIsNew';
+import WPTB_BackgroundMenu from '$MountPoints/WPTB_BackgroundMenu';
+import WPTB_ExtraStylesControl from '$MountPoints/WPTB_ExtraStylesControl';
+import WPTB_MultiCheckboxControl from '$MountPoints/WPTB_MultiCheckboxControl';
+import WPTB_Size2Control from '$MountPoints/WPTB_Size2Control';
+import WPTB_ColorPaletteControl from '$MountPoints/WPTB_ColorPaletteControl';
+import WPTB_NightMode from '$MountPoints/WPTB_NightMode';
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
@@ -56,6 +57,7 @@ const controls = [
 	WPTB_MultiCheckboxControl,
 	WPTB_Size2Control,
 	WPTB_ColorPaletteControl,
+	WPTB_NightMode,
 ];
 
 /**

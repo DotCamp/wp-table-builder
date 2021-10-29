@@ -13766,6 +13766,44 @@ var colorPickerModule = {
 
 var _default = colorPickerModule;
 exports.default = _default;
+},{}],"stores/builderStore/modules/nightMode/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Night mode store module.
+ *
+ * @type {Object}
+ */
+var nightMode = {
+  namespaced: true,
+  state: function state() {
+    return {
+      activated: false
+    };
+  },
+  getters: {
+    isActive: function isActive(state) {
+      return state.activated;
+    }
+  },
+  mutations: {
+    setNightMode: function setNightMode(state, status) {
+      // eslint-disable-next-line no-param-reassign
+      state.activated = status;
+    }
+  }
+};
+/**
+ * @module nightMode
+ */
+
+var _default = nightMode;
+exports.default = _default;
 },{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -13774,7 +13812,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _colorPicker = _interopRequireDefault(require("./colorPicker"));
+var _colorPicker = _interopRequireDefault(require("$Stores/builderStore/modules/colorPicker"));
+
+var _nightMode = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13784,7 +13824,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @type {Object}
  */
 var modules = {
-  colorPicker: _colorPicker.default
+  colorPicker: _colorPicker.default,
+  nightMode: _nightMode.default
 };
 /**
  * @module modules
@@ -13792,7 +13833,7 @@ var modules = {
 
 var _default = modules;
 exports.default = _default;
-},{"./colorPicker":"stores/builderStore/modules/colorPicker/index.js"}],"stores/builderStore/plugin.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js"}],"stores/builderStore/plugin.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13844,6 +13885,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _vue = _interopRequireDefault(require("vue"));
 
 var _vuex = _interopRequireDefault(require("vuex"));
@@ -13856,14 +13899,15 @@ var _plugin = _interopRequireDefault(require("$Stores/builderStore/plugin"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_vue.default.use(_vuex.default);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 /**
  * Default store for builder.
  *
  * @type {Object}
  */
-
-
 var defaultStore = {
   strict: true,
   modules: _modules.default,
@@ -13879,26 +13923,50 @@ var defaultStore = {
 var createStore = function createStore(extraStoreOptions) {
   return (0, _general.createBasicStore)(defaultStore, extraStoreOptions);
 };
+
+function BuilderStore() {
+  _vue.default.use(_vuex.default); // eslint-disable-next-line camelcase
+
+
+  var _wptb_admin_object = wptb_admin_object,
+      storeData = _wptb_admin_object.store;
+  var extraStoreOptions = {
+    state: _objectSpread({}, storeData),
+    getters: {
+      proStatus: function proStatus(state) {
+        return state.pro;
+      }
+    }
+  };
+  var builderStore = createStore(extraStoreOptions);
+  /**
+   * Compatibility function for store getters.
+   *
+   * @param {string} getterId getter id
+   * @return {any} getter operation result
+   */
+
+  builderStore.get = function (getterId) {
+    return builderStore.getters[getterId];
+  };
+
+  return builderStore;
+}
 /**
  * @module createStore
  */
 
 
-var _default = createStore;
+var _default = new BuilderStore();
+
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"WPTB_Store.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"WPTB_Store.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
  * Wptb store UMD module.
@@ -13907,50 +13975,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   // eslint-disable-next-line no-param-reassign
   context[key] = factory(); // eslint-disable-next-line no-restricted-globals
 })('WPTB_Store', self || global, function () {
-  /**
-   * Data store for builder.
-   *
-   * @param {Object} extraStoreOptions extra store options to use
-   *
-   * @class
-   */
-  function WptbStore() {
-    var extraStoreOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var builderStore = (0, _builderStore.default)(extraStoreOptions);
-    /**
-     * Compatibility function for store getters.
-     *
-     * @param {string} getterId getter id
-     * @return {any} getter operation result
-     */
-
-    builderStore.get = function (getterId) {
-      return builderStore.getters[getterId];
-    };
-
-    return builderStore;
-  } // eslint-disable-next-line camelcase
-
-
-  var _wptb_admin_object = wptb_admin_object,
-      storeData = _wptb_admin_object.store;
-  /**
-   * App store for builder.
-   *
-   * @type {Object}
-   */
-
-  var appStore = {
-    state: _objectSpread({}, storeData),
-    getters: {
-      proStatus: function proStatus(state) {
-        return state.pro;
-      }
-    }
-  };
-  /** @module WptbStore */
-
-  return new WptbStore(appStore);
+  return _builderStore.default;
 });
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","$Stores/builderStore":"stores/builderStore/index.js"}]},{},["WPTB_Store.js"], null)
+},{"$Stores/builderStore":"stores/builderStore/index.js"}]},{},["WPTB_Store.js"], null)
 //# sourceMappingURL=/WPTB_Store.js.map
