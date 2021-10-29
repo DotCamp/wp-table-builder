@@ -45204,8 +45204,6 @@ var _NightMode = _interopRequireDefault(require("$Containers/NightMode"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import BuilderStore from '$Stores/builderStore';
-
 /**
  * Night mode component.
  */
@@ -45289,18 +45287,21 @@ var nightMode = {
   namespaced: true,
   state: function state() {
     return {
-      activated: false
+      activated: {
+        value: false,
+        _persistent: true
+      }
     };
   },
   getters: {
     isActive: function isActive(state) {
-      return state.activated;
+      return state.activated.value;
     }
   },
   mutations: {
     setNightMode: function setNightMode(state, status) {
       // eslint-disable-next-line no-param-reassign
-      state.activated = status;
+      state.activated.value = status;
     }
   }
 };
@@ -45339,15 +45340,178 @@ var modules = {
 
 var _default = modules;
 exports.default = _default;
-},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js"}],"stores/builderStore/plugin.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
+var define;
+var global = arguments[3];
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/*! js-cookie v3.0.1 | MIT */
+;
+
+(function (global, factory) {
+  (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global = global || self, function () {
+    var current = global.Cookies;
+    var exports = global.Cookies = factory();
+
+    exports.noConflict = function () {
+      global.Cookies = current;
+      return exports;
+    };
+  }());
+})(this, function () {
+  'use strict';
+  /* eslint-disable no-var */
+
+  function assign(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        target[key] = source[key];
+      }
+    }
+
+    return target;
+  }
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+
+
+  var defaultConverter = {
+    read: function read(value) {
+      if (value[0] === '"') {
+        value = value.slice(1, -1);
+      }
+
+      return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent);
+    },
+    write: function write(value) {
+      return encodeURIComponent(value).replace(/%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g, decodeURIComponent);
+    }
+  };
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+
+  function init(converter, defaultAttributes) {
+    function set(key, value, attributes) {
+      if (typeof document === 'undefined') {
+        return;
+      }
+
+      attributes = assign({}, defaultAttributes, attributes);
+
+      if (typeof attributes.expires === 'number') {
+        attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
+      }
+
+      if (attributes.expires) {
+        attributes.expires = attributes.expires.toUTCString();
+      }
+
+      key = encodeURIComponent(key).replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent).replace(/[()]/g, escape);
+      var stringifiedAttributes = '';
+
+      for (var attributeName in attributes) {
+        if (!attributes[attributeName]) {
+          continue;
+        }
+
+        stringifiedAttributes += '; ' + attributeName;
+
+        if (attributes[attributeName] === true) {
+          continue;
+        } // Considers RFC 6265 section 5.2:
+        // ...
+        // 3.  If the remaining unparsed-attributes contains a %x3B (";")
+        //     character:
+        // Consume the characters of the unparsed-attributes up to,
+        // not including, the first %x3B (";") character.
+        // ...
+
+
+        stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
+      }
+
+      return document.cookie = key + '=' + converter.write(value, key) + stringifiedAttributes;
+    }
+
+    function get(key) {
+      if (typeof document === 'undefined' || arguments.length && !key) {
+        return;
+      } // To prevent the for loop in the first place assign an empty array
+      // in case there are no cookies at all.
+
+
+      var cookies = document.cookie ? document.cookie.split('; ') : [];
+      var jar = {};
+
+      for (var i = 0; i < cookies.length; i++) {
+        var parts = cookies[i].split('=');
+        var value = parts.slice(1).join('=');
+
+        try {
+          var foundKey = decodeURIComponent(parts[0]);
+          jar[foundKey] = converter.read(value, foundKey);
+
+          if (key === foundKey) {
+            break;
+          }
+        } catch (e) {}
+      }
+
+      return key ? jar[key] : jar;
+    }
+
+    return Object.create({
+      set: set,
+      get: get,
+      remove: function remove(key, attributes) {
+        set(key, '', assign({}, attributes, {
+          expires: -1
+        }));
+      },
+      withAttributes: function withAttributes(attributes) {
+        return init(this.converter, assign({}, this.attributes, attributes));
+      },
+      withConverter: function withConverter(converter) {
+        return init(assign({}, this.converter, converter), this.attributes);
+      }
+    }, {
+      attributes: {
+        value: Object.freeze(defaultAttributes)
+      },
+      converter: {
+        value: Object.freeze(converter)
+      }
+    });
+  }
+
+  var api = init(defaultConverter, {
+    path: '/'
+  });
+  /* eslint-enable no-var */
+
+  return api;
+});
+},{}],"stores/builderStore/plugin.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.getPersistentState = void 0;
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
+var _jsCookie = _interopRequireDefault(require("js-cookie"));
 
 var _general = require("$Stores/general");
+
+var _index = require("$Functions/index");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable no-param-reassign */
 
@@ -45359,8 +45523,8 @@ var _general = require("$Stores/general");
 var stateWatchList = {
   proStatus: {
     watch: 'pro',
-    callBack: function callBack(store, n) {
-      if (n) {
+    callBack: function callBack(store, n, o) {
+      if (n && !o) {
         // disable pro status changes from outside sources
         store.state.pro = false;
       }
@@ -45368,12 +45532,110 @@ var stateWatchList = {
   }
 };
 /**
+ * Get persistent state of global store.
+ *
+ * @return {undefined | store} persistent state
+ */
+
+var getPersistentState = function getPersistentState() {
+  var wptbCookie = _jsCookie.default.get('wptb');
+
+  if (wptbCookie) {
+    try {
+      wptbCookie = JSON.parse(atob(wptbCookie));
+    } catch (e) {// do nothing...
+    }
+  }
+
+  return wptbCookie;
+};
+/**
+ * Write state to document cookie.
+ *
+ * @param {Object} state store state
+ * @param {Array} addresses an array of addresses to use while preparing data for write operation
+ */
+
+
+exports.getPersistentState = getPersistentState;
+
+var writePersistentState = function writePersistentState(state) {
+  var addresses = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var dataToWrite = {}; // eslint-disable-next-line array-callback-return
+
+  addresses.map(function (addr) {
+    var parts = addr.split('.');
+    parts.reduce(function (carry, key, index) {
+      if (index < parts.length - 1) {
+        if (!carry[key]) {
+          carry[key] = {};
+        }
+      } else {
+        carry[key] = (0, _index.objectPropertyFromString)(addr, state);
+      }
+
+      return carry[key];
+    }, dataToWrite);
+  });
+
+  _jsCookie.default.set('wptb', btoa(JSON.stringify(dataToWrite)));
+};
+/**
+ * Prepare a map array for state values with persistent functionality enabled.
+ *
+ * @param {Object} state store state
+ * @return {Array} an array of JSON style addresses for persistent state keys
+ */
+
+
+var preparePersistentMap = function preparePersistentMap(state) {
+  var map = [];
+  /**
+   * Get persistent addresses of values in store state.
+   *
+   * This function will push those addresses to map array in its closure
+   *
+   * @param {any} storeVal current store value
+   * @param {string} carryAddr carried address
+   */
+
+  function getPersistentAddr(storeVal) {
+    var carryAddr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+    if ((0, _typeof2.default)(storeVal) === 'object' && storeVal !== null) {
+      // eslint-disable-next-line no-underscore-dangle
+      if (Object.prototype.hasOwnProperty.call(storeVal, '_persistent')) {
+        map.push(carryAddr);
+      } else {
+        // eslint-disable-next-line array-callback-return
+        Object.keys(storeVal).map(function (key) {
+          if (Object.prototype.hasOwnProperty.call(storeVal, key)) {
+            getPersistentAddr(storeVal[key], "".concat(carryAddr).concat(carryAddr === '' ? '' : '.').concat(key));
+          }
+        });
+      }
+    }
+  }
+
+  getPersistentAddr(state);
+  return map;
+};
+/**
  * Store subscriptions to watch various store events.
  *
  * @param {Object} store flux store
  */
 
+
 var subscriptions = function subscriptions(store) {
+  var persistentMap = preparePersistentMap(store.state);
+  stateWatchList.stateWrite = {
+    watch: persistentMap,
+    callBack: function callBack(currentStore) {
+      // only values of state which are marked as persistent will trigger a save operation for store state
+      writePersistentState(currentStore.state, persistentMap);
+    }
+  };
   (0, _general.stateWatchFunction)(store, stateWatchList);
 };
 /**
@@ -45383,7 +45645,7 @@ var subscriptions = function subscriptions(store) {
 
 var _default = subscriptions;
 exports.default = _default;
-},{"$Stores/general":"stores/general.js"}],"stores/builderStore/index.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","js-cookie":"../../../../../node_modules/js-cookie/dist/js.cookie.js","$Stores/general":"stores/general.js","$Functions/index":"functions/index.js"}],"stores/builderStore/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45397,11 +45659,17 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _vuex = _interopRequireDefault(require("vuex"));
 
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
 var _general = require("$Stores/general");
 
 var _modules = _interopRequireDefault(require("./modules"));
 
-var _plugin = _interopRequireDefault(require("$Stores/builderStore/plugin"));
+var _plugin = _interopRequireWildcard(require("$Stores/builderStore/plugin"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -45445,12 +45713,18 @@ function BuilderStore() {
     }
   };
   var builderStore = createStore(extraStoreOptions);
+  var savedState = (0, _plugin.getPersistentState)();
+
+  if (savedState) {
+    builderStore.replaceState((0, _deepmerge.default)(builderStore.state, savedState));
+  }
   /**
    * Compatibility function for store getters.
    *
    * @param {string} getterId getter id
    * @return {any} getter operation result
    */
+
 
   builderStore.get = function (getterId) {
     return builderStore.getters[getterId];
@@ -45466,7 +45740,7 @@ function BuilderStore() {
 var _default = new BuilderStore();
 
 exports.default = _default;
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"functions/globalStore.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"functions/globalStore.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 

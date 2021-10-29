@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import merge from 'deepmerge';
 import { createBasicStore } from '$Stores/general';
 import modules from './modules';
-import subscriptions from '$Stores/builderStore/plugin';
+import subscriptions, { getPersistentState } from '$Stores/builderStore/plugin';
 
 /**
  * Default store for builder.
@@ -43,6 +44,11 @@ function BuilderStore() {
 	};
 
 	const builderStore = createStore(extraStoreOptions);
+
+	const savedState = getPersistentState();
+	if (savedState) {
+		builderStore.replaceState(merge(builderStore.state, savedState));
+	}
 
 	/**
 	 * Compatibility function for store getters.

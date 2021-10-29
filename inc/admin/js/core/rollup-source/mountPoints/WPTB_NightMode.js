@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import NightMode from '$Containers/NightMode';
-// import BuilderStore from '$Stores/builderStore';
 
 /**
  * Night mode component.
