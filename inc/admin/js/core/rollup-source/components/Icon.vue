@@ -16,6 +16,13 @@ export default {
 			},
 		},
 	},
+	watch: {
+		name(n) {
+			WPTB_IconManager.getIcon(n, this.extraClasses, true).then((icon) => {
+				this.iconFragment = icon;
+			});
+		},
+	},
 	data() {
 		return {
 			iconFragment: '',

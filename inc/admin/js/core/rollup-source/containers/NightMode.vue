@@ -15,7 +15,6 @@ const { mapGetters, mapMutations } = createNamespacedHelpers('nightMode');
 
 export default {
 	components: { Icon },
-	mounted() {},
 	computed: {
 		currentMode() {
 			return this.isActive ? 'light' : 'dark';

@@ -23,6 +23,9 @@
     --wptb-plugin-red-600: #E53E3E;
     --wptb-plugin-red-800: #991B1B;
     --wptb-plugin-blue-300: #90CDF4;
+    --wptb-plugin-blue-400: #60A5FA;
+    --wptb-plugin-blue-500: #3B82F6;
+    --wptb-plugin-blue-600: #2563EB;
     --wptb-plugin-white: #FFF;
     --wptb-plugin-black: #000;
     --wptb-plugin-gold: #D4AF37;
@@ -216,6 +219,7 @@ body > img {
 .wptb-panel-night-mode-icon-container {
     width: 32px;
     height: 32px;
+    cursor: pointer;
 }
 
 [data-wptb-mode='light'] .wptb-panel-night-mode-icon-container {
@@ -223,7 +227,7 @@ body > img {
 }
 
 [data-wptb-mode='dark'] .wptb-panel-night-mode-icon-container {
-    color: var(--wptb-plugin-gray-500);
+    color: var(--wptb-plugin-blue-400);
 }
 
 .wptb-header .wptb-settings-section-item {

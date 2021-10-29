@@ -14621,16 +14621,25 @@ var _default = {
       }
     }
   },
+  watch: {
+    name: function name(n) {
+      var _this = this;
+
+      WPTB_IconManager.getIcon(n, this.extraClasses, true).then(function (icon) {
+        _this.iconFragment = icon;
+      });
+    }
+  },
   data: function data() {
     return {
       iconFragment: ''
     };
   },
   mounted: function mounted() {
-    var _this = this;
+    var _this2 = this;
 
     WPTB_IconManager.getIcon(this.name, this.extraClasses, true).then(function (icon) {
-      _this.iconFragment = icon;
+      _this2.iconFragment = icon;
     });
   }
 };
@@ -45121,7 +45130,6 @@ var _default = {
   components: {
     Icon: _Icon.default
   },
-  mounted: function mounted() {},
   computed: _objectSpread({
     currentMode: function currentMode() {
       return this.isActive ? 'light' : 'dark';
