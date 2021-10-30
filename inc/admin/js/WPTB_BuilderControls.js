@@ -45123,22 +45123,49 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var _createNamespacedHelp = (0, _vuex.createNamespacedHelpers)('nightMode'),
-    mapGetters = _createNamespacedHelp.mapGetters,
-    mapMutations = _createNamespacedHelp.mapMutations;
+    mapStateNamespaced = _createNamespacedHelp.mapState,
+    mapGettersNamespaced = _createNamespacedHelp.mapGetters,
+    mapMutationsNamespaced = _createNamespacedHelp.mapMutations;
 
 var _default = {
   components: {
     Icon: _Icon.default
   },
-  computed: _objectSpread({
+  watch: {
+    isActive: function isActive() {
+      this.startModeProcess();
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.startModeProcess();
+    });
+  },
+  computed: _objectSpread(_objectSpread({
     currentMode: function currentMode() {
       return this.isActive ? 'light' : 'dark';
     },
     currentIcon: function currentIcon() {
       return this.isActive ? 'sun' : 'cloud-moon';
     }
-  }, mapGetters(['isActive'])),
-  methods: _objectSpread({}, mapMutations(['setNightMode']))
+  }, mapGettersNamespaced(['isActive'])), mapStateNamespaced(['cssVariableMaps'])),
+  methods: _objectSpread({
+    startModeProcess: function startModeProcess() {
+      var _this2 = this;
+
+      var ownerDocument = this.$refs.wrapper.ownerDocument;
+      ownerDocument.documentElement.dataset.wptbNightMode = this.isActive; // eslint-disable-next-line array-callback-return
+
+      Object.keys(this.cssVariableMaps).map(function (key) {
+        if (Object.prototype.hasOwnProperty.call(_this2.cssVariableMaps, key)) {
+          var styleOperation = _this2.isActive ? 'setProperty' : 'removeProperty';
+          ownerDocument.documentElement.style[styleOperation](key, _this2.cssVariableMaps[key]);
+        }
+      });
+    }
+  }, mapMutationsNamespaced(['setNightMode']))
 };
 exports.default = _default;
         var $3016e8 = exports.default || module.exports;
@@ -45156,6 +45183,7 @@ exports.default = _default;
   return _c(
     "div",
     {
+      ref: "wrapper",
       attrs: { "data-wptb-mode": _vm.currentMode },
       on: {
         click: function($event) {
@@ -45270,6 +45298,37 @@ var colorPickerModule = {
 
 var _default = colorPickerModule;
 exports.default = _default;
+},{}],"stores/builderStore/modules/nightMode/state/cssVariableMaps.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Variable mappings for night mode.
+ *
+ * @type {Object}
+ */
+var cssVariableMaps = {
+  // gray-500
+  '--wptb-plugin-theme-color-light': '#A0AEC0',
+  // gray-300
+  '--wptb-plugin-theme-text-color-main': '#E2E8F0',
+  // gray-600
+  '--wptb-plugin-gray-100': '#718096',
+  // gray-400
+  '--wptb-plugin-theme-sidebar-bg': '#CBD5E0',
+  // gray-700
+  '--wptb-plugin-logo-color': '#4A5568'
+};
+/**
+ * @module cssVariableMaps
+ */
+
+var _default = cssVariableMaps;
+exports.default = _default;
 },{}],"stores/builderStore/modules/nightMode/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -45277,6 +45336,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _cssVariableMaps = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode/state/cssVariableMaps"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Night mode store module.
@@ -45290,7 +45353,8 @@ var nightMode = {
       activated: {
         value: false,
         _persistent: true
-      }
+      },
+      cssVariableMaps: _cssVariableMaps.default
     };
   },
   getters: {
@@ -45311,7 +45375,7 @@ var nightMode = {
 
 var _default = nightMode;
 exports.default = _default;
-},{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/nightMode/state/cssVariableMaps":"stores/builderStore/modules/nightMode/state/cssVariableMaps.js"}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

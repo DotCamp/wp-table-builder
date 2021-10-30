@@ -1443,6 +1443,10 @@ ul.wptb-tabs {
     z-index: 100000;
 }
 
+[data-wptb-night-mode="true"] .wptb-builder-panel {
+    background-color: var(--wptb-plugin-gray-500);
+}
+
 .wptb-left-panel[data-wptb-panel-location="left"] + .wptb-builder-panel {
     left: var(--wptb-plugin-sidebar-size-full);
 }

@@ -1,3 +1,4 @@
+import cssVariableMaps from '$Stores/builderStore/modules/nightMode/state/cssVariableMaps';
 /**
  * Night mode store module.
  *
@@ -10,6 +11,7 @@ const nightMode = {
 			value: false,
 			_persistent: true,
 		},
+		cssVariableMaps,
 	}),
 	getters: {
 		isActive(state) {

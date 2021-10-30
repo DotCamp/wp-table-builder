@@ -32741,6 +32741,37 @@ var colorPickerModule = {
 
 var _default = colorPickerModule;
 exports.default = _default;
+},{}],"stores/builderStore/modules/nightMode/state/cssVariableMaps.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Variable mappings for night mode.
+ *
+ * @type {Object}
+ */
+var cssVariableMaps = {
+  // gray-500
+  '--wptb-plugin-theme-color-light': '#A0AEC0',
+  // gray-300
+  '--wptb-plugin-theme-text-color-main': '#E2E8F0',
+  // gray-600
+  '--wptb-plugin-gray-100': '#718096',
+  // gray-400
+  '--wptb-plugin-theme-sidebar-bg': '#CBD5E0',
+  // gray-700
+  '--wptb-plugin-logo-color': '#4A5568'
+};
+/**
+ * @module cssVariableMaps
+ */
+
+var _default = cssVariableMaps;
+exports.default = _default;
 },{}],"stores/builderStore/modules/nightMode/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -32748,6 +32779,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _cssVariableMaps = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode/state/cssVariableMaps"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Night mode store module.
@@ -32761,7 +32796,8 @@ var nightMode = {
       activated: {
         value: false,
         _persistent: true
-      }
+      },
+      cssVariableMaps: _cssVariableMaps.default
     };
   },
   getters: {
@@ -32782,7 +32818,7 @@ var nightMode = {
 
 var _default = nightMode;
 exports.default = _default;
-},{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/nightMode/state/cssVariableMaps":"stores/builderStore/modules/nightMode/state/cssVariableMaps.js"}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
