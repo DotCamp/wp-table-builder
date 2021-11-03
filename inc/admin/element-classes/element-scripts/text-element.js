@@ -143,12 +143,6 @@ function controlsChange(inputs, element) {
 }
 
 // start linkRel component as hidden
-WPTB_ControlsManager.updateControlValue(
-	elementId,
-	'linkRel',
-	false,
-	'componentVisibility'
-);
-
+WPTB_ControlsManager.updateControlValue(elementId, 'linkRel', false, 'componentVisibility');
 
 WPTB_Helper.controlsInclude(element, controlsChange);

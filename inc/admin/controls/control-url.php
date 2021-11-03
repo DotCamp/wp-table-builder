@@ -129,16 +129,26 @@ class Control_Url extends Base_Control {
             ( function() {
                 let selectorElement = document.querySelector( '{{{selector}}}' );
                 let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
-                for( let i = 0; i < targetInputs.length; i++ ) {
+            const mailLinkCheck = (val) => {
+                const regExp = new RegExp(/^(mailto:(.+)@(.+)\.(.+))$/);
+                return regExp.test(val);
+            };
+
+            for( let i = 0; i < targetInputs.length; i++ ) {
                     if( targetInputs[i].dataset.type == 'element-link' ) {
                         let href = selectorElement.getAttribute( 'href' );
                         targetInputs[i].value = href;
 
                         targetInputs[i].onchange = function() {
                             if ( this.value ) {
-                                const convertRelative = selectorElement.dataset.wptbLinkEnableConvertRelative;
-                                selectorElement.href = WPTB_Helper.linkHttpCheckChange( this.value , convertRelative === 'true' );
-                            } else {
+                                if(mailLinkCheck(this.value)){
+                                    selectorElement.href = this.value;
+                                }else{
+                                    const convertRelative = selectorElement.dataset.wptbLinkEnableConvertRelative;
+                                    selectorElement.href = WPTB_Helper.linkHttpCheckChange( this.value , convertRelative === 'true' );
+
+                                }
+            } else {
                                 selectorElement.removeAttribute( 'href' );
                             }
                             
@@ -195,16 +205,16 @@ class Control_Url extends Base_Control {
 
             currentCheckbox.addEventListener('change', function () {
             const hrefVal = selectorElement.href;
+            if(!mailLinkCheck(hrefVal)){
             if (this.checked) {
             selectorElement.dataset.wptbLinkEnableConvertRelative = true;
             } else {
             selectorElement.dataset.wptbLinkEnableConvertRelative = false;
             }
-
-
             selectorElement.href = WPTB_Helper.linkHttpCheckChange(hrefVal, this.checked);
 
             new WPTB_TableStateSaveManager().tableStateSet();
+            }
             })
 
                     }
