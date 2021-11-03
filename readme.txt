@@ -95,6 +95,7 @@ That's it. You're done!
 * FIX: An issue with element control changes not reflected to associated targets.
 * FIX: Star rating element default color reverted to gold.
 * FIX: Term object check for tag manager.
+* FIX: An issue with styled list icons change their sizes depending on sibling text length.
 
 = 1.3.12 =
 
