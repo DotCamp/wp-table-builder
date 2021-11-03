@@ -191,12 +191,6 @@ class Button_Element extends Element_Base {
 					],
 					'defaultValue' => '#FFFFFF'
 				],
-			'buttonLink'              =>
-				[
-					'label'    => __( 'Button Link', 'wp_table_builder' ),
-					'type'     => Controls_Manager::URL,
-					'selector' => '{{{data.container}}} .wptb-button-wrapper a'
-				],
 			'buttonAlignmentCheckbox' =>
 				[
 					'label'        => __( 'Button Alignment', 'wp_table_builder' ),
@@ -325,8 +319,18 @@ class Button_Element extends Element_Base {
 				],
 		];
 
+		$link_controls = [
+			'buttonLink' =>
+				[
+					'label'    => __( 'Button Link', 'wp_table_builder' ),
+					'type'     => Controls_Manager::URL,
+					'selector' => '{{{data.container}}} .wptb-button-wrapper a'
+				],
+		];
+
 		$button_controls = [
 			esc_html__( 'general', $text_domain ) => $general_controls,
+			esc_html__( 'link', $text_domain )    => $link_controls,
 			esc_html__( 'hover', $text_domain )   => $hover_controls,
 			esc_html__( 'icon', $text_domain )    => $icon_controls,
 		];
