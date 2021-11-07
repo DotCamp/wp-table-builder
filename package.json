@@ -27,6 +27,7 @@
     "$LazyLoadSettings": "./inc/admin/js/core/rollup-source/components/lazyLoadSettings",
     "$Plugins": "./inc/admin/js/core/rollup-source/plugins",
     "$Containers": "./inc/admin/js/core/rollup-source/containers",
+    "$MountPoints": "./inc/admin/js/core/rollup-source/mountPoints",
     "$Stores": "./inc/admin/js/core/rollup-source/stores",
     "$FrontEndOnly": "./inc/frontend/js/frontend-only"
   },
@@ -108,6 +109,6 @@
     "vue-color": "^2.8.1",
     "vue-fragment": "^1.5.1",
     "vue-hot-reload-api": "^2.3.4",
-    "vuex": "^3.5.1"
+    "vuex": "^3.6.2"
   }
 }

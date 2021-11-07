@@ -90,6 +90,9 @@ var WPTB_Initializer = function () {
     // call what-is-new component
     WPTB_ControlsManager.callControlScript('WhatIsNew');
 
+    // initialize night mode component
+    WPTB_ControlsManager.callControlScript('NightMode', 'wptbPanelNightMode');
+
     // initialize notification manager
     WPTB_NotificationManager.init();
 

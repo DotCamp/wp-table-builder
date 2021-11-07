@@ -16,7 +16,6 @@ const gulpConfig = {
 		src: [
 			'./inc/admin/js/core/*.js',
 			'./inc/admin/js/core-premium/*.js',
-			'./inc/admin/js/WPTB_Store.js',
 			'./inc/admin/js/core/rollup-source/WPTB_IconManager.js',
 		],
 		dest: '.',
