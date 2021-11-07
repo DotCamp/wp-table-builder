@@ -60,7 +60,6 @@ const controls = [
 	WPTB_MultiCheckboxControl,
 	WPTB_Size2Control,
 	WPTB_ColorPaletteControl,
-	WPTB_NightMode,
 ];
 
 /**

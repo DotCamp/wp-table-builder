@@ -18,34 +18,34 @@ do_action( 'wptb_before_header' );
                         class="dashicons dashicons-no wptb-header-close"></span></a>
         </div>
         <div class="wptb-header-buttons-container">
-            <?php
-		        // create a nonce
-		        $nonce = wp_create_nonce( 'wptb_nonce_table_preview' );
-		        ?>
-                <div class="wptb-right">
-			        <?php
-			        $wptb_button_disable_class        = '';
-			        $wptb_preview_button_url_value_id = 'empty';
-			        if ( ! isset( $_GET['table'] ) || ! absint( $_GET['table'] ) || ! get_post_meta( absint( $_GET['table'] ), '_wptb_content_', true ) ) {
-				        $wptb_button_disable_class = 'wptb-button-disable';
-			        } else {
-				        $wptb_preview_button_url_value_id = absint( $_GET['table'] );
-			        }
-			        $wptb_preview_button_url = add_query_arg(
-				        array(
-					        'post_type' => 'wptb-tables',
-					        'p'         => $wptb_preview_button_url_value_id,
-					        '_wpnonce'  => $nonce,
-				        ),
-				        home_url()
-			        );
-			        ?>
-                    <div class="wptb-undo-redo-container">
-                        <div class="wptb-undo wptb-undoredo-disabled" data-wptb-undoredo="undo">
-                            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                 viewBox="0 0 511.983 511.983" style="enable-background:new 0 0 511.983 511.983;"
-                                 xml:space="preserve" width="30" height="30" class="">
+			<?php
+			// create a nonce
+			$nonce = wp_create_nonce( 'wptb_nonce_table_preview' );
+			?>
+            <div class="wptb-right">
+				<?php
+				$wptb_button_disable_class        = '';
+				$wptb_preview_button_url_value_id = 'empty';
+				if ( ! isset( $_GET['table'] ) || ! absint( $_GET['table'] ) || ! get_post_meta( absint( $_GET['table'] ), '_wptb_content_', true ) ) {
+					$wptb_button_disable_class = 'wptb-button-disable';
+				} else {
+					$wptb_preview_button_url_value_id = absint( $_GET['table'] );
+				}
+				$wptb_preview_button_url = add_query_arg(
+					array(
+						'post_type' => 'wptb-tables',
+						'p'         => $wptb_preview_button_url_value_id,
+						'_wpnonce'  => $nonce,
+					),
+					home_url()
+				);
+				?>
+                <div class="wptb-undo-redo-container">
+                    <div class="wptb-undo wptb-undoredo-disabled" data-wptb-undoredo="undo">
+                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                             viewBox="0 0 511.983 511.983" style="enable-background:new 0 0 511.983 511.983;"
+                             xml:space="preserve" width="30" height="30" class="">
                     <g>
                         <path style="fill:#3B7EC0" d="M255.983,160.199V63.986c-0.007-5.891-4.788-10.661-10.679-10.655
                             c-2.134,0.002-4.218,0.645-5.983,1.844l-234.667,160c-4.866,3.321-6.119,9.957-2.798,14.823c0.75,1.099,1.699,2.048,2.798,2.798
@@ -56,12 +56,12 @@ do_action( 'wptb_before_header' );
                         </path>
                     </g>
                 </svg>
-                        </div>
-                        <div class="wptb-redo wptb-undoredo-disabled" data-wptb-undoredo="redo">
-                            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                 viewBox="0 0 511.983 511.983" style="enable-background:new 0 0 511.983 511.983;"
-                                 xml:space="preserve" width="30" height="30">
+                    </div>
+                    <div class="wptb-redo wptb-undoredo-disabled" data-wptb-undoredo="redo">
+                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                             viewBox="0 0 511.983 511.983" style="enable-background:new 0 0 511.983 511.983;"
+                             xml:space="preserve" width="30" height="30">
                     <g>
                         <path style="fill:#3B7EC0"
                               d="M507.328,215.175l-234.667-160c-4.873-3.311-11.507-2.045-14.817,2.828
@@ -73,54 +73,55 @@ do_action( 'wptb_before_header' );
                         </path>
                     </g>
                 </svg>
-                        </div>
                     </div>
-                    <div class="wptb-panel-night-mode-container" >
-                        <div id="wptbPanelNightMode"></div>
+                </div>
+                <!--                    reserved for future night mode-->
+                <!--                    <div class="wptb-panel-night-mode-container" >-->
+                <!--                        <div id="wptbPanelNightMode"></div>-->
+                <!--                    </div>-->
+                <div class="wptb-panel-sub-container-buttons">
+                    <div class="wptb-embed">
+                        <a href="#"
+                           class="static-active wptb-button-grey wptb-embed-btn wptb-settings-section-item <?php echo $wptb_button_disable_class; ?>">
+							<?php esc_html_e( 'Embed', 'wp-table-builder' ); ?>
+                        </a>
                     </div>
-                    <div class="wptb-panel-sub-container-buttons">
-                        <div class="wptb-embed">
-                            <a href="#"
-                               class="static-active wptb-button-grey wptb-embed-btn wptb-settings-section-item <?php echo $wptb_button_disable_class; ?>">
-				                <?php esc_html_e( 'Embed', 'wp-table-builder' ); ?>
-                            </a>
-                        </div>
-                        <div class="wptb-preview">
-                            <a href="<?php echo $wptb_preview_button_url_value_id !== 'empty' ? $wptb_preview_button_url : '#'; ?>"
-                               target="_blank"
-                               class="static-active wptb-button-grey wptb-settings-section-item wptb-preview-btn <?php echo $wptb_button_disable_class; ?>"
-                               data-preview-href="<?php echo $wptb_preview_button_url_value_id === 'empty' ? $wptb_preview_button_url : '#'; ?>">
-				                <?php esc_html_e( 'Preview', 'wp-table-builder' ); ?>
-                            </a>
-                        </div>
-                        <div class="wptb-save">
-                            <a href="#"
-                               class="wptb-save-btn wptb-save-disabled wptb-settings-section-item static-active">
-				                <?php esc_html_e( 'Save Table', 'wp-table-builder' ); ?>
-                            </a>
-                          <div class="wptb-busy">
+                    <div class="wptb-preview">
+                        <a href="<?php echo $wptb_preview_button_url_value_id !== 'empty' ? $wptb_preview_button_url : '#'; ?>"
+                           target="_blank"
+                           class="static-active wptb-button-grey wptb-settings-section-item wptb-preview-btn <?php echo $wptb_button_disable_class; ?>"
+                           data-preview-href="<?php echo $wptb_preview_button_url_value_id === 'empty' ? $wptb_preview_button_url : '#'; ?>">
+							<?php esc_html_e( 'Preview', 'wp-table-builder' ); ?>
+                        </a>
+                    </div>
+                    <div class="wptb-save">
+                        <a href="#"
+                           class="wptb-save-btn wptb-save-disabled wptb-settings-section-item static-active">
+							<?php esc_html_e( 'Save Table', 'wp-table-builder' ); ?>
+                        </a>
+                        <div class="wptb-busy">
                             <div class="wptb-busy-circle"></div>
                             <div class="wptb-busy-circle"></div>
                             <div class="wptb-busy-circle"></div>
-                          </div>
                         </div>
                     </div>
                 </div>
-                <div class="wptb-popup-window-modal">
-                    <div class="wptb-popup-box">
-                        <div class="wptb-popup-window-close-icon" style="display: block;">×</div>
-                        <div class="wptb-popup-content">
-                            <p>
-						        <?php esc_html_e( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ); ?>
-                            </p>
+            </div>
+            <div class="wptb-popup-window-modal">
+                <div class="wptb-popup-box">
+                    <div class="wptb-popup-window-close-icon" style="display: block;">×</div>
+                    <div class="wptb-popup-content">
+                        <p>
+							<?php esc_html_e( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ); ?>
+                        </p>
 
-                            <input type="text" value="<?php echo isset( $_GET['table'] ) && absint( $_GET['table'] ) &&
-					                                             get_post_meta( absint( $_GET['table'] ), '_wptb_content_', true ) ? '[wptb id=' . absint( $_GET['table'] ) . ']' : ''; ?>"
-                                   id="wptb-embed-shortcode" readonly>
-                        </div>
+                        <input type="text" value="<?php echo isset( $_GET['table'] ) && absint( $_GET['table'] ) &&
+						                                     get_post_meta( absint( $_GET['table'] ), '_wptb_content_', true ) ? '[wptb id=' . absint( $_GET['table'] ) . ']' : ''; ?>"
+                               id="wptb-embed-shortcode" readonly>
                     </div>
                 </div>
-                <div class="wptb-popup-dark-area"></div>
+            </div>
+            <div class="wptb-popup-dark-area"></div>
         </div>
     </div>
 <?php
