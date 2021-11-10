@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
+use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Tabbed;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
@@ -89,78 +90,63 @@ class List_Element extends Element_Base {
 	 * @access protected
 	 */
 	protected function _register_controls() {
-		$this->add_control(
-			'section_header',
-			[
-				'label'      => __( 'List Options', 'wp_table_builder' ),
-				'type'       => Controls_Manager::SECTION_HEADER,
-				'buttonBack' => true
-			]
-		);
-
-		$this->add_control(
-			'select1',
-			[
-				'label'           => __( 'List Type', 'wp_table_builder' ),
-				'type'            => Controls_Manager::SELECT,
-				'options'         => [
-					[ 'Ordered', 'numbered', '' ],
-					[
-						'Unordered',
-						'unordered',
+		$general_controls = [
+			'select1' =>
+				[
+					'label'           => __( 'List Type', 'wp-table-builder' ),
+					'type'            => Controls_Manager::SELECT,
+					'options'         => [
+						[ 'Ordered', 'numbered', '' ],
 						[
-							'wptb-list-style-type-disc',
-							'wptb-list-style-type-circle',
-							'wptb-list-style-type-square',
-							'wptb-list-style-type-none'
+							'Unordered',
+							'unordered',
+							[
+								'wptb-list-style-type-disc',
+								'wptb-list-style-type-circle',
+								'wptb-list-style-type-square',
+								'wptb-list-style-type-none'
+							]
 						]
-					]
+					],
+					'selectors'       => [
+						'{{{data.container}}} ul li p' => 'class'
+					],
+					'selectedDefault' => 0,
 				],
-				'selectors'       => [
-					'{{{data.container}}} ul li p' => 'class'
-				],
-				'selectedDefault' => 0,
-			]
-		);
+			'select2' =>
+				[
+					'label'                 => __( 'List Icon', 'wp-table-builder' ),
+					'type'                  => Controls_Manager::SELECT,
+					'options'               => [
+						[ 'Circle', 'circle', 'wptb-list-style-type-circle' ],
+						[ 'Square', 'square', 'wptb-list-style-type-square' ],
+						[ 'Disc', 'disc', 'wptb-list-style-type-disc' ],
+						[ 'None', 'none', 'wptb-list-style-type-none' ]
+					],
+					'selectors'             => [
+						'{{{data.container}}} ul li p' => 'class'
+					],
+					'selectedDefault'       => 2,
+					'appearDependOnControl' => [ 'select1', [ 'unordered' ], [ 'numbered' ] ]
+				]
+		];
 
-		$this->add_control(
-			'select2',
-			[
-				'label'                 => __( 'List Icon', 'wp_table_builder' ),
-				'type'                  => Controls_Manager::SELECT,
-				'options'               => [
-					[ 'Circle', 'circle', 'wptb-list-style-type-circle' ],
-					[ 'Square', 'square', 'wptb-list-style-type-square' ],
-					[ 'Disc', 'disc', 'wptb-list-style-type-disc' ],
-					[ 'None', 'none', 'wptb-list-style-type-none' ]
-				],
-				'selectors'             => [
-					'{{{data.container}}} ul li p' => 'class'
-				],
-				'selectedDefault'       => 2,
-				'appearDependOnControl' => [ 'select1', [ 'unordered' ], [ 'numbered' ] ]
-			]
-		);
-
-		$this->add_control(
-			'listColor',
-			[
-				'label'     => __( 'List Font Color', 'wp_table_builder' ),
-				'type'      => Controls_Manager::COLOR_PALETTE,
-				'selectors' => [
-					[
-						'query' => '{{{data.container}}} ul li p',
-						'type'  => Controls_Manager::STYLE,
-						'key'   => 'color',
+		$font_controls = [
+			'listColor' =>
+				[
+					'label'     => __( 'List Font Color', 'wp-table-builder' ),
+					'type'      => Controls_Manager::COLOR_PALETTE,
+					'selectors' => [
+						[
+							'query' => '{{{data.container}}} ul li p',
+							'type'  => Controls_Manager::STYLE,
+							'key'   => 'color',
+						],
 					],
 				],
-			]
-		);
-
-		$this->add_control(
-			'size',
+			'size' =>
 			[
-				'label'        => __( 'Font Size', 'wp_table_builder' ),
+				'label'        => __( 'Font Size', 'wp-table-builder' ),
 				'type'         => Controls_Manager::RANGE,
 				'selectors'    => [
 					[
@@ -175,44 +161,55 @@ class List_Element extends Element_Base {
 				'defaultValue' => 15,
 				'postFix'      => 'px'
 			]
-		);
 
-		$this->add_control(
-			'spacing',
-			[
-				'label'        => __( 'Item Spacing', 'wp_table_builder' ),
-				'type'         => Controls_Manager::RANGE,
-				'selectors'    => [
-					[
-						'query'  => '{{{data.container}}} ul li',
-						'type'   => Controls_Manager::STYLE,
-						'key'    => 'marginBottom',
-						'format' => '{$}px',
-					]
-				],
-				'min'          => 0,
-				'max'          => 30,
-				'defaultValue' => 0,
-				'postFix'      => 'px'
-			]
-		);
+		];
 
-		$this->add_control(
-			'listAlignment',
-			[
-				'label'        => __( 'List Alignment', 'wp_table_builder' ),
-				'type'         => Controls_Manager::ALIGNMENT2,
-				'selected'     => 0,
-				'selectors'    => [
-					[
-						'query' => '{{{data.container}}} ul li p',
-						'type'  => Controls_Manager::STYLE,
-						'key'   => 'textAlign',
-					]
+		$layout_controls = [
+			'spacing'       =>
+				[
+					'label'        => __( 'Item Spacing', 'wp-table-builder' ),
+					'type'         => Controls_Manager::RANGE,
+					'selectors'    => [
+						[
+							'query'  => '{{{data.container}}} ul li',
+							'type'   => Controls_Manager::STYLE,
+							'key'    => 'marginBottom',
+							'format' => '{$}px',
+						]
+					],
+					'min'          => 0,
+					'max'          => 30,
+					'defaultValue' => 0,
+					'postFix'      => 'px'
 				],
-				'defaultValue' => 'left'
-			]
-		);
+			'listAlignment' =>
+				[
+					'label'        => __( 'List Alignment', 'wp-table-builder' ),
+					'type'         => Controls_Manager::ALIGNMENT2,
+					'selected'     => 0,
+					'selectors'    => [
+						[
+							'query' => '{{{data.container}}} ul li p',
+							'type'  => Controls_Manager::STYLE,
+							'key'   => 'textAlign',
+						]
+					],
+					'defaultValue' => 'left'
+				]
+		];
+
+
+		$list_element_controls = [
+			esc_html__( 'general', 'wp-table-builder' ) => $general_controls,
+			esc_html__( 'font', 'wp-table-builder' )    => $font_controls,
+			esc_html__( 'layout', 'wp-table-builder' )  => $layout_controls,
+		];
+
+		Control_Section_Group_Tabbed::add_section( 'listElementOptions', __( 'List Options', 'wp-table-builder' ), $list_element_controls, [
+			$this,
+			'add_control'
+		] );
+
 	}
 
 	/**
