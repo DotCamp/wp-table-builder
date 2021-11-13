@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.8
-Stable tag: 1.3.13-dev
+Stable tag: 1.3.13
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -92,11 +92,13 @@ That's it. You're done!
 
 = 1.3.13 =
 
+* PRO: NEW: Tooltip support for styled list element.
+* PRO: IMPROVE: Styled list horizontal spacing can not be overridden by outside sources.
 * IMPROVE: Button element e-mail link support.
+* PRO: FIX: An issue with styled list icons change their sizes depending on sibling text length.
 * FIX: An issue with element control changes not reflected to associated targets.
 * FIX: Star rating element default color reverted to gold.
 * FIX: Term object check for tag manager.
-* FIX: An issue with styled list icons change their sizes depending on sibling text length.
 
 = 1.3.12 =
 
