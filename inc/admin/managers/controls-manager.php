@@ -116,6 +116,11 @@ class Controls_Manager {
 	const SECTION_GROUP_TABBED_START = 'section_group_tabbed_start';
 
 	/**
+	 * Adding start of tab group content.
+	 */
+	const SECTION_GROUP_TAB_CONTENT_START = 'section_group_tab_content_start';
+
+	/**
 	 * Adding end of tab group content.
 	 */
 	const SECTION_GROUP_TAB_CONTENT_END = 'section_group_tab_content_end';
@@ -246,6 +251,7 @@ class Controls_Manager {
 			self::SECTION_GROUP_COLLAPSE_START,
 			self::SECTION_GROUP_COLLAPSE_END,
 			self::SECTION_GROUP_TABBED_START,
+			self::SECTION_GROUP_TAB_CONTENT_START,
 			self::SECTION_GROUP_TAB_CONTENT_END,
 			self::ICON_SELECT,
 			self::RANGE,

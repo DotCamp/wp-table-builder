@@ -45,6 +45,13 @@ class Control_Section_Group_Tabbed {
 	 * @param callable $control_call function to add controls to control manager instance
 	 */
 	private static function add_controls( $section_id, $tab_id, $section_controls, $control_call ) {
+		// start tab content start control
+		call_user_func( $control_call, "${section_id}_${tab_id}_tab_content_start", [
+			'type'      => Controls_Manager::SECTION_GROUP_TAB_CONTENT_START,
+			'sectionId' => $section_id,
+			'groupId'   => $tab_id,
+		] );
+
 		foreach ( $section_controls as $control_id => $control_options ) {
 			$control_pos = 0;
 			if ( is_array( $control_options ) ) {
