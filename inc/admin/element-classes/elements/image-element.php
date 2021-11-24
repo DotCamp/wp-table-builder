@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
+use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Tabbed;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
@@ -89,74 +90,70 @@ class Image_Element extends Element_Base {
 	 * @access protected
 	 */
 	protected function _register_controls() {
-		$this->add_control(
-			'section_header',
-			[
-				'label'      => __( 'Image Options', 'wp_table_builder' ),
-				'type'       => Controls_Manager::SECTION_HEADER,
-				'buttonBack' => true
-			]
-		);
-
-		$this->add_control(
-			'imageReplaceButton',
-			[
-				'label' => __( 'Replace Image', 'wp_table_builder' ),
-				'type'  => Controls_Manager::BUTTON,
-			]
-		);
-
-		$this->add_control(
-			'imageAlignment',
-			[
-				'label'        => __( 'Image Alignment', 'wp_table_builder' ),
-				'type'         => Controls_Manager::ALIGNMENT2,
-				'selectors'    => [
-					[
-						'query' => '{{{data.container}}}',
-						'type'  => Controls_Manager::DATASET,
-						'key'   => 'wptbImageAlignment',
-					]
+		$general_controls = [
+			'imageReplaceButton'   =>
+				[
+					'label' => __( 'Replace Image', 'wp_table_builder' ),
+					'type'  => Controls_Manager::BUTTON,
 				],
-				'defaultValue' => 'center'
-			]
-		);
-
-		$this->add_control(
-			'imageSize',
-			[
-				'label'        => __( 'Image Size', 'wp_table_builder' ),
-				'type'         => Controls_Manager::SIZE,
-				'selectors'    => [
-					'{{{data.container}}} .wptb-image-wrapper a' => 'width',
+			'imageAlignment'       =>
+				[
+					'label'        => __( 'Image Alignment', 'wp_table_builder' ),
+					'type'         => Controls_Manager::ALIGNMENT2,
+					'selectors'    => [
+						[
+							'query' => '{{{data.container}}}',
+							'type'  => Controls_Manager::DATASET,
+							'key'   => 'wptbImageAlignment',
+						]
+					],
+					'defaultValue' => 'center'
 				],
-				'min'          => 10,
-				'max'          => 100,
-				'defaultValue' => 100,
-				'dimension'    => '%'
-			]
-		);
+			'imageAlternativeText' =>
+				[
+					'label'       => __( 'Image Alternative Text', 'wp_table_builder' ),
+					'type'        => Controls_Manager::TEXT,
+					'selectors'   => [
+						'{{{data.container}}} .wptb-image-wrapper a img' => 'alt',
+					],
+					'placeholder' => __( 'Image Alt Text', 'wp_table_builder' ),
+				]
+		];
 
-		$this->add_control(
-			'imageLink',
-			[
-				'label'    => __( 'Image Link', 'wp_table_builder' ),
-				'type'     => Controls_Manager::URL,
-				'selector' => '{{{data.container}}} .wptb-image-wrapper a'
-			]
-		);
+		$size_controls = [
+			'imageSize' =>
+				[
+					'label'        => __( 'Image Size', 'wp_table_builder' ),
+					'type'         => Controls_Manager::SIZE,
+					'selectors'    => [
+						'{{{data.container}}} .wptb-image-wrapper a' => 'width',
+					],
+					'min'          => 10,
+					'max'          => 100,
+					'defaultValue' => 100,
+					'dimension'    => '%'
+				]
+		];
 
-		$this->add_control(
-			'imageAlternativeText',
-			[
-				'label'       => __( 'Image Alternative Text', 'wp_table_builder' ),
-				'type'        => Controls_Manager::TEXT,
-				'selectors'   => [
-					'{{{data.container}}} .wptb-image-wrapper a img' => 'alt',
-				],
-				'placeholder' => __( 'Image Alt Text', 'wp_table_builder' ),
-			]
-		);
+		$link_controls = [
+			'imageLink' =>
+				[
+					'label'    => __( 'Image Link', 'wp_table_builder' ),
+					'type'     => Controls_Manager::URL,
+					'selector' => '{{{data.container}}} .wptb-image-wrapper a'
+				]
+		];
+
+		$image_controls = [
+			esc_html__( 'general', 'wp-table-builder' ) => $general_controls,
+			esc_html__( 'size', 'wp-table-builder' )    => $size_controls,
+			esc_html__( 'link', 'wp-table-builder' )    => $link_controls,
+		];
+
+		Control_Section_Group_Tabbed::add_section( 'imageElementOptions', __( 'image options', 'wp-table-builder' ), $image_controls, [
+			$this,
+			'add_control'
+		] );
 	}
 
 	/**

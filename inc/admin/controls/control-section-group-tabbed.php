@@ -38,7 +38,7 @@ class Control_Section_Group_Tabbed {
 	}
 
 	/**
-	 * Inject a control to already registered tabbed section group.
+	 * Inject a control to an already registered tabbed section group.
 	 *
 	 * @param string $element_type table element type controls will be injected
 	 * @param array $control controls that will be injected

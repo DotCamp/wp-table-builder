@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.3.14 =
+
+* IMPROVE: Updated control groups for table elements.
+
 = 1.3.13 =
 
 * PRO: NEW: Tooltip support for styled list element.
