@@ -456,4 +456,24 @@ class Controls_Manager {
 			endforeach;
 		}
 	}
+
+	/**
+	 * Get currently registered controls.
+	 * @return array|null current controls in stack
+	 */
+	public function get_current_control_stack() {
+		return $this->stacks;
+	}
+
+	/**
+	 * Set control stack for given element type.
+	 *
+	 * @param string $element_type table element type
+	 * @param array $control_stack element control stack array
+	 */
+	public function set_element_stack( $element_type, $control_stack ) {
+		if ( isset( $this->stacks[ $element_type ] ) ) {
+			$this->stacks[ $element_type ] = $control_stack;
+		}
+	}
 }

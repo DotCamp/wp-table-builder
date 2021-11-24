@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager_Base;
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Core\Init;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -181,5 +182,23 @@ class Elements_Manager extends Elements_Manager_Base {
             })();
         </script>
 		<?php
+	}
+
+	/**
+	 * Get registered element controls.
+	 * @return array|null elements' control stack
+	 */
+	public function element_control_stack() {
+		return Init::instance()->controls_manager->get_current_control_stack();
+	}
+
+	/**
+	 * Set control stack for given element type.
+	 *
+	 * @param string $element_type table element type
+	 * @param array $control_stack element control stack
+	 */
+	public function set_element_control_stack( $element_type, $control_stack ) {
+		Init::instance()->controls_manager->set_element_stack( $element_type, $control_stack );
 	}
 }
