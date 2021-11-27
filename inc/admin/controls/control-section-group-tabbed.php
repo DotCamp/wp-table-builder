@@ -3,6 +3,7 @@
 namespace WP_Table_Builder\Inc\Admin\Controls;
 
 // if called directly, abort.
+use WP_Table_Builder\Inc\Admin\Base\Control_Group_Base;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager;
 
@@ -15,7 +16,7 @@ if ( ! defined( 'WPINC' ) ) {
  *
  * Adds a tabbed control grouping for the supplied controls
  */
-class Control_Section_Group_Tabbed {
+class Control_Section_Group_Tabbed extends Control_Group_Base {
 
 	/**
 	 * Add tabbed control group to control manager instance.
@@ -102,7 +103,7 @@ class Control_Section_Group_Tabbed {
 						// these are the controls that will be injected into section tab
 						$controls_to_reposition = array_splice( $element_control_stack, sizeof( $element_control_stack ) - sizeof( $control ) );
 
-						$reposition_index = min( $position >= 0 ? $position : $tab_length , $tab_length ) + $tab_start_index + 1;
+						$reposition_index = min( $position >= 0 ? $position : $tab_length, $tab_length ) + $tab_start_index + 1;
 
 						$stack_head  = array_slice( $element_control_stack, 0, $reposition_index );
 						$stack_tail  = array_slice( $element_control_stack, $reposition_index );
@@ -131,18 +132,8 @@ class Control_Section_Group_Tabbed {
 			'groupId'   => $tab_id,
 		] );
 
-		foreach ( $section_controls as $control_id => $control_options ) {
-			$control_pos = 0;
-			if ( is_array( $control_options ) ) {
-				if ( array_key_exists( 'control_pos', $control_options ) ) {
-					$control_pos = $control_options['control_pos'];
-				}
-				if ( array_key_exists( 'control_args', $control_options ) ) {
-					$control_options = $control_options['control_args'];
-				}
-			}
-			call_user_func( $control_call, $control_id, $control_options, $control_pos );
-		}
+		// add group controls
+		static::control_batch_add( $section_controls, $control_call );
 
 		// end tab content end control
 		call_user_func( $control_call, "${section_id}_${tab_id}_tab_content_end", [

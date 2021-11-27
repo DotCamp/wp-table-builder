@@ -2,9 +2,10 @@
 
 namespace WP_Table_Builder\Inc\Admin\Controls;
 
-// If this file is called directly, abort the process.
+use WP_Table_Builder\Inc\Admin\Base\Control_Group_Base;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 
+// If this file is called directly, abort the process.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
@@ -14,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
  *
  * Adds a section grouping for the supplied control elements
  */
-class Control_Section_Group_Collapse {
+class Control_Section_Group_Collapse extends Control_Group_Base {
 
 	/**
 	 * Add control section group to control manager instance.
@@ -34,18 +35,7 @@ class Control_Section_Group_Collapse {
 		static::add_section_start( $section_label, $start_section_id, $open_state, $control_call );
 
 		// add group controls
-		foreach ( $section_controls as $control_id => $control_args ) {
-			$control_pos = 0;
-			if ( is_array( $control_args ) ) {
-				if ( array_key_exists( 'control_pos', $control_args ) ) {
-					$control_pos = $control_args['control_pos'];
-				}
-				if ( array_key_exists( 'control_args', $control_args ) ) {
-					$control_args = $control_args['control_args'];
-				}
-			}
-			call_user_func( $control_call, $control_id, $control_args, $control_pos );
-		}
+		static::control_batch_add( $section_controls, $control_call );
 
 		// add section end
 		static::add_section_end( $start_section_id, $end_section_id, $control_call );
