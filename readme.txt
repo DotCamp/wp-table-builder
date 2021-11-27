@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.3.14 =
 
 * IMPROVE: Updated control groups for table elements.
+* PRO: FIX: An issue with spacing controls reset themselves for some table elements on element activation.
 
 = 1.3.13 =
 

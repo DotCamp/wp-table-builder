@@ -97,7 +97,6 @@ export default {
 				}
 				this.setTableDirty(true);
 			},
-			immediate: true,
 		},
 		linkValues() {
 			this.calculateElementValue();
@@ -173,7 +172,7 @@ export default {
 					[this.sideValues.top, this.sideValues.right] = values;
 				} else if (values.length === 3) {
 					[this.sideValues.top, this.sideValues.right, this.sideValues.bottom] = values;
-					this.sideValues.left = 0;
+					this.sideValues.left = this.sideValues.right;
 				} else {
 					[this.sideValues.top, this.sideValues.right, this.sideValues.bottom, this.sideValues.left] = values;
 				}

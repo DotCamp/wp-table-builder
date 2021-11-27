@@ -22148,8 +22148,7 @@ var _default = {
         }
 
         this.setTableDirty(true);
-      },
-      immediate: true
+      }
     },
     linkValues: function linkValues() {
       this.calculateElementValue();
@@ -22249,7 +22248,7 @@ var _default = {
           this.sideValues.top = _values7[0];
           this.sideValues.right = _values7[1];
           this.sideValues.bottom = _values7[2];
-          this.sideValues.left = 0;
+          this.sideValues.left = this.sideValues.right;
         } else {
           var _values8 = (0, _slicedToArray2.default)(values, 4);
 
