@@ -19,6 +19,8 @@
   },
   "alias": {
     "vue": "./node_modules/vue/dist/vue.esm.js",
+    "$Js": "./inc/admin/js",
+    "$Core": "./inc/admin/js/core",
     "$Components": "./inc/admin/js/core/rollup-source/components",
     "$Mixins": "./inc/admin/js/core/rollup-source/mixins",
     "$Functions": "./inc/admin/js/core/rollup-source/functions",

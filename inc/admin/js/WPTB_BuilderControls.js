@@ -19981,23 +19981,23 @@ exports.default = void 0;
 
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
-var _TableClone = _interopRequireDefault(require("../components/TableClone"));
+var _TableClone = _interopRequireDefault(require("$Components/TableClone"));
 
-var _ScreenSizeSlider = _interopRequireDefault(require("../components/ScreenSizeSlider"));
+var _ScreenSizeSlider = _interopRequireDefault(require("$Components/ScreenSizeSlider"));
 
-var _WPTB_ResponsiveFrontend = _interopRequireDefault(require("../../../WPTB_ResponsiveFrontend"));
+var _WPTB_ResponsiveFrontend = _interopRequireDefault(require("$Js/WPTB_ResponsiveFrontend"));
 
-var _WPTB_SortableTable = _interopRequireDefault(require("../../WPTB_SortableTable"));
+var _WPTB_SortableTable = _interopRequireDefault(require("$Core/WPTB_SortableTable"));
 
-var _DeBouncer = _interopRequireDefault(require("../functions/DeBouncer"));
+var _DeBouncer = _interopRequireDefault(require("$Functions/DeBouncer"));
 
-var _ModalWindow = _interopRequireDefault(require("../components/ModalWindow"));
+var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
 
-var _MaterialButton = _interopRequireDefault(require("../components/MaterialButton"));
+var _MaterialButton = _interopRequireDefault(require("$Components/MaterialButton"));
 
-var _NumberPostfixInput = _interopRequireDefault(require("../components/NumberPostfixInput"));
+var _NumberPostfixInput = _interopRequireDefault(require("$Components/NumberPostfixInput"));
 
-var _NumberPostfixButtons = _interopRequireDefault(require("../components/NumberPostfixButtons"));
+var _NumberPostfixButtons = _interopRequireDefault(require("$Components/NumberPostfixButtons"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20542,7 +20542,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../../WPTB_SortableTable":"../WPTB_SortableTable.js","../functions/DeBouncer":"functions/DeBouncer.js","../components/ModalWindow":"components/ModalWindow.vue","../components/MaterialButton":"components/MaterialButton.vue","../components/NumberPostfixInput":"components/NumberPostfixInput.vue","../components/NumberPostfixButtons":"components/NumberPostfixButtons.vue"}],"components/ResponsiveControlsRow.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","$Components/TableClone":"components/TableClone.vue","$Components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","$Js/WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","$Core/WPTB_SortableTable":"../WPTB_SortableTable.js","$Functions/DeBouncer":"functions/DeBouncer.js","$Components/ModalWindow":"components/ModalWindow.vue","$Components/MaterialButton":"components/MaterialButton.vue","$Components/NumberPostfixInput":"components/NumberPostfixInput.vue","$Components/NumberPostfixButtons":"components/NumberPostfixButtons.vue"}],"components/ResponsiveControlsRow.vue":[function(require,module,exports) {
 
         var $d55f26 = exports.default || module.exports;
       

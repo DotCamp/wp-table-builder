@@ -66,16 +66,16 @@
 	</transition>
 </template>
 <script>
-import TableClone from '../components/TableClone';
-import ScreenSizeSlider from '../components/ScreenSizeSlider';
+import TableClone from '$Components/TableClone';
+import ScreenSizeSlider from '$Components/ScreenSizeSlider';
 /* eslint-disable camelcase */
-import WPTB_ResponsiveFrontend from '../../../WPTB_ResponsiveFrontend';
-import WPTB_SortableTable from '../../WPTB_SortableTable';
-import DeBouncer from '../functions/DeBouncer';
-import ModalWindow from '../components/ModalWindow';
-import MaterialButton from '../components/MaterialButton';
-import NumberPostfixInput from '../components/NumberPostfixInput';
-import NumberPostfixButtons from '../components/NumberPostfixButtons';
+import WPTB_ResponsiveFrontend from '$Js/WPTB_ResponsiveFrontend';
+import WPTB_SortableTable from '$Core/WPTB_SortableTable';
+import DeBouncer from '$Functions/DeBouncer';
+import ModalWindow from '$Components/ModalWindow';
+import MaterialButton from '$Components/MaterialButton';
+import NumberPostfixInput from '$Components/NumberPostfixInput';
+import NumberPostfixButtons from '$Components/NumberPostfixButtons';
 
 export default {
 	props: {

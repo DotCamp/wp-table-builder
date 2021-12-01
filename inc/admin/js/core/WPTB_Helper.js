@@ -1687,6 +1687,13 @@ var WPTB_Helper = {
 		this.previousSection = this.currentSection;
 		this.currentSection = sectionDataId;
 		this.triggerSectionEvent(sectionDataId);
+
+		const builderAdminContainer = document.querySelector('#wptb_builder');
+
+		if (builderAdminContainer) {
+			builderAdminContainer.dataset.wptbActiveSection = this.currentSection;
+		}
+
 		// eslint-disable-next-line array-callback-return
 		Object.keys(this.sections).map((k) => {
 			if (Object.prototype.hasOwnProperty.call(this.sections, k)) {
