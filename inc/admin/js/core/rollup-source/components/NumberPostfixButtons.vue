@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import NumberPostfixInput from './NumberPostfixInput';
+import NumberPostfixInput from '$Components/NumberPostfixInput';
 
 export default {
 	props: {

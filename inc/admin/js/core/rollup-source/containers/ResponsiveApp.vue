@@ -1,6 +1,11 @@
 <template>
 	<transition name="wptb-fade">
-		<div ref="builderResponsive" v-if="isVisible" class="wptb-builder-responsive">
+		<div
+			ref="builderResponsive"
+			v-if="isVisible"
+			class="wptb-builder-responsive"
+			:data-wptb-responsive-status="!directives.responsiveEnabled"
+		>
 			<div class="wptb-responsive-menu-tools">
 				<screen-size-slider
 					:end-padding="sliderPadding"
@@ -10,7 +15,10 @@
 					:enable-breakpoint-customization="appOptions.breakpointCustomization"
 				></screen-size-slider>
 			</div>
-			<div class="wptb-responsive-builder-main wptb-checkerboard-pattern wptb-plugin-inset-shadow-md">
+			<div
+				ref="builderMainResponsive"
+				class="wptb-responsive-builder-main wptb-checkerboard-pattern wptb-plugin-inset-shadow-md"
+			>
 				<div class="wptb-responsive-builder-toolbox-float">
 					<div class="wptb-responsive-builder-toolbox-left-float">
 						<number-postfix-input
@@ -115,6 +123,14 @@ export default {
 		currentSizeRangeName(n) {
 			this.appOptions.currentBreakpoint = n;
 		},
+		'directives.responsiveEnabled': {
+			handler(n) {
+				if (!n) {
+					// scroll responsive preview to its start position if it is disabled
+					this.$refs.builderMainResponsive.scroll(0, 0);
+				}
+			},
+		},
 		directives: {
 			handler() {
 				this.currentDirectives = this.encodeResponsiveDirectives();
@@ -141,25 +157,11 @@ export default {
 			},
 		},
 	},
-	beforeMount() {
-		// calculate slider size stops before mounting the component
-		// this.sizeStops = this.sliderSizeStops();
-	},
 	mounted() {
 		// add a listener to section change event to hide/show component
 		document.addEventListener('wptbSectionChanged', (e) => {
 			this.isVisible = e.detail === 'table_responsive_menu';
 		});
-
-		// @deprecated
-		// const maxWidth = Number.parseInt(
-		// 	document.querySelector(this.cloneQuery).dataset.wptbTableContainerMaxWidth,
-		// 	10
-		// );
-		// const builderWidth = this.$refs.builderResponsive.getBoundingClientRect().width;
-		//
-		// // take maximum width of table to consideration while calculating size limit max
-		// this.sizeLimitMax = Math.min(maxWidth, builderWidth);
 
 		this.calculateSizeLimitMax();
 	},
@@ -168,16 +170,6 @@ export default {
 		 * Calculate certain properties of responsive table element's style
 		 */
 		tableStyle() {
-			// @deprecated
-			// if (!this.directives.responsiveEnabled) {
-			// 	return {};
-			// }
-
-			// don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
-			// if (this.currentSizeRangeName === 'desktop') {
-			// 	return {};
-			// }
-
 			const width = this.limitToRange(
 				this.appOptions.currentSize,
 				Math.min(this.sizeLimitMin, this.sizeLimitMax),

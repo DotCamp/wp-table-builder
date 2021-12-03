@@ -10,7 +10,7 @@
 	</div>
 </template>
 <script>
-import MaterialButton from './MaterialButton';
+import MaterialButton from '$Components/MaterialButton';
 
 export default {
 	props: {

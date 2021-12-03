@@ -16125,7 +16125,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _DeBouncer = _interopRequireDefault(require("../functions/DeBouncer"));
+var _DeBouncer = _interopRequireDefault(require("$Functions/DeBouncer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16333,7 +16333,7 @@ render._withStripped = true
           };
         })());
       
-},{"../functions/DeBouncer":"functions/DeBouncer.js"}],"components/SliderStop.vue":[function(require,module,exports) {
+},{"$Functions/DeBouncer":"functions/DeBouncer.js"}],"components/SliderStop.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16341,7 +16341,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
+var _NumberPostfixInput = _interopRequireDefault(require("$Components/NumberPostfixInput"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16544,7 +16544,7 @@ render._withStripped = true
           };
         })());
       
-},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/SliderFill.vue":[function(require,module,exports) {
+},{"$Components/NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/SliderFill.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16757,11 +16757,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _SliderStop = _interopRequireDefault(require("./SliderStop"));
+var _SliderStop = _interopRequireDefault(require("$Components/SliderStop"));
 
-var _SliderFill = _interopRequireDefault(require("./SliderFill"));
+var _SliderFill = _interopRequireDefault(require("$Components/SliderFill"));
 
-var _SliderArrow = _interopRequireDefault(require("./SliderArrow"));
+var _SliderArrow = _interopRequireDefault(require("$Components/SliderArrow"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17050,7 +17050,7 @@ render._withStripped = true
           };
         })());
       
-},{"./SliderStop":"components/SliderStop.vue","./SliderFill":"components/SliderFill.vue","./SliderArrow":"components/SliderArrow.vue"}],"../../../../../node_modules/process/browser.js":[function(require,module,exports) {
+},{"$Components/SliderStop":"components/SliderStop.vue","$Components/SliderFill":"components/SliderFill.vue","$Components/SliderArrow":"components/SliderArrow.vue"}],"../../../../../node_modules/process/browser.js":[function(require,module,exports) {
 
 // shim for using process in browser
 var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
@@ -19651,7 +19651,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
+var _MaterialButton = _interopRequireDefault(require("$Components/MaterialButton"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19770,7 +19770,7 @@ render._withStripped = true
           };
         })());
       
-},{"./MaterialButton":"components/MaterialButton.vue"}],"components/NumberPostfixButtons.vue":[function(require,module,exports) {
+},{"$Components/MaterialButton":"components/MaterialButton.vue"}],"components/NumberPostfixButtons.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19780,7 +19780,7 @@ exports.default = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
-var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
+var _NumberPostfixInput = _interopRequireDefault(require("$Components/NumberPostfixInput"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19971,7 +19971,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"containers/ResponsiveApp.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","$Components/NumberPostfixInput":"components/NumberPostfixInput.vue"}],"containers/ResponsiveApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20001,6 +20001,14 @@ var _NumberPostfixButtons = _interopRequireDefault(require("$Components/NumberPo
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -20108,6 +20116,14 @@ var _default = {
     currentSizeRangeName: function currentSizeRangeName(n) {
       this.appOptions.currentBreakpoint = n;
     },
+    'directives.responsiveEnabled': {
+      handler: function handler(n) {
+        if (!n) {
+          // scroll responsive preview to its start position if it is disabled
+          this.$refs.builderMainResponsive.scroll(0, 0);
+        }
+      }
+    },
     directives: {
       handler: function handler() {
         this.currentDirectives = this.encodeResponsiveDirectives();
@@ -20133,25 +20149,13 @@ var _default = {
       }
     }
   },
-  beforeMount: function beforeMount() {// calculate slider size stops before mounting the component
-    // this.sizeStops = this.sliderSizeStops();
-  },
   mounted: function mounted() {
     var _this2 = this;
 
     // add a listener to section change event to hide/show component
     document.addEventListener('wptbSectionChanged', function (e) {
       _this2.isVisible = e.detail === 'table_responsive_menu';
-    }); // @deprecated
-    // const maxWidth = Number.parseInt(
-    // 	document.querySelector(this.cloneQuery).dataset.wptbTableContainerMaxWidth,
-    // 	10
-    // );
-    // const builderWidth = this.$refs.builderResponsive.getBoundingClientRect().width;
-    //
-    // // take maximum width of table to consideration while calculating size limit max
-    // this.sizeLimitMax = Math.min(maxWidth, builderWidth);
-
+    });
     this.calculateSizeLimitMax();
   },
   computed: {
@@ -20159,14 +20163,6 @@ var _default = {
      * Calculate certain properties of responsive table element's style
      */
     tableStyle: function tableStyle() {
-      // @deprecated
-      // if (!this.directives.responsiveEnabled) {
-      // 	return {};
-      // }
-      // don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
-      // if (this.currentSizeRangeName === 'desktop') {
-      // 	return {};
-      // }
       var width = this.limitToRange(this.appOptions.currentSize, Math.min(this.sizeLimitMin, this.sizeLimitMax), Math.max(this.sizeLimitMin, this.sizeLimitMax));
       return {
         width: "".concat(width, "px"),
@@ -20377,7 +20373,13 @@ exports.default = _default;
     _vm.isVisible
       ? _c(
           "div",
-          { ref: "builderResponsive", staticClass: "wptb-builder-responsive" },
+          {
+            ref: "builderResponsive",
+            staticClass: "wptb-builder-responsive",
+            attrs: {
+              "data-wptb-responsive-status": !_vm.directives.responsiveEnabled
+            }
+          },
           [
             _c(
               "div",
@@ -20400,6 +20402,7 @@ exports.default = _default;
             _c(
               "div",
               {
+                ref: "builderMainResponsive",
                 staticClass:
                   "wptb-responsive-builder-main wptb-checkerboard-pattern wptb-plugin-inset-shadow-md"
               },
@@ -21665,8 +21668,7 @@ var _default = {
      * * identifyCells -> show visual unique identification for table cell elements
      * * hasLegacyResponsive -> indicates current table has legacy responsive functionality enabled
      * * currentBreakpoint -> id of the current breakpoint
-     * * currentSize -> current screen size value that is being used in responsive builder. this is not the actual screen size value of the current window but a mock up value to provide a display of table's layout at different sizes
-     *
+     * * currentSize -> current screen size value that is being used in responsive builder. this is not the actual screen size value of the current window but a mock-up value to provide a display of table's layout at different sizes
      */
 
     var appOptions = {

@@ -29,9 +29,9 @@
 	</div>
 </template>
 <script>
-import SliderStop from './SliderStop';
-import SliderFill from './SliderFill';
-import SliderArrow from './SliderArrow';
+import SliderStop from '$Components/SliderStop';
+import SliderFill from '$Components/SliderFill';
+import SliderArrow from '$Components/SliderArrow';
 
 export default {
 	props: {

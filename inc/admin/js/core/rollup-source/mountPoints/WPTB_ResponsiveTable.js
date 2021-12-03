@@ -23,8 +23,7 @@ export default {
 		 * * identifyCells -> show visual unique identification for table cell elements
 		 * * hasLegacyResponsive -> indicates current table has legacy responsive functionality enabled
 		 * * currentBreakpoint -> id of the current breakpoint
-		 * * currentSize -> current screen size value that is being used in responsive builder. this is not the actual screen size value of the current window but a mock up value to provide a display of table's layout at different sizes
-		 *
+		 * * currentSize -> current screen size value that is being used in responsive builder. this is not the actual screen size value of the current window but a mock-up value to provide a display of table's layout at different sizes
 		 */
 		const appOptions = {
 			identifyCells: false,

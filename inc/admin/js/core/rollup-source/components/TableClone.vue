@@ -6,7 +6,7 @@
 	</div>
 </template>
 <script>
-import DeBouncer from '../functions/DeBouncer';
+import DeBouncer from '$Functions/DeBouncer';
 
 export default {
 	props: {

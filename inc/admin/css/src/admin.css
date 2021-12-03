@@ -3869,6 +3869,10 @@ wptb_shortcode_container_element {
     padding: 40px 10px;
 }
 
+.wptb-builder-responsive[data-wptb-responsive-status="true"] .wptb-responsive-builder-main {
+    overflow-x: hidden !important;
+}
+
 .wptb-responsive-menu-tools {
     margin: auto auto 60px auto;
     max-width: 700px;
