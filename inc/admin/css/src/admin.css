@@ -5781,6 +5781,12 @@ label.wptb-control-row {
     color: var(--wptb-plugin-logo-color)
 }
 
+.wptb-color-picker-logo div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .wptb-color-picker-logo svg {
     fill: currentColor;
 }
