@@ -2,14 +2,14 @@
  * Responsive table component
  */
 import Vue from 'vue';
-import ResponsiveApp from '../containers/ResponsiveApp';
-import ResponsiveControlsRow from '../components/ResponsiveControlsRow';
+import ResponsiveApp from '$Containers/ResponsiveApp';
+import ResponsiveControlsRow from '$Components/ResponsiveControlsRow';
 // eslint-disable-next-line camelcase
-import WPTB_ControlsManager from '../functions/WPTB_ControlsManager';
-import filters from '../plugins/filters';
-import strings from '../plugins/strings';
-import ResponsivePanelGeneralControls from '../components/ResponsivePanelGeneralControls';
-import ResponsivePanelModeControls from '../components/ResponsivePanelModeControls';
+import WPTB_ControlsManager from '$Functions/WPTB_ControlsManager';
+import filters from '$Plugins/filters';
+import strings from '$Plugins/strings';
+import ResponsivePanelGeneralControls from '$Components/ResponsivePanelGeneralControls';
+import ResponsivePanelModeControls from '$Components/ResponsivePanelModeControls';
 
 export default {
 	name: 'ResponsiveTable',

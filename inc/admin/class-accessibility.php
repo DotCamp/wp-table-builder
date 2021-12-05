@@ -51,6 +51,6 @@ class Accessibility {
 		Control_Section_Group_Collapse::add_section( 'table_settings_accessibility', esc_html__( 'Accessibility', 'wp-table-builder' ), $accessibility_group_controls, [
 			$context,
 			'add_control'
-		], false );
+		], false, 'universal-access' );
 	}
 }

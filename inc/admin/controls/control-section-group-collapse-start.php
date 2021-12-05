@@ -40,12 +40,12 @@ class Control_Section_Group_Collapse_Start extends Base_Control {
         const label = data.label;
         const sectionId = data.sectionId;
         const openState = data.openState;
-
+        const labelIcon = data.labelIcon? data.labelIcon : '';
 
         #>
         <div class="wptb-panel-toggle-group" id="{{{sectionId}}}">
             <div class="wptb-panel-toggle">
-                <div class="header">{{{label}}}</div>
+                <div class="header"><div class="wptb-panel-toggle-group-header-icon">{{{labelIcon}}}</div><div class="wptb-panel-toggle-group-header-label">{{{label}}}</div></div>
                 <span class="dashicons toggle-icon"></span>
             </div>
             <div class="wptb-panel-section-toggle-target">

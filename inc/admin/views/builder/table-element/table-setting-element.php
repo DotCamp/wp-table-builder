@@ -239,26 +239,27 @@ class Table_Setting_Element extends Element_Base_Object {
 				]
 		];
 
-		$responsive_section_group_controls = [
-			'makeTableResponsive'  =>
-				[
-					'label'     => __( 'Make Table Responsive', 'wp_table_builder' ),
-					'type'      => Controls_Manager::TOGGLE,
-					'selectors' => [
-						'{{{data.container}}}' => [ 'data-wptb-adaptive-table', '1', '0' ]
-					],
-				],
-			'tableTopRowsAsHeader' =>
-				[
-					'label'     => __( 'Top Rows As Header', 'wp_table_builder' ),
-					'type'      => Controls_Manager::TOGGLE,
-					'selectors' => [
-						'{{{data.container}}}' => [ 'class', 'wptb-table-preview-head', '' ]
-					],
-				]
-		];
+		// @deprecated
+//		$responsive_section_group_controls = [
+//			'makeTableResponsive'  =>
+//				[
+//					'label'     => __( 'Make Table Responsive', 'wp_table_builder' ),
+//					'type'      => Controls_Manager::TOGGLE,
+//					'selectors' => [
+//						'{{{data.container}}}' => [ 'data-wptb-adaptive-table', '1', '0' ]
+//					],
+//				],
+//			'tableTopRowsAsHeader' =>
+//				[
+//					'label'     => __( 'Top Rows As Header', 'wp_table_builder' ),
+//					'type'      => Controls_Manager::TOGGLE,
+//					'selectors' => [
+//						'{{{data.container}}}' => [ 'class', 'wptb-table-preview-head', '' ]
+//					],
+//				]
+//		];
 
-		$help_support_section_grup_controls = [
+		$help_support_section_group_controls = [
 			'helpSupportLinks' => [
 				'label' => 'test',
 				'type'  => Controls_Manager::HTML_OUTPUT,
@@ -266,11 +267,12 @@ class Table_Setting_Element extends Element_Base_Object {
 			]
 		];
 
+		// TODO [erdembircan] change open_state to true for production
 		// general section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_general', esc_html__( 'general', NS\PLUGIN_TEXT_DOMAIN ), $general_section_group_controls, [
 			$this,
 			'add_control'
-		] );
+		], false, 'sliders-h' );
 
 		// @deprecated in favor of new background menu
 //		// background section group
@@ -283,16 +285,16 @@ class Table_Setting_Element extends Element_Base_Object {
 		Control_Section_Group_Collapse::add_section( 'table_settings_border', esc_html__( 'border', NS\PLUGIN_TEXT_DOMAIN ), $border_section_group_controls, [
 			$this,
 			'add_control'
-		], false );
+		], false, 'border-style' );
 
 		// table settings registered action hook
 		do_action( 'wp-table-builder/table_settings_registered', $this );
 
 		// help&support section group
-		Control_Section_Group_Collapse::add_section( 'table_settings_help_support', esc_html__( 'help & support', NS\PLUGIN_TEXT_DOMAIN ), $help_support_section_grup_controls, [
+		Control_Section_Group_Collapse::add_section( 'table_settings_help_support', esc_html__( 'help & support', NS\PLUGIN_TEXT_DOMAIN ), $help_support_section_group_controls, [
 			$this,
 			'add_control'
-		], false );
+		], false, 'info-circle' );
 
 		$this->setDefaultControlArg( 'elementOptionsGroupId', 'wptb-bar-top' );
 		$this->setDefaultControlArg( 'elementOptionsContainerOn', 'false' );

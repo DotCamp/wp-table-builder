@@ -335,7 +335,7 @@ class Tag_Manager {
 		Control_Section_Group_Collapse::add_section( 'table_settings_tags', esc_html__( 'Table Tags', 'wp-table-builder' ), $tag_group, [
 			$context,
 			'add_control'
-		], false );
+		], false, 'tags' );
 	}
 
 	/**

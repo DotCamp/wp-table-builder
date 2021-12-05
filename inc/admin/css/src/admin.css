@@ -1270,6 +1270,22 @@ ul.wptb-tabs {
     font-size: 90%;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-panel-toggle .header .wptb-panel-toggle-group-header-icon {
+    width: 17px;
+    margin-right: 7px;
+    color: var(--wptb-plugin-logo-color);
+}
+
+.wptb-panel-toggle .header .wptb-panel-toggle-group-header-icon:empty {
+    display: none;
+}
+
+.wptb-panel-toggle .header .wptb-panel-toggle-group-header-icon svg {
+    fill: currentColor;
 }
 
 .header .wptb-back-button {

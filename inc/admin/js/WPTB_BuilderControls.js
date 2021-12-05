@@ -21633,19 +21633,19 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _vue = _interopRequireDefault(require("vue"));
 
-var _ResponsiveApp = _interopRequireDefault(require("../containers/ResponsiveApp"));
+var _ResponsiveApp = _interopRequireDefault(require("$Containers/ResponsiveApp"));
 
-var _ResponsiveControlsRow = _interopRequireDefault(require("../components/ResponsiveControlsRow"));
+var _ResponsiveControlsRow = _interopRequireDefault(require("$Components/ResponsiveControlsRow"));
 
-var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
+var _WPTB_ControlsManager = _interopRequireDefault(require("$Functions/WPTB_ControlsManager"));
 
-var _filters = _interopRequireDefault(require("../plugins/filters"));
+var _filters = _interopRequireDefault(require("$Plugins/filters"));
 
-var _strings = _interopRequireDefault(require("../plugins/strings"));
+var _strings = _interopRequireDefault(require("$Plugins/strings"));
 
-var _ResponsivePanelGeneralControls = _interopRequireDefault(require("../components/ResponsivePanelGeneralControls"));
+var _ResponsivePanelGeneralControls = _interopRequireDefault(require("$Components/ResponsivePanelGeneralControls"));
 
-var _ResponsivePanelModeControls = _interopRequireDefault(require("../components/ResponsivePanelModeControls"));
+var _ResponsivePanelModeControls = _interopRequireDefault(require("$Components/ResponsivePanelModeControls"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21792,7 +21792,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/ResponsiveApp":"containers/ResponsiveApp.vue","../components/ResponsiveControlsRow":"components/ResponsiveControlsRow.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../plugins/filters":"plugins/filters.js","../plugins/strings":"plugins/strings.js","../components/ResponsivePanelGeneralControls":"components/ResponsivePanelGeneralControls.vue","../components/ResponsivePanelModeControls":"components/ResponsivePanelModeControls.vue"}],"components/SideInput.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ResponsiveApp":"containers/ResponsiveApp.vue","$Components/ResponsiveControlsRow":"components/ResponsiveControlsRow.vue","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$Plugins/filters":"plugins/filters.js","$Plugins/strings":"plugins/strings.js","$Components/ResponsivePanelGeneralControls":"components/ResponsivePanelGeneralControls.vue","$Components/ResponsivePanelModeControls":"components/ResponsivePanelModeControls.vue"}],"components/SideInput.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
