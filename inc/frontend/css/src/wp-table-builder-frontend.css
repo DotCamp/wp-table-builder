@@ -18,6 +18,10 @@
     overflow-x: auto !important;
 }
 
+.wptb-table-container[data-wptb-horizontal-scroll-status="true"] table{
+    padding: 10px;
+}
+
 .wptb-table-container-matrix {
     margin: auto;
 }

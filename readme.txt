@@ -92,6 +92,7 @@ That's it. You're done!
 
 = 1.3.14 =
 
+* NEW: Horizontal scroll options.
 * IMPROVE: Updated control groups for table elements.
 * IMPROVE: Better builder horizontal scroll ability for smaller screens and wide tables.
 * PRO: FIX: An issue with spacing controls reset themselves for some table elements on element activation.
