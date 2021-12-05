@@ -13,6 +13,11 @@
     margin: 30px auto;
 }
 
+.wptb-table-container[data-wptb-horizontal-scroll-status="true"] {
+    width: 100%;
+    overflow-x: auto !important;
+}
+
 .wptb-table-container-matrix {
     margin: auto;
 }

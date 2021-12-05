@@ -267,6 +267,17 @@ class Table_Setting_Element extends Element_Base_Object {
 			]
 		];
 
+		$scroll_section_group_controls = [
+			'horizontalScrollEnable' => [
+				'label'     => esc_html__( 'Enable horizontal scrolling', 'wp-table-builder-pro' ),
+				'type'      => Controls_Manager::TOGGLE,
+				'selectors' => [
+					'{{{data.container}}}' => [ 'data-wptb-horizontal-scroll-status', '1', null ]
+				]
+			]
+
+		];
+
 		// TODO [erdembircan] change open_state to true for production
 		// general section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_general', esc_html__( 'general', NS\PLUGIN_TEXT_DOMAIN ), $general_section_group_controls, [
@@ -286,6 +297,12 @@ class Table_Setting_Element extends Element_Base_Object {
 			$this,
 			'add_control'
 		], false, 'border-style' );
+
+		// scroll section group
+		Control_Section_Group_Collapse::add_section( 'table_settings_scroll', esc_html__( 'Scroll', NS\PLUGIN_TEXT_DOMAIN ), $scroll_section_group_controls, [
+			$this,
+			'add_control'
+		], false, 'arrows-alt-h' );
 
 		// table settings registered action hook
 		do_action( 'wp-table-builder/table_settings_registered', $this );

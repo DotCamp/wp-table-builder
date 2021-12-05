@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (table.length > 0) {
 				table = table[0];
 
-				if (table.dataset.wptbTableContainerMaxWidth) {
+				if (table.dataset.wptbTableContainerMaxWidth && !table.dataset.wptbTableHorizontalScrollStatus) {
 					wptbTableContainer.style.maxWidth = `${table.dataset.wptbTableContainerMaxWidth}px`;
 				}
 				table.classList.remove('wptb-table-preview-static-indic');
