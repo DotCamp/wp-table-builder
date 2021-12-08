@@ -278,7 +278,6 @@ class Table_Setting_Element extends Element_Base_Object {
 
 		];
 
-		// TODO [erdembircan] change open_state to true for production
 		// general section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_general', esc_html__( 'general', NS\PLUGIN_TEXT_DOMAIN ), $general_section_group_controls, [
 			$this,

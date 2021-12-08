@@ -1,8 +1,8 @@
 {
-  "1.3.13": [
+  "1.3.14-dev": [
     [
-      "Mail link support for button element.",
-      "mailto.png"
+      "Horizontal scrolling support.",
+      "horizontal_scroll_control.png"
     ]
   ]
 }

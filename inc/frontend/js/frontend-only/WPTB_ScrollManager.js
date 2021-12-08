@@ -42,5 +42,8 @@
 		};
 	}
 
+	/**
+	 * @module WPTB_ScrollManager
+	 */
 	return WPTB_ScrollManager;
 });

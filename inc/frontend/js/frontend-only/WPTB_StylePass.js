@@ -91,8 +91,15 @@
 			}
 			const container = document.createElement('div');
 			container.classList.add('wptb-shadow-root-container');
-			const maxWidth = tableContainer.querySelector('table').dataset.wptbTableContainerMaxWidth;
-			if (maxWidth) {
+
+			const mainTable = tableContainer.querySelector('table');
+
+			const maxWidth = mainTable.dataset.wptbTableContainerMaxWidth;
+
+			const scrollStatus = mainTable.dataset.wptbHorizontalScrollStatus;
+
+			// only add max-width to shadow root container if scroll functionality is disabled
+			if (maxWidth && !scrollStatus) {
 				container.style.maxWidth = `${maxWidth}px`;
 			}
 

@@ -5,6 +5,9 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 use DOMDocument;
 use DOMXPath;
 use WP_Table_Builder\Inc\Admin\Base\Manager_Base;
+use function add_filter;
+use function get_bloginfo;
+use function mb_convert_encoding;
 
 // if called directly, abort process
 if ( ! defined( 'WPINC' ) ) {
@@ -33,8 +36,7 @@ class Scroll_Manager extends Manager_Base {
 	 */
 	public function handle_frontend_data( $data ) {
 		$data['scrollManager'] = [
-			// TODO [erdembircan] invert logic for production
-			'frontendCalculationStatus' => function_exists( 'mb_convert_encoding' )
+			'frontendCalculationStatus' => ! function_exists( 'mb_convert_encoding' )
 		];
 
 		return $data;
@@ -49,8 +51,7 @@ class Scroll_Manager extends Manager_Base {
 	 *
 	 */
 	public function process_shortcode( $shortcode_html ) {
-		// TODO [erdembircan] revert logic for production
-		if ( ! function_exists( 'mb_convert_encoding' ) ) {
+		if ( function_exists( 'mb_convert_encoding' ) ) {
 			$dom_handler = new DOMDocument();
 
 			$charset = get_bloginfo( 'charset' );
