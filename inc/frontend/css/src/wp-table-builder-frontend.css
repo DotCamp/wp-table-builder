@@ -18,8 +18,8 @@
     overflow-x: auto !important;
 }
 
-.wptb-table-container[data-wptb-horizontal-scroll-status="true"] table{
-    padding: 10px;
+.wptb-table-container[data-wptb-horizontal-scroll-status="true"] .wptb-table-container-matrix{
+    padding:10px 0;
 }
 
 .wptb-table-container-matrix {
@@ -825,4 +825,12 @@ table.wptb-preview-table {
 
 .wptb-plugin-width-full {
     width: 100% !important;
+}
+
+.wptb-scroll-indicator-container {
+    position: absolute;
+    width: 50px;
+    height: 100%;
+    background-color: red;
+    top: 0;
 }

@@ -206,9 +206,7 @@ class Tables {
 			$after_table = '<div class="wptb-frontend-table-after">' . $post_edit_link . $post_give_credit . '</div>';
 		}
 
-		$horizontal_scroll_enabled = ( strpos( $html, 'data-wptb-horizontal-scroll-status' ) !== false ) ? 'true' : 'false';
-
-		$html = sprintf( '<div class="wptb-table-container wptb-table-%1$d" data-wptb-horizontal-scroll-status="%6$s"><div class="wptb-table-container-matrix" id="wptb-table-id-%1$d" data-wptb-version="%4$s" data-wptb-pro-status="%5$s">%2$s</div></div>%3$s', esc_attr( $args['id'] ), $html, $after_table, esc_attr( get_plugin_data( NS\PLUGIN__FILE__ )['Version'] ), esc_attr( Addon_Manager::check_pro_status() ? 'true' : 'false' ), esc_attr( $horizontal_scroll_enabled ) );
+		$html = sprintf( '<div class="wptb-table-container wptb-table-%1$d"><div class="wptb-table-container-matrix" id="wptb-table-id-%1$d" data-wptb-version="%4$s" data-wptb-pro-status="%5$s">%2$s</div></div>%3$s', esc_attr( $args['id'] ), $html, $after_table, esc_attr( get_plugin_data( NS\PLUGIN__FILE__ )['Version'] ), esc_attr( Addon_Manager::check_pro_status() ? 'true' : 'false' ) );
 
 		$html = apply_filters( 'wp-table-builder/filter/table_html_shortcode', $html );
 

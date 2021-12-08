@@ -9,6 +9,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Gutenberg_Block_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Notification_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Scroll_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Upsells_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Version_Sync_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\What_Is_New_Manager;
@@ -232,6 +233,9 @@ class Init {
 
 		// initialize what is new manager
 		What_Is_New_Manager::init();
+
+		// initialize scroll manager
+		Scroll_Manager::init( [], 'WP_Table_Builder\Inc\Admin\Managers\Scroll_Manager' );
 	}
 
 	/**
@@ -260,8 +264,8 @@ class Init {
 
 		$plugin_admin = new Admin\Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
-		$tables = new Admin\Tables;
-		$this->admin_menu   = new Admin\Admin_Menu;
+		$tables           = new Admin\Tables;
+		$this->admin_menu = new Admin\Admin_Menu;
 		//$import = new Admin\Import;
 
 		// accessibility initialization

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	function addHoverSupport(querySelector) {
 		const buttons = Array.from(document.querySelectorAll(querySelector));
 
+		// eslint-disable-next-line array-callback-return
 		buttons.map((b) => {
 			b.addEventListener('mouseenter', (e) => {
 				const el = e.target;
@@ -475,7 +476,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (table.length > 0) {
 				table = table[0];
 
-				if (table.dataset.wptbTableContainerMaxWidth && !table.dataset.wptbTableHorizontalScrollStatus) {
+				// added check for horizontal scroll functionality while adding max width property to table container style
+				if (
+					table.dataset.wptbTableContainerMaxWidth &&
+					!table.dataset.wptbTableHorizontalScrollStatus &&
+					!wptbTableContainer.dataset.wptbHorizontalScrollStatus
+				) {
 					wptbTableContainer.style.maxWidth = `${table.dataset.wptbTableContainerMaxWidth}px`;
 				}
 				table.classList.remove('wptb-table-preview-static-indic');
@@ -652,7 +658,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
-	window.addEventListener('resize',  () => {
+	window.addEventListener('resize', () => {
 		wptb_tdDefaultWidth();
 		wptb_tableReconstraction();
 	});
@@ -705,6 +711,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		},
 	});
 	document.dispatchEvent(responsiveFrontReady);
+
+	// initialize scroll manager
+	new WPTB_ScrollManager(WptbFrontendData.scrollManager).init();
 
 	// apply defined extra styles to tables if there is any
 	WPTB_ExtraStyles.applyStyles(WPTB_ExtraStyles.modes.frontEnd, WptbFrontendData.generalStyles);

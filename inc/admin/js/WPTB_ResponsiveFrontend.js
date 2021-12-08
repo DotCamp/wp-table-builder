@@ -770,6 +770,27 @@
 		};
 
 		/**
+		 * Scroll operation related adjustments to responsive process.
+		 *
+		 * @param {Node} tableElement table element
+		 * @param {boolean} revertToOriginal revert to original state
+		 */
+		const scrollOperations = (tableElement, revertToOriginal) => {
+			const scrollFunctionalityStatus = tableElement.dataset.wptbHorizontalScrollStatus;
+
+			if (scrollFunctionalityStatus) {
+				const matrixContainer = tableElement.parentNode;
+				if (revertToOriginal) {
+					const storedMaxWidth = tableElement.dataset.wptbTableContainerMaxWidth;
+
+					matrixContainer.style.width = `${storedMaxWidth}px`;
+				} else {
+					matrixContainer.style.width = '';
+				}
+			}
+		};
+
+		/**
 		 * Rebuild table in auto mode.
 		 *
 		 * Main characteristic of auto mode is table is rebuilt by stacking rows/columns on top of each other, leaving minimal effort from user to create a responsive table at breakpoints.
@@ -803,9 +824,11 @@
 			tableObj.clearTable();
 
 			if (sizeRange === 'desktop') {
+				scrollOperations(tableEl, true);
 				this.buildDefault(tableObj);
 				this.removeDefaultClasses(tableEl);
 			} else {
+				scrollOperations(tableEl, false);
 				this.autoDirectionBuild(
 					tableObj,
 					direction,
@@ -1293,6 +1316,7 @@
 		 */
 		const htmlResponsiveIndicators = (tableElement, breakpointId) => {
 			if (tableElement && breakpointId) {
+				// eslint-disable-next-line no-param-reassign
 				tableElement.dataset.wptbBreakpoint = breakpointId;
 			}
 		};
@@ -1349,8 +1373,8 @@
 					});
 					el.dispatchEvent(tabEvent);
 
-                    // add html indicators to target table
-                    htmlResponsiveIndicators(el,sizeRangeId);
+					// add html indicators to target table
+					htmlResponsiveIndicators(el, sizeRangeId);
 				} else {
 					throw new Error(`No build mode named as [${mode}] found.`);
 				}

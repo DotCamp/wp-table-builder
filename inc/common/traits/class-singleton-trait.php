@@ -36,9 +36,9 @@ trait Singleton_Trait {
 	 *
 	 * @return Object class instance
 	 */
-	public static function get_instance( $options = [] ) {
+	public static function get_instance( $options = [], $class = null ) {
 		if ( static::$instance === null ) {
-			$class            = __CLASS__;
+			$class            = $class ? $class : __CLASS__;
 			static::$instance = new $class( $options );
 		}
 

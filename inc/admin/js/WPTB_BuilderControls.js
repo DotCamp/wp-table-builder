@@ -18097,6 +18097,28 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       el.classList.remove(_this3.options.defaultClasses);
     };
     /**
+     * Scroll operation related adjustments to responsive process.
+     *
+     * @param {Node} tableElement table element
+     * @param {boolean} revertToOriginal revert to original state
+     */
+
+
+    var scrollOperations = function scrollOperations(tableElement, revertToOriginal) {
+      var scrollFunctionalityStatus = tableElement.dataset.wptbHorizontalScrollStatus;
+
+      if (scrollFunctionalityStatus) {
+        var matrixContainer = tableElement.parentNode;
+
+        if (revertToOriginal) {
+          var storedMaxWidth = tableElement.dataset.wptbTableContainerMaxWidth;
+          matrixContainer.style.width = "".concat(storedMaxWidth, "px");
+        } else {
+          matrixContainer.style.width = '';
+        }
+      }
+    };
+    /**
      * Rebuild table in auto mode.
      *
      * Main characteristic of auto mode is table is rebuilt by stacking rows/columns on top of each other, leaving minimal effort from user to create a responsive table at breakpoints.
@@ -18125,10 +18147,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       tableObj.clearTable();
 
       if (sizeRange === 'desktop') {
+        scrollOperations(tableEl, true);
+
         _this3.buildDefault(tableObj);
 
         _this3.removeDefaultClasses(tableEl);
       } else {
+        scrollOperations(tableEl, false);
+
         _this3.autoDirectionBuild(tableObj, direction, topRowAsHeader, staticTopRow, cellsPerRow, repeatMergedHeader);
 
         _this3.addDefaultClasses(tableEl);
@@ -18579,6 +18605,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
     var htmlResponsiveIndicators = function htmlResponsiveIndicators(tableElement, breakpointId) {
       if (tableElement && breakpointId) {
+        // eslint-disable-next-line no-param-reassign
         tableElement.dataset.wptbBreakpoint = breakpointId;
       }
     };
