@@ -2013,7 +2013,7 @@ table.wptb-table {
     min-height: 55px;
     text-align: center;
     position: sticky !important;
-    top: 95px;
+    top: 39px;
     z-index: 100;
     display: inline-block;
 }
@@ -2079,7 +2079,7 @@ table.wptb-table {
 .mce-tinymce.mce-tinymce-inline.mce-container.mce-panel {
     left: 50% !important;
     transform: translate(-50%, 0) !important;
-    border: 0px !important;
+    border: 1px solid var(--wptb-plugin-gray-300) !important;
 }
 
 .mce-container.mce-panel.mce-floatpanel.mce-window.mce-in {
