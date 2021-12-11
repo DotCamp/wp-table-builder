@@ -99,9 +99,6 @@ export default {
 				return key;
 			}
 		});
-
-		// TODO [erdembircan] comment for production
-		// this.currentSection = 'lazyLoad';
 	},
 	computed: {
 		sectionData() {
