@@ -21,7 +21,7 @@ abstract class Manager_Base {
 	 * Class initialization status.
 	 * @var bool
 	 */
-	private static $initialized = false;
+	protected static $initialized = false;
 
 	/**
 	 * Get initialization status of a static class.
