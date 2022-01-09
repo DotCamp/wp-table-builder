@@ -114,7 +114,6 @@ do_action( 'wptb_before_header' );
                         <p>
 							<?php esc_html_e( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ); ?>
                         </p>
-
                         <div id="divPArent">
                             <div id="divInput">
                                 <input value="<?php echo isset($_GET['table']) && absint($_GET['table']) &&
@@ -137,7 +136,9 @@ do_action( 'wptb_before_header' );
                                     </g>
 
                         </svg>
+                                <span class="tooltiptext">Copy</span>
                             </div>
+
                         </div>
 
                     </div>
