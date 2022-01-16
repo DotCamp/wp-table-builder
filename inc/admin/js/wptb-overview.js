@@ -122,4 +122,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 
+function copyClipboard(id) {
+    var a = jQuery("<input>");
+    jQuery("body").append(a), a.val(jQuery(".shortcode-" + id).text()).select(), document.execCommand("copy"), a.remove()
+}
 
+jQuery(".main-shortcode-div .inner-shortcode").mouseenter(function () {
+    jQuery(this).find(".tooltiptext").html("Copy");
+    jQuery(this).find(".tooltiptext").css("visibility", "visible")
+});
+jQuery(".main-shortcode-div .inner-shortcode").mouseleave(function () {
+    jQuery(this).find(".tooltiptext").html("Copy");
+    jQuery(this).find(".tooltiptext").css("visibility", "hidden")
+});
+jQuery(".main-shortcode-div .inner-shortcode").mousedown(function () {
+    jQuery(this).find(".tooltiptext").html("Copied");
+    jQuery(this).find(".tooltiptext").css("visibility", "visible")
+});
