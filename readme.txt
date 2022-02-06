@@ -2,7 +2,7 @@
 Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
-Tested up to: 5.8
+Tested up to: 5.9
 Stable tag: 1.3.16
 Requires PHP: 5.6
 License: GPL3+
@@ -89,6 +89,16 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.3.16 =
+
+* IMPROVE: WordPress 5.9 compatibility.
+* NEW: Shortcode clipboard copy functionality at table listings.
+* FIX: Startup error for some older PHP versions.
+
+= 1.3.15 =
+
+* FIX: An issue affecting some PHP versions.
 
 = 1.3.14 =
 
