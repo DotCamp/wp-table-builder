@@ -2,11 +2,8 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
-use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Common\Helpers;
 use function path_join;
-use function request_filesystem_credentials;
-use function wp_enqueue_script;
 use function WP_Filesystem;
 use function wp_localize_script;
 
@@ -85,14 +82,6 @@ class Icon_Manager {
 	 * @return array an associated array of icon list with keys as icon name and values as icon url
 	 */
 	public function get_icon_list( $extension = 'svg' ) {
-		// @deprecated
-//		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
-//
-//		// return an empty array if filesystem credential check fails
-//		if ( ! WP_Filesystem( $creds ) ) {
-//			return [];
-//		}
-
 		WP_Filesystem( true );
 
 		// continue filesystem read operations from here if credential check passes
@@ -129,15 +118,6 @@ class Icon_Manager {
 	 */
 	public function get_icon( $icon_name, $echo_to_output = false, $extension = 'svg', $container = null ) {
 		require_once ABSPATH . 'wp-admin/includes/file.php';
-
-		// @deprecated
-//
-//		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
-//
-//		// check for filesystem credentials
-//		if ( ! WP_Filesystem( $creds ) ) {
-//			return;
-//		}
 
 		WP_Filesystem( true );
 

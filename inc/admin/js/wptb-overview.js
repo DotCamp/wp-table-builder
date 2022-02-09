@@ -1,11 +1,11 @@
-document.addEventListener("DOMContentLoaded", function(event) {
-    
-    
-    function wptbModalPopupWindowCreate() {
-        let wptbPopupWindowModal = document.createElement( 'div' );
-        wptbPopupWindowModal.classList.add( 'wptb-popup-window-modal', 'wptb-popup-window-delete-confirm' );
+document.addEventListener('DOMContentLoaded', function () {
+	function wptbModalPopupWindowCreate() {
+		const wptbPopupWindowModal = document.createElement('div');
+		wptbPopupWindowModal.classList.add('wptb-popup-window-modal', 'wptb-popup-window-delete-confirm');
 
-        wptbPopupWindowModal.innerHTML = '<div class="wptb-popup-box">\n\
+		wptbPopupWindowModal.innerHTML =
+			// eslint-disable-next-line no-multi-str
+			'<div class="wptb-popup-box">\n\
             <div class="wptb-popup-sing-picture-container">\n\
                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" \n\
                     x="0px" y="0px" viewBox="0 0 27.963 27.963" style="enable-background:new 0 0 27.963 27.963;" \n\
@@ -40,102 +40,122 @@ document.addEventListener("DOMContentLoaded", function(event) {
             </div>\n\
         </div>';
 
-        let wptbPopupDarkArea = document.createElement( 'div' );
-        wptbPopupDarkArea.classList.add( 'wptb-popup-dark-area' );
+		const wptbPopupDarkArea = document.createElement('div');
+		wptbPopupDarkArea.classList.add('wptb-popup-dark-area');
 
-        let body = document.getElementsByTagName( 'body' );
-        if( body.length > 0 ) {
-            body = body[0];
-            body.appendChild( wptbPopupWindowModal );
-            body.appendChild( wptbPopupDarkArea );
-        }
+		let body = document.getElementsByTagName('body');
+		if (body.length > 0) {
+			body = body[0];
+			body.appendChild(wptbPopupWindowModal);
+			body.appendChild(wptbPopupDarkArea);
+		}
 
-        wptbPopupDarkArea.onclick = function() {
-            wptbPopupWindowModal.classList.add( 'hilight' );
+		wptbPopupDarkArea.onclick = function () {
+			wptbPopupWindowModal.classList.add('hilight');
 
-            setTimeout( function(){
-                wptbPopupWindowModal.classList.remove( 'hilight' );
-            }, 1000 );
-        }
+			setTimeout(function () {
+				wptbPopupWindowModal.classList.remove('hilight');
+			}, 1000);
+		};
 
-        let wptbCancelButton = wptbPopupWindowModal.getElementsByClassName( 'wptb-cancel-btn' );
-        if( wptbCancelButton.length > 0 ) {
-            wptbCancelButton = wptbCancelButton[0];
-            wptbCancelButton.onclick = function() {
-                wptbPopupWindowModal.classList.remove( 'wptb-popup-show' );
-            }
-        }
+		let wptbCancelButton = wptbPopupWindowModal.getElementsByClassName('wptb-cancel-btn');
+		if (wptbCancelButton.length > 0) {
+			wptbCancelButton = wptbCancelButton[0];
+			wptbCancelButton.onclick = function () {
+				wptbPopupWindowModal.classList.remove('wptb-popup-show');
+			};
+		}
 
-        let wptbConfirmButton = wptbPopupWindowModal.getElementsByClassName( 'wptb-confirm-btn' );
-        if( wptbConfirmButton.length > 0 ) {
-            wptbConfirmButton = wptbConfirmButton[0];
-            wptbConfirmButton.onclick = function() {
-                window.location.href = this.dataset.urlForTableConfirm;
-            }
-        }
-    }
-    
-    wptbModalPopupWindowCreate();
-    
-    
-    function eachItemsAddHandler( attributeClass ) {
-        let htmlCollection = document.getElementsByClassName( attributeClass );
-        let wptbPopupWindowModal = document.getElementsByClassName( 'wptb-popup-window-modal' )[0];
-        
-        for( let i = 0; i < htmlCollection.length; i++ ) {
-            let a = htmlCollection[i].getElementsByTagName( 'a' );
-            if( a.length > 0 ) {
-                a[0].onclick = function( e ) {
-                    e.preventDefault();
-                    wptbPopupWindowModal.classList.add( 'wptb-popup-show' );
-                    
-                    let wptbPopupContent = wptbPopupWindowModal.getElementsByClassName( 'wptb-popup-content' );
-                    if( wptbPopupContent.length > 0 ) {
-                        wptbPopupContent = wptbPopupContent[0];
-                        let p = wptbPopupContent.getElementsByTagName( 'p' );
-                        if( p.length > 0 ) {
-                            p = p[0];
-                            if( attributeClass == 'delete' ) {
-                                p.innerHTML = 'Are you sure you want to delete this table?';
-                            } else if( attributeClass == 'duplicate' ) {
-                                p.innerHTML = 'Are you sure you want to duplicate this table?';
-                            }
-                        }
-                    }
-                    
-                    let wptbConfirmButton = wptbPopupWindowModal.getElementsByClassName( 'wptb-confirm-btn' );
-                    if( wptbConfirmButton.length > 0 ) {
-                        wptbConfirmButton = wptbConfirmButton[0];
-                        wptbConfirmButton.dataset.urlForTableConfirm = e.target.href;
-                    }
-                }
-            }
-        }
-    }
-    
-    eachItemsAddHandler( 'delete' );
-    
-    eachItemsAddHandler( 'duplicate' );
-    
-    
-    
+		let wptbConfirmButton = wptbPopupWindowModal.getElementsByClassName('wptb-confirm-btn');
+		if (wptbConfirmButton.length > 0) {
+			wptbConfirmButton = wptbConfirmButton[0];
+			wptbConfirmButton.onclick = function () {
+				window.location.href = this.dataset.urlForTableConfirm;
+			};
+		}
+	}
+
+	wptbModalPopupWindowCreate();
+
+	function eachItemsAddHandler(attributeClass) {
+		const htmlCollection = document.getElementsByClassName(attributeClass);
+		const wptbPopupWindowModal = document.getElementsByClassName('wptb-popup-window-modal')[0];
+
+		for (let i = 0; i < htmlCollection.length; i++) {
+			const a = htmlCollection[i].getElementsByTagName('a');
+			if (a.length > 0) {
+				a[0].onclick = function (e) {
+					e.preventDefault();
+					wptbPopupWindowModal.classList.add('wptb-popup-show');
+
+					let wptbPopupContent = wptbPopupWindowModal.getElementsByClassName('wptb-popup-content');
+					if (wptbPopupContent.length > 0) {
+						wptbPopupContent = wptbPopupContent[0];
+						let p = wptbPopupContent.getElementsByTagName('p');
+						if (p.length > 0) {
+							p = p[0];
+							if (attributeClass == 'delete') {
+								p.innerHTML = 'Are you sure you want to delete this table?';
+							} else if (attributeClass == 'duplicate') {
+								p.innerHTML = 'Are you sure you want to duplicate this table?';
+							}
+						}
+					}
+
+					let wptbConfirmButton = wptbPopupWindowModal.getElementsByClassName('wptb-confirm-btn');
+					if (wptbConfirmButton.length > 0) {
+						wptbConfirmButton = wptbConfirmButton[0];
+						wptbConfirmButton.dataset.urlForTableConfirm = e.target.href;
+					}
+				};
+			}
+		}
+	}
+
+	eachItemsAddHandler('delete');
+
+	eachItemsAddHandler('duplicate');
 });
 
+/**
+ * Copy selected table shortcode to clipboard.
+ *
+ * @param {string} shortcode shortcode
+ */
+function wptbCopyShortcode(shortcode) {
+	// create a dummy text input element for copy operation
+	const dummyTextInputString = '<input type="text" class="wptb-dummy-text-input">';
+	const range = document.createRange();
+	range.setStart(document.body, 0);
+	const dummyTextElement = range.createContextualFragment(dummyTextInputString).childNodes[0];
+	document.body.appendChild(dummyTextElement);
 
-function copyClipboard(id) {
-    var a = jQuery("<input>");
-    jQuery("body").append(a), a.val(jQuery(".shortcode-" + id).text()).select(), document.execCommand("copy"), a.remove()
+	// copy shortcode to clipboard
+	dummyTextElement.value = shortcode.trim();
+	dummyTextElement.select();
+	document.execCommand('copy');
+
+	// remove dummy input element
+	dummyTextElement.parentNode.removeChild(dummyTextElement);
 }
 
-jQuery(".main-shortcode-div .inner-shortcode").mouseenter(function () {
-    jQuery(this).find(".tooltiptext").html("Copy");
-    jQuery(this).find(".tooltiptext").css("visibility", "visible")
-});
-jQuery(".main-shortcode-div .inner-shortcode").mouseleave(function () {
-    jQuery(this).find(".tooltiptext").html("Copy");
-    jQuery(this).find(".tooltiptext").css("visibility", "hidden")
-});
-jQuery(".main-shortcode-div .inner-shortcode").mousedown(function () {
-    jQuery(this).find(".tooltiptext").html("Copied");
-    jQuery(this).find(".tooltiptext").css("visibility", "visible")
-});
+/**
+ * Assign shortcode copy functionality to HTML elements.
+ */
+function assignCopyShortcodeFunctionality() {
+	// eslint-disable-next-line array-callback-return
+	Array.from(document.querySelectorAll('.wptb-listing-shortcode-inner-wrap')).map((wrapper) => {
+		const shortCodeRawWrapper = wrapper.querySelector('.wptb-listing-shortcode-raw');
+		if (shortCodeRawWrapper) {
+			const shortcode = shortCodeRawWrapper.textContent;
+
+			wrapper.addEventListener('click', (e) => {
+				e.preventDefault();
+				wptbCopyShortcode(shortcode);
+			});
+		}
+	});
+}
+
+// shortcode clipboard functionality initialization
+assignCopyShortcodeFunctionality();
