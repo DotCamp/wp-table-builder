@@ -1,8 +1,8 @@
 {
-  "1.3.14": [
+  "1.3.16": [
     [
-      "Horizontal scrolling support.",
-      "horizontal_scroll_control.png"
+      "Easy shortcode clipboard copy at table listing.",
+      "listing_shortcode_copy.png"
     ]
   ]
 }
