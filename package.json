@@ -82,8 +82,10 @@
     "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.5.2",
     "gulp-csso": "^4.0.1",
+    "gulp-if": "^3.0.0",
     "gulp-js-import": "^1.0.6",
     "gulp-notify": "^3.0.0",
+    "gulp-sass": "^5.1.0",
     "gulp-sort": "^2.0.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-uglify": "^3.0.2",
@@ -91,6 +93,7 @@
     "gulp-wp-pot": "^2.0.4",
     "parcel-bundler": "^1.12.4",
     "prettier": "^2.0.5",
+    "sass": "^1.49.7",
     "vue-template-compiler": "^2.6.11"
   },
   "dependencies": {

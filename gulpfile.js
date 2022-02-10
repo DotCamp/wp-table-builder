@@ -5,6 +5,9 @@ const csso = require('gulp-csso');
 const babel = require('gulp-babel');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
+const sass = require('gulp-sass')(require('sass'));
+const gulpif = require('gulp-if');
+const path = require('path');
 
 /**
  * Gulp configuration object for path locations.
@@ -40,8 +43,16 @@ const gulpConfig = {
 		src: ['./inc/admin/css/src/*.css', '!./inc/admin/css/src/admin.css'],
 		dest: './inc/admin/css',
 	},
+	adminSass: {
+		src: ['./inc/admin/css/src/*.scss', '!./inc/admin/css/src/admin.scss'],
+		dest: './inc/admin/css',
+	},
 	onlyAdminCss: {
 		src: ['./inc/admin/css/src/admin.css', './inc/admin/js/WPTB_BuilderControls.css'],
+		dest: './inc/admin/css/admin.css',
+	},
+	onlyAdminSass: {
+		src: ['./inc/admin/css/src/admin.scss', './inc/admin/js/WPTB_BuilderControls.css'],
 		dest: './inc/admin/css/admin.css',
 	},
 };
@@ -91,12 +102,32 @@ function cssAdmin() {
 		.pipe(gulp.dest(gulpConfig.adminCss.dest));
 }
 
+function adminSass() {
+	return gulp
+		.src(gulpConfig.adminSass.src)
+		.pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+		.pipe(gulp.dest(gulpConfig.adminSass.dest));
+}
+
 function onlyCssAdmin() {
 	return gulp
 		.src(gulpConfig.onlyAdminCss.src)
 		.pipe(autoprefixer())
 		.pipe(concat(gulpConfig.onlyAdminCss.dest))
 		.pipe(csso())
+		.pipe(gulp.dest('.'));
+}
+
+function onlyAdminSass() {
+	const filter = (file) => {
+		return path.parse(file.path).ext === '.scss';
+	};
+
+	return gulp
+		.src(gulpConfig.onlyAdminSass.src)
+		.pipe(gulpif(filter, sass({ outputStyle: 'compressed' }).on('error', sass.logError)))
+		.pipe(autoprefixer())
+		.pipe(concat(gulpConfig.onlyAdminSass.dest))
 		.pipe(gulp.dest('.'));
 }
 
@@ -121,9 +152,13 @@ exports.watch = gulp.parallel(
 		await cssAdmin();
 		return gulp.watch(['./inc/admin/css/src/*.css'], cssAdmin);
 	},
-	async function watchOnlyAdminStyles() {
-		await onlyCssAdmin();
-		return gulp.watch(gulpConfig.onlyAdminCss.src, onlyCssAdmin);
+	async function watchAdminSass() {
+		await adminSass();
+		return gulp.watch(gulpConfig.adminSass.src, adminSass);
+	},
+	async function watchOnlyAdminSass() {
+		await onlyAdminSass();
+		return gulp.watch(gulpConfig.onlyAdminSass.src, onlyAdminSass);
 	},
 	async function watchFrontendStyles() {
 		await cssFrontend();
@@ -131,4 +166,4 @@ exports.watch = gulp.parallel(
 	}
 );
 
-exports.default = gulp.parallel(adminJs, frontendJs, cssAdmin, onlyCssAdmin, cssFrontend);
+exports.default = gulp.parallel(adminJs, frontendJs, cssAdmin, adminSass, onlyAdminSass, cssFrontend);

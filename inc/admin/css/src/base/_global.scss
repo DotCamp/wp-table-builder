@@ -1,0 +1,44 @@
+/*css constants for plugin styles*/
+:root {
+  /*constants*/
+  --wptb-plugin-sidebar-size-full: 300px;
+  --wptb-plugin-logo-color: #3299D1;
+  --wptb-plugin-gray-100: #F7FAFC;
+  --wptb-plugin-gray-200: #EDF2F7;
+  --wptb-plugin-gray-300: #E2E8F0;
+  --wptb-plugin-gray-400: #CBD5E0;
+  --wptb-plugin-gray-500: #A0AEC0;
+  --wptb-plugin-gray-600: #718096;
+  --wptb-plugin-gray-700: #4A5568;
+  --wptb-plugin-green-500: #48BB78;
+  --wptb-plugin-yellow-500: #ECC94B;
+  --wptb-plugin-red-300: #FCA5A5;
+  --wptb-plugin-red-500: #F56565;
+  --wptb-plugin-red-600: #E53E3E;
+  --wptb-plugin-red-800: #991B1B;
+  --wptb-plugin-blue-300: #90CDF4;
+  --wptb-plugin-blue-400: #60A5FA;
+  --wptb-plugin-blue-500: #3B82F6;
+  --wptb-plugin-blue-600: #2563EB;
+  --wptb-plugin-white: #FFF;
+  --wptb-plugin-black: #000;
+  --wptb-plugin-gold: #D4AF37;
+  --wptb-plugin-cta-button: #F7C948;
+
+  /*theme*/
+  --wptb-plugin-theme-text-color-main: var(--wptb-plugin-gray-700);
+  --wptb-plugin-theme-color-light: var(--wptb-plugin-white);
+  --wptb-plugin-theme-sidebar-bg: var(--wptb-plugin-gray-300);
+  --wptb-plugin-theme-side-bar-font-size-base: 16px;
+  --wptb-plugin-theme-header-font-size-base: 16px;
+  --wptb-plugin-theme-side-bar-sections-font-base: 80%;
+
+
+  --wptb-plugin-left-panel-constant: 40px;
+
+  --wptb-prebuilt-card-border-size: 2px;
+  --wptb-prebuilt-card-control-size: 30px;
+
+  --wptb-busy-duration: 0.9s;
+  --wptb-notification-manager-width: 300px;
+}
