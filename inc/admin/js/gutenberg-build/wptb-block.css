@@ -1,4 +1,3 @@
-@charset "UTF-8";
 .wptb-block-wrapper {
   position: relative;
   width: 100%;
@@ -223,10 +222,10 @@
   align-items: center;
 }
 .wptb-block-wrapper .wptb-block-toggle:after {
-  content: "";
+  content: "\f347";
 }
 .wptb-block-wrapper .wptb-block-toggle[aria-expanded=true]:after {
-  content: "";
+  content: "\f343";
 }
 
 .wptb-basic-appear-anim {

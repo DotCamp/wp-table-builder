@@ -1,0 +1,37 @@
+@import 'base/colors';
+@import 'base/common';
+
+.wptb-main-shortcode-div {
+  .wptb-listing-shortcode-inner-wrap {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    color: $logo-color;
+
+    &:hover .wptb-listing-shortcode-copy-icon {
+      opacity: 1;
+    }
+
+    .wptb-listing-shortcode-copy-icon {
+      @extend %default-transition;
+      margin: 0 10px;
+      width: 15px;
+      height: 15px;
+      opacity: 0;
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+
+      &:active {
+        transform: scale(0.9);
+        color: lighten($logo-color, 10);
+      }
+
+      svg {
+        fill: currentColor;
+      }
+    }
+  }
+}

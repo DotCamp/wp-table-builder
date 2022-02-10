@@ -149,10 +149,14 @@ function assignCopyShortcodeFunctionality() {
 		if (shortCodeRawWrapper) {
 			const shortcode = shortCodeRawWrapper.textContent;
 
-			wrapper.addEventListener('click', (e) => {
-				e.preventDefault();
-				wptbCopyShortcode(shortcode);
-			});
+			const copyIcon = wrapper.querySelector('.wptb-listing-shortcode-copy-icon');
+
+			if (copyIcon) {
+				copyIcon.addEventListener('click', (e) => {
+					e.preventDefault();
+					wptbCopyShortcode(shortcode);
+				});
+			}
 		}
 	});
 }

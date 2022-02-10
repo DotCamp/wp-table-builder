@@ -225,12 +225,14 @@ class WPTB_Listing extends WP_List_Table {
 	 */
 	private function get_shortcode_listing_html( $item_id ) {
 		ob_start();
+
 		?>
         <div class="wptb-main-shortcode-div">
             <div class="wptb-listing-shortcode-inner-wrap">
                 <div class="wptb-listing-shortcode-raw">[wptb id=<?php echo esc_html( $item_id ); ?>]
                 </div>
-                <div class="wptb-listing-shortcode-copy-icon">
+                <div class="wptb-listing-shortcode-copy-icon"
+                     title="<?php esc_attr_e( 'copy', 'wp-table-builder' ); ?>">
 					<?php
 					Init::instance()->get_icon_manager()->get_icon( 'clone', true );
 					?>
