@@ -16224,9 +16224,10 @@ var _default = {
       if (!this.mainTable) {
         throw new Error("no clone target is found with a query value of ".concat(this.cloneQuery));
       } // check for legacy responsive functionality on main table
+      // TODO [erdembircan] revert logic check for production
 
 
-      this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable === '1';
+      this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable !== '1';
       this.clonedTable = this.mainTable.cloneNode(true);
       this.clonedTable.classList.add('wptb-plugin-box-shadow-xl');
       this.$refs.tableClone.appendChild(this.clonedTable); // directives that are already present in the main table
@@ -19680,8 +19681,16 @@ exports.default = void 0;
 
 var _MaterialButton = _interopRequireDefault(require("$Components/MaterialButton"));
 
+var _Icon = _interopRequireDefault(require("./Icon"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -19698,6 +19707,20 @@ var _default = {
     message: {
       type: String,
       default: 'This is a default message for modal window.'
+    },
+    iconName: {
+      type: String,
+      default: 'exclamation-circle'
+    },
+    iconClasses: {
+      type: Array,
+      default: function _default() {
+        return ['wptb-plugin-modal-icon-inner-wrapper', 'wptb-svg-inherit-color'];
+      }
+    },
+    buttonLabel: {
+      type: String,
+      default: 'Okay'
     },
     visible: {
       type: Boolean,
@@ -19716,6 +19739,7 @@ var _default = {
     }
   },
   components: {
+    Icon: _Icon.default,
     MaterialButton: _MaterialButton.default
   },
   mounted: function mounted() {
@@ -19754,7 +19778,17 @@ exports.default = _default;
     },
     [
       _c("div", { staticClass: "wptb-plugin-modal-inner-window" }, [
-        _vm._m(0),
+        _c(
+          "div",
+          { staticClass: "wptb-plugin-modal-icon" },
+          [
+            _c("icon", {
+              staticClass: "wptb-plugin-modal-icon-parent-wrapper",
+              attrs: { name: _vm.iconName, "extra-classes": _vm.iconClasses }
+            })
+          ],
+          1
+        ),
         _vm._v(" "),
         _c("div", { staticClass: "wptb-plugin-modal-message" }, [
           _vm._v(_vm._s(_vm.message))
@@ -19767,7 +19801,7 @@ exports.default = _default;
             _c(
               "material-button",
               { attrs: { size: "full-size", click: _vm.callback } },
-              [_vm._v(_vm._s(_vm.strings.okay))]
+              [_vm._v(_vm._s(_vm.buttonLabel))]
             )
           ],
           1
@@ -19776,16 +19810,7 @@ exports.default = _default;
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wptb-plugin-modal-icon" }, [
-      _c("span", { staticClass: "dashicons dashicons-warning" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
           return {
@@ -19797,7 +19822,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Components/MaterialButton":"components/MaterialButton.vue"}],"components/NumberPostfixButtons.vue":[function(require,module,exports) {
+},{"$Components/MaterialButton":"components/MaterialButton.vue","./Icon":"components/Icon.vue"}],"components/NumberPostfixButtons.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

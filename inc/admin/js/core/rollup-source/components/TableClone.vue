@@ -99,7 +99,8 @@ export default {
 			}
 
 			// check for legacy responsive functionality on main table
-			this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable === '1';
+			// TODO [erdembircan] revert logic check for production
+			this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable !== '1';
 
 			this.clonedTable = this.mainTable.cloneNode(true);
 			this.clonedTable.classList.add('wptb-plugin-box-shadow-xl');

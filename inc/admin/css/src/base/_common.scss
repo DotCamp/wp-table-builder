@@ -3,3 +3,14 @@ $default-transition-time: 0.1s;
 %default-transition {
   transition: all $default-transition-time ease-out;
 }
+
+%size-full {
+  width: 100%;
+  height: 100%;
+}
+
+%flex-center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

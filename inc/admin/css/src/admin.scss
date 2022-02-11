@@ -1,4 +1,6 @@
 @import 'base/global';
+@import 'base/common';
+@import 'base/colors';
 
 html {
   overflow-y: hidden;
@@ -4157,8 +4159,23 @@ wptb_shortcode_container_element {
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: scale(2);
   pointer-events: none;
+  color: $yellow-500;
+
+  .wptb-plugin-modal-icon-parent-wrapper {
+    @extend %size-full;
+    @extend %flex-center-all;
+
+    .wptb-plugin-modal-icon-inner-wrapper {
+      @extend %size-full;
+      @extend %flex-center-all;
+
+      svg{
+        @extend %size-full;
+      }
+    }
+  }
+
 }
 
 .wptb-plugin-modal-message {
