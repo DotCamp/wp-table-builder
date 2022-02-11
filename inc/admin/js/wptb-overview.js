@@ -123,20 +123,24 @@ document.addEventListener('DOMContentLoaded', function () {
  * @param {string} shortcode shortcode
  */
 function wptbCopyShortcode(shortcode) {
-	// create a dummy text input element for copy operation
-	const dummyTextInputString = '<input type="text" class="wptb-dummy-text-input">';
-	const range = document.createRange();
-	range.setStart(document.body, 0);
-	const dummyTextElement = range.createContextualFragment(dummyTextInputString).childNodes[0];
-	document.body.appendChild(dummyTextElement);
+	if (!navigator.clipboard) {
+		// create a dummy text input element for copy operation
+		const dummyTextInputString = '<input type="text" class="wptb-dummy-text-input">';
+		const range = document.createRange();
+		range.setStart(document.body, 0);
+		const dummyTextElement = range.createContextualFragment(dummyTextInputString).childNodes[0];
+		document.body.appendChild(dummyTextElement);
 
-	// copy shortcode to clipboard
-	dummyTextElement.value = shortcode.trim();
-	dummyTextElement.select();
-	document.execCommand('copy');
+		// copy shortcode to clipboard
+		dummyTextElement.value = shortcode.trim();
+		dummyTextElement.select();
+		document.execCommand('copy');
 
-	// remove dummy input element
-	dummyTextElement.parentNode.removeChild(dummyTextElement);
+		// remove dummy input element
+		dummyTextElement.parentNode.removeChild(dummyTextElement);
+	} else {
+		navigator.clipboard.writeText(shortcode);
+	}
 }
 
 /**
