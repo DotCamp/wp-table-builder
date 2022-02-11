@@ -8,19 +8,20 @@
     flex-direction: row;
     color: $logo-color;
 
-    &:hover .wptb-listing-shortcode-copy-icon {
+    &:hover .wptb-listing-shortcode-icon-wrapper {
       opacity: 1;
     }
 
-    .wptb-listing-shortcode-copy-icon {
+    .wptb-listing-shortcode-icon-wrapper {
       @extend %default-transition;
-      margin: 0 10px;
-      width: 15px;
-      height: 15px;
+      margin: 0 5px;
+      width: 20px;
+      height: 20px;
       opacity: 0;
       cursor: pointer;
+      color: $logo-color;
 
-      &:hover {
+      &:not([data-wptb-copy-status="true"]):hover {
         transform: scale(1.2);
       }
 
@@ -29,7 +30,31 @@
         color: lighten($logo-color, 10);
       }
 
+      &[data-wptb-copy-status="true"] {
+        color: $green-500;
+
+        & .wptb-listing-shortcode-copy-icon {
+          display: none;
+        }
+
+        & .wptb-listing-shortcode-success-icon {
+          display: inherit;
+        }
+      }
+
+      &[data-wptb-copy-status='false'] {
+        & .wptb-listing-shortcode-copy-icon {
+          display: inherit;
+        }
+
+        & .wptb-listing-shortcode-success-icon {
+          display: none;
+        }
+      }
+
       svg {
+        width: 20px;
+        height: 20px;
         fill: currentColor;
       }
     }

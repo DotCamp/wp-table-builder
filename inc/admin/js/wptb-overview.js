@@ -149,12 +149,18 @@ function assignCopyShortcodeFunctionality() {
 		if (shortCodeRawWrapper) {
 			const shortcode = shortCodeRawWrapper.textContent;
 
-			const copyIcon = wrapper.querySelector('.wptb-listing-shortcode-copy-icon');
+			const copyIconWrapper = wrapper.querySelector('.wptb-listing-shortcode-icon-wrapper');
 
-			if (copyIcon) {
-				copyIcon.addEventListener('click', (e) => {
+			if (copyIconWrapper) {
+				copyIconWrapper.addEventListener('click', (e) => {
 					e.preventDefault();
 					wptbCopyShortcode(shortcode);
+					copyIconWrapper.dataset.wptbCopyStatus = true;
+				});
+
+				wrapper.addEventListener('mouseleave', (e) => {
+					e.preventDefault();
+					copyIconWrapper.dataset.wptbCopyStatus = false;
 				});
 			}
 		}

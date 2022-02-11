@@ -231,11 +231,19 @@ class WPTB_Listing extends WP_List_Table {
             <div class="wptb-listing-shortcode-inner-wrap">
                 <div class="wptb-listing-shortcode-raw">[wptb id=<?php echo esc_html( $item_id ); ?>]
                 </div>
-                <div class="wptb-listing-shortcode-copy-icon"
+                <div data-wptb-copy-status="false" class="wptb-listing-shortcode-icon-wrapper"
                      title="<?php esc_attr_e( 'copy', 'wp-table-builder' ); ?>">
-					<?php
-					Init::instance()->get_icon_manager()->get_icon( 'clone', true );
-					?>
+                    <div class="wptb-listing-shortcode-copy-icon">
+						<?php
+						Init::instance()->get_icon_manager()->get_icon( 'clipboard', true );
+						?>
+                    </div>
+                    <div class="wptb-listing-shortcode-success-icon"
+                         title="<?php esc_attr_e( 'copied', 'wp-table-builder' ); ?>">
+						<?php
+						Init::instance()->get_icon_manager()->get_icon( 'clipboard-check', true );
+						?>
+                    </div>
                 </div>
             </div>
         </div>
