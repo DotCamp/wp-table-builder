@@ -3,6 +3,8 @@
 </template>
 
 <script>
+const defaultClasses = ['wptb-svg-inherit-color'];
+
 export default {
 	props: {
 		name: {
@@ -12,26 +14,40 @@ export default {
 		extraClasses: {
 			type: Array,
 			default: () => {
-				return ['wptb-svg-inherit-color'];
+				return defaultClasses;
 			},
 		},
 	},
 	watch: {
-		name(n) {
-			WPTB_IconManager.getIcon(n, this.extraClasses, true).then((icon) => {
-				this.iconFragment = icon;
-			});
+		extraClasses() {
+			this.prepareClasses();
+			this.prepareIcon();
+		},
+		name() {
+			this.prepareIcon();
 		},
 	},
 	data() {
 		return {
 			iconFragment: '',
+			innerExtraClasses: [],
 		};
 	},
 	mounted() {
-		WPTB_IconManager.getIcon(this.name, this.extraClasses, true).then((icon) => {
-			this.iconFragment = icon;
+		this.$nextTick(() => {
+			this.prepareClasses(this.extraClasses);
+			this.prepareIcon();
 		});
+	},
+	methods: {
+		prepareIcon() {
+			WPTB_IconManager.getIcon(this.name, this.innerExtraClasses, true).then((icon) => {
+				this.iconFragment = icon;
+			});
+		},
+		prepareClasses() {
+			this.innerExtraClasses = Array.from(new Set([...this.extraClasses, ...defaultClasses]));
+		},
 	},
 };
 </script>

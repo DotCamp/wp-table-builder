@@ -938,7 +938,8 @@ input[type="range"]::-webkit-slider-thumb {
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #ffffff));
   /* android <= 2.2 */
   background-image: -webkit-linear-gradient(top, #ffffff 0, #ffffff 100%);
-  /* older mobile safari and android > 2.2 */;
+  /* older mobile safari and android > 2.2 */
+;
   background-image: linear-gradient(to bottom, #ffffff 0, #ffffff 100%);
   /* W3C */
 }
@@ -4148,8 +4149,13 @@ wptb_shortcode_container_element {
   display: grid;
   grid-template-areas:
             "modalIcon message"
+            "slotContainer slotContainer"
             "buttonContainer buttonContainer";
   grid-gap: 10px;
+}
+
+.wptb-plugin-modal-slot-container {
+  grid-area: slotContainer;
 }
 
 .wptb-plugin-modal-icon {
@@ -4170,7 +4176,7 @@ wptb_shortcode_container_element {
       @extend %size-full;
       @extend %flex-center-all;
 
-      svg{
+      svg {
         @extend %size-full;
       }
     }

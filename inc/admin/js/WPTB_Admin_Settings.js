@@ -28181,10 +28181,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 //
 //
 //
 //
+var defaultClasses = ['wptb-svg-inherit-color'];
 var _default = {
   props: {
     name: {
@@ -28194,30 +28200,45 @@ var _default = {
     extraClasses: {
       type: Array,
       default: function _default() {
-        return ['wptb-svg-inherit-color'];
+        return defaultClasses;
       }
     }
   },
   watch: {
-    name: function name(n) {
-      var _this = this;
-
-      WPTB_IconManager.getIcon(n, this.extraClasses, true).then(function (icon) {
-        _this.iconFragment = icon;
-      });
+    extraClasses: function extraClasses() {
+      this.prepareClasses();
+      this.prepareIcon();
+    },
+    name: function name() {
+      this.prepareIcon();
     }
   },
   data: function data() {
     return {
-      iconFragment: ''
+      iconFragment: '',
+      innerExtraClasses: []
     };
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this = this;
 
-    WPTB_IconManager.getIcon(this.name, this.extraClasses, true).then(function (icon) {
-      _this2.iconFragment = icon;
+    this.$nextTick(function () {
+      _this.prepareClasses(_this.extraClasses);
+
+      _this.prepareIcon();
     });
+  },
+  methods: {
+    prepareIcon: function prepareIcon() {
+      var _this2 = this;
+
+      WPTB_IconManager.getIcon(this.name, this.innerExtraClasses, true).then(function (icon) {
+        _this2.iconFragment = icon;
+      });
+    },
+    prepareClasses: function prepareClasses() {
+      this.innerExtraClasses = Array.from(new Set([].concat((0, _toConsumableArray2.default)(this.extraClasses), defaultClasses)));
+    }
   }
 };
 exports.default = _default;
@@ -28247,7 +28268,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/RangeInputButton.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js"}],"components/RangeInputButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

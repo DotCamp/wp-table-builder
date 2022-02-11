@@ -14604,10 +14604,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 //
 //
 //
 //
+var defaultClasses = ['wptb-svg-inherit-color'];
 var _default = {
   props: {
     name: {
@@ -14617,30 +14623,45 @@ var _default = {
     extraClasses: {
       type: Array,
       default: function _default() {
-        return ['wptb-svg-inherit-color'];
+        return defaultClasses;
       }
     }
   },
   watch: {
-    name: function name(n) {
-      var _this = this;
-
-      WPTB_IconManager.getIcon(n, this.extraClasses, true).then(function (icon) {
-        _this.iconFragment = icon;
-      });
+    extraClasses: function extraClasses() {
+      this.prepareClasses();
+      this.prepareIcon();
+    },
+    name: function name() {
+      this.prepareIcon();
     }
   },
   data: function data() {
     return {
-      iconFragment: ''
+      iconFragment: '',
+      innerExtraClasses: []
     };
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this = this;
 
-    WPTB_IconManager.getIcon(this.name, this.extraClasses, true).then(function (icon) {
-      _this2.iconFragment = icon;
+    this.$nextTick(function () {
+      _this.prepareClasses(_this.extraClasses);
+
+      _this.prepareIcon();
     });
+  },
+  methods: {
+    prepareIcon: function prepareIcon() {
+      var _this2 = this;
+
+      WPTB_IconManager.getIcon(this.name, this.innerExtraClasses, true).then(function (icon) {
+        _this2.iconFragment = icon;
+      });
+    },
+    prepareClasses: function prepareClasses() {
+      this.innerExtraClasses = Array.from(new Set([].concat((0, _toConsumableArray2.default)(this.extraClasses), defaultClasses)));
+    }
   }
 };
 exports.default = _default;
@@ -14670,7 +14691,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/RangeInputButton.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js"}],"components/RangeInputButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19679,12 +19700,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
 var _MaterialButton = _interopRequireDefault(require("$Components/MaterialButton"));
 
 var _Icon = _interopRequireDefault(require("./Icon"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
 //
 //
 //
@@ -19715,7 +19741,7 @@ var _default = {
     iconClasses: {
       type: Array,
       default: function _default() {
-        return ['wptb-plugin-modal-icon-inner-wrapper', 'wptb-svg-inherit-color'];
+        return [];
       }
     },
     buttonLabel: {
@@ -19742,8 +19768,30 @@ var _default = {
     Icon: _Icon.default,
     MaterialButton: _MaterialButton.default
   },
+  data: function data() {
+    return {
+      iconFinalClasses: []
+    };
+  },
   mounted: function mounted() {
-    this.relativeRef.appendChild(this.$refs.mainWrapper);
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.relativeRef.appendChild(_this.$refs.mainWrapper);
+
+      _this.prepareFinalClasses(_this.iconClasses);
+    });
+  },
+  watch: {
+    iconClasses: function iconClasses() {
+      this.prepareFinalClasses();
+    }
+  },
+  methods: {
+    prepareFinalClasses: function prepareFinalClasses() {
+      var defaultClasses = ['wptb-plugin-modal-icon-inner-wrapper'];
+      this.iconFinalClasses = Array.from(new Set([].concat((0, _toConsumableArray2.default)(this.iconClasses), defaultClasses)));
+    }
   },
   beforeDestroy: function beforeDestroy() {
     this.$refs.mainWrapper.remove();
@@ -19784,7 +19832,10 @@ exports.default = _default;
           [
             _c("icon", {
               staticClass: "wptb-plugin-modal-icon-parent-wrapper",
-              attrs: { name: _vm.iconName, "extra-classes": _vm.iconClasses }
+              attrs: {
+                name: _vm.iconName,
+                "extra-classes": _vm.iconFinalClasses
+              }
             })
           ],
           1
@@ -19793,6 +19844,13 @@ exports.default = _default;
         _c("div", { staticClass: "wptb-plugin-modal-message" }, [
           _vm._v(_vm._s(_vm.message))
         ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "wptb-plugin-modal-slot-container" },
+          [_vm._t("default")],
+          2
+        ),
         _vm._v(" "),
         _c(
           "div",
@@ -19822,7 +19880,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Components/MaterialButton":"components/MaterialButton.vue","./Icon":"components/Icon.vue"}],"components/NumberPostfixButtons.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","$Components/MaterialButton":"components/MaterialButton.vue","./Icon":"components/Icon.vue"}],"components/NumberPostfixButtons.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

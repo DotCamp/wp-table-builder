@@ -5,10 +5,13 @@
 				<icon
 					class="wptb-plugin-modal-icon-parent-wrapper"
 					:name="iconName"
-					:extra-classes="iconClasses"
+					:extra-classes="iconFinalClasses"
 				></icon>
 			</div>
 			<div class="wptb-plugin-modal-message">{{ message }}</div>
+			<div class="wptb-plugin-modal-slot-container">
+				<slot></slot>
+			</div>
 			<div class="wptb-plugin-modal-button-container">
 				<material-button size="full-size" :click="callback">{{ buttonLabel }}</material-button>
 			</div>
@@ -31,7 +34,7 @@ export default {
 		},
 		iconClasses: {
 			type: Array,
-			default: () => ['wptb-plugin-modal-icon-inner-wrapper', 'wptb-svg-inherit-color'],
+			default: () => [],
 		},
 		buttonLabel: {
 			type: String,
@@ -54,8 +57,28 @@ export default {
 		},
 	},
 	components: { Icon, MaterialButton },
+	data() {
+		return {
+			iconFinalClasses: [],
+		};
+	},
 	mounted() {
-		this.relativeRef.appendChild(this.$refs.mainWrapper);
+		this.$nextTick(() => {
+			this.relativeRef.appendChild(this.$refs.mainWrapper);
+			this.prepareFinalClasses(this.iconClasses);
+		});
+	},
+	watch: {
+		iconClasses() {
+			this.prepareFinalClasses();
+		},
+	},
+	methods: {
+		prepareFinalClasses() {
+			const defaultClasses = ['wptb-plugin-modal-icon-inner-wrapper'];
+
+			this.iconFinalClasses = Array.from(new Set([...this.iconClasses, ...defaultClasses]));
+		},
 	},
 	beforeDestroy() {
 		this.$refs.mainWrapper.remove();
