@@ -32839,7 +32839,49 @@ var nightMode = {
 
 var _default = nightMode;
 exports.default = _default;
-},{"$Stores/builderStore/modules/nightMode/state/cssVariableMaps":"stores/builderStore/modules/nightMode/state/cssVariableMaps.js"}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/nightMode/state/cssVariableMaps":"stores/builderStore/modules/nightMode/state/cssVariableMaps.js"}],"stores/builderStore/modules/embed/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * Embed store module.
+ *
+ * @type {Object}
+ */
+var embed = {
+  namespaced: true,
+  state: function state() {
+    return {
+      modalVisibility: false
+    };
+  },
+  getters: {
+    visibility: function visibility(state) {
+      return state.modalVisibility;
+    }
+  },
+  mutations: {
+    showModal: function showModal(state) {
+      state.modalVisibility = true;
+    },
+    hideModal: function hideModal(state) {
+      state.modalVisibility = false;
+    }
+  }
+};
+/**
+ * @module embed
+ */
+
+var _default = embed;
+exports.default = _default;
+},{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32851,6 +32893,8 @@ var _colorPicker = _interopRequireDefault(require("$Stores/builderStore/modules/
 
 var _nightMode = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode"));
 
+var _embed = _interopRequireDefault(require("$Stores/builderStore/modules/embed"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -32860,7 +32904,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 var modules = {
   colorPicker: _colorPicker.default,
-  nightMode: _nightMode.default
+  nightMode: _nightMode.default,
+  embed: _embed.default
 };
 /**
  * @module modules
@@ -32868,7 +32913,7 @@ var modules = {
 
 var _default = modules;
 exports.default = _default;
-},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -33249,6 +33294,9 @@ function BuilderStore() {
         return function (id) {
           return state.translations[id];
         };
+      },
+      tableId: function tableId(state) {
+        return state.tableId;
       }
     }
   };

@@ -51,6 +51,9 @@ function BuilderStore() {
 					return state.translations[id];
 				};
 			},
+			tableId(state) {
+				return state.tableId;
+			},
 		},
 	};
 

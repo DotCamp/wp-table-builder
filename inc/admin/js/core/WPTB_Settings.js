@@ -59,11 +59,12 @@ var WPTB_Settings = function () {
 
     // @deprecated
     // let shortcodePopupWindow = document.getElementsByClassName( 'wptb-popup-window-modal' )[0];
-    // document.getElementsByClassName( 'wptb-embed-btn' )[0].onclick = function () {
-        // if( ! this.classList.contains( 'wptb-button-disable' ) ) {
-        //     shortcodePopupWindow.classList.add( 'wptb-popup-show' );
-        // }
-    // }
+    document.getElementsByClassName( 'wptb-embed-btn' )[0].onclick = function () {
+        if( ! this.classList.contains( 'wptb-button-disable' ) ) {
+            // show modal window for shortcode embed
+            WPTB_Store.commit('embed/showModal');
+        }
+    }
     
     window.onbeforeunload = function(e) {
         let wptbSaveDisabled = document.getElementsByClassName( 'wptb-save-disabled' );

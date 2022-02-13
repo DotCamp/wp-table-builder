@@ -94,7 +94,7 @@ var WPTB_Initializer = function () {
     WPTB_NotificationManager.init();
 
     // call table embed
-    WPTB_ControlsManager.callControlScript('TableEmbed', 'wptb-embed-modal', 'test');
+    WPTB_ControlsManager.callControlScript('TableEmbed', 'wptb-embed-modal');
 
 	// start up extra styles for builder and make connections to necessary hooks
 	document.addEventListener('wptb:table:generated', () => {

@@ -3,7 +3,7 @@
 		<div class="wptb-plugin-modal-inner-window">
 			<div class="wptb-plugin-modal-header" v-if="windowTitle">
 				<div class="wptb-plugin-modal-header-title">{{ windowTitle | cap }}</div>
-				<div class="wptb-plugin-modal-header-close">
+				<div class="wptb-plugin-modal-header-close" @click.prevent="closeCallback">
 					<div class="wptb-plugin-modal-close-wrapper">X</div>
 				</div>
 			</div>
@@ -20,7 +20,9 @@
 					<slot></slot>
 				</div>
 				<div class="wptb-plugin-modal-button-container">
-					<material-button size="full-size" :click="callback">{{ buttonLabel | cap }}</material-button>
+					<material-button :class="buttonExtraClasses" size="full-size" :click="callback">{{
+						buttonLabel | cap
+					}}</material-button>
 				</div>
 			</div>
 		</div>
@@ -32,6 +34,10 @@ import Icon from '$Components/Icon';
 
 export default {
 	props: {
+		buttonExtraClasses: {
+			type: Array,
+			default: () => [],
+		},
 		windowTitle: {
 			type: null,
 			default: null,
@@ -65,6 +71,13 @@ export default {
 			default: () => {
 				// eslint-disable-next-line no-console
 				console.log('modal button clicked');
+			},
+		},
+		closeCallback: {
+			type: Function,
+			default: () => {
+				// eslint-disable-next-line no-console
+				console.log('modal window close');
 			},
 		},
 	},

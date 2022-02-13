@@ -4201,6 +4201,10 @@ wptb_shortcode_container_element {
 
 }
 
+.wptb-embed-button-success {
+  background-color: $green-500 !important;
+}
+
 .wptb-plugin-modal-slot-container {
   grid-area: slotContainer;
 }

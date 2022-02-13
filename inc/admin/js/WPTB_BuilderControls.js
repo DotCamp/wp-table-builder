@@ -19736,8 +19736,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
 var _default = {
   props: {
+    buttonExtraClasses: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
     windowTitle: {
       type: null,
       default: null
@@ -19773,6 +19781,13 @@ var _default = {
       default: function _default() {
         // eslint-disable-next-line no-console
         console.log('modal button clicked');
+      }
+    },
+    closeCallback: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('modal window close');
       }
     }
   },
@@ -19844,7 +19859,25 @@ exports.default = _default;
                 _vm._v(_vm._s(_vm._f("cap")(_vm.windowTitle)))
               ]),
               _vm._v(" "),
-              _vm._m(0)
+              _c(
+                "div",
+                {
+                  staticClass: "wptb-plugin-modal-header-close",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeCallback($event)
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "wptb-plugin-modal-close-wrapper" },
+                    [_vm._v("X")]
+                  )
+                ]
+              )
             ])
           : _vm._e(),
         _vm._v(" "),
@@ -19881,7 +19914,10 @@ exports.default = _default;
             [
               _c(
                 "material-button",
-                { attrs: { size: "full-size", click: _vm.callback } },
+                {
+                  class: _vm.buttonExtraClasses,
+                  attrs: { size: "full-size", click: _vm.callback }
+                },
                 [_vm._v(_vm._s(_vm._f("cap")(_vm.buttonLabel)))]
               )
             ],
@@ -19892,18 +19928,7 @@ exports.default = _default;
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wptb-plugin-modal-header-close" }, [
-      _c("div", { staticClass: "wptb-plugin-modal-close-wrapper" }, [
-        _vm._v("X")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
           return {
@@ -45256,33 +45281,43 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _vuex = require("vuex");
+
 var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 var _default = {
   components: {
     ModalWindow: _ModalWindow.default
   },
   data: function data() {
     return {
-      visibility: true
+      copyStatus: false
     };
   },
-  computed: {
+  watch: {
+    visibility: function visibility(n) {
+      // reset copy status to default at visibility change
+      this.copyStatus = !n ? false : this.copyStatus;
+    }
+  },
+  computed: _objectSpread({
+    buttonClass: function buttonClass() {
+      var defaultClasses = [];
+
+      if (this.copyStatus) {
+        defaultClasses.push('wptb-embed-button-success');
+      }
+
+      return defaultClasses;
+    },
     relativeRef: function relativeRef() {
       return document.querySelector('.wptb-builder-panel');
     },
@@ -45290,15 +45325,30 @@ var _default = {
       return WPTB_Store.getTranslation('embedMessage');
     },
     buttonLabel: function buttonLabel() {
-      return WPTB_Store.getTranslation('copyToClipboard');
+      var titleId = this.copyStatus ? 'copied' : 'copyToClipboard';
+      return WPTB_Store.getTranslation(titleId);
     },
     windowTitle: function windowTitle() {
       return WPTB_Store.getTranslation('shortcode');
     },
     generatedShortcode: function generatedShortcode() {
-      return '[wptb id=]';
+      return "[wptb id=".concat(this.tableId, "]");
     }
-  }
+  }, (0, _vuex.mapGetters)({
+    tableId: 'tableId',
+    visibility: 'embed/visibility'
+  })),
+  methods: _objectSpread({
+    copyToClipboard: function copyToClipboard() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(this.generatedShortcode);
+      }
+
+      this.copyStatus = true;
+    }
+  }, (0, _vuex.mapMutations)({
+    hideModal: 'embed/hideModal'
+  }))
 };
 exports.default = _default;
         var $7d84ba = exports.default || module.exports;
@@ -45322,10 +45372,17 @@ exports.default = _default;
         "relative-ref": _vm.relativeRef,
         message: _vm.embedMessage,
         "button-label": _vm.buttonLabel,
-        "window-title": _vm.windowTitle
+        "window-title": _vm.windowTitle,
+        callback: _vm.copyToClipboard,
+        "close-callback": _vm.hideModal,
+        "button-extra-classes": _vm.buttonClass
       }
     },
-    [_c("code", [_vm._v(_vm._s(_vm.generatedShortcode))])]
+    [
+      _c("code", { staticStyle: { "font-size": "150%" } }, [
+        _vm._v(_vm._s(_vm.generatedShortcode))
+      ])
+    ]
   )
 }
 var staticRenderFns = []
@@ -45340,7 +45397,41 @@ render._withStripped = true
           };
         })());
       
-},{"$Components/ModalWindow":"components/ModalWindow.vue"}],"mountPoints/WPTB_Embed.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/ModalWindow":"components/ModalWindow.vue"}],"mixins/withGlobalStoreVue.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * Create a vue instance object with global store attached.
+ *
+ * @param {Object} vueInstanceObject vue instance object
+ * @return {Object} vue instance object
+ */
+var withGlobalStoreVue = function withGlobalStoreVue(vueInstanceObject) {
+  return _objectSpread(_objectSpread({}, vueInstanceObject), {}, {
+    store: WPTB_Store
+  });
+};
+/**
+ * @module withGlobalStoreVue;
+ */
+
+
+var _default = withGlobalStoreVue;
+exports.default = _default;
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js"}],"mountPoints/WPTB_Embed.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45352,21 +45443,23 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _EmbedWindow = _interopRequireDefault(require("$Containers/EmbedWindow"));
 
+var _withGlobalStoreVue = _interopRequireDefault(require("$Mixins/withGlobalStoreVue"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _default = {
   name: 'TableEmbed',
   handler: function embedJS(uniqueId) {
-    new _vue.default({
+    new _vue.default((0, _withGlobalStoreVue.default)({
       components: {
         EmbedWindow: _EmbedWindow.default
       },
       template: '<embed-window></embed-window>'
-    }).$mount("#".concat(uniqueId));
+    })).$mount("#".concat(uniqueId));
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/EmbedWindow":"containers/EmbedWindow.vue"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/EmbedWindow":"containers/EmbedWindow.vue","$Mixins/withGlobalStoreVue":"mixins/withGlobalStoreVue.js"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45493,7 +45586,49 @@ var nightMode = {
 
 var _default = nightMode;
 exports.default = _default;
-},{"$Stores/builderStore/modules/nightMode/state/cssVariableMaps":"stores/builderStore/modules/nightMode/state/cssVariableMaps.js"}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/nightMode/state/cssVariableMaps":"stores/builderStore/modules/nightMode/state/cssVariableMaps.js"}],"stores/builderStore/modules/embed/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * Embed store module.
+ *
+ * @type {Object}
+ */
+var embed = {
+  namespaced: true,
+  state: function state() {
+    return {
+      modalVisibility: false
+    };
+  },
+  getters: {
+    visibility: function visibility(state) {
+      return state.modalVisibility;
+    }
+  },
+  mutations: {
+    showModal: function showModal(state) {
+      state.modalVisibility = true;
+    },
+    hideModal: function hideModal(state) {
+      state.modalVisibility = false;
+    }
+  }
+};
+/**
+ * @module embed
+ */
+
+var _default = embed;
+exports.default = _default;
+},{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45505,6 +45640,8 @@ var _colorPicker = _interopRequireDefault(require("$Stores/builderStore/modules/
 
 var _nightMode = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode"));
 
+var _embed = _interopRequireDefault(require("$Stores/builderStore/modules/embed"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -45514,7 +45651,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 var modules = {
   colorPicker: _colorPicker.default,
-  nightMode: _nightMode.default
+  nightMode: _nightMode.default,
+  embed: _embed.default
 };
 /**
  * @module modules
@@ -45522,7 +45660,7 @@ var modules = {
 
 var _default = modules;
 exports.default = _default;
-},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -45903,6 +46041,9 @@ function BuilderStore() {
         return function (id) {
           return state.translations[id];
         };
+      },
+      tableId: function tableId(state) {
+        return state.tableId;
       }
     }
   };
