@@ -24,6 +24,7 @@ import WPTB_ExtraStylesControl from '$MountPoints/WPTB_ExtraStylesControl';
 import WPTB_MultiCheckboxControl from '$MountPoints/WPTB_MultiCheckboxControl';
 import WPTB_Size2Control from '$MountPoints/WPTB_Size2Control';
 import WPTB_ColorPaletteControl from '$MountPoints/WPTB_ColorPaletteControl';
+import WPTB_Embed from '$MountPoints/WPTB_Embed';
 import { setupGlobalStore } from '$Functions/globalStore';
 
 // setup up global store for builder
@@ -60,6 +61,7 @@ const controls = [
 	WPTB_MultiCheckboxControl,
 	WPTB_Size2Control,
 	WPTB_ColorPaletteControl,
+	WPTB_Embed,
 ];
 
 /**

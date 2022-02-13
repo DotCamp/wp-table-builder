@@ -19794,7 +19794,7 @@ var _default = {
     }
   },
   beforeDestroy: function beforeDestroy() {
-    this.$refs.mainWrapper.remove();
+    this.$refs.mainWrapper.parentNode.removeChild(this.$refs.mainWrapper);
   }
 };
 exports.default = _default;
@@ -45213,7 +45213,81 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ColorPaletteControl":"containers/ColorPaletteControl.vue","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ColorPaletteControl":"containers/ColorPaletteControl.vue","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"containers/EmbedWindow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+var _default = {
+  components: {
+    ModalWindow: _ModalWindow.default
+  }
+};
+exports.default = _default;
+        var $7d84ba = exports.default || module.exports;
+      
+      if (typeof $7d84ba === 'function') {
+        $7d84ba = $7d84ba.options;
+      }
+    
+        /* template */
+        Object.assign($7d84ba, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("modal-window")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$Components/ModalWindow":"components/ModalWindow.vue"}],"mountPoints/WPTB_Embed.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _EmbedWindow = _interopRequireDefault(require("$Containers/EmbedWindow"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = {
+  name: 'Embed',
+  handler: function embedJD(uniqueId) {
+    new _vue.default({
+      components: {
+        EmbedWindow: _EmbedWindow.default
+      },
+      template: '<embed-window></embed-window>'
+    }).$mount("#".concat(uniqueId));
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/EmbedWindow":"containers/EmbedWindow.vue"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45841,6 +45915,8 @@ var _WPTB_Size2Control = _interopRequireDefault(require("$MountPoints/WPTB_Size2
 
 var _WPTB_ColorPaletteControl = _interopRequireDefault(require("$MountPoints/WPTB_ColorPaletteControl"));
 
+var _WPTB_Embed = _interopRequireDefault(require("$MountPoints/WPTB_Embed"));
+
 var _globalStore = require("$Functions/globalStore");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -45863,7 +45939,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default, _WPTB_ColorPaletteControl.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default, _WPTB_ColorPaletteControl.default, _WPTB_Embed.default];
 /**
  * Register control element.
  *
@@ -45875,5 +45951,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$Functions/globalStore":"functions/globalStore.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_Embed":"mountPoints/WPTB_Embed.js","$Functions/globalStore":"functions/globalStore.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

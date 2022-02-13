@@ -81,7 +81,7 @@ export default {
 		},
 	},
 	beforeDestroy() {
-		this.$refs.mainWrapper.remove();
+		this.$refs.mainWrapper.parentNode.removeChild(this.$refs.mainWrapper);
 	},
 };
 </script>
