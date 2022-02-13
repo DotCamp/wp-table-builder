@@ -19,7 +19,7 @@ export default function Builder({ builderUrl, show, builderVisibility, updateSel
 		prepareUrl(builderUrl);
 
 		if (show) {
-			const togglePreferenceValue = select('core/edit-post').getPreference('features').fullscreenMode;
+			const togglePreferenceValue = select('core/edit-post').isFeatureActive('fullscreenMode');
 			if (!togglePreferenceValue) {
 				dispatch('core/edit-post').toggleFeature('fullscreenMode');
 			}
