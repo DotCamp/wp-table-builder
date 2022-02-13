@@ -60,6 +60,19 @@ export default {
 		copyToClipboard() {
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(this.generatedShortcode);
+			} else {
+				const dummyInputSerialized = '<input type="text">';
+				const range = document.createRange();
+				range.setStart(document.body, 0);
+				const dummyInput = range.createContextualFragment(dummyInputSerialized).childNodes[0];
+
+				document.body.appendChild(dummyInput);
+
+				dummyInput.value = this.generatedShortcode;
+				dummyInput.select();
+				document.execCommand('copy');
+
+				dummyInput.parentNode.removeChild(dummyInput);
 			}
 
 			this.copyStatus = true;
