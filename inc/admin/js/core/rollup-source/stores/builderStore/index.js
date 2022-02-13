@@ -71,6 +71,16 @@ function BuilderStore() {
 		return builderStore.getters[getterId];
 	};
 
+	/**
+	 * Get translation of a string.
+	 *
+	 * @param {string} translationId translation id
+	 * @return {undefined | string} translated string
+	 */
+	builderStore.getTranslation = (translationId) => {
+		return builderStore.getters.getTranslation(translationId);
+	};
+
 	return builderStore;
 }
 

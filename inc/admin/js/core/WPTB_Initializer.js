@@ -90,11 +90,11 @@ var WPTB_Initializer = function () {
     // call what-is-new component
     WPTB_ControlsManager.callControlScript('WhatIsNew');
 
-    // call what-is-new component
-    WPTB_ControlsManager.callControlScript('Embed');
-
     // initialize notification manager
     WPTB_NotificationManager.init();
+
+    // call table embed
+    WPTB_ControlsManager.callControlScript('TableEmbed', 'wptb-embed-modal', 'test');
 
 	// start up extra styles for builder and make connections to necessary hooks
 	document.addEventListener('wptb:table:generated', () => {

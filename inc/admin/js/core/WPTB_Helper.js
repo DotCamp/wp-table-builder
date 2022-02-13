@@ -2546,7 +2546,7 @@ var WPTB_Helper = {
 					const tableId = new URL(window.location.href).searchParams.get('table');
 
 					if (!isTableClean) {
-						const confirmResult = window.confirm(WPTB_Store.get('getTranslation')('dirtyConfirmation'));
+						const confirmResult = window.confirm(WPTB_Store.getTranslation('dirtyConfirmation'));
 						if (confirmResult) {
 							WPTB_Helper.wptbDocumentEventGenerate('gutenbergClose', document, tableId);
 						}

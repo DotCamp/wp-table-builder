@@ -1,29 +1,41 @@
 <template>
 	<div ref="mainWrapper" class="wptb-plugin-modal-window" v-show="visible">
 		<div class="wptb-plugin-modal-inner-window">
-			<div class="wptb-plugin-modal-icon">
-				<icon
-					class="wptb-plugin-modal-icon-parent-wrapper"
-					:name="iconName"
-					:extra-classes="iconFinalClasses"
-				></icon>
+			<div class="wptb-plugin-modal-header" v-if="windowTitle">
+				<div class="wptb-plugin-modal-header-title">{{ windowTitle | cap }}</div>
+				<div class="wptb-plugin-modal-header-close">
+					<div class="wptb-plugin-modal-close-wrapper">X</div>
+				</div>
 			</div>
-			<div class="wptb-plugin-modal-message">{{ message }}</div>
-			<div class="wptb-plugin-modal-slot-container">
-				<slot></slot>
-			</div>
-			<div class="wptb-plugin-modal-button-container">
-				<material-button size="full-size" :click="callback">{{ buttonLabel }}</material-button>
+			<div class="wptb-plugin-modal-content-container">
+				<div class="wptb-plugin-modal-icon">
+					<icon
+						class="wptb-plugin-modal-icon-parent-wrapper"
+						:name="iconName"
+						:extra-classes="iconFinalClasses"
+					></icon>
+				</div>
+				<div class="wptb-plugin-modal-message">{{ message }}</div>
+				<div class="wptb-plugin-modal-slot-container">
+					<slot></slot>
+				</div>
+				<div class="wptb-plugin-modal-button-container">
+					<material-button size="full-size" :click="callback">{{ buttonLabel | cap }}</material-button>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
 import MaterialButton from '$Components/MaterialButton';
-import Icon from './Icon';
+import Icon from '$Components/Icon';
 
 export default {
 	props: {
+		windowTitle: {
+			type: null,
+			default: null,
+		},
 		message: {
 			type: String,
 			default: 'This is a default message for modal window.',

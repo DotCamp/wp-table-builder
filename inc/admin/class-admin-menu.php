@@ -336,21 +336,25 @@ class Admin_Menu {
 			$strings = [
 				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
 				'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
-				'copy'              => esc_html__( 'copy', 'wp-table-builder' ),
+				'copyToClipboard'   => esc_html__( 'copy to clipboard', 'wp-table-builder' ),
 				'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
 			];
+
+			$table_id = isset( $_GET['table'] ) ? $_GET['table'] : null;
 
 			$admin_object = [
 				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
 				'strings'       => $strings,
 				'store'         => [
+					'tableId'      => $table_id,
 					'pro'          => Addon_Manager::check_pro_status(),
 					'translations' => [
 						'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
 						'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
-						'copy'              => esc_html__( 'copy', 'wp-table-builder' ),
+						'copyToClipboard'   => esc_html__( 'copy to clipboard', 'wp-table-builder' ),
 						'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
+						'shortcode'         => esc_html__( 'shortcode', 'wp-table-builder' ),
 					]
 				]
 			];

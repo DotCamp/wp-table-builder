@@ -26,12 +26,16 @@ import WPTB_Size2Control from '$MountPoints/WPTB_Size2Control';
 import WPTB_ColorPaletteControl from '$MountPoints/WPTB_ColorPaletteControl';
 import WPTB_Embed from '$MountPoints/WPTB_Embed';
 import { setupGlobalStore } from '$Functions/globalStore';
+import filters from '$Plugins/filters';
 
 // setup up global store for builder
 setupGlobalStore();
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
+
+// enable filters
+Vue.use(filters);
 
 // eslint-disable-next-line no-restricted-globals
 const global = self || this;

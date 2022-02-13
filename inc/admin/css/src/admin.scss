@@ -4144,14 +4144,61 @@ wptb_shortcode_container_element {
 .wptb-plugin-modal-inner-window {
   max-width: 400px;
   background-color: #fff;
-  padding: 20px;
   border-radius: 3px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "modalHeader" "modalContent";
+  overflow: hidden;
+}
+
+.wptb-plugin-modal-header {
+  grid-area: modalHeader;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 1fr;
+  align-items: center;
+  border-bottom: 1px solid $gray-400;
+
+  .wptb-plugin-modal-header-title {
+    font-weight: bold;
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .wptb-plugin-modal-header-close {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    grid-row: 1;
+    grid-column: 1;
+
+    .wptb-plugin-modal-close-wrapper {
+      @extend %default-transition;
+      padding: 10px 15px;
+      font-weight: bold;
+      border-left: 1px solid $gray-400;
+      color: $gray-400;
+      cursor: pointer;
+      font-size: 120%;
+
+      &:hover {
+        color: $white;
+        background-color: $gray-400;
+      }
+    }
+  }
+}
+
+.wptb-plugin-modal-content-container {
+  grid-area: modalContent;
+  padding: 20px;
   display: grid;
   grid-template-areas:
             "modalIcon message"
             "slotContainer slotContainer"
             "buttonContainer buttonContainer";
-  grid-gap: 10px;
+  grid-gap: 20px;
+
 }
 
 .wptb-plugin-modal-slot-container {
@@ -4166,7 +4213,7 @@ wptb_shortcode_container_element {
   justify-content: center;
   align-items: center;
   pointer-events: none;
-  color: $yellow-500;
+  color: $logo-color;
 
   .wptb-plugin-modal-icon-parent-wrapper {
     @extend %size-full;

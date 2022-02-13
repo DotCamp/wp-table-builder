@@ -392,6 +392,7 @@ function ControlsManager() {
 		if (!controlScripts[key]) {
 			throw new Error(`Called control element not found: [${key}]`);
 		}
+
 		controlScripts[key].apply(null, args);
 	}
 

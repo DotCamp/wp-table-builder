@@ -392,7 +392,7 @@ function Builder(_ref) {
     prepareUrl(builderUrl);
 
     if (show) {
-      var togglePreferenceValue = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__["select"])('core/edit-post').getPreference('features').fullscreenMode;
+      var togglePreferenceValue = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__["select"])('core/edit-post').isFeatureActive('fullscreenMode');
 
       if (!togglePreferenceValue) {
         Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__["dispatch"])('core/edit-post').toggleFeature('fullscreenMode');

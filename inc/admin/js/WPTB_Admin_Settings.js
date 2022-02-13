@@ -33269,6 +33269,17 @@ function BuilderStore() {
   builderStore.get = function (getterId) {
     return builderStore.getters[getterId];
   };
+  /**
+   * Get translation of a string.
+   *
+   * @param {string} translationId translation id
+   * @return {undefined | string} translated string
+   */
+
+
+  builderStore.getTranslation = function (translationId) {
+    return builderStore.getters.getTranslation(translationId);
+  };
 
   return builderStore;
 }

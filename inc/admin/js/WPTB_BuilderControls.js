@@ -19704,7 +19704,7 @@ var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers
 
 var _MaterialButton = _interopRequireDefault(require("$Components/MaterialButton"));
 
-var _Icon = _interopRequireDefault(require("./Icon"));
+var _Icon = _interopRequireDefault(require("$Components/Icon"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19728,8 +19728,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
+    windowTitle: {
+      type: null,
+      default: null
+    },
     message: {
       type: String,
       default: 'This is a default message for modal window.'
@@ -19826,49 +19838,72 @@ exports.default = _default;
     },
     [
       _c("div", { staticClass: "wptb-plugin-modal-inner-window" }, [
-        _c(
-          "div",
-          { staticClass: "wptb-plugin-modal-icon" },
-          [
-            _c("icon", {
-              staticClass: "wptb-plugin-modal-icon-parent-wrapper",
-              attrs: {
-                name: _vm.iconName,
-                "extra-classes": _vm.iconFinalClasses
-              }
-            })
-          ],
-          1
-        ),
+        _vm.windowTitle
+          ? _c("div", { staticClass: "wptb-plugin-modal-header" }, [
+              _c("div", { staticClass: "wptb-plugin-modal-header-title" }, [
+                _vm._v(_vm._s(_vm._f("cap")(_vm.windowTitle)))
+              ]),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
+          : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "wptb-plugin-modal-message" }, [
-          _vm._v(_vm._s(_vm.message))
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "wptb-plugin-modal-slot-container" },
-          [_vm._t("default")],
-          2
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "wptb-plugin-modal-button-container" },
-          [
-            _c(
-              "material-button",
-              { attrs: { size: "full-size", click: _vm.callback } },
-              [_vm._v(_vm._s(_vm.buttonLabel))]
-            )
-          ],
-          1
-        )
+        _c("div", { staticClass: "wptb-plugin-modal-content-container" }, [
+          _c(
+            "div",
+            { staticClass: "wptb-plugin-modal-icon" },
+            [
+              _c("icon", {
+                staticClass: "wptb-plugin-modal-icon-parent-wrapper",
+                attrs: {
+                  name: _vm.iconName,
+                  "extra-classes": _vm.iconFinalClasses
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "wptb-plugin-modal-message" }, [
+            _vm._v(_vm._s(_vm.message))
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-plugin-modal-slot-container" },
+            [_vm._t("default")],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-plugin-modal-button-container" },
+            [
+              _c(
+                "material-button",
+                { attrs: { size: "full-size", click: _vm.callback } },
+                [_vm._v(_vm._s(_vm._f("cap")(_vm.buttonLabel)))]
+              )
+            ],
+            1
+          )
+        ])
       ])
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "wptb-plugin-modal-header-close" }, [
+      _c("div", { staticClass: "wptb-plugin-modal-close-wrapper" }, [
+        _vm._v("X")
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
           return {
@@ -19880,7 +19915,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","$Components/MaterialButton":"components/MaterialButton.vue","./Icon":"components/Icon.vue"}],"components/NumberPostfixButtons.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","$Components/MaterialButton":"components/MaterialButton.vue","$Components/Icon":"components/Icon.vue"}],"components/NumberPostfixButtons.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45229,13 +45264,39 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   components: {
     ModalWindow: _ModalWindow.default
   },
+  data: function data() {
+    return {
+      visibility: true
+    };
+  },
   computed: {
     relativeRef: function relativeRef() {
       return document.querySelector('.wptb-builder-panel');
+    },
+    embedMessage: function embedMessage() {
+      return WPTB_Store.getTranslation('embedMessage');
+    },
+    buttonLabel: function buttonLabel() {
+      return WPTB_Store.getTranslation('copyToClipboard');
+    },
+    windowTitle: function windowTitle() {
+      return WPTB_Store.getTranslation('shortcode');
+    },
+    generatedShortcode: function generatedShortcode() {
+      return '[wptb id=]';
     }
   }
 };
@@ -45252,13 +45313,20 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("modal-window", {
-    attrs: {
-      "icon-name": "clipboard",
-      visible: true,
-      "relative-ref": _vm.relativeRef
-    }
-  })
+  return _c(
+    "modal-window",
+    {
+      attrs: {
+        "icon-name": "clipboard",
+        visible: _vm.visibility,
+        "relative-ref": _vm.relativeRef,
+        message: _vm.embedMessage,
+        "button-label": _vm.buttonLabel,
+        "window-title": _vm.windowTitle
+      }
+    },
+    [_c("code", [_vm._v(_vm._s(_vm.generatedShortcode))])]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -45287,8 +45355,8 @@ var _EmbedWindow = _interopRequireDefault(require("$Containers/EmbedWindow"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _default = {
-  name: 'Embed',
-  handler: function embedJD(uniqueId) {
+  name: 'TableEmbed',
+  handler: function embedJS(uniqueId) {
     new _vue.default({
       components: {
         EmbedWindow: _EmbedWindow.default
@@ -45855,6 +45923,17 @@ function BuilderStore() {
   builderStore.get = function (getterId) {
     return builderStore.getters[getterId];
   };
+  /**
+   * Get translation of a string.
+   *
+   * @param {string} translationId translation id
+   * @return {undefined | string} translated string
+   */
+
+
+  builderStore.getTranslation = function (translationId) {
+    return builderStore.getters.getTranslation(translationId);
+  };
 
   return builderStore;
 }
@@ -45942,6 +46021,8 @@ var _WPTB_Embed = _interopRequireDefault(require("$MountPoints/WPTB_Embed"));
 
 var _globalStore = require("$Functions/globalStore");
 
+var _filters = _interopRequireDefault(require("$Plugins/filters"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable camelcase */
@@ -45954,7 +46035,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // setup up global store for builder
 (0, _globalStore.setupGlobalStore)(); // turn off Vue production message at console
 
-_vue.default.config.productionTip = false; // eslint-disable-next-line no-restricted-globals
+_vue.default.config.productionTip = false; // enable filters
+
+_vue.default.use(_filters.default); // eslint-disable-next-line no-restricted-globals
+
 
 var global = self || void 0; // adding controls manager to global space
 
@@ -45974,5 +46058,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_Embed":"mountPoints/WPTB_Embed.js","$Functions/globalStore":"functions/globalStore.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_Embed":"mountPoints/WPTB_Embed.js","$Functions/globalStore":"functions/globalStore.js","$Plugins/filters":"plugins/filters.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map
