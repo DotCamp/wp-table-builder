@@ -95,6 +95,7 @@ That's it. You're done!
 * IMPROVE: WordPress 5.9 compatibility.
 * NEW: Shortcode clipboard copy functionality at table listings.
 * FIX: Startup error for some older PHP versions.
+* FIX: Version control wrong list for available rollback versions.
 
 = 1.3.15 =
 
