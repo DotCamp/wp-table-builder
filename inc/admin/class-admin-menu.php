@@ -334,7 +334,10 @@ class Admin_Menu {
 			wp_enqueue_script( 'wptb-controls-manager-js', plugin_dir_url( __FILE__ ) . 'js/WPTB_BuilderControls.js', [], filemtime( $builder_path ), false );
 
 			$strings = [
-				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
+				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
+				'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
+				'copy'              => esc_html__( 'copy', 'wp-table-builder' ),
+				'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
 			];
 
 			$admin_object = [
@@ -342,7 +345,13 @@ class Admin_Menu {
 				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
 				'strings'       => $strings,
 				'store'         => [
-					'pro' => Addon_Manager::check_pro_status()
+					'pro'          => Addon_Manager::check_pro_status(),
+					'translations' => [
+						'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
+						'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
+						'copy'              => esc_html__( 'copy', 'wp-table-builder' ),
+						'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
+					]
 				]
 			];
 

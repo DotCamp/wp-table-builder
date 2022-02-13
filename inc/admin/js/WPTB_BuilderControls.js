@@ -45232,6 +45232,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = {
   components: {
     ModalWindow: _ModalWindow.default
+  },
+  computed: {
+    relativeRef: function relativeRef() {
+      return document.querySelector('.wptb-builder-panel');
+    }
   }
 };
 exports.default = _default;
@@ -45247,7 +45252,13 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("modal-window")
+  return _c("modal-window", {
+    attrs: {
+      "icon-name": "clipboard",
+      visible: true,
+      "relative-ref": _vm.relativeRef
+    }
+  })
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -45800,6 +45811,13 @@ var defaultStore = {
 var createStore = function createStore(extraStoreOptions) {
   return (0, _general.createBasicStore)(defaultStore, extraStoreOptions);
 };
+/**
+ * WPTB data store.
+ *
+ * @return {Object} data store instance
+ * @class
+ */
+
 
 function BuilderStore() {
   _vue.default.use(_vuex.default); // eslint-disable-next-line camelcase
@@ -45812,6 +45830,11 @@ function BuilderStore() {
     getters: {
       proStatus: function proStatus(state) {
         return state.pro;
+      },
+      getTranslation: function getTranslation(state) {
+        return function (id) {
+          return state.translations[id];
+        };
       }
     }
   };

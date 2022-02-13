@@ -90,6 +90,9 @@ var WPTB_Initializer = function () {
     // call what-is-new component
     WPTB_ControlsManager.callControlScript('WhatIsNew');
 
+    // call what-is-new component
+    WPTB_ControlsManager.callControlScript('Embed');
+
     // initialize notification manager
     WPTB_NotificationManager.init();
 

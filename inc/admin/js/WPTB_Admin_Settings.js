@@ -33225,6 +33225,13 @@ var defaultStore = {
 var createStore = function createStore(extraStoreOptions) {
   return (0, _general.createBasicStore)(defaultStore, extraStoreOptions);
 };
+/**
+ * WPTB data store.
+ *
+ * @return {Object} data store instance
+ * @class
+ */
+
 
 function BuilderStore() {
   _vue.default.use(_vuex.default); // eslint-disable-next-line camelcase
@@ -33237,6 +33244,11 @@ function BuilderStore() {
     getters: {
       proStatus: function proStatus(state) {
         return state.pro;
+      },
+      getTranslation: function getTranslation(state) {
+        return function (id) {
+          return state.translations[id];
+        };
       }
     }
   };

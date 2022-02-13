@@ -26,6 +26,12 @@ const createStore = (extraStoreOptions) => {
 	return createBasicStore(defaultStore, extraStoreOptions);
 };
 
+/**
+ * WPTB data store.
+ *
+ * @return {Object} data store instance
+ * @class
+ */
 function BuilderStore() {
 	Vue.use(Vuex);
 
@@ -39,6 +45,11 @@ function BuilderStore() {
 		getters: {
 			proStatus(state) {
 				return state.pro;
+			},
+			getTranslation(state) {
+				return (id) => {
+					return state.translations[id];
+				};
 			},
 		},
 	};

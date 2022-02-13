@@ -56,13 +56,14 @@ var WPTB_Settings = function () {
             
         }
     }
-    
-    let shortcodePopupWindow = document.getElementsByClassName( 'wptb-popup-window-modal' )[0];
-    document.getElementsByClassName( 'wptb-embed-btn' )[0].onclick = function () {
-        if( ! this.classList.contains( 'wptb-button-disable' ) ) {
-            shortcodePopupWindow.classList.add( 'wptb-popup-show' );
-        }
-    }
+
+    // @deprecated
+    // let shortcodePopupWindow = document.getElementsByClassName( 'wptb-popup-window-modal' )[0];
+    // document.getElementsByClassName( 'wptb-embed-btn' )[0].onclick = function () {
+        // if( ! this.classList.contains( 'wptb-button-disable' ) ) {
+        //     shortcodePopupWindow.classList.add( 'wptb-popup-show' );
+        // }
+    // }
     
     window.onbeforeunload = function(e) {
         let wptbSaveDisabled = document.getElementsByClassName( 'wptb-save-disabled' );
@@ -77,10 +78,11 @@ var WPTB_Settings = function () {
     document.getElementsByClassName( 'wptb-popup-dark-area' )[0].onclick = function () {
         shortcodePopupWindow.classList.remove( 'wptb-popup-show' );
     }
-    
-    document.getElementsByClassName( 'wptb-popup-window-close-icon' )[0].onclick = function () {
-        shortcodePopupWindow.classList.remove( 'wptb-popup-show' );
-    }
+
+    // @deprecated
+    // document.getElementsByClassName( 'wptb-popup-window-close-icon' )[0].onclick = function () {
+    //     shortcodePopupWindow.classList.remove( 'wptb-popup-show' );
+    // }
     
     document.getElementsByClassName( 'wptb-preview-btn' )[0].onclick = function ( event ) {
         if( this.classList.contains( 'wptb-button-disable' ) ) {
