@@ -2037,7 +2037,10 @@ var WPTB_Helper = {
 
 						WPTB_NotificationManager.sendNotification({ message: `Table ${t} was successfully saved.` });
 						document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
-						document.getElementById('wptb-embed-shortcode').value = `[wptb id=${data[1]}]`;
+
+						// update centralized data registry with new table id
+						WPTB_Store.commit('setTableId', data[1]);
+
 						const wptbPreviewTable = document.querySelector('.wptb-preview-table');
 						let wptbPreviewBtn = document.getElementsByClassName('wptb-preview-btn');
 						if (wptbPreviewBtn.length > 0) {
@@ -2169,6 +2172,8 @@ var WPTB_Helper = {
 				} else {
 					detail = '';
 				}
+			// TODO [erdembircan] remove for production
+			console.log(detail);
 				WPTB_Helper.wptbDocumentEventGenerate('wptb-element:ajax-response', element, detail);
 			}
 		};

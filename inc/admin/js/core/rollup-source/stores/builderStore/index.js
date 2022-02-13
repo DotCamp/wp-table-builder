@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import Vue from 'vue';
 import Vuex from 'vuex';
 import merge from 'deepmerge';
@@ -53,6 +54,11 @@ function BuilderStore() {
 			},
 			tableId(state) {
 				return state.tableId;
+			},
+		},
+		mutations: {
+			setTableId: (state, tableId) => {
+				state.tableId = tableId;
 			},
 		},
 	};

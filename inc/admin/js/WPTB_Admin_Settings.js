@@ -33298,6 +33298,11 @@ function BuilderStore() {
       tableId: function tableId(state) {
         return state.tableId;
       }
+    },
+    mutations: {
+      setTableId: function setTableId(state, tableId) {
+        state.tableId = tableId;
+      }
     }
   };
   var builderStore = createStore(extraStoreOptions);
