@@ -186,7 +186,7 @@ class Version_Control_Manager extends Version_Sync_Base {
 
 		$plugin_remote_data = plugins_api( 'plugin_information', [ 'slug' => static::PLUGIN_SLUG ] );
 		$latestVersion      = $plugin_remote_data->version;
-		$allVersions        = array_reverse( $plugin_remote_data->versions, true );
+		$allVersions        = $plugin_remote_data->versions;
 		$changelog          = $plugin_remote_data->sections['changelog'];
 		$security           = [
 			'action'  => static::get_class_name(),
@@ -197,8 +197,10 @@ class Version_Control_Manager extends Version_Sync_Base {
 		// remove trunk from version list
 		unset( $allVersions['trunk'] );
 
+		ksort( $allVersions, SORT_NATURAL );
+
 		// limit version amount
-		$allVersions = array_slice( $allVersions, 0, static::VERSION_N );
+		$allVersions = array_slice( array_reverse( $allVersions, true ), 0, static::VERSION_N );
 
 
 		// if pro version is enabled, limit oldest version to rollback to pro oldest version to avoid version mismatch issues for older version of the base plugin
