@@ -41,5 +41,5 @@ trait Init_Once {
 	/**
 	 * Function to be called during initialization process.
 	 */
-	abstract static function init_process();
+	public static function init_process(){}
 }
