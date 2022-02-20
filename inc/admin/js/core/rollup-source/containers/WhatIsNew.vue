@@ -23,7 +23,11 @@
 						></div>
 						<div class="wptb-what-is-new-images-wrapper">
 							<transition name="wptb-fade" v-for="({ image, isPro }, index) in notes" :key="index">
-								<div class="wptb-what-is-new-image-background" v-show="currentNoteIndex === index">
+								<div
+									class="wptb-what-is-new-image-background"
+									:data-last="index === notes.length - 1"
+									v-show="currentNoteIndex === index"
+								>
 									<div class="wptb-what-is-new-pro-indicator" v-if="isPro">
 										<div class="wptb-what-is-new-pro-indicator-text wptb-plugin-box-shadow-md">
 											PRO
