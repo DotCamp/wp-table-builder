@@ -1,6 +1,7 @@
 @import 'base/global';
 @import 'base/common';
 @import 'base/colors';
+@import 'inc/tableFixerSettings';
 
 html {
   overflow-y: hidden;
@@ -3087,7 +3088,7 @@ wptb_shortcode_container_element {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #3299D1;
+  background-color: var(--wptb-plugin-logo-color);
   padding: 10px;
 }
 

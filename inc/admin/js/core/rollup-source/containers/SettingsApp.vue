@@ -28,6 +28,7 @@ import MenuButton from '$Components/MenuButton.vue';
 import GeneralSettings from '$Containers/GeneralSettings';
 import VersionControlSettings from '$Components/VersionControlSettings';
 import GeneralStylesSettings from '$Components/Settings/GeneralStylesSettings';
+import TableFixerSettings from '$Components/TableFixer/TableFixerSettings';
 import LazyLoadSettings from '$LazyLoadSettings/LazyLoadSettings';
 
 export default {
@@ -41,6 +42,7 @@ export default {
 		VersionControlSettings,
 		GeneralStylesSettings,
 		LazyLoadSettings,
+		TableFixerSettings,
 	},
 	mixins: [withStore, withMessage],
 	data() {
@@ -94,11 +96,14 @@ export default {
 
 		// TODO [erdembircan] uncomment for production
 		// eslint-disable-next-line array-callback-return,consistent-return
-		[this.currentSection] = Object.keys(this.parsedFields).map((key) => {
-			if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
-				return key;
-			}
-		});
+		// [this.currentSection] = Object.keys(this.parsedFields).map((key) => {
+		// 	if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
+		// 		return key;
+		// 	}
+		// });
+
+		// TODO [erdembircan] remove for production
+		this.currentSection = 'tableFixer';
 	},
 	computed: {
 		sectionData() {
