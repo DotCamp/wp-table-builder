@@ -18926,6 +18926,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _withSearchClause = _interopRequireDefault(require("../mixins/withSearchClause"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -18963,13 +18965,31 @@ var _default = {
     }
   },
   mixins: [(0, _withSearchClause.default)('rowTitle')],
+  data: function data() {
+    return {
+      selected: false
+    };
+  },
   computed: {
     rowTitle: function rowTitle() {
       return this.row.fieldDatas[0];
     },
     rowVisibility: function rowVisibility() {
       var regExp = new RegExp("(".concat(this.searchClause, ")"), 'gi');
-      return this.row.fieldDatas[0].match(regExp);
+
+      var _this$row$fieldDatas = (0, _slicedToArray2.default)(this.row.fieldDatas, 1),
+          value = _this$row$fieldDatas[0];
+
+      if (typeof value !== 'string') {
+        value = value.toString();
+      }
+
+      return value.match(regExp);
+    }
+  },
+  methods: {
+    setSelected: function setSelected(e) {
+      this.selected = e.target.checked;
     }
   }
 };
@@ -18990,6 +19010,10 @@ exports.default = _default;
     _vm.rowVisibility
       ? _c(
           "tr",
+          {
+            staticClass: "wptb-list-table-row",
+            attrs: { "data-selected": _vm.selected }
+          },
           [
             _c("td", [
               _c("input", {
@@ -19008,6 +19032,7 @@ exports.default = _default;
                     : _vm.modelBind[_vm.row.ID]
                 },
                 on: {
+                  input: _vm.setSelected,
                   change: function($event) {
                     var $$a = _vm.modelBind[_vm.row.ID],
                       $$el = $event.target,
@@ -19065,7 +19090,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/withSearchClause":"mixins/withSearchClause.js"}],"components/ListTable.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","../mixins/withSearchClause":"mixins/withSearchClause.js"}],"components/ListTable.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19079,6 +19104,8 @@ var _ListTableRow = _interopRequireDefault(require("$Components/ListTableRow"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
 //
 //
 //
@@ -19225,7 +19252,7 @@ exports.default = _default;
         _c(
           "tr",
           [
-            _c("td"),
+            _vm._m(0),
             _vm._v(" "),
             _vm._l(_vm.rowLabels, function(label, i) {
               return _c("column-sort", {
@@ -19256,7 +19283,14 @@ exports.default = _default;
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("input", { attrs: { type: "checkbox" } })])
+  }
+]
 render._withStripped = true
 
           return {

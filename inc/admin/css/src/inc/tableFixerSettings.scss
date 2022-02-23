@@ -1,1 +1,13 @@
 @import '../base/colors';
+@import '../base/common';
+
+.wptb-table-fixer-settings {
+  .wptb-list-table-row {
+    @extend %default-transition;
+
+    &[data-selected="true"] {
+      background-color: $logo-color;
+      color: $white;
+    }
+  }
+}

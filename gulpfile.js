@@ -54,6 +54,7 @@ const gulpConfig = {
 	onlyAdminSass: {
 		src: ['./inc/admin/css/src/admin.scss', './inc/admin/js/WPTB_BuilderControls.css'],
 		dest: './inc/admin/css/admin.css',
+		extraWatch: ['./inc/admin/css/src/inc/*.scss'],
 	},
 };
 
@@ -158,7 +159,7 @@ exports.watch = gulp.parallel(
 	},
 	async function watchOnlyAdminSass() {
 		await onlyAdminSass();
-		return gulp.watch(gulpConfig.onlyAdminSass.src, onlyAdminSass);
+		return gulp.watch([...gulpConfig.onlyAdminSass.src, ...gulpConfig.onlyAdminSass.extraWatch], onlyAdminSass);
 	},
 	async function watchFrontendStyles() {
 		await cssFrontend();

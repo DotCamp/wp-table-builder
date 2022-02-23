@@ -25973,7 +25973,189 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","../MenuContent":"components/MenuContent.vue","./FooterButtons":"components/Settings/FooterButtons.vue","../MenuButton":"components/MenuButton.vue","../CssCodeInput":"components/CssCodeInput.vue","../../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","../../mixins/withMessage":"mixins/withMessage.js","../BusyRotate":"components/BusyRotate.vue"}],"components/TableFixer/TableFixerSettings.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","../MenuContent":"components/MenuContent.vue","./FooterButtons":"components/Settings/FooterButtons.vue","../MenuButton":"components/MenuButton.vue","../CssCodeInput":"components/CssCodeInput.vue","../../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","../../mixins/withMessage":"mixins/withMessage.js","../BusyRotate":"components/BusyRotate.vue"}],"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":[function(require,module,exports) {
+var arrayLikeToArray = require("./arrayLikeToArray");
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+}
+
+module.exports = _arrayWithoutHoles;
+},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArray.js":[function(require,module,exports) {
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+module.exports = _iterableToArray;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":[function(require,module,exports) {
+var arrayLikeToArray = require("./arrayLikeToArray");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableSpread.js":[function(require,module,exports) {
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableSpread;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js":[function(require,module,exports) {
+var arrayWithoutHoles = require("./arrayWithoutHoles");
+
+var iterableToArray = require("./iterableToArray");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray");
+
+var nonIterableSpread = require("./nonIterableSpread");
+
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+}
+
+module.exports = _toConsumableArray;
+},{"./arrayWithoutHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js","./iterableToArray":"../../../../../node_modules/@babel/runtime/helpers/iterableToArray.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableSpread":"../../../../../node_modules/@babel/runtime/helpers/nonIterableSpread.js"}],"components/ColumnSort.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ['label', 'index'],
+  data: function data() {
+    return {
+      currentDirection: 1
+    };
+  },
+  methods: {
+    /**
+     * Main sort function
+     */
+    sort: function sort() {
+      this.currentDirection *= -1;
+      this.$emit('sort', this.index, this.currentDirection);
+    }
+  }
+};
+exports.default = _default;
+        var $12ac5d = exports.default || module.exports;
+      
+      if (typeof $12ac5d === 'function') {
+        $12ac5d = $12ac5d.options;
+      }
+    
+        /* template */
+        Object.assign($12ac5d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "td",
+    {
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.sort($event)
+        }
+      }
+    },
+    [_vm._v("\n\t" + _vm._s(_vm.label) + "\n")]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":[function(require,module,exports) {
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js":[function(require,module,exports) {
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js":[function(require,module,exports) {
+var arrayWithHoles = require("./arrayWithHoles");
+
+var iterableToArrayLimit = require("./iterableToArrayLimit");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray");
+
+var nonIterableRest = require("./nonIterableRest");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+},{"./arrayWithHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit":"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest":"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"mixins/withSearchClause.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25981,17 +26163,48 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _vueFragment = require("vue-fragment");
+/**
+ * Search clause mixin.
+ *
+ * @param {string} dataId data key that will search clause will be tested against
+ * @return {Object} search clause mixin
+ */
+var withSearchClause = function withSearchClause(dataId) {
+  return {
+    props: {
+      searchClause: {
+        type: String,
+        default: ''
+      }
+    },
+    computed: {
+      searchClauseFilteredValue: function searchClauseFilteredValue() {
+        var originalData = this[dataId];
 
-var _FooterButtons = _interopRequireDefault(require("$Settings/FooterButtons"));
+        if (this.searchClause === '') {
+          return originalData;
+        }
 
-var _MenuContent = _interopRequireDefault(require("$Components/MenuContent"));
+        var regexp = new RegExp("(".concat(this.searchClause, ")"), 'gi');
+        return "<span class=\"wptb-data-listing-row-search-clause-wrap\">".concat(originalData.replaceAll(regexp, '<span class="wptb-data-listing-row-search-clause">$&</span>'), "</span>");
+      }
+    }
+  };
+};
 
-var _MenuButton = _interopRequireDefault(require("$Components/MenuButton"));
+var _default = withSearchClause;
+exports.default = _default;
+},{}],"components/ListTableRow.vue":[function(require,module,exports) {
+"use strict";
 
-var _SettingsMenuSection = _interopRequireDefault(require("$Mixins/SettingsMenuSection"));
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
 
-var _withMessage = _interopRequireDefault(require("$Mixins/withMessage"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _withSearchClause = _interopRequireDefault(require("../mixins/withSearchClause"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26007,8 +26220,411 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    modelBind: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    row: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  mixins: [(0, _withSearchClause.default)('rowTitle')],
+  data: function data() {
+    return {
+      selected: false
+    };
+  },
+  computed: {
+    rowTitle: function rowTitle() {
+      return this.row.fieldDatas[0];
+    },
+    rowVisibility: function rowVisibility() {
+      var regExp = new RegExp("(".concat(this.searchClause, ")"), 'gi');
+
+      var _this$row$fieldDatas = (0, _slicedToArray2.default)(this.row.fieldDatas, 1),
+          value = _this$row$fieldDatas[0];
+
+      if (typeof value !== 'string') {
+        value = value.toString();
+      }
+
+      return value.match(regExp);
+    }
+  },
+  methods: {
+    setSelected: function setSelected(e) {
+      this.selected = e.target.checked;
+    }
+  }
+};
+exports.default = _default;
+        var $e12c30 = exports.default || module.exports;
+      
+      if (typeof $e12c30 === 'function') {
+        $e12c30 = $e12c30.options;
+      }
+    
+        /* template */
+        Object.assign($e12c30, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("transition", { attrs: { name: "wptb-fade", mode: "out-in" } }, [
+    _vm.rowVisibility
+      ? _c(
+          "tr",
+          {
+            staticClass: "wptb-list-table-row",
+            attrs: { "data-selected": _vm.selected }
+          },
+          [
+            _c("td", [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.modelBind[_vm.row.ID],
+                    expression: "modelBind[row.ID]"
+                  }
+                ],
+                attrs: { id: _vm.row.ID, type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.modelBind[_vm.row.ID])
+                    ? _vm._i(_vm.modelBind[_vm.row.ID], null) > -1
+                    : _vm.modelBind[_vm.row.ID]
+                },
+                on: {
+                  input: _vm.setSelected,
+                  change: function($event) {
+                    var $$a = _vm.modelBind[_vm.row.ID],
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(_vm.modelBind, _vm.row.ID, $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.modelBind,
+                            _vm.row.ID,
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.modelBind, _vm.row.ID, $$c)
+                    }
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.row.fieldDatas, function(data, index) {
+              return _c("td", { key: data }, [
+                _c("label", {
+                  class: index === 0 ? "title-label" : "",
+                  attrs: { for: _vm.row.ID },
+                  domProps: {
+                    innerHTML: _vm._s(
+                      index === 0 ? _vm.searchClauseFilteredValue : data
+                    )
+                  }
+                })
+              ])
+            })
+          ],
+          2
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","../mixins/withSearchClause":"mixins/withSearchClause.js"}],"components/ListTable.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ColumnSort = _interopRequireDefault(require("$Components/ColumnSort"));
+
+var _ListTableRow = _interopRequireDefault(require("$Components/ListTableRow"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    rowLabels: Array,
+    rowData: Array,
+    modelBind: Object,
+    sortType: Object,
+    searchClause: String
+  },
+  components: {
+    ListTableRow: _ListTableRow.default,
+    ColumnSort: _ColumnSort.default
+  },
+  data: function data() {
+    return {
+      innerRowData: [],
+      sortOptions: {
+        index: 0,
+        direction: 1
+      }
+    };
+  },
+  watch: {
+    /**
+     * Watching row data to update component specific data for mainly sort operations since props should not be mutated
+     *
+     * @param {any} n new value
+     */
+    rowData: function rowData(n) {
+      // updates component state data to be in sync with parent sent rowData
+      this.innerRowData = n;
+
+      if (this.sortOptions) {
+        this.sort(this.sortOptions.index, this.sortOptions.direction);
+      }
+    }
+  },
+  methods: {
+    /**
+     * Sort column data
+     *
+     * @param {number} index index of fieldData array of element
+     * @param {number} direction negative/positive integer to depict the direction of sort (ascending/descending)
+     */
+    sort: function sort(index, direction) {
+      // store latest sort data to use it at reactive updates of component data (field selection/deselection)
+      this.sortOptions.index = index;
+      this.sortOptions.direction = direction;
+      var sortAlgs = {
+        // date sorting
+        dateSort: function dateSort(a, b) {
+          var status = 0;
+          var aData = new Date(a.fieldDatas[index].toLowerCase()).getTime();
+          var bData = new Date(b.fieldDatas[index].toLowerCase()).getTime();
+
+          if (aData < bData) {
+            status = 1;
+          }
+
+          if (aData > bData) {
+            status = -1;
+          }
+
+          return status * direction;
+        },
+        numberSort: function numberSort(a, b) {
+          return (Number.parseInt(a.fieldDatas[index], 10) - Number.parseInt(b.fieldDatas[index], 10)) * direction;
+        },
+        // default sort based on alphabetical/number sorting
+        defaultSort: function defaultSort(a, b) {
+          var status = 0;
+          var aData = a.fieldDatas[index].toLowerCase();
+          var bData = b.fieldDatas[index].toLowerCase();
+
+          if (aData < bData) {
+            status = 1;
+          }
+
+          if (aData > bData) {
+            status = -1;
+          }
+
+          return status * direction;
+        }
+      };
+      var currentAlg;
+      var requestedType = this.sortType[index];
+
+      if (!requestedType || !sortAlgs["".concat(requestedType, "Sort")]) {
+        currentAlg = sortAlgs.defaultSort;
+      } else {
+        currentAlg = sortAlgs["".concat(requestedType, "Sort")];
+      }
+
+      this.innerRowData.sort(currentAlg);
+    }
+  }
+};
+exports.default = _default;
+        var $758d0b = exports.default || module.exports;
+      
+      if (typeof $758d0b === 'function') {
+        $758d0b = $758d0b.options;
+      }
+    
+        /* template */
+        Object.assign($758d0b, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("table", { staticClass: "wptb-menu-list-table" }, [
+      _c("thead", [
+        _c(
+          "tr",
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _vm._l(_vm.rowLabels, function(label, i) {
+              return _c("column-sort", {
+                key: label,
+                attrs: { label: label, index: i },
+                on: { sort: _vm.sort }
+              })
+            })
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.innerRowData, function(row) {
+          return _c("list-table-row", {
+            key: row.ID,
+            attrs: {
+              "model-bind": _vm.modelBind,
+              row: row,
+              "search-clause": _vm.searchClause
+            }
+          })
+        }),
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("input", { attrs: { type: "checkbox" } })])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$Components/ColumnSort":"components/ColumnSort.vue","$Components/ListTableRow":"components/ListTableRow.vue"}],"components/TableFixer/TableFixerSettings.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _vueFragment = require("vue-fragment");
+
+var _FooterButtons = _interopRequireDefault(require("$Settings/FooterButtons"));
+
+var _MenuContent = _interopRequireDefault(require("$Components/MenuContent"));
+
+var _MenuButton = _interopRequireDefault(require("$Components/MenuButton"));
+
+var _SettingsMenuSection = _interopRequireDefault(require("$Mixins/SettingsMenuSection"));
+
+var _withMessage = _interopRequireDefault(require("$Mixins/withMessage"));
+
+var _ListTable = _interopRequireDefault(require("$Components/ListTable"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   components: {
+    ListTable: _ListTable.default,
     MenuButton: _MenuButton.default,
     MenuContent: _MenuContent.default,
     FooterButtons: _FooterButtons.default,
@@ -26017,34 +26633,61 @@ var _default = {
   mixins: [_SettingsMenuSection.default, _withMessage.default],
   data: function data() {
     return {
-      selectedTableIds: [],
+      selectedTables: {},
       tables: []
     };
   },
   computed: {
+    selectedTableIds: function selectedTableIds() {
+      var _this = this;
+
+      return Object.keys(this.selectedTables).filter(function (key) {
+        return Object.prototype.hasOwnProperty.call(_this.selectedTables, key) && _this.selectedTables[key];
+      });
+    },
     tableFixButtonLabel: function tableFixButtonLabel() {
       var stringId = this.selectedTableIds.length > 1 ? 'fixTables' : 'fixTable';
       return this.strings[stringId];
     },
     fixTableButtonDisabledStatus: function fixTableButtonDisabledStatus() {
       return this.isBusy() || this.selectedTableIds.length === 0;
+    },
+    userTables: function userTables() {
+      return (0, _toConsumableArray2.default)(this.tables);
     }
   },
   mounted: function mounted() {
-    var _this = this;
+    var _this2 = this;
 
     this.$nextTick(function () {
-      _this.getTables();
+      _this2.getTables();
     });
   },
   methods: {
+    parseFetchedTables: function parseFetchedTables(rawTables) {
+      return rawTables.reduce(function (carry, current) {
+        var localDate = new Intl.DateTimeFormat('default', {
+          year: 'numeric',
+          day: 'numeric',
+          month: 'long'
+        }).format(new Date(current.modified));
+        var title = current.title,
+            id = current.id;
+        var tempObject = {
+          ID: id,
+          fieldDatas: [id, title.rendered, localDate]
+        };
+        carry.push(tempObject);
+        return carry;
+      }, []);
+    },
     getTables: function getTables() {
-      var _this2 = this;
+      var _this3 = this;
 
       var fetchUrl = new URL(this.sectionData.restUrl);
       fetchUrl.searchParams.append('status', 'draft');
       fetchUrl.searchParams.append('per_page', '100');
-      fetchUrl.searchParams.append('_fields', 'id,title');
+      fetchUrl.searchParams.append('_fields', 'id,title,modified');
       this.setBusy();
       return fetch(fetchUrl.toString(), {
         method: 'GET',
@@ -26057,19 +26700,19 @@ var _default = {
         }
 
         throw new Error(resp.statusText);
-      }).then(function (tables) {
-        _this2.tables = tables;
+      }).then(function (rawTables) {
+        _this3.tables = _this3.parseFetchedTables(rawTables);
 
-        _this2.setMessage({
-          message: _this2.strings.tablesFetched
+        _this3.setMessage({
+          message: _this3.strings.tablesFetched
         });
       }).catch(function (err) {
-        _this2.setMessage({
+        _this3.setMessage({
           type: 'error',
           message: err
         });
       }).finally(function () {
-        _this2.setBusy(false);
+        _this3.setBusy(false);
       });
     }
   }
@@ -26090,23 +26733,24 @@ exports.default = _default;
   return _c(
     "fragment",
     [
-      _c(
-        "menu-content",
-        {
-          staticStyle: {
-            "flex-direction": "column",
-            "justify-content": "flex-start",
-            "align-items": "center"
-          },
-          attrs: { center: true }
-        },
-        _vm._l(_vm.tables, function(table) {
-          return _c("code", { key: table.id, staticStyle: { margin: "5px" } }, [
-            _vm._v(_vm._s(table.id) + ": " + _vm._s(table.title.rendered))
-          ])
-        }),
-        0
-      ),
+      _c("menu-content", { attrs: { center: true } }, [
+        _c(
+          "div",
+          { staticClass: "wptb-table-fixer-settings" },
+          [
+            _c("list-table", {
+              attrs: {
+                "model-bind": _vm.selectedTables,
+                "row-data": _vm.userTables,
+                "row-labels": ["ID", _vm.strings.title, _vm.strings.modified],
+                "sort-type": { 0: "number", 2: "date" },
+                "search-clause": ""
+              }
+            })
+          ],
+          1
+        )
+      ]),
       _vm._v(" "),
       _c(
         "footer-buttons",
@@ -26135,7 +26779,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/ListTable":"components/ListTable.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
 'use strict';
 
 var isMergeableObject = function isMergeableObject(value) {
@@ -26262,66 +26906,7 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 module.exports = deepmerge_1;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-module.exports = _arrayLikeToArray;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":[function(require,module,exports) {
-var arrayLikeToArray = require("./arrayLikeToArray");
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return arrayLikeToArray(arr);
-}
-
-module.exports = _arrayWithoutHoles;
-},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArray.js":[function(require,module,exports) {
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-
-module.exports = _iterableToArray;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":[function(require,module,exports) {
-var arrayLikeToArray = require("./arrayLikeToArray");
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-}
-
-module.exports = _unsupportedIterableToArray;
-},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableSpread.js":[function(require,module,exports) {
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-module.exports = _nonIterableSpread;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js":[function(require,module,exports) {
-var arrayWithoutHoles = require("./arrayWithoutHoles");
-
-var iterableToArray = require("./iterableToArray");
-
-var unsupportedIterableToArray = require("./unsupportedIterableToArray");
-
-var nonIterableSpread = require("./nonIterableSpread");
-
-function _toConsumableArray(arr) {
-  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
-}
-
-module.exports = _toConsumableArray;
-},{"./arrayWithoutHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js","./iterableToArray":"../../../../../node_modules/@babel/runtime/helpers/iterableToArray.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableSpread":"../../../../../node_modules/@babel/runtime/helpers/nonIterableSpread.js"}],"../../../../frontend/js/frontend-only/WPTB_LazyLoad.js":[function(require,module,exports) {
+},{}],"../../../../frontend/js/frontend-only/WPTB_LazyLoad.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 

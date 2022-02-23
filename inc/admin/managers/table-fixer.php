@@ -37,6 +37,8 @@ class Table_Fixer extends Manager_Base {
 			'fixTable'      => esc_html__( 'fix table', 'wp-table-builder' ),
 			'fixTables'     => esc_html__( 'fix tables', 'wp-table-builder' ),
 			'tablesFetched' => esc_html__( 'tables fetched', 'wp-table-builder' ),
+			'title'         => esc_html__( 'title', 'wp-table-builder' ),
+			'modified'      => esc_html__( 'modified', 'wp-table-builder' ),
 		];
 
 		$settings_data['strings'] = array_merge( $settings_data['strings'], $table_fixer_strings );

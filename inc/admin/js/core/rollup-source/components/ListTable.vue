@@ -4,7 +4,9 @@
 		<table class="wptb-menu-list-table">
 			<thead>
 				<tr>
-					<td></td>
+					<td>
+						<input type="checkbox" />
+					</td>
 					<column-sort
 						v-for="(label, i) in rowLabels"
 						:label="label"
