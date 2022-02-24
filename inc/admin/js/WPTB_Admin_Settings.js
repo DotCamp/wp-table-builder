@@ -12793,7 +12793,7 @@ var rawStore = _objectSpread({}, wptbAdminSettingsData.options);
 /**
  * singleton store mixin for Vue components
  *
- * @type {{data(): {rawStore: *, store: *}, methods: {revertStore(): void}}}
+ * @type {Object}
  */
 
 
@@ -26238,6 +26238,12 @@ var _default = {
       default: function _default() {
         return {};
       }
+    },
+    searchIndex: {
+      type: Array,
+      default: function _default() {
+        return [0];
+      }
     }
   },
   mixins: [(0, _withSearchClause.default)('rowTitle')],
@@ -26578,7 +26584,150 @@ render._withStripped = true
           };
         })());
       
-},{"$Components/ColumnSort":"components/ColumnSort.vue","$Components/ListTableRow":"components/ListTableRow.vue"}],"components/TableFixer/TableFixerSettings.vue":[function(require,module,exports) {
+},{"$Components/ColumnSort":"components/ColumnSort.vue","$Components/ListTableRow":"components/ListTableRow.vue"}],"components/SearchInput.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: String,
+      default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  data: function data() {
+    return {
+      searchTerm: this.value
+    };
+  },
+  mounted: function mounted() {},
+  watch: {
+    searchTerm: function searchTerm(n) {
+      this.$emit('valueChanged', n.trim());
+    },
+    value: function value(n) {
+      this.searchTerm = n.trim();
+    }
+  },
+  computed: {
+    clearButtonVisibility: function clearButtonVisibility() {
+      return this.searchTerm !== '';
+    }
+  },
+  methods: {
+    clearSearch: function clearSearch() {
+      if (!this.disabled) {
+        this.searchTerm = '';
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $69c79d = exports.default || module.exports;
+      
+      if (typeof $69c79d === 'function') {
+        $69c79d = $69c79d.options;
+      }
+    
+        /* template */
+        Object.assign($69c79d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-search-input-wrapper" }, [
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.searchTerm,
+          expression: "searchTerm"
+        }
+      ],
+      staticClass: "wptb-search-input-element",
+      attrs: {
+        disabled: _vm.disabled,
+        type: "text",
+        placeholder: _vm.placeholder
+      },
+      domProps: { value: _vm.searchTerm },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.searchTerm = $event.target.value
+        }
+      }
+    }),
+    _vm._v(" "),
+    _vm.clearButtonVisibility
+      ? _c(
+          "div",
+          {
+            staticClass: "wptb-search-input-clear",
+            attrs: { "data-disabled": _vm.disabled },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.clearSearch($event)
+              }
+            }
+          },
+          [_vm._v("\n\t\tX\n\t")]
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/TableFixer/TableFixerSettings.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26602,6 +26751,8 @@ var _withMessage = _interopRequireDefault(require("$Mixins/withMessage"));
 
 var _ListTable = _interopRequireDefault(require("$Components/ListTable"));
 
+var _SearchInput = _interopRequireDefault(require("$Components/SearchInput"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //
@@ -26622,8 +26773,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   components: {
+    SearchInput: _SearchInput.default,
     ListTable: _ListTable.default,
     MenuButton: _MenuButton.default,
     MenuContent: _MenuContent.default,
@@ -26634,7 +26787,8 @@ var _default = {
   data: function data() {
     return {
       selectedTables: {},
-      tables: []
+      tables: [],
+      searchClause: ''
     };
   },
   computed: {
@@ -26673,6 +26827,7 @@ var _default = {
         }).format(new Date(current.modified));
         var title = current.title,
             id = current.id;
+        id = id.toString();
         var tempObject = {
           ID: id,
           fieldDatas: [id, title.rendered, localDate]
@@ -26738,13 +26893,24 @@ exports.default = _default;
           "div",
           { staticClass: "wptb-table-fixer-settings" },
           [
+            _c("search-input", {
+              attrs: { placeholder: _vm._f("cap")(_vm.strings.search) },
+              model: {
+                value: _vm.searchClause,
+                callback: function($$v) {
+                  _vm.searchClause = $$v
+                },
+                expression: "searchClause"
+              }
+            }),
+            _vm._v(" "),
             _c("list-table", {
               attrs: {
                 "model-bind": _vm.selectedTables,
                 "row-data": _vm.userTables,
                 "row-labels": ["ID", _vm.strings.title, _vm.strings.modified],
-                "sort-type": { 0: "number", 2: "date" },
-                "search-clause": ""
+                "sort-type": { 0: "number", 1: "default", 2: "date" },
+                "search-clause": _vm.searchClause
               }
             })
           ],
@@ -26779,7 +26945,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/ListTable":"components/ListTable.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/ListTable":"components/ListTable.vue","$Components/SearchInput":"components/SearchInput.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
 'use strict';
 
 var isMergeableObject = function isMergeableObject(value) {

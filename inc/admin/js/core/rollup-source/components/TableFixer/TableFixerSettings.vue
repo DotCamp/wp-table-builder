@@ -2,12 +2,13 @@
 	<fragment>
 		<menu-content :center="true">
 			<div class="wptb-table-fixer-settings">
+				<search-input v-model="searchClause" :placeholder="strings.search | cap"></search-input>
 				<list-table
 					:model-bind="selectedTables"
 					:row-data="userTables"
 					:row-labels="['ID', strings.title, strings.modified]"
-					:sort-type="{ 0: 'number', 2: 'date' }"
-					search-clause=""
+					:sort-type="{ 0: 'number', 1: 'default', 2: 'date' }"
+					:search-clause="searchClause"
 				></list-table>
 			</div>
 		</menu-content>
@@ -24,11 +25,16 @@ import MenuButton from '$Components/MenuButton';
 import SettingsMenuSection from '$Mixins/SettingsMenuSection';
 import withMessage from '$Mixins/withMessage';
 import ListTable from '$Components/ListTable';
+import SearchInput from '$Components/SearchInput';
 
 export default {
-	components: { ListTable, MenuButton, MenuContent, FooterButtons, Fragment },
+	components: { SearchInput, ListTable, MenuButton, MenuContent, FooterButtons, Fragment },
 	mixins: [SettingsMenuSection, withMessage],
-	data: () => ({ selectedTables: {}, tables: [] }),
+	data: () => ({
+		selectedTables: {},
+		tables: [],
+		searchClause: '',
+	}),
 	computed: {
 		selectedTableIds() {
 			return Object.keys(this.selectedTables).filter((key) => {
@@ -61,7 +67,9 @@ export default {
 					month: 'long',
 				}).format(new Date(current.modified));
 
-				const { title, id } = current;
+				let { title, id } = current;
+				id = id.toString();
+
 				const tempObject = { ID: id, fieldDatas: [id, title.rendered, localDate] };
 
 				carry.push(tempObject);

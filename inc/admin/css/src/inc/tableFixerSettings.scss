@@ -2,6 +2,15 @@
 @import '../base/common';
 
 .wptb-table-fixer-settings {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
+  grid-template-areas: 'search' 'listing' 'disclaimer';
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  grid-gap: 10px;
+
   .wptb-list-table-row {
     @extend %default-transition;
 

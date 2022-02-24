@@ -22,15 +22,15 @@ export default {
 	props: {
 		modelBind: {
 			type: Object,
-			default: () => {
-				return {};
-			},
+			default: () => ({}),
 		},
 		row: {
 			type: Object,
-			default: () => {
-				return {};
-			},
+			default: () => ({}),
+		},
+		searchIndex: {
+			type: Array,
+			default: () => [0],
 		},
 	},
 	mixins: [withSearchClause('rowTitle')],

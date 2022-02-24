@@ -5,7 +5,7 @@ const rawStore = { ...wptbAdminSettingsData.options };
 /**
  * singleton store mixin for Vue components
  *
- * @type {{data(): {rawStore: *, store: *}, methods: {revertStore(): void}}}
+ * @type {Object}
  */
 const withStore = {
 	data() {

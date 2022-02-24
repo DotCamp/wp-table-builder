@@ -18962,6 +18962,12 @@ var _default = {
       default: function _default() {
         return {};
       }
+    },
+    searchIndex: {
+      type: Array,
+      default: function _default() {
+        return [0];
+      }
     }
   },
   mixins: [(0, _withSearchClause.default)('rowTitle')],
