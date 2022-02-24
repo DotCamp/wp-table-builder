@@ -9,6 +9,7 @@
 					:row-labels="['ID', strings.title, strings.modified]"
 					:sort-type="{ 0: 'number', 1: 'default', 2: 'date' }"
 					:search-clause="searchClause"
+					:search-data-index="1"
 				></list-table>
 			</div>
 		</menu-content>

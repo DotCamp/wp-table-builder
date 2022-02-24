@@ -26100,62 +26100,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-module.exports = _arrayWithHoles;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":[function(require,module,exports) {
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-module.exports = _iterableToArrayLimit;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js":[function(require,module,exports) {
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-module.exports = _nonIterableRest;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js":[function(require,module,exports) {
-var arrayWithHoles = require("./arrayWithHoles");
-
-var iterableToArrayLimit = require("./iterableToArrayLimit");
-
-var unsupportedIterableToArray = require("./unsupportedIterableToArray");
-
-var nonIterableRest = require("./nonIterableRest");
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
-}
-
-module.exports = _slicedToArray;
-},{"./arrayWithHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit":"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest":"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"mixins/withSearchClause.js":[function(require,module,exports) {
+},{}],"mixins/withSearchClause.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26202,8 +26147,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _withSearchClause = _interopRequireDefault(require("../mixins/withSearchClause"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -26240,10 +26183,8 @@ var _default = {
       }
     },
     searchIndex: {
-      type: Array,
-      default: function _default() {
-        return [0];
-      }
+      type: Number,
+      default: 0
     }
   },
   mixins: [(0, _withSearchClause.default)('rowTitle')],
@@ -26254,13 +26195,11 @@ var _default = {
   },
   computed: {
     rowTitle: function rowTitle() {
-      return this.row.fieldDatas[0];
+      return this.row.fieldDatas[this.searchIndex];
     },
     rowVisibility: function rowVisibility() {
       var regExp = new RegExp("(".concat(this.searchClause, ")"), 'gi');
-
-      var _this$row$fieldDatas = (0, _slicedToArray2.default)(this.row.fieldDatas, 1),
-          value = _this$row$fieldDatas[0];
+      var value = this.row.fieldDatas[this.searchIndex];
 
       if (typeof value !== 'string') {
         value = value.toString();
@@ -26344,11 +26283,13 @@ exports.default = _default;
             _vm._l(_vm.row.fieldDatas, function(data, index) {
               return _c("td", { key: data }, [
                 _c("label", {
-                  class: index === 0 ? "title-label" : "",
+                  class: index === _vm.searchIndex ? "title-label" : "",
                   attrs: { for: _vm.row.ID },
                   domProps: {
                     innerHTML: _vm._s(
-                      index === 0 ? _vm.searchClauseFilteredValue : data
+                      index === _vm.searchIndex
+                        ? _vm.searchClauseFilteredValue
+                        : data
                     )
                   }
                 })
@@ -26372,7 +26313,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","../mixins/withSearchClause":"mixins/withSearchClause.js"}],"components/ListTable.vue":[function(require,module,exports) {
+},{"../mixins/withSearchClause":"mixins/withSearchClause.js"}],"components/ListTable.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26418,13 +26359,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   props: {
     rowLabels: Array,
     rowData: Array,
     modelBind: Object,
     sortType: Object,
-    searchClause: String
+    searchClause: String,
+    searchDataIndex: {
+      type: Number,
+      default: 0
+    }
   },
   components: {
     ListTableRow: _ListTableRow.default,
@@ -26556,7 +26502,8 @@ exports.default = _default;
             attrs: {
               "model-bind": _vm.modelBind,
               row: row,
-              "search-clause": _vm.searchClause
+              "search-clause": _vm.searchClause,
+              "search-index": _vm.searchDataIndex
             }
           })
         }),
@@ -26774,6 +26721,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   components: {
     SearchInput: _SearchInput.default,
@@ -26910,7 +26858,8 @@ exports.default = _default;
                 "row-data": _vm.userTables,
                 "row-labels": ["ID", _vm.strings.title, _vm.strings.modified],
                 "sort-type": { 0: "number", 1: "default", 2: "date" },
-                "search-clause": _vm.searchClause
+                "search-clause": _vm.searchClause,
+                "search-data-index": 1
               }
             })
           ],

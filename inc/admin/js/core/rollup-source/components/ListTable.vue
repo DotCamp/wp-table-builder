@@ -24,6 +24,7 @@
 					:row="row"
 					:key="row.ID"
 					:search-clause="searchClause"
+					:search-index="searchDataIndex"
 				></list-table-row>
 			</tbody>
 			<!--			</transition-group>-->
@@ -41,6 +42,10 @@ export default {
 		modelBind: Object,
 		sortType: Object,
 		searchClause: String,
+		searchDataIndex: {
+			type: Number,
+			default: 0,
+		},
 	},
 	components: { ListTableRow, ColumnSort },
 	data() {

@@ -18926,8 +18926,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _withSearchClause = _interopRequireDefault(require("../mixins/withSearchClause"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -18964,10 +18962,8 @@ var _default = {
       }
     },
     searchIndex: {
-      type: Array,
-      default: function _default() {
-        return [0];
-      }
+      type: Number,
+      default: 0
     }
   },
   mixins: [(0, _withSearchClause.default)('rowTitle')],
@@ -18978,13 +18974,11 @@ var _default = {
   },
   computed: {
     rowTitle: function rowTitle() {
-      return this.row.fieldDatas[0];
+      return this.row.fieldDatas[this.searchIndex];
     },
     rowVisibility: function rowVisibility() {
       var regExp = new RegExp("(".concat(this.searchClause, ")"), 'gi');
-
-      var _this$row$fieldDatas = (0, _slicedToArray2.default)(this.row.fieldDatas, 1),
-          value = _this$row$fieldDatas[0];
+      var value = this.row.fieldDatas[this.searchIndex];
 
       if (typeof value !== 'string') {
         value = value.toString();
@@ -19068,11 +19062,13 @@ exports.default = _default;
             _vm._l(_vm.row.fieldDatas, function(data, index) {
               return _c("td", { key: data }, [
                 _c("label", {
-                  class: index === 0 ? "title-label" : "",
+                  class: index === _vm.searchIndex ? "title-label" : "",
                   attrs: { for: _vm.row.ID },
                   domProps: {
                     innerHTML: _vm._s(
-                      index === 0 ? _vm.searchClauseFilteredValue : data
+                      index === _vm.searchIndex
+                        ? _vm.searchClauseFilteredValue
+                        : data
                     )
                   }
                 })
@@ -19096,7 +19092,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","../mixins/withSearchClause":"mixins/withSearchClause.js"}],"components/ListTable.vue":[function(require,module,exports) {
+},{"../mixins/withSearchClause":"mixins/withSearchClause.js"}],"components/ListTable.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19142,13 +19138,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   props: {
     rowLabels: Array,
     rowData: Array,
     modelBind: Object,
     sortType: Object,
-    searchClause: String
+    searchClause: String,
+    searchDataIndex: {
+      type: Number,
+      default: 0
+    }
   },
   components: {
     ListTableRow: _ListTableRow.default,
@@ -19280,7 +19281,8 @@ exports.default = _default;
             attrs: {
               "model-bind": _vm.modelBind,
               row: row,
-              "search-clause": _vm.searchClause
+              "search-clause": _vm.searchClause,
+              "search-index": _vm.searchDataIndex
             }
           })
         }),

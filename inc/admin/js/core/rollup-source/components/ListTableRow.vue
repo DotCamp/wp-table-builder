@@ -6,9 +6,9 @@
 			</td>
 			<td v-for="(data, index) in row.fieldDatas" :key="data">
 				<label
-					:class="index === 0 ? 'title-label' : ''"
+					:class="index === searchIndex ? 'title-label' : ''"
 					:for="row.ID"
-					v-html="index === 0 ? searchClauseFilteredValue : data"
+					v-html="index === searchIndex ? searchClauseFilteredValue : data"
 				></label>
 			</td>
 		</tr>
@@ -29,19 +29,19 @@ export default {
 			default: () => ({}),
 		},
 		searchIndex: {
-			type: Array,
-			default: () => [0],
+			type: Number,
+			default: 0,
 		},
 	},
 	mixins: [withSearchClause('rowTitle')],
 	data: () => ({ selected: false }),
 	computed: {
 		rowTitle() {
-			return this.row.fieldDatas[0];
+			return this.row.fieldDatas[this.searchIndex];
 		},
 		rowVisibility() {
 			const regExp = new RegExp(`(${this.searchClause})`, 'gi');
-			let [value] = this.row.fieldDatas;
+			let value = this.row.fieldDatas[this.searchIndex];
 
 			if (typeof value !== 'string') {
 				value = value.toString();
