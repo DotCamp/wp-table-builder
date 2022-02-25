@@ -9,6 +9,10 @@ $default-transition-time: 0.1s;
   height: 100%;
 }
 
+%height-full {
+  height: 100%;
+}
+
 %flex-center-all {
   display: flex;
   justify-content: center;

@@ -34,12 +34,14 @@ class Table_Fixer extends Manager_Base {
 		];
 
 		$table_fixer_strings = [
-			'fixTable'      => esc_html__( 'fix table', 'wp-table-builder' ),
-			'fixTables'     => esc_html__( 'fix tables', 'wp-table-builder' ),
-			'tablesFetched' => esc_html__( 'tables fetched', 'wp-table-builder' ),
-			'title'         => esc_html__( 'title', 'wp-table-builder' ),
-			'modified'      => esc_html__( 'modified', 'wp-table-builder' ),
-			'search'        => esc_html__( 'search', 'wp-table-builder' ),
+			'fixTable'          => esc_html__( 'fix table', 'wp-table-builder' ),
+			'fixTables'         => esc_html__( 'fix tables', 'wp-table-builder' ),
+			'tablesFetched'     => esc_html__( 'tables fetched', 'wp-table-builder' ),
+			'title'             => esc_html__( 'title', 'wp-table-builder' ),
+			'modified'          => esc_html__( 'modified', 'wp-table-builder' ),
+			'search'            => esc_html__( 'search', 'wp-table-builder' ),
+			'disclaimerTitle'   => esc_html__( 'when to use', 'wp-table-builder' ),
+			'disclaimerMessage' => esc_html__( 'Your tables might get corrupted by your browser addons. If you have any table with unexpected behaviour (cell edit disabled, etc) use this tool. If problem still persists, contact our support forums.', 'wp-table-builder' ),
 		];
 
 		$settings_data['strings'] = array_merge( $settings_data['strings'], $table_fixer_strings );

@@ -1,7 +1,10 @@
 @import '../base/colors';
 @import '../base/common';
 
+$table-listing-header-height: 50px;
+
 .wptb-table-fixer-settings {
+  @extend %height-full;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
@@ -10,13 +13,42 @@
   justify-items: center;
   align-items: center;
   grid-gap: 10px;
+  min-width: 50%;
 
-  .wptb-list-table-row {
-    @extend %default-transition;
+  .wptb-table-fixer-table-filter {
+    grid-area: search;
+  }
 
-    &[data-selected="true"] {
-      background-color: $logo-color;
-      color: $white;
+  .wptb-table-fixer-disclaimer {
+    grid-area: disclaimer;
+    max-width: 50%;
+  }
+
+  .wptb-table-fixer-listing {
+    @extend %height-full;
+    grid-area: listing;
+    border: 1px solid $gray-400;
+    border-radius: 3px;
+    min-width: 50%;
+    overflow: auto;
+
+    .wptb-menu-list-table {
+      .wptb-list-table-row {
+        @extend %default-transition;
+
+        td:first-child {
+          @extend %flex-center-all;
+        }
+
+        &[data-selected="true"] {
+          background-color: $logo-color;
+          color: $white;
+
+          & .wptb-data-listing-row-search-clause {
+            color: $white !important;
+          }
+        }
+      }
     }
   }
 }

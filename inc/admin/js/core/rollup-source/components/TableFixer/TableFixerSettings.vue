@@ -2,15 +2,24 @@
 	<fragment>
 		<menu-content :center="true">
 			<div class="wptb-table-fixer-settings">
-				<search-input v-model="searchClause" :placeholder="strings.search | cap"></search-input>
-				<list-table
-					:model-bind="selectedTables"
-					:row-data="userTables"
-					:row-labels="['ID', strings.title, strings.modified]"
-					:sort-type="{ 0: 'number', 1: 'default', 2: 'date' }"
-					:search-clause="searchClause"
-					:search-data-index="1"
-				></list-table>
+				<search-input
+					class="wptb-table-fixer-table-filter"
+					v-model="searchClause"
+					:placeholder="strings.search | cap"
+				></search-input>
+				<div class="wptb-table-fixer-listing">
+					<list-table
+						:model-bind="selectedTables"
+						:row-data="userTables"
+						:row-labels="['ID', strings.title, strings.modified]"
+						:sort-type="{ 0: 'number', 1: 'default', 2: 'date' }"
+						:search-clause="searchClause"
+						:search-data-index="1"
+					></list-table>
+				</div>
+				<div class="wptb-table-fixer-disclaimer">
+					<disclaimer :title="strings.disclaimerTitle" :message="strings.disclaimerMessage"></disclaimer>
+				</div>
 			</div>
 		</menu-content>
 		<footer-buttons>
@@ -27,9 +36,10 @@ import SettingsMenuSection from '$Mixins/SettingsMenuSection';
 import withMessage from '$Mixins/withMessage';
 import ListTable from '$Components/ListTable';
 import SearchInput from '$Components/SearchInput';
+import Disclaimer from '$Settings/Disclaimer';
 
 export default {
-	components: { SearchInput, ListTable, MenuButton, MenuContent, FooterButtons, Fragment },
+	components: { Disclaimer, SearchInput, ListTable, MenuButton, MenuContent, FooterButtons, Fragment },
 	mixins: [SettingsMenuSection, withMessage],
 	data: () => ({
 		selectedTables: {},

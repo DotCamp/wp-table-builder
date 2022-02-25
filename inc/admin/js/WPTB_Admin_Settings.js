@@ -26700,6 +26700,8 @@ var _ListTable = _interopRequireDefault(require("$Components/ListTable"));
 
 var _SearchInput = _interopRequireDefault(require("$Components/SearchInput"));
 
+var _Disclaimer = _interopRequireDefault(require("$Settings/Disclaimer"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //
@@ -26722,8 +26724,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   components: {
+    Disclaimer: _Disclaimer.default,
     SearchInput: _SearchInput.default,
     ListTable: _ListTable.default,
     MenuButton: _MenuButton.default,
@@ -26842,6 +26854,7 @@ exports.default = _default;
           { staticClass: "wptb-table-fixer-settings" },
           [
             _c("search-input", {
+              staticClass: "wptb-table-fixer-table-filter",
               attrs: { placeholder: _vm._f("cap")(_vm.strings.search) },
               model: {
                 value: _vm.searchClause,
@@ -26852,16 +26865,41 @@ exports.default = _default;
               }
             }),
             _vm._v(" "),
-            _c("list-table", {
-              attrs: {
-                "model-bind": _vm.selectedTables,
-                "row-data": _vm.userTables,
-                "row-labels": ["ID", _vm.strings.title, _vm.strings.modified],
-                "sort-type": { 0: "number", 1: "default", 2: "date" },
-                "search-clause": _vm.searchClause,
-                "search-data-index": 1
-              }
-            })
+            _c(
+              "div",
+              { staticClass: "wptb-table-fixer-listing" },
+              [
+                _c("list-table", {
+                  attrs: {
+                    "model-bind": _vm.selectedTables,
+                    "row-data": _vm.userTables,
+                    "row-labels": [
+                      "ID",
+                      _vm.strings.title,
+                      _vm.strings.modified
+                    ],
+                    "sort-type": { 0: "number", 1: "default", 2: "date" },
+                    "search-clause": _vm.searchClause,
+                    "search-data-index": 1
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "wptb-table-fixer-disclaimer" },
+              [
+                _c("disclaimer", {
+                  attrs: {
+                    title: _vm.strings.disclaimerTitle,
+                    message: _vm.strings.disclaimerMessage
+                  }
+                })
+              ],
+              1
+            )
           ],
           1
         )
@@ -26894,7 +26932,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/ListTable":"components/ListTable.vue","$Components/SearchInput":"components/SearchInput.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/ListTable":"components/ListTable.vue","$Components/SearchInput":"components/SearchInput.vue","$Settings/Disclaimer":"components/Settings/Disclaimer.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
 'use strict';
 
 var isMergeableObject = function isMergeableObject(value) {
