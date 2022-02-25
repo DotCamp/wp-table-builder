@@ -23,7 +23,9 @@
 			</div>
 		</menu-content>
 		<footer-buttons>
-			<menu-button :disabled="fixTableButtonDisabledStatus">{{ tableFixButtonLabel }}</menu-button>
+			<menu-button :disabled="fixTableButtonDisabledStatus" @click="fixTables"
+				>{{ tableFixButtonLabel }}
+			</menu-button>
 		</footer-buttons>
 	</fragment>
 </template>
@@ -88,7 +90,10 @@ export default {
 			}, []);
 		},
 		getTables() {
-			const fetchUrl = new URL(this.sectionData.restUrl);
+			const { getUrl } = this.sectionData.tableGet;
+			const { restNonce } = this.sectionData.rest;
+
+			const fetchUrl = new URL(getUrl);
 			fetchUrl.searchParams.append('status', 'draft');
 			fetchUrl.searchParams.append('per_page', '100');
 			fetchUrl.searchParams.append('_fields', 'id,title,modified');
@@ -97,7 +102,7 @@ export default {
 			return fetch(fetchUrl.toString(), {
 				method: 'GET',
 				headers: {
-					'X-WP-Nonce': this.sectionData.restNonce,
+					'X-WP-Nonce': restNonce,
 				},
 			})
 				.then((resp) => {
@@ -118,6 +123,34 @@ export default {
 				})
 				.finally(() => {
 					this.setBusy(false);
+				});
+		},
+		fixTables() {
+			const { fixUrl, fixAction, fixNonce } = this.sectionData.fixPost;
+			const { restNonce } = this.sectionData.rest;
+
+			const postUrl = new URL(fixUrl);
+			postUrl.searchParams.append('action', fixAction);
+			postUrl.searchParams.append('nonce', fixNonce);
+
+			return fetch(postUrl.toString(), {
+				method: 'POST',
+				headers: {
+					'X-WP-NONCE': restNonce,
+					'Content-Type': 'application/json',
+					Accept: 'application/json',
+				},
+				body: JSON.stringify({
+					// eslint-disable-next-line no-unused-vars
+					tableIds: Object.entries(this.selectedTableIds).map(([_, id]) => {
+						return id;
+					}),
+				}),
+			})
+				.then((resp) => resp.json())
+				.then((data) => {
+					// TODO [erdembircan] remove for production
+					console.log(data);
 				});
 		},
 	},

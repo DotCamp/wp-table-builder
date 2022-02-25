@@ -6,7 +6,7 @@ use WP_Table_Builder as NS;
 use function wp_enqueue_script;
 
 /**
- * Contains various functions that will used throughout the plugin.
+ * Contains various functions that will be used throughout the plugin.
  *
  * @link       http://wptablebuilder.com/
  * @since      1.0.0
@@ -27,7 +27,7 @@ class Helpers {
 	}
 
 	/**
-	 * Check permissions for currently logged in user.
+	 * Check permissions for currently logged-in user.
 	 *
 	 * @return bool
 	 * @since 1.0.0

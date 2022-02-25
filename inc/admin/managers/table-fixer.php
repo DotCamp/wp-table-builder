@@ -2,14 +2,24 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use WP_Error;
+use WP_REST_Request;
 use WP_Table_Builder\Inc\Admin\Base\Manager_Base;
+use WP_Table_Builder\Inc\Common\Factory\Rest_Response_Factory;
+use function add_action;
 use function add_filter;
+use function check_admin_referer;
+use function current_user_can;
+use function register_rest_route;
 use function wp_create_nonce;
 
 /**
  * Fixer for various corrupted and erroneous tables.
  */
 class Table_Fixer extends Manager_Base {
+	private $rest_namespace = 'wptb/v1';
+
+	private $rest_route = 'table-fixer/fix';
 
 	/**
 	 * Function to be called during initialization process.
@@ -19,6 +29,39 @@ class Table_Fixer extends Manager_Base {
 			$this,
 			'settings_manager_frontend_data'
 		] );
+
+		add_action( 'rest_api_init', [ $this, 'table_fixer_rest_init' ] );
+	}
+
+	/**
+	 * Callback for rest fix operation.
+	 *
+	 * @param WP_REST_Request $request request object
+	 *
+	 * @return array
+	 */
+	public function rest_fix_callback( $request ) {
+		return [ 'test' => 'test data' ];
+	}
+
+	/**
+	 * Initialize rest endpoint for table fixer operations.
+	 */
+	public function table_fixer_rest_init() {
+		register_rest_route( $this->rest_namespace, '/' . $this->rest_route, [
+			'methods'             => 'POST',
+			'callback'            => [ $this, 'rest_fix_callback' ],
+			'permission_callback' => [ $this, 'rest_fix_permission_check' ]
+		] );
+	}
+
+	/**
+	 * Permission check for rest fix operations.
+	 *
+	 * @return bool permission status
+	 */
+	public function rest_fix_permission_check( $request ) {
+		return current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_admin_referer( $this->rest_route, 'nonce' );
 	}
 
 	/**
@@ -47,12 +90,21 @@ class Table_Fixer extends Manager_Base {
 		$settings_data['strings'] = array_merge( $settings_data['strings'], $table_fixer_strings );
 
 		$table_fixer_data = [
-			'restNonce' => wp_create_nonce( 'wp_rest' ),
-			'restUrl'   => get_rest_url( null, '/wp/v2/wptb-tables' )
+			'rest'     => [
+				'restNonce' => wp_create_nonce( 'wp_rest' ),
+
+			],
+			'tableGet' => [
+				'getUrl' => get_rest_url( null, '/wp/v2/wptb-tables' )
+			],
+			'fixPost'  => [
+				'fixAction' => $this->rest_route,
+				'fixNonce'  => wp_create_nonce( $this->rest_route ),
+				'fixUrl'    => get_rest_url( null, $this->rest_namespace . '/' . $this->rest_route )
+			]
 		];
 
 		$settings_data['data']['tableFixer'] = $table_fixer_data;
-
 
 		return $settings_data;
 	}

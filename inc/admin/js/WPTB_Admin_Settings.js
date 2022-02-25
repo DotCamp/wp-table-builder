@@ -25973,7 +25973,42 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","../MenuContent":"components/MenuContent.vue","./FooterButtons":"components/Settings/FooterButtons.vue","../MenuButton":"components/MenuButton.vue","../CssCodeInput":"components/CssCodeInput.vue","../../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","../../mixins/withMessage":"mixins/withMessage.js","../BusyRotate":"components/BusyRotate.vue"}],"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","../MenuContent":"components/MenuContent.vue","./FooterButtons":"components/Settings/FooterButtons.vue","../MenuButton":"components/MenuButton.vue","../CssCodeInput":"components/CssCodeInput.vue","../../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","../../mixins/withMessage":"mixins/withMessage.js","../BusyRotate":"components/BusyRotate.vue"}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":[function(require,module,exports) {
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
 
@@ -25985,20 +26020,6 @@ function _arrayLikeToArray(arr, len) {
 }
 
 module.exports = _arrayLikeToArray;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":[function(require,module,exports) {
-var arrayLikeToArray = require("./arrayLikeToArray");
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return arrayLikeToArray(arr);
-}
-
-module.exports = _arrayWithoutHoles;
-},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArray.js":[function(require,module,exports) {
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-
-module.exports = _iterableToArray;
 },{}],"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":[function(require,module,exports) {
 var arrayLikeToArray = require("./arrayLikeToArray");
 
@@ -26012,7 +26033,41 @@ function _unsupportedIterableToArray(o, minLen) {
 }
 
 module.exports = _unsupportedIterableToArray;
-},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableSpread.js":[function(require,module,exports) {
+},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js":[function(require,module,exports) {
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js":[function(require,module,exports) {
+var arrayWithHoles = require("./arrayWithHoles");
+
+var iterableToArrayLimit = require("./iterableToArrayLimit");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray");
+
+var nonIterableRest = require("./nonIterableRest");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+},{"./arrayWithHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit":"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest":"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":[function(require,module,exports) {
+var arrayLikeToArray = require("./arrayLikeToArray");
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+}
+
+module.exports = _arrayWithoutHoles;
+},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArray.js":[function(require,module,exports) {
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+module.exports = _iterableToArray;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableSpread.js":[function(require,module,exports) {
 function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
@@ -26682,6 +26737,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _vueFragment = require("vue-fragment");
@@ -26704,35 +26761,15 @@ var _Disclaimer = _interopRequireDefault(require("$Settings/Disclaimer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function _objectEntries(obj) {
+  var entries = [];
+  var keys = Object.keys(obj);
+
+  for (var k = 0; k < keys.length; k++) entries.push([keys[k], obj[keys[k]]]);
+
+  return entries;
+}
+
 var _default = {
   components: {
     Disclaimer: _Disclaimer.default,
@@ -26799,7 +26836,9 @@ var _default = {
     getTables: function getTables() {
       var _this3 = this;
 
-      var fetchUrl = new URL(this.sectionData.restUrl);
+      var getUrl = this.sectionData.tableGet.getUrl;
+      var restNonce = this.sectionData.rest.restNonce;
+      var fetchUrl = new URL(getUrl);
       fetchUrl.searchParams.append('status', 'draft');
       fetchUrl.searchParams.append('per_page', '100');
       fetchUrl.searchParams.append('_fields', 'id,title,modified');
@@ -26807,7 +26846,7 @@ var _default = {
       return fetch(fetchUrl.toString(), {
         method: 'GET',
         headers: {
-          'X-WP-Nonce': this.sectionData.restNonce
+          'X-WP-Nonce': restNonce
         }
       }).then(function (resp) {
         if (resp.ok) {
@@ -26828,6 +26867,39 @@ var _default = {
         });
       }).finally(function () {
         _this3.setBusy(false);
+      });
+    },
+    fixTables: function fixTables() {
+      var _this$sectionData$fix = this.sectionData.fixPost,
+          fixUrl = _this$sectionData$fix.fixUrl,
+          fixAction = _this$sectionData$fix.fixAction,
+          fixNonce = _this$sectionData$fix.fixNonce;
+      var restNonce = this.sectionData.rest.restNonce;
+      var postUrl = new URL(fixUrl);
+      postUrl.searchParams.append('action', fixAction);
+      postUrl.searchParams.append('nonce', fixNonce);
+      return fetch(postUrl.toString(), {
+        method: 'POST',
+        headers: {
+          'X-WP-NONCE': restNonce,
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          // eslint-disable-next-line no-unused-vars
+          tableIds: _objectEntries(this.selectedTableIds).map(function (_ref) {
+            var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+                _ = _ref2[0],
+                id = _ref2[1];
+
+            return id;
+          })
+        })
+      }).then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        // TODO [erdembircan] remove for production
+        console.log(data);
       });
     }
   }
@@ -26910,8 +26982,11 @@ exports.default = _default;
         [
           _c(
             "menu-button",
-            { attrs: { disabled: _vm.fixTableButtonDisabledStatus } },
-            [_vm._v(_vm._s(_vm.tableFixButtonLabel))]
+            {
+              attrs: { disabled: _vm.fixTableButtonDisabledStatus },
+              on: { click: _vm.fixTables }
+            },
+            [_vm._v(_vm._s(_vm.tableFixButtonLabel) + "\n\t\t")]
           )
         ],
         1
@@ -26932,7 +27007,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/ListTable":"components/ListTable.vue","$Components/SearchInput":"components/SearchInput.vue","$Settings/Disclaimer":"components/Settings/Disclaimer.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/ListTable":"components/ListTable.vue","$Components/SearchInput":"components/SearchInput.vue","$Settings/Disclaimer":"components/Settings/Disclaimer.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
 'use strict';
 
 var isMergeableObject = function isMergeableObject(value) {
