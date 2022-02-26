@@ -2172,8 +2172,6 @@ var WPTB_Helper = {
 				} else {
 					detail = '';
 				}
-			// TODO [erdembircan] remove for production
-			console.log(detail);
 				WPTB_Helper.wptbDocumentEventGenerate('wptb-element:ajax-response', element, detail);
 			}
 		};

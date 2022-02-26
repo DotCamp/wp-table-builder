@@ -96,14 +96,11 @@ export default {
 
 		// TODO [erdembircan] uncomment for production
 		// eslint-disable-next-line array-callback-return,consistent-return
-		// [this.currentSection] = Object.keys(this.parsedFields).map((key) => {
-		// 	if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
-		// 		return key;
-		// 	}
-		// });
-
-		// TODO [erdembircan] remove for production
-		this.currentSection = 'tableFixer';
+		[this.currentSection] = Object.keys(this.parsedFields).map((key) => {
+			if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
+				return key;
+			}
+		});
 	},
 	computed: {
 		sectionData() {
