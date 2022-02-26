@@ -97,6 +97,7 @@ export default {
 			fetchUrl.searchParams.append('status', 'draft');
 			fetchUrl.searchParams.append('per_page', '100');
 			fetchUrl.searchParams.append('_fields', 'id,title,modified');
+			fetchUrl.searchParams.append('orderby', 'id');
 
 			this.setBusy();
 			return fetch(fetchUrl.toString(), {
@@ -133,6 +134,7 @@ export default {
 			postUrl.searchParams.append('action', fixAction);
 			postUrl.searchParams.append('nonce', fixNonce);
 
+			this.setBusy();
 			return fetch(postUrl.toString(), {
 				method: 'POST',
 				headers: {
@@ -147,10 +149,27 @@ export default {
 					}),
 				}),
 			})
-				.then((resp) => resp.json())
+				.then((resp) => {
+					if (resp.ok) {
+						return resp.json();
+					}
+
+					return resp.json().then((data) => {
+						throw new Error(data.message);
+					});
+				})
 				.then((data) => {
 					// TODO [erdembircan] remove for production
 					console.log(data);
+				})
+				.catch((err) => {
+					this.setMessage({
+						message: err,
+						type: 'error',
+					});
+				})
+				.finally(() => {
+					this.setBusy(false);
 				});
 		},
 	},

@@ -26435,8 +26435,8 @@ var _default = {
     return {
       innerRowData: [],
       sortOptions: {
-        index: 0,
-        direction: 1
+        index: null,
+        direction: null
       }
     };
   },
@@ -26450,7 +26450,7 @@ var _default = {
       // updates component state data to be in sync with parent sent rowData
       this.innerRowData = n;
 
-      if (this.sortOptions) {
+      if (this.sortOptions && this.sortOptions.index && this.sortOptions.direction) {
         this.sort(this.sortOptions.index, this.sortOptions.direction);
       }
     }
@@ -26842,6 +26842,7 @@ var _default = {
       fetchUrl.searchParams.append('status', 'draft');
       fetchUrl.searchParams.append('per_page', '100');
       fetchUrl.searchParams.append('_fields', 'id,title,modified');
+      fetchUrl.searchParams.append('orderby', 'id');
       this.setBusy();
       return fetch(fetchUrl.toString(), {
         method: 'GET',
@@ -26870,6 +26871,8 @@ var _default = {
       });
     },
     fixTables: function fixTables() {
+      var _this4 = this;
+
       var _this$sectionData$fix = this.sectionData.fixPost,
           fixUrl = _this$sectionData$fix.fixUrl,
           fixAction = _this$sectionData$fix.fixAction,
@@ -26878,6 +26881,7 @@ var _default = {
       var postUrl = new URL(fixUrl);
       postUrl.searchParams.append('action', fixAction);
       postUrl.searchParams.append('nonce', fixNonce);
+      this.setBusy();
       return fetch(postUrl.toString(), {
         method: 'POST',
         headers: {
@@ -26896,10 +26900,23 @@ var _default = {
           })
         })
       }).then(function (resp) {
-        return resp.json();
+        if (resp.ok) {
+          return resp.json();
+        }
+
+        return resp.json().then(function (data) {
+          throw new Error(data.message);
+        });
       }).then(function (data) {
         // TODO [erdembircan] remove for production
         console.log(data);
+      }).catch(function (err) {
+        _this4.setMessage({
+          message: err,
+          type: 'error'
+        });
+      }).finally(function () {
+        _this4.setBusy(false);
       });
     }
   }

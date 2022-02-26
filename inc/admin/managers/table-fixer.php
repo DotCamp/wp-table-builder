@@ -4,13 +4,16 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use WP_Error;
 use WP_REST_Request;
+use WP_REST_Response;
 use WP_Table_Builder\Inc\Admin\Base\Manager_Base;
+use WP_Table_Builder\Inc\Common\Factory\Fix_Factory;
 use WP_Table_Builder\Inc\Common\Factory\Rest_Response_Factory;
 use function add_action;
 use function add_filter;
 use function check_admin_referer;
 use function current_user_can;
 use function register_rest_route;
+use function rest_ensure_response;
 use function wp_create_nonce;
 
 /**
@@ -34,14 +37,55 @@ class Table_Fixer extends Manager_Base {
 	}
 
 	/**
+	 * Check and fix tables for corruption.
+	 *
+	 * @param array $table_ids table ids
+	 *
+	 * @return array array of table ids with fix status
+	 */
+	private function fix_tables( $table_ids ) {
+		$status_report = [];
+
+		foreach ( $table_ids as $id ) {
+			array_map( function ( $fix_type ) use ( $id, &$status_report ) {
+				$fix_status = Fix_Factory::make( $fix_type )->fix( $id );
+
+				if ( !isset( $status_report[ $id ] ) ) {
+					$status_report[ $id ] = false;
+				}
+
+				if ( $status_report[ $id ] === false ) {
+					$status_report[ $id ] = $fix_status;
+				}
+
+			}, Fix_Factory::$available_fixes );
+		}
+
+		return $status_report;
+	}
+
+	/**
 	 * Callback for rest fix operation.
 	 *
 	 * @param WP_REST_Request $request request object
 	 *
-	 * @return array
+	 * @return WP_Error|WP_REST_Response
 	 */
 	public function rest_fix_callback( $request ) {
-		return [ 'test' => 'test data' ];
+		$request_body = $request->get_json_params();
+
+		if ( isset( $request_body['tableIds'] ) ) {
+			$table_ids = $request_body['tableIds'];
+			if ( ! empty( $table_ids ) ) {
+				$fix_summary = $this->fix_tables( $table_ids );
+
+				return rest_ensure_response( Rest_Response_Factory::generate_response( $fix_summary ) );
+			}
+
+			return rest_ensure_response( Rest_Response_Factory::generate_response( null, 401, 'invalid_post_body', esc_html__( 'no table ids found to operate on' ) ) );
+		}
+
+		return rest_ensure_response( Rest_Response_Factory::generate_response( null, 401, 'invalid_post_body', esc_html__( 'invalid post request body' ) ) );
 	}
 
 	/**
@@ -60,7 +104,7 @@ class Table_Fixer extends Manager_Base {
 	 *
 	 * @return bool permission status
 	 */
-	public function rest_fix_permission_check( $request ) {
+	public function rest_fix_permission_check() {
 		return current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_admin_referer( $this->rest_route, 'nonce' );
 	}
 

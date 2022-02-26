@@ -19159,8 +19159,8 @@ var _default = {
     return {
       innerRowData: [],
       sortOptions: {
-        index: 0,
-        direction: 1
+        index: null,
+        direction: null
       }
     };
   },
@@ -19174,7 +19174,7 @@ var _default = {
       // updates component state data to be in sync with parent sent rowData
       this.innerRowData = n;
 
-      if (this.sortOptions) {
+      if (this.sortOptions && this.sortOptions.index && this.sortOptions.direction) {
         this.sort(this.sortOptions.index, this.sortOptions.direction);
       }
     }
