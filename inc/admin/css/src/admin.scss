@@ -3434,7 +3434,7 @@ wptb_shortcode_container_element {
   border-collapse: collapse;
 }
 
-.wptb-import-table th, td {
+.wptb-import-table th{
   padding: 15px 10px;
 }
 
@@ -4153,6 +4153,17 @@ wptb_shortcode_container_element {
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
+  text-align: center;
+
+  &[data-is-fixed="true"] {
+    position: fixed;
+  }
+
+
+  & * {
+    box-sizing: border-box;
+  }
 }
 
 .wptb-plugin-modal-inner-window {

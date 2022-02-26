@@ -52,3 +52,47 @@ $table-listing-header-height: 50px;
     }
   }
 }
+
+.wptb-fix-summary-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 200px;
+  overflow: auto;
+
+  .wptb-fix-summary-list {
+
+    .wptb-fix-summary-column {
+      @extend %flex-center-all;
+      background-color: $gray-300;
+      padding: 5px;
+      font-weight: bold;
+
+      &[data-fix-status="true"] {
+        color: $green-500;
+      }
+
+      &[data-fix-status="false"] {
+        color: $red-500;
+      }
+
+      .icon-wrapper-parent {
+        @extend %flex-center-all;
+        width: 100%;
+        height: 100%;
+
+        .icon-wrapper {
+          @extend %flex-center-all;
+          width: 15px;
+          height: 15px;
+
+          svg {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+}

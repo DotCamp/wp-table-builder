@@ -1,8 +1,8 @@
 <template>
 	<transition name="wptb-fade" mode="out-in">
-		<tr class="wptb-list-table-row" :data-selected="selected" v-if="rowVisibility">
+		<tr class="wptb-list-table-row" :data-selected="modelBind[row.ID]" v-if="rowVisibility">
 			<td>
-				<input @input="setSelected" :id="row.ID" type="checkbox" v-model="modelBind[row.ID]" />
+				<input :id="row.ID" type="checkbox" v-model="modelBind[row.ID]" />
 			</td>
 			<td v-for="(data, index) in row.fieldDatas" :key="data">
 				<label
@@ -48,11 +48,6 @@ export default {
 			}
 
 			return value.match(regExp);
-		},
-	},
-	methods: {
-		setSelected(e) {
-			this.selected = e.target.checked;
 		},
 	},
 };

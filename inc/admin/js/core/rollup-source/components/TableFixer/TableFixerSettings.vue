@@ -22,6 +22,16 @@
 				</div>
 			</div>
 		</menu-content>
+		<modal-window
+			:close-callback="hideSummary"
+			:is-fixed="true"
+			:callback="hideSummary"
+			:visible="summaryVisibility"
+			:window-title="strings.summary"
+			:message="summaryMessage"
+		>
+			<fix-summary :summary-data="summaryData"></fix-summary>
+		</modal-window>
 		<footer-buttons>
 			<menu-button :disabled="fixTableButtonDisabledStatus" @click="fixTables"
 				>{{ tableFixButtonLabel }}
@@ -39,15 +49,35 @@ import withMessage from '$Mixins/withMessage';
 import ListTable from '$Components/ListTable';
 import SearchInput from '$Components/SearchInput';
 import Disclaimer from '$Settings/Disclaimer';
+import ModalWindow from '$Components/ModalWindow';
+import FixSummary from '$Components/TableFixer/FixSummary';
 
 export default {
-	components: { Disclaimer, SearchInput, ListTable, MenuButton, MenuContent, FooterButtons, Fragment },
+	components: {
+		FixSummary,
+		ModalWindow,
+		Disclaimer,
+		SearchInput,
+		ListTable,
+		MenuButton,
+		MenuContent,
+		FooterButtons,
+		Fragment,
+	},
 	mixins: [SettingsMenuSection, withMessage],
 	data: () => ({
 		selectedTables: {},
 		tables: [],
 		searchClause: '',
+		summaryVisibility: false,
+		summaryMessage: '',
+		summaryData: {},
 	}),
+	mounted() {
+		this.$nextTick(() => {
+			this.getTables();
+		});
+	},
 	computed: {
 		selectedTableIds() {
 			return Object.keys(this.selectedTables).filter((key) => {
@@ -66,12 +96,26 @@ export default {
 			return [...this.tables];
 		},
 	},
-	mounted() {
-		this.$nextTick(() => {
-			this.getTables();
-		});
-	},
 	methods: {
+		resetSelections() {
+			this.selectedTables = {};
+		},
+		showSummary(summaryData) {
+			// eslint-disable-next-line no-unused-vars
+			const allFixed = Object.entries(summaryData).every(([_, val]) => {
+				return val;
+			});
+
+			this.summaryMessage = allFixed
+				? this.strings.summaryMessageAllFixed
+				: this.strings.summaryMessageNotAllFixed;
+
+			this.summaryData = summaryData;
+			this.summaryVisibility = true;
+		},
+		hideSummary() {
+			this.summaryVisibility = false;
+		},
 		parseFetchedTables(rawTables) {
 			return rawTables.reduce((carry, current) => {
 				const localDate = new Intl.DateTimeFormat('default', {
@@ -158,9 +202,9 @@ export default {
 						throw new Error(data.message);
 					});
 				})
-				.then((data) => {
-					// TODO [erdembircan] remove for production
-					console.log(data);
+				.then((respObj) => {
+					this.resetSelections();
+					this.showSummary(respObj.data.response);
 				})
 				.catch((err) => {
 					this.setMessage({

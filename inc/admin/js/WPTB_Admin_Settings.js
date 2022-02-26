@@ -26262,11 +26262,6 @@ var _default = {
 
       return value.match(regExp);
     }
-  },
-  methods: {
-    setSelected: function setSelected(e) {
-      this.selected = e.target.checked;
-    }
   }
 };
 exports.default = _default;
@@ -26288,7 +26283,7 @@ exports.default = _default;
           "tr",
           {
             staticClass: "wptb-list-table-row",
-            attrs: { "data-selected": _vm.selected }
+            attrs: { "data-selected": _vm.modelBind[_vm.row.ID] }
           },
           [
             _c("td", [
@@ -26308,7 +26303,6 @@ exports.default = _default;
                     : _vm.modelBind[_vm.row.ID]
                 },
                 on: {
-                  input: _vm.setSelected,
                   change: function($event) {
                     var $$a = _vm.modelBind[_vm.row.ID],
                       $$el = $event.target,
@@ -26729,7 +26723,642 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/TableFixer/TableFixerSettings.vue":[function(require,module,exports) {
+},{}],"components/MaterialButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    click: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('Material button clicked');
+      }
+    },
+    size: {
+      type: String,
+      default: 'fit-content'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    buttonClass: function buttonClass() {
+      return ["wptb-plugin-button-material-".concat(this.size)];
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      if (!this.disabled) {
+        this.click();
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $48fd91 = exports.default || module.exports;
+      
+      if (typeof $48fd91 === 'function') {
+        $48fd91 = $48fd91.options;
+      }
+    
+        /* template */
+        Object.assign($48fd91, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-plugin-button-material",
+      class: _vm.buttonClass,
+      attrs: { disabled: _vm.disabled },
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleClick($event)
+        }
+      }
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/Icon.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+var defaultClasses = ['wptb-svg-inherit-color'];
+var _default = {
+  props: {
+    name: {
+      type: String,
+      default: ''
+    },
+    extraClasses: {
+      type: Array,
+      default: function _default() {
+        return defaultClasses;
+      }
+    }
+  },
+  watch: {
+    extraClasses: function extraClasses() {
+      this.prepareClasses();
+      this.prepareIcon();
+    },
+    name: function name() {
+      this.prepareIcon();
+    }
+  },
+  data: function data() {
+    return {
+      iconFragment: '',
+      innerExtraClasses: []
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.prepareClasses(_this.extraClasses);
+
+      _this.prepareIcon();
+    });
+  },
+  methods: {
+    prepareIcon: function prepareIcon() {
+      var _this2 = this;
+
+      WPTB_IconManager.getIcon(this.name, this.innerExtraClasses, true).then(function (icon) {
+        _this2.iconFragment = icon;
+      });
+    },
+    prepareClasses: function prepareClasses() {
+      this.innerExtraClasses = Array.from(new Set([].concat((0, _toConsumableArray2.default)(this.extraClasses), defaultClasses)));
+    }
+  }
+};
+exports.default = _default;
+        var $fdfc7a = exports.default || module.exports;
+      
+      if (typeof $fdfc7a === 'function') {
+        $fdfc7a = $fdfc7a.options;
+      }
+    
+        /* template */
+        Object.assign($fdfc7a, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { domProps: { innerHTML: _vm._s(_vm.iconFragment) } })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js"}],"components/ModalWindow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _MaterialButton = _interopRequireDefault(require("$Components/MaterialButton"));
+
+var _Icon = _interopRequireDefault(require("$Components/Icon"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    isFixed: {
+      type: Boolean,
+      default: false
+    },
+    buttonExtraClasses: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
+    windowTitle: {
+      type: null,
+      default: null
+    },
+    message: {
+      type: String,
+      default: 'This is a default message for modal window.'
+    },
+    iconName: {
+      type: String,
+      default: 'exclamation-circle'
+    },
+    iconClasses: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
+    buttonLabel: {
+      type: String,
+      default: 'Okay'
+    },
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    relativeRef: {
+      type: HTMLElement,
+      required: false
+    },
+    callback: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('modal button clicked');
+      }
+    },
+    closeCallback: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('modal window close');
+      }
+    }
+  },
+  components: {
+    Icon: _Icon.default,
+    MaterialButton: _MaterialButton.default
+  },
+  data: function data() {
+    return {
+      iconFinalClasses: []
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      if (!_this.isFixed) {
+        _this.relativeRef.appendChild(_this.$refs.mainWrapper);
+      }
+
+      _this.prepareFinalClasses(_this.iconClasses);
+    });
+  },
+  watch: {
+    iconClasses: function iconClasses() {
+      this.prepareFinalClasses();
+    }
+  },
+  methods: {
+    prepareFinalClasses: function prepareFinalClasses() {
+      var defaultClasses = ['wptb-plugin-modal-icon-inner-wrapper'];
+      this.iconFinalClasses = Array.from(new Set([].concat((0, _toConsumableArray2.default)(this.iconClasses), defaultClasses)));
+    }
+  },
+  beforeDestroy: function beforeDestroy() {
+    if (!this.isFixed) {
+      this.$refs.mainWrapper.parentNode.removeChild(this.$refs.mainWrapper);
+    }
+  }
+};
+exports.default = _default;
+        var $6a3b9d = exports.default || module.exports;
+      
+      if (typeof $6a3b9d === 'function') {
+        $6a3b9d = $6a3b9d.options;
+      }
+    
+        /* template */
+        Object.assign($6a3b9d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.visible,
+          expression: "visible"
+        }
+      ],
+      ref: "mainWrapper",
+      staticClass: "wptb-plugin-modal-window",
+      attrs: { "data-is-fixed": _vm.isFixed }
+    },
+    [
+      _c("div", { staticClass: "wptb-plugin-modal-inner-window" }, [
+        _vm.windowTitle
+          ? _c("div", { staticClass: "wptb-plugin-modal-header" }, [
+              _c("div", { staticClass: "wptb-plugin-modal-header-title" }, [
+                _vm._v(_vm._s(_vm._f("cap")(_vm.windowTitle)))
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "wptb-plugin-modal-header-close",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeCallback($event)
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "wptb-plugin-modal-close-wrapper" },
+                    [_vm._v("X")]
+                  )
+                ]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "wptb-plugin-modal-content-container" }, [
+          _c(
+            "div",
+            { staticClass: "wptb-plugin-modal-icon" },
+            [
+              _c("icon", {
+                staticClass: "wptb-plugin-modal-icon-parent-wrapper",
+                attrs: {
+                  name: _vm.iconName,
+                  "extra-classes": _vm.iconFinalClasses
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "wptb-plugin-modal-message" }, [
+            _vm._v(_vm._s(_vm.message))
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-plugin-modal-slot-container" },
+            [_vm._t("default")],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-plugin-modal-button-container" },
+            [
+              _c(
+                "material-button",
+                {
+                  class: _vm.buttonExtraClasses,
+                  attrs: { size: "full-size", click: _vm.callback }
+                },
+                [_vm._v(_vm._s(_vm._f("cap")(_vm.buttonLabel)))]
+              )
+            ],
+            1
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","$Components/MaterialButton":"components/MaterialButton.vue","$Components/Icon":"components/Icon.vue"}],"components/TableFixer/SummaryRow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Icon = _interopRequireDefault(require("$Components/Icon"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    id: {
+      type: String,
+      required: true
+    },
+    status: {
+      type: Boolean,
+      required: true
+    }
+  },
+  components: {
+    Icon: _Icon.default
+  },
+  computed: {
+    fixStatus: function fixStatus() {
+      return JSON.stringify(this.status);
+    },
+    tableTitle: function tableTitle() {
+      return "".concat(this.strings.table, "#").concat(this.id);
+    },
+    iconName: function iconName() {
+      return this.status ? 'check-circle' : 'times-circle';
+    }
+  }
+};
+exports.default = _default;
+        var $69d1e9 = exports.default || module.exports;
+      
+      if (typeof $69d1e9 === 'function') {
+        $69d1e9 = $69d1e9.options;
+      }
+    
+        /* template */
+        Object.assign($69d1e9, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("tr", [
+    _c("td", [
+      _c(
+        "div",
+        {
+          staticClass: "wptb-fix-summary-column",
+          attrs: { "data-fix-status": _vm.fixStatus }
+        },
+        [_vm._v("\n\t\t\t" + _vm._s(_vm._f("cap")(_vm.tableTitle)) + "\n\t\t")]
+      )
+    ]),
+    _vm._v(" "),
+    _c("td", [
+      _c(
+        "div",
+        {
+          key: _vm.id,
+          staticClass: "wptb-fix-summary-column",
+          attrs: { "data-fix-status": _vm.fixStatus }
+        },
+        [
+          _c("icon", {
+            staticClass: "icon-wrapper-parent",
+            attrs: { "extra-classes": ["icon-wrapper"], name: _vm.iconName }
+          })
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: "data-v-69d1e9",
+            functional: undefined
+          };
+        })());
+      
+},{"$Components/Icon":"components/Icon.vue"}],"components/TableFixer/FixSummary.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _SummaryRow = _interopRequireDefault(require("$Components/TableFixer/SummaryRow"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    SummaryRow: _SummaryRow.default
+  },
+  props: {
+    summaryData: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  methods: {
+    tableTitle: function tableTitle(id) {
+      return "".concat(this.strings.table, "#").concat(id);
+    },
+    fixStatus: function fixStatus(status) {
+      return JSON.stringify(status);
+    },
+    iconName: function iconName(status) {
+      return status ? 'check-circle' : 'times-circle';
+    }
+  }
+};
+exports.default = _default;
+        var $c2982c = exports.default || module.exports;
+      
+      if (typeof $c2982c === 'function') {
+        $c2982c = $c2982c.options;
+      }
+    
+        /* template */
+        Object.assign($c2982c, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-fix-summary-wrapper" }, [
+    _c("div", { staticClass: "wptb-fix-summary-list" }, [
+      _c("table", [
+        _c(
+          "tbody",
+          _vm._l(_vm.summaryData, function(status, id) {
+            return _c("summary-row", {
+              key: id,
+              attrs: { id: id, status: status }
+            })
+          }),
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$Components/TableFixer/SummaryRow":"components/TableFixer/SummaryRow.vue"}],"components/TableFixer/TableFixerSettings.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26759,6 +27388,10 @@ var _SearchInput = _interopRequireDefault(require("$Components/SearchInput"));
 
 var _Disclaimer = _interopRequireDefault(require("$Settings/Disclaimer"));
 
+var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
+
+var _FixSummary = _interopRequireDefault(require("$Components/TableFixer/FixSummary"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _objectEntries(obj) {
@@ -26772,6 +27405,8 @@ function _objectEntries(obj) {
 
 var _default = {
   components: {
+    FixSummary: _FixSummary.default,
+    ModalWindow: _ModalWindow.default,
     Disclaimer: _Disclaimer.default,
     SearchInput: _SearchInput.default,
     ListTable: _ListTable.default,
@@ -26785,15 +27420,25 @@ var _default = {
     return {
       selectedTables: {},
       tables: [],
-      searchClause: ''
+      searchClause: '',
+      summaryVisibility: false,
+      summaryMessage: '',
+      summaryData: {}
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.getTables();
+    });
   },
   computed: {
     selectedTableIds: function selectedTableIds() {
-      var _this = this;
+      var _this2 = this;
 
       return Object.keys(this.selectedTables).filter(function (key) {
-        return Object.prototype.hasOwnProperty.call(_this.selectedTables, key) && _this.selectedTables[key];
+        return Object.prototype.hasOwnProperty.call(_this2.selectedTables, key) && _this2.selectedTables[key];
       });
     },
     tableFixButtonLabel: function tableFixButtonLabel() {
@@ -26807,14 +27452,27 @@ var _default = {
       return (0, _toConsumableArray2.default)(this.tables);
     }
   },
-  mounted: function mounted() {
-    var _this2 = this;
-
-    this.$nextTick(function () {
-      _this2.getTables();
-    });
-  },
   methods: {
+    resetSelections: function resetSelections() {
+      this.selectedTables = {};
+    },
+    showSummary: function showSummary(summaryData) {
+      // eslint-disable-next-line no-unused-vars
+      var allFixed = _objectEntries(summaryData).every(function (_ref) {
+        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+            _ = _ref2[0],
+            val = _ref2[1];
+
+        return val;
+      });
+
+      this.summaryMessage = allFixed ? this.strings.summaryMessageAllFixed : this.strings.summaryMessageNotAllFixed;
+      this.summaryData = summaryData;
+      this.summaryVisibility = true;
+    },
+    hideSummary: function hideSummary() {
+      this.summaryVisibility = false;
+    },
     parseFetchedTables: function parseFetchedTables(rawTables) {
       return rawTables.reduce(function (carry, current) {
         var localDate = new Intl.DateTimeFormat('default', {
@@ -26891,10 +27549,10 @@ var _default = {
         },
         body: JSON.stringify({
           // eslint-disable-next-line no-unused-vars
-          tableIds: _objectEntries(this.selectedTableIds).map(function (_ref) {
-            var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-                _ = _ref2[0],
-                id = _ref2[1];
+          tableIds: _objectEntries(this.selectedTableIds).map(function (_ref3) {
+            var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+                _ = _ref4[0],
+                id = _ref4[1];
 
             return id;
           })
@@ -26907,9 +27565,10 @@ var _default = {
         return resp.json().then(function (data) {
           throw new Error(data.message);
         });
-      }).then(function (data) {
-        // TODO [erdembircan] remove for production
-        console.log(data);
+      }).then(function (respObj) {
+        _this4.resetSelections();
+
+        _this4.showSummary(respObj.data.response);
       }).catch(function (err) {
         _this4.setMessage({
           message: err,
@@ -26995,6 +27654,22 @@ exports.default = _default;
       ]),
       _vm._v(" "),
       _c(
+        "modal-window",
+        {
+          attrs: {
+            "close-callback": _vm.hideSummary,
+            "is-fixed": true,
+            callback: _vm.hideSummary,
+            visible: _vm.summaryVisibility,
+            "window-title": _vm.strings.summary,
+            message: _vm.summaryMessage
+          }
+        },
+        [_c("fix-summary", { attrs: { "summary-data": _vm.summaryData } })],
+        1
+      ),
+      _vm._v(" "),
+      _c(
         "footer-buttons",
         [
           _c(
@@ -27024,7 +27699,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/ListTable":"components/ListTable.vue","$Components/SearchInput":"components/SearchInput.vue","$Settings/Disclaimer":"components/Settings/Disclaimer.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuContent":"components/MenuContent.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/ListTable":"components/ListTable.vue","$Components/SearchInput":"components/SearchInput.vue","$Settings/Disclaimer":"components/Settings/Disclaimer.vue","$Components/ModalWindow":"components/ModalWindow.vue","$Components/TableFixer/FixSummary":"components/TableFixer/FixSummary.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
 'use strict';
 
 var isMergeableObject = function isMergeableObject(value) {
@@ -27793,92 +28468,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
   return new WPTB_LazyLoad();
 });
-},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js"}],"components/MaterialButton.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    click: {
-      type: Function,
-      default: function _default() {
-        // eslint-disable-next-line no-console
-        console.log('Material button clicked');
-      }
-    },
-    size: {
-      type: String,
-      default: 'fit-content'
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  computed: {
-    buttonClass: function buttonClass() {
-      return ["wptb-plugin-button-material-".concat(this.size)];
-    }
-  },
-  methods: {
-    handleClick: function handleClick() {
-      if (!this.disabled) {
-        this.click();
-      }
-    }
-  }
-};
-exports.default = _default;
-        var $48fd91 = exports.default || module.exports;
-      
-      if (typeof $48fd91 === 'function') {
-        $48fd91 = $48fd91.options;
-      }
-    
-        /* template */
-        Object.assign($48fd91, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-plugin-button-material",
-      class: _vm.buttonClass,
-      attrs: { disabled: _vm.disabled },
-      on: {
-        click: function($event) {
-          $event.preventDefault()
-          return _vm.handleClick($event)
-        }
-      }
-    },
-    [_vm._t("default")],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js"}],"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29111,101 +29701,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/Icon.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-var defaultClasses = ['wptb-svg-inherit-color'];
-var _default = {
-  props: {
-    name: {
-      type: String,
-      default: ''
-    },
-    extraClasses: {
-      type: Array,
-      default: function _default() {
-        return defaultClasses;
-      }
-    }
-  },
-  watch: {
-    extraClasses: function extraClasses() {
-      this.prepareClasses();
-      this.prepareIcon();
-    },
-    name: function name() {
-      this.prepareIcon();
-    }
-  },
-  data: function data() {
-    return {
-      iconFragment: '',
-      innerExtraClasses: []
-    };
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    this.$nextTick(function () {
-      _this.prepareClasses(_this.extraClasses);
-
-      _this.prepareIcon();
-    });
-  },
-  methods: {
-    prepareIcon: function prepareIcon() {
-      var _this2 = this;
-
-      WPTB_IconManager.getIcon(this.name, this.innerExtraClasses, true).then(function (icon) {
-        _this2.iconFragment = icon;
-      });
-    },
-    prepareClasses: function prepareClasses() {
-      this.innerExtraClasses = Array.from(new Set([].concat((0, _toConsumableArray2.default)(this.extraClasses), defaultClasses)));
-    }
-  }
-};
-exports.default = _default;
-        var $fdfc7a = exports.default || module.exports;
-      
-      if (typeof $fdfc7a === 'function') {
-        $fdfc7a = $fdfc7a.options;
-      }
-    
-        /* template */
-        Object.assign($fdfc7a, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { domProps: { innerHTML: _vm._s(_vm.iconFragment) } })
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js"}],"components/RangeInputButton.vue":[function(require,module,exports) {
+},{}],"components/RangeInputButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

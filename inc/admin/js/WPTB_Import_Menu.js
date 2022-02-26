@@ -18986,11 +18986,6 @@ var _default = {
 
       return value.match(regExp);
     }
-  },
-  methods: {
-    setSelected: function setSelected(e) {
-      this.selected = e.target.checked;
-    }
   }
 };
 exports.default = _default;
@@ -19012,7 +19007,7 @@ exports.default = _default;
           "tr",
           {
             staticClass: "wptb-list-table-row",
-            attrs: { "data-selected": _vm.selected }
+            attrs: { "data-selected": _vm.modelBind[_vm.row.ID] }
           },
           [
             _c("td", [
@@ -19032,7 +19027,6 @@ exports.default = _default;
                     : _vm.modelBind[_vm.row.ID]
                 },
                 on: {
-                  input: _vm.setSelected,
                   change: function($event) {
                     var $$a = _vm.modelBind[_vm.row.ID],
                       $$el = $event.target,

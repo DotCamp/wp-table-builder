@@ -1,5 +1,5 @@
 <template>
-	<div ref="mainWrapper" class="wptb-plugin-modal-window" v-show="visible">
+	<div ref="mainWrapper" class="wptb-plugin-modal-window" :data-is-fixed="isFixed" v-show="visible">
 		<div class="wptb-plugin-modal-inner-window">
 			<div class="wptb-plugin-modal-header" v-if="windowTitle">
 				<div class="wptb-plugin-modal-header-title">{{ windowTitle | cap }}</div>
@@ -34,6 +34,10 @@ import Icon from '$Components/Icon';
 
 export default {
 	props: {
+		isFixed: {
+			type: Boolean,
+			default: false,
+		},
 		buttonExtraClasses: {
 			type: Array,
 			default: () => [],
@@ -64,7 +68,7 @@ export default {
 		},
 		relativeRef: {
 			type: HTMLElement,
-			required: true,
+			required: false,
 		},
 		callback: {
 			type: Function,
@@ -89,7 +93,9 @@ export default {
 	},
 	mounted() {
 		this.$nextTick(() => {
-			this.relativeRef.appendChild(this.$refs.mainWrapper);
+			if (!this.isFixed) {
+				this.relativeRef.appendChild(this.$refs.mainWrapper);
+			}
 			this.prepareFinalClasses(this.iconClasses);
 		});
 	},
@@ -106,7 +112,9 @@ export default {
 		},
 	},
 	beforeDestroy() {
-		this.$refs.mainWrapper.parentNode.removeChild(this.$refs.mainWrapper);
+		if (!this.isFixed) {
+			this.$refs.mainWrapper.parentNode.removeChild(this.$refs.mainWrapper);
+		}
 	},
 };
 </script>

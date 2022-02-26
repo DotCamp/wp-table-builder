@@ -19740,6 +19740,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var _default = {
   props: {
+    isFixed: {
+      type: Boolean,
+      default: false
+    },
     buttonExtraClasses: {
       type: Array,
       default: function _default() {
@@ -19774,7 +19778,7 @@ var _default = {
     },
     relativeRef: {
       type: HTMLElement,
-      required: true
+      required: false
     },
     callback: {
       type: Function,
@@ -19804,7 +19808,9 @@ var _default = {
     var _this = this;
 
     this.$nextTick(function () {
-      _this.relativeRef.appendChild(_this.$refs.mainWrapper);
+      if (!_this.isFixed) {
+        _this.relativeRef.appendChild(_this.$refs.mainWrapper);
+      }
 
       _this.prepareFinalClasses(_this.iconClasses);
     });
@@ -19821,7 +19827,9 @@ var _default = {
     }
   },
   beforeDestroy: function beforeDestroy() {
-    this.$refs.mainWrapper.parentNode.removeChild(this.$refs.mainWrapper);
+    if (!this.isFixed) {
+      this.$refs.mainWrapper.parentNode.removeChild(this.$refs.mainWrapper);
+    }
   }
 };
 exports.default = _default;
@@ -19849,7 +19857,8 @@ exports.default = _default;
         }
       ],
       ref: "mainWrapper",
-      staticClass: "wptb-plugin-modal-window"
+      staticClass: "wptb-plugin-modal-window",
+      attrs: { "data-is-fixed": _vm.isFixed }
     },
     [
       _c("div", { staticClass: "wptb-plugin-modal-inner-window" }, [

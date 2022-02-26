@@ -125,10 +125,14 @@ class Table_Fixer extends Manager_Base {
 			'fixTables'         => esc_html__( 'fix tables', 'wp-table-builder' ),
 			'tablesFetched'     => esc_html__( 'tables fetched', 'wp-table-builder' ),
 			'title'             => esc_html__( 'title', 'wp-table-builder' ),
+			'table'             => esc_html__( 'table', 'wp-table-builder' ),
 			'modified'          => esc_html__( 'modified', 'wp-table-builder' ),
 			'search'            => esc_html__( 'search', 'wp-table-builder' ),
+			'summary'            => esc_html__( 'summary', 'wp-table-builder' ),
 			'disclaimerTitle'   => esc_html__( 'when to use', 'wp-table-builder' ),
 			'disclaimerMessage' => esc_html__( 'Your tables might get corrupted by your browser addons. If you have any table with unexpected behaviour (cell edit disabled, etc) use this tool. If problem still persists, contact our support forums.', 'wp-table-builder' ),
+			'summaryMessageNotAllFixed' => esc_html__( "We could not fix some of your tables, please drop a support request.", 'wp-table-builder' ),
+			'summaryMessageAllFixed' => esc_html__( "All selected tables are fixed.", 'wp-table-builder' ),
 		];
 
 		$settings_data['strings'] = array_merge( $settings_data['strings'], $table_fixer_strings );
