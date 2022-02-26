@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.3.16 =
 
 * IMPROVE: WordPress 5.9 compatibility.
+* NEW: Table fix tool for corrupted tables.
 * NEW: Shortcode clipboard copy functionality at table listings.
 * FIX: Startup error for some older PHP versions.
 * FIX: Version control wrong list for available rollback versions.
