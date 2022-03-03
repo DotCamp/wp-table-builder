@@ -970,7 +970,60 @@ var WPTB_Helper = {
 			}
 		}
 	},
-	//
+	// TODO switchThirdToggleIf
+	switchThirdToggleIf( dataSwitchThirdToggleIf, dependencyElemClass ) {
+		if (Array.isArray(dataSwitchThirdToggleIf)) {
+			const dependencyElemVal = dataSwitchThirdToggleIf[0];
+			const dependencyElem = document.querySelector('.' + dependencyElemClass);
+			if (dataSwitchThirdToggleIf[1] && typeof dataSwitchThirdToggleIf[1] === 'object'){
+				const dependencyParameters = dataSwitchThirdToggleIf[1];
+				Object.keys(dependencyParameters).map((k) => {
+					const dependentElemVal = dependencyParameters[k];
+					const infArr = dependencyElemClass.match(/wptb-el-((.+-)\d+)-(.+)/i);
+					if (infArr && Array.isArray(infArr)) {
+						const controlName = infArr[3];
+						const dependentElemClass = dependencyElemClass.replace(controlName, k);
+						if (dependentElemClass) {
+							const dependentElems = document.getElementsByClassName(
+								dependentElemClass
+							);
+							if (dependentElems.length > 0) {
+								const dependentElem = dependentElems[0];
+								console.log(dependentElem)
+								dependencyElem.addEventListener(
+									'change',
+									switchThirdToggleExecute.bind( null, dependencyElem, dependencyElemVal, dependentElem, dependentElemVal ),
+									false
+								);
+							}
+						}
+					}
+				});
+
+				function switchThirdToggleExecute(dependencyElem, dependencyElemVal, dependentElem, dependentElemVal) {
+					if( 'checked' in dependentElem ) {
+						if( ( dependencyElem.checked === true && dependencyElemVal === 'checked' ) ||
+							( dependencyElem.checked === false && dependencyElemVal === 'unchecked' ) ) {
+							if( dependentElemVal === 'checked' ) {
+								dependentElem.checked = true;
+							} else if( dependentElemVal === 'unchecked' ) {
+								dependentElem.checked = false;
+							}
+
+							if (dataSwitchThirdToggleIf[2] === undefined || dataSwitchThirdToggleIf[2] === true) {
+								WPTB_Helper.wptbDocumentEventGenerate(
+									'change',
+									dependentElem,
+									{ eventType: 'switchThirdToggleIf' }
+								);
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+
 	controlsStateManager(targetControlClass, controlChangeIndic) {
 		const targetControls = document.getElementsByClassName(targetControlClass);
 		if (targetControls.length > 0) {
@@ -1327,6 +1380,9 @@ var WPTB_Helper = {
 			// array for keep "toggle switch" params
 			const controltoggleSwitch = [];
 
+			// array for keep "toggle switch" params
+			const controlSwitchThirdToggleIf = [];
+
 			// array for keep "value depend on" params
 			const controlValueDependOnControl = [];
 
@@ -1365,6 +1421,12 @@ var WPTB_Helper = {
 				if ('toggleSwitch' in data) {
 					if (Array.isArray(data.toggleSwitch)) {
 						controltoggleSwitch.push([data.toggleSwitch, data.elementControlTargetUnicClass]);
+					}
+				}
+
+				if('switchThirdToggleIf' in data) {
+					if (Array.isArray(data.switchThirdToggleIf)) {
+						controlSwitchThirdToggleIf.push([data.switchThirdToggleIf, data.elementControlTargetUnicClass]);
 					}
 				}
 
@@ -1498,6 +1560,11 @@ var WPTB_Helper = {
 			// run toggleSwitch function
 			for (let i = 0; i < controltoggleSwitch.length; i++) {
 				WPTB_Helper.toggleSwitch(controltoggleSwitch[i][0], controltoggleSwitch[i][1]);
+			}
+
+			// run switchThirdToggleIf function
+			for (let i = 0; i < controlSwitchThirdToggleIf.length; i++) {
+				WPTB_Helper.switchThirdToggleIf(controlSwitchThirdToggleIf[i][0], controlSwitchThirdToggleIf[i][1]);
 			}
 
 			// run appearDependOnControl function

@@ -18,6 +18,19 @@ if ( ! defined( 'WPINC' ) ) {
  * Scroll manager for table scrolling capabilities.
  */
 class Scroll_Manager extends Manager_Base {
+
+    /**
+     * Protected class instance
+     * @var
+     */
+    protected static $instance = null;
+
+    /**
+     * Class initialization status.
+     * @var bool
+     */
+    protected static $initialized = false;
+
 	/**
 	 * Function to be called during initialization process.
 	 */
