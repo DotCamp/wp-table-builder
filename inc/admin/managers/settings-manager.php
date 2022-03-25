@@ -119,7 +119,7 @@ class Settings_Manager {
 		Tag_Manager::init();
 		General_Styles_Manager::init();
 		Lazy_Load_Manager::init();
-		Table_Fixer::init( null, 'WP_Table_Builder\Inc\Admin\Managers\Table_Fixer' );
+		Table_Fixer::init();
 
 		// subscribe to version sync
 		Version_Control_Manager::instance()->subscribe_to_version_sync();

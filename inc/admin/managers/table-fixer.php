@@ -5,9 +5,10 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
-use WP_Table_Builder\Inc\Admin\Base\Manager_Base;
 use WP_Table_Builder\Inc\Common\Factory\Fix_Factory;
 use WP_Table_Builder\Inc\Common\Factory\Rest_Response_Factory;
+use WP_Table_Builder\Inc\Common\Traits\Init_Once;
+use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use function add_action;
 use function add_filter;
 use function check_admin_referer;
@@ -19,7 +20,10 @@ use function wp_create_nonce;
 /**
  * Fixer for various corrupted and erroneous tables.
  */
-class Table_Fixer extends Manager_Base {
+class Table_Fixer {
+	use Singleton_Trait;
+	use Init_Once;
+
 	private $rest_namespace = 'wptb/v1';
 
 	private $rest_route = 'table-fixer/fix';
@@ -27,13 +31,15 @@ class Table_Fixer extends Manager_Base {
 	/**
 	 * Function to be called during initialization process.
 	 */
-	protected function init_process() {
+	public static function init_process() {
+		$instance = static::get_instance();
+
 		add_filter( 'wp-table-builder/filter/settings_manager_frontend_data', [
-			$this,
+			$instance,
 			'settings_manager_frontend_data'
 		] );
 
-		add_action( 'rest_api_init', [ $this, 'table_fixer_rest_init' ] );
+		add_action( 'rest_api_init', [ $instance, 'table_fixer_rest_init' ] );
 	}
 
 	/**
@@ -50,7 +56,7 @@ class Table_Fixer extends Manager_Base {
 			array_map( function ( $fix_type ) use ( $id, &$status_report ) {
 				$fix_status = Fix_Factory::make( $fix_type )->fix( $id );
 
-				if ( !isset( $status_report[ $id ] ) ) {
+				if ( ! isset( $status_report[ $id ] ) ) {
 					$status_report[ $id ] = false;
 				}
 
@@ -121,18 +127,18 @@ class Table_Fixer extends Manager_Base {
 		];
 
 		$table_fixer_strings = [
-			'fixTable'          => esc_html__( 'fix table', 'wp-table-builder' ),
-			'fixTables'         => esc_html__( 'fix tables', 'wp-table-builder' ),
-			'tablesFetched'     => esc_html__( 'tables fetched', 'wp-table-builder' ),
-			'title'             => esc_html__( 'title', 'wp-table-builder' ),
-			'table'             => esc_html__( 'table', 'wp-table-builder' ),
-			'modified'          => esc_html__( 'modified', 'wp-table-builder' ),
-			'search'            => esc_html__( 'search', 'wp-table-builder' ),
-			'summary'            => esc_html__( 'summary', 'wp-table-builder' ),
-			'disclaimerTitle'   => esc_html__( 'when to use', 'wp-table-builder' ),
-			'disclaimerMessage' => esc_html__( 'Your tables might get corrupted by your browser addons. If you have any table with unexpected behaviour (cell edit disabled, etc) use this tool. If problem still persists, contact our support forums.', 'wp-table-builder' ),
+			'fixTable'                  => esc_html__( 'fix table', 'wp-table-builder' ),
+			'fixTables'                 => esc_html__( 'fix tables', 'wp-table-builder' ),
+			'tablesFetched'             => esc_html__( 'tables fetched', 'wp-table-builder' ),
+			'title'                     => esc_html__( 'title', 'wp-table-builder' ),
+			'table'                     => esc_html__( 'table', 'wp-table-builder' ),
+			'modified'                  => esc_html__( 'modified', 'wp-table-builder' ),
+			'search'                    => esc_html__( 'search', 'wp-table-builder' ),
+			'summary'                   => esc_html__( 'summary', 'wp-table-builder' ),
+			'disclaimerTitle'           => esc_html__( 'when to use', 'wp-table-builder' ),
+			'disclaimerMessage'         => esc_html__( 'Your tables might get corrupted by your browser addons. If you have any table with unexpected behaviour (cell edit disabled, etc) use this tool. If problem still persists, contact our support forums.', 'wp-table-builder' ),
 			'summaryMessageNotAllFixed' => esc_html__( "We could not fix some of your tables, please drop a support request.", 'wp-table-builder' ),
-			'summaryMessageAllFixed' => esc_html__( "All selected tables are fixed.", 'wp-table-builder' ),
+			'summaryMessageAllFixed'    => esc_html__( "All selected tables are fixed.", 'wp-table-builder' ),
 		];
 
 		$settings_data['strings'] = array_merge( $settings_data['strings'], $table_fixer_strings );

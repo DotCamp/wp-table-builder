@@ -235,7 +235,7 @@ class Init {
 		What_Is_New_Manager::init();
 
 		// initialize scroll manager
-		Scroll_Manager::init( [], 'WP_Table_Builder\Inc\Admin\Managers\Scroll_Manager' );
+		Scroll_Manager::init();
 	}
 
 	/**
@@ -255,7 +255,7 @@ class Init {
 	}
 
 	/**
-	 * Register all of the hooks related to the admin area functionality
+	 * Register all the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
 	 * @access    private

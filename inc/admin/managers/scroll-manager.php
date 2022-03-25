@@ -4,7 +4,8 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use DOMDocument;
 use DOMXPath;
-use WP_Table_Builder\Inc\Admin\Base\Manager_Base;
+use WP_Table_Builder\Inc\Common\Traits\Init_Once;
+use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use function add_filter;
 use function get_bloginfo;
 use function mb_convert_encoding;
@@ -17,27 +18,19 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Scroll manager for table scrolling capabilities.
  */
-class Scroll_Manager extends Manager_Base {
-
-    /**
-     * Protected class instance
-     * @var
-     */
-    protected static $instance = null;
-
-    /**
-     * Class initialization status.
-     * @var bool
-     */
-    protected static $initialized = false;
+class Scroll_Manager {
+	use Singleton_Trait;
+	use Init_Once;
 
 	/**
 	 * Function to be called during initialization process.
 	 */
-	protected function init_process() {
-		add_filter( 'wp-table-builder/filter/table_html_shortcode', [ $this, 'process_shortcode' ], 1, 99 );
+	public static function init_process() {
+		$instance = static::get_instance();
 
-		add_filter( 'wp-table-builder/filter/wptb_frontend_data', [ $this, 'handle_frontend_data' ], 1, 99 );
+		add_filter( 'wp-table-builder/filter/table_html_shortcode', [ $instance, 'process_shortcode' ], 1, 99 );
+
+		add_filter( 'wp-table-builder/filter/wptb_frontend_data', [ $instance, 'handle_frontend_data' ], 1, 99 );
 	}
 
 	/**

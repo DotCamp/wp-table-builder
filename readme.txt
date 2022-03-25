@@ -92,6 +92,8 @@ That's it. You're done!
 
 = 1.3.17 =
 
+* FIX: Broken styles for some server installations.
+
 = 1.3.16 =
 
 * IMPROVE: WordPress 5.9 compatibility.
