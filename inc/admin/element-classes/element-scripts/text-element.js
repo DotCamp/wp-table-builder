@@ -25,21 +25,34 @@ const tinyMceInitStart = function () {
 				}
 			});
 
+			/**
+			 * Find and transform all text content inside target element.
+			 *
+			 * @param {Node} targetElement target element
+			 */
+			function poolTextContent(targetElement) {
+				const pEls = Array.from(targetElement.querySelectorAll('p'));
+
+				return pEls.reduce((carry, p) => {
+					let pText = p.innerHTML.replace(/\s+/g, ' ').trim();
+					pText = pText.replace(/&nbsp;/g, '').trim();
+
+					return carry + pText;
+				}, '');
+			}
+
 			ed.on('keydown', function (e) {
-				const p = e.target.querySelector('p');
-				let pText = p.innerHTML.replace(/\s+/g, ' ').trim();
-				pText = pText.replace(/&nbsp;/g, '').trim();
+				const finalText = poolTextContent(e.target);
 
 				if (!window.textElemPTextKeyDown) {
-					window.textElemPTextKeyDown = pText;
+					window.textElemPTextKeyDown = finalText;
 				}
 			});
 
 			ed.on('keyup', function (e) {
-				const p = e.target.querySelector('p');
-				let pText = p.innerHTML.replace(/\s+/g, ' ').trim();
-				pText = pText.replace(/&nbsp;/g, '').trim();
-				if (pText !== window.textElemPTextKeyDown) {
+				const finalText = poolTextContent(e.target);
+
+				if (finalText !== window.textElemPTextKeyDown) {
 					e.target.onblur = function () {
 						const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
 						wptbTableStateSaveManager.tableStateSet();
