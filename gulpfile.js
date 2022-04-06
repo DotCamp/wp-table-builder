@@ -25,6 +25,7 @@ const gulpConfig = {
 	},
 	frontEndJs: {
 		src: [
+			'./inc/frontend/js/frontend-only/WPTB_FrontendBase.js',
 			'./inc/admin/js/core/WPTB_ExtraStyles.js',
 			'./inc/admin/js/core/WPTB_Logger.js',
 			'./inc/admin/js/core/WPTB_CutGlueTable.js',
