@@ -18632,6 +18632,38 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
     };
     /**
+     * Status of responsive enabled property.
+     *
+     * This property is the main switch whether to continue responsive operations or not. For breakpoint related enabled statuses, related properties should be checked
+     *
+     * @param {Object} directive table responsive directive
+     * @return {boolean} responsive enabled status
+     */
+
+
+    var isMainResponsiveEnabled = function isMainResponsiveEnabled(directive) {
+      return directive ? directive.responsiveEnabled : false;
+    };
+    /**
+     * Whether current responsive breakpoint enabled for responsive operations.
+     *
+     * @param {Object} directive table responsive directive
+     * @param {number} size relative size
+     */
+
+
+    var isCurrentBreakpointEnabled = function isCurrentBreakpointEnabled(directive, size) {
+      var sizeRangeId = _this3.calculateRangeId(size, directive.breakpoints);
+
+      if (sizeRangeId === 'desktop') {
+        return false;
+      }
+
+      var mode = directive.responsiveMode;
+      var modeOptions = directive.modeOptions[mode];
+      return modeOptions.disabled && !modeOptions.disabled[sizeRangeId];
+    };
+    /**
      * Rebuild table according to its responsive directives.
      *
      * @private
@@ -18646,7 +18678,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       var directive = _this3.getDirective(el);
 
       if (directive) {
-        if (!directive.responsiveEnabled) {
+        if (!isMainResponsiveEnabled(directive)) {
           // this.buildDefault(tableObj);
           return;
         }
@@ -18665,7 +18697,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         if (buildCallable) {
           var modeOptions = directive.modeOptions[mode]; // if current breakpoint is disabled, render default table instead
 
-          if (modeOptions.disabled && modeOptions.disabled[sizeRangeId]) {
+          if (!isCurrentBreakpointEnabled(directive, size)) {
             tableObj.clearTable();
 
             _this3.buildDefault(tableObj);
@@ -18692,6 +18724,42 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
     };
     /**
+     * Calculate inner size which will be used to decide breakpoint operations.
+     *
+     * @param {HTMLTableElement} tableElement table element
+     * @return {number} inner size width
+     */
+
+
+    var calculateInnerSize = function calculateInnerSize(tableElement) {
+      var innerSize = window.innerWidth;
+
+      var directives = _this3.getDirective(tableElement); // calculate size according to relative width directive
+
+
+      if (directives && directives.relativeWidth) {
+        switch (directives.relativeWidth) {
+          case 'window':
+            // eslint-disable-next-line no-param-reassign
+            innerSize = window.innerWidth;
+            break;
+
+          case 'container':
+            // get the size of the container table is in
+            // eslint-disable-next-line no-param-reassign
+            innerSize = tableElement.parentNode.parentNode.parentNode.clientWidth;
+            break;
+
+          default:
+            // eslint-disable-next-line no-param-reassign
+            innerSize = window.innerWidth;
+            break;
+        }
+      }
+
+      return innerSize;
+    };
+    /**
      * Rebuild tables with the given screen size.
      *
      * @param {number} size screen size
@@ -18705,34 +18773,23 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
         if (!size) {
           // eslint-disable-next-line no-param-reassign
-          innerSize = window.innerWidth;
-
-          var directives = _this3.getDirective(o.el); // calculate size according to relative width directive
-
-
-          if (directives && directives.relativeWidth) {
-            switch (directives.relativeWidth) {
-              case 'window':
-                // eslint-disable-next-line no-param-reassign
-                innerSize = window.innerWidth;
-                break;
-
-              case 'container':
-                // get the size of the container table is in
-                // eslint-disable-next-line no-param-reassign
-                innerSize = o.el.parentNode.parentNode.parentNode.clientWidth;
-                break;
-
-              default:
-                // eslint-disable-next-line no-param-reassign
-                innerSize = window.innerWidth;
-                break;
-            }
-          }
+          innerSize = calculateInnerSize(o.el);
         }
 
         _this3.rebuildTable(o.el, innerSize, o.tableObject);
       });
+    };
+    /**
+     * Check if current breakpoint is enabled for responsive operations.
+     *
+     * @param {HTMLTableElement} tableElement table element
+     */
+
+
+    this.isResponsiveEnabledForCurrentBreakpoint = function (tableElement) {
+      var tableDirectives = _this3.getDirective(tableElement);
+
+      return tableDirectives && isMainResponsiveEnabled(tableDirectives) && isCurrentBreakpointEnabled(tableDirectives, calculateInnerSize(tableElement));
     };
 
     if (this.options.bindToResize) {
@@ -18742,7 +18799,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     return {
       rebuildTables: this.rebuildTables,
       getDirective: this.getDirective,
-      calculateRangeId: this.calculateRangeId
+      calculateRangeId: this.calculateRangeId,
+      isResponsiveEnabledForCurrentBreakpoint: this.isResponsiveEnabledForCurrentBreakpoint
     };
   }
 

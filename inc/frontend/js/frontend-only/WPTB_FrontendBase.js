@@ -13,8 +13,32 @@ window.addEventListener('DOMContentLoaded', () => {
 		 * @class
 		 */
 		function WptbTableObject(containerElement) {
+			/**
+			 * Top level wrapper for table element.
+			 *
+			 * @type {null | Node}
+			 */
+			this.parentContainer = null;
+
+			/**
+			 * Container with matrix properties.
+			 *
+			 * @type {null | Node}
+			 */
 			this.matrixContainer = null;
+
+			/**
+			 * Main table element.
+			 *
+			 * @type {null | HTMLTableElement}
+			 */
 			this.mainTable = null;
+
+			/**
+			 * Table id.
+			 *
+			 * @type {null | number}
+			 */
 			this.id = null;
 
 			/**
@@ -47,6 +71,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			 */
 			const init = () => {
 				if (containerElement.classList.contains('wptb-table-container')) {
+					this.parentContainer = containerElement;
 					const matrixContainer = containerElement.querySelector('.wptb-table-container-matrix');
 
 					if (matrixContainer) {
