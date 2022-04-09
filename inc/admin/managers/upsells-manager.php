@@ -58,7 +58,7 @@ class Upsells_Manager {
 			], 1 );
 			add_filter( 'wp-table-builder/filter/generate_data', [ __CLASS__, 'generate_data_filter' ], 1, 1 );
 
-			add_filter( 'wp-table-builder/filter/builder_script_data', [ __CLASS__, 'builder_data' ], 10, 1 );
+			Frontend_Data_Manager::add_builder_data( [ __CLASS__, 'builder_data' ], 'upsells' );;
 		}
 	}
 
@@ -66,19 +66,15 @@ class Upsells_Manager {
 	/**
 	 * Add upsell related data to builder scripts.
 	 *
-	 * @param array $data builder data
-	 *
 	 * @return array filtered builder data
 	 */
-	public static function builder_data( $data ) {
-		$data['upsells'] = [
+	public static function builder_data() {
+		return [
 			'pro'      => Addon_Manager::check_pro_status(),
 			'elements' => [
 				'leftPanel' => static::after_elements_upsell()
 			]
 		];
-
-		return $data;
 	}
 
 	/**
@@ -113,7 +109,7 @@ class Upsells_Manager {
 	 */
 	public static function generate_data_filter( $generate_data ) {
 		extract( static::get_upsell_data( 'generate_menu' ) );
-		$upsell_element  =static::prepare_upsell_element( $message, $url ,false);
+		$upsell_element = static::prepare_upsell_element( $message, $url, false );
 
 		$generate_data['upsell'] = $upsell_element;
 

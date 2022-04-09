@@ -43,7 +43,7 @@ class Icon_Manager {
 		$this->icon_dir_path = $icon_dir_path;
 		$this->icon_dir_url  = $icon_dir_url;
 
-		add_filter( 'wp-table-builder/filter/builder_script_data', [ $this, 'icon_manager_frontend_data' ] );
+		Frontend_Data_Manager::add_builder_data( [ $this, 'icon_manager_frontend_data' ], 'iconManager' );
 	}
 
 	/**
@@ -64,14 +64,11 @@ class Icon_Manager {
 	/**
 	 * Add icon manager related data to builder menu.
 	 *
-	 * @param array $admin_data admin data
-	 *
 	 * @return array admin data with icon manager related data
 	 */
-	public function icon_manager_frontend_data( $admin_data ) {
-		$admin_data['iconManager'] = $this->get_icon_list();
+	public function icon_manager_frontend_data() {
+		return $this->get_icon_list();
 
-		return $admin_data;
 	}
 
 	/**

@@ -5,6 +5,7 @@ namespace WP_Table_Builder\Inc\Admin;
 use DOMDocument;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin\Managers\Addon_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Frontend_Data_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Core\Init;
@@ -347,22 +348,23 @@ class Admin_Menu {
 				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
 				'strings'       => $strings,
 				'store'         => [
-					'tableId'      => $table_id,
-					'pro'          => Addon_Manager::check_pro_status(),
-					'translations' => [
-						'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
-						'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
-						'copyToClipboard'   => esc_html__( 'copy to clipboard', 'wp-table-builder' ),
-						'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
-						'shortcode'         => esc_html__( 'shortcode', 'wp-table-builder' ),
-					]
+					'tableId' => $table_id,
+					'pro'     => Addon_Manager::check_pro_status(),
 				]
 			];
 
-			// filter for builder script data
-			$admin_object = apply_filters( 'wp-table-builder/filter/builder_script_data', $admin_object );
+			$admin_translations = [
+				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
+				'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
+				'copyToClipboard'   => esc_html__( 'copy to clipboard', 'wp-table-builder' ),
+				'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
+				'shortcode'         => esc_html__( 'shortcode', 'wp-table-builder' ),
+			];
 
-			wp_localize_script( 'wptb-controls-manager-js', 'wptb_admin_object', $admin_object );
+			// add translations to builder menu data
+			Frontend_Data_Manager::add_builder_translations( $admin_translations );
+
+			Frontend_Data_Manager::localize_builder_data( 'wptb-controls-manager-js', $admin_object );
 
 			// generate controls
 			$generate_path = plugin_dir_path( __FILE__ ) . 'js/WPTB_Generate.js';
@@ -416,24 +418,6 @@ class Admin_Menu {
 			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
 			wp_enqueue_script( 'wptb-admin-builder-js' );
 
-//			$strings = [
-//				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
-//			];
-//
-//			$admin_object = [
-//				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-//				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
-//				'strings'       => $strings,
-//				'store'         => [
-//					'pro' => Addon_Manager::check_pro_status()
-//				]
-//			];
-//
-//			// filter for builder script data
-//			$admin_object = apply_filters( 'wp-table-builder/filter/builder_script_data', $admin_object );
-//
-//			wp_localize_script( 'wptb-admin-builder-js', 'wptb_admin_object', $admin_object );
-
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
 
 			Helpers::enqueue_file( 'inc/admin/js/wptb-overview.js', [], true, 'wptb-overview-js' );
@@ -446,7 +430,6 @@ class Admin_Menu {
 			$script_path = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.js';
 
 			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
-
 
 			$handler        = 'wptb-import-menu';
 			$plugin_version = NS\PLUGIN_VERSION;

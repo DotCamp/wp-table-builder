@@ -33,37 +33,32 @@ class Notification_Manager {
 	 */
 	public static function init() {
 		add_action( 'wp-table-builder/action/wptb-builder-view', [ __CLASS__, 'notification_builder_view' ] );
-		add_filter( 'wp-table-builder/filter/builder_script_data', [ __CLASS__, 'add_manager_data' ], 10, 1 );
+
+		Frontend_Data_Manager::add_builder_data( [ __CLASS__, 'add_manager_data' ], 'notificationManager' );
 	}
 
 	/**
 	 * Add notification manager frontend script data.
 	 *
-	 * @param array $data current script data
-	 *
 	 * @return array builder script data
 	 */
-	public static function add_manager_data( $data ) {
-		$manager_data                = [
-			'id'    => static::FRONTEND_ELEMENT_ID,
-			'icons' => [
+	public static function add_manager_data() {
+		return [
+			'id'      => static::FRONTEND_ELEMENT_ID,
+			'icons'   => [
 				'ok'    => static::icon_manager_instance()->get_icon( 'check', false ),
 				'error' => static::icon_manager_instance()->get_icon( 'times', false ),
 				'info'  => static::icon_manager_instance()->get_icon( 'info', false ),
 				'pro'   => NS\WP_TABLE_BUILDER_URL . 'assets/images/wptb-logo.png'
 			],
-			'sounds' => [
-				'ding'   => NS\WP_TABLE_BUILDER_URL . 'assets/sounds/ding.mp3'
+			'sounds'  => [
+				'ding' => NS\WP_TABLE_BUILDER_URL . 'assets/sounds/ding.mp3'
 			],
 			'options' => [
 				// enable/disable sound with notification manager
 				'soundEnabled' => false
 			]
-
 		];
-		$data['notificationManager'] = $manager_data;
-
-		return $data;
 	}
 
 	/**
