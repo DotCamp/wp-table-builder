@@ -74,6 +74,7 @@
 		};
 
 		// prepare mount point for dev tool
+		// eslint-disable-next-line no-unused-vars
 		const addDevToolsToDOM = () => {
 			const builderElement = document.querySelector('.wptb-builder-panel');
 
@@ -99,8 +100,6 @@
 				this.notificationTypes = this.store.getters.notificationTypes;
 				// assign queue types from store
 				this.queueTypes = this.store.getters.queueTypes;
-				// assign reveal types from store
-				this.revealTypes = this.store.getters.revealTypes;
 				// assign reveal types from store
 				this.revealTypes = this.store.getters.revealTypes;
 				// assign dismiss types from store

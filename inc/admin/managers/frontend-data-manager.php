@@ -2,7 +2,6 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
-use Cassandra\Function_;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use function add_filter;
@@ -22,6 +21,19 @@ class Frontend_Data_Manager {
 	const BUILDER_DATA_OBJECT_NAME = 'wptb_admin_object';
 
 	/**
+	 * Process given data.
+	 *
+	 * This function will be used for in situations where supplied data is a callable where returns that data.
+	 *
+	 * @param callable | array $data data
+	 *
+	 * @return array processed data
+	 */
+	private static function process_data( $data ) {
+		return is_callable( $data ) ? call_user_func( $data ) : $data;
+	}
+
+	/**
 	 * Add data to builder.
 	 *
 	 * @param array | callable $data data, or a callback function which returns data
@@ -31,12 +43,13 @@ class Frontend_Data_Manager {
 	 */
 	public static function add_builder_data( $data, $id = null ) {
 		add_filter( 'wp-table-builder/filter/builder_script_data', function ( $builder_data ) use ( $data, $id ) {
-			$final_data = $data;
+			$final_data = static::process_data( $data );
 
-			if ( is_callable( $data ) ) {
-				$final_data = call_user_func( $data );
+			if ( empty( $final_data ) ) {
+				return $builder_data;
 			}
 
+			// if no data id is supplied, merge with current builder data on top level
 			if ( is_null( $id ) ) {
 				$builder_data = array_merge( $builder_data, $final_data );
 			} else {
@@ -55,13 +68,14 @@ class Frontend_Data_Manager {
 	 * @return void
 	 */
 	public static function add_builder_translations( $data ) {
-		add_filter( 'wp-table-builder/filter/builder_script_data', function ( $builder_data ) use ( $data ) {
+		$static_context = __CLASS__;
+		add_filter( 'wp-table-builder/filter/builder_script_data', function ( $builder_data ) use ( $data, $static_context ) {
 			// if no translations are found, create container array
 			if ( ! isset( $builder_data['store']['translations'] ) ) {
 				$builder_data['store']['translations'] = [];
 			}
 
-			$builder_data['store']['translations'] = array_merge( $builder_data['store']['translations'], $data );
+			$builder_data['store']['translations'] = array_merge( $builder_data['store']['translations'], $static_context::process_data( $data ) );
 
 			return $builder_data;
 		}, 10, 1 );

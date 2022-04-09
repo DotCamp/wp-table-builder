@@ -27234,7 +27234,7 @@ exports.default = _default;
     "div",
     {
       ref: "wrapper",
-      staticClass: "wptb-notification-wrapper wptb-plugin-box-shadow-md",
+      staticClass: "wptb-notification-wrapper wptb-plugin-filter-box-shadow-md",
       style: _vm.style.wrapper,
       attrs: { id: "notification#" + _vm.id },
       on: { click: _vm.handleNotificationClick }
