@@ -92,6 +92,7 @@ That's it. You're done!
 
 = 1.3.17 =
 
+* PRO: NEW: Sticky first column.
 * FIX: Broken styles for some server installations.
 * FIX: Text element changes don't enable save button for some table layouts.
 
