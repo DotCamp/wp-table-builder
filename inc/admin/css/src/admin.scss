@@ -3434,7 +3434,7 @@ wptb_shortcode_container_element {
   border-collapse: collapse;
 }
 
-.wptb-import-table th{
+.wptb-import-table th {
   padding: 15px 10px;
 }
 
@@ -7137,6 +7137,9 @@ label.wptb-control-row {
   top: 0;
   left: 0;
   background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, #3299D13C 15px, #3299D13C 30px);
+  cursor: pointer;
+  animation: linear-gradient-move 40s linear infinite reverse;
+  background-size: 400% 400%;
 }
 
 /*region data listing*/
@@ -7261,3 +7264,18 @@ label.wptb-control-row {
 }
 
 /*endregion*/
+
+.wptb-pro-overlay-screen-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.pro-overlay-screen-popup-icon {
+  color: $gold !important;
+  width: 30px !important;
+}

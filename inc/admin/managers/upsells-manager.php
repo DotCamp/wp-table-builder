@@ -38,7 +38,7 @@ class Upsells_Manager {
 	 * @var string[]
 	 */
 	protected static $pro_dummy_controls = [
-		'spacing'
+		'control_spacing_dummy'
 	];
 
 

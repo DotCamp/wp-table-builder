@@ -200,6 +200,11 @@ class Controls_Manager {
 	 */
 	const COLOR_PALETTE = 'color_palette';
 
+	/**
+	 * Adding pro overlay controls.
+	 */
+	const PRO_OVERLAY = 'pro_overlay';
+
 	// Control elements query types
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
@@ -268,6 +273,7 @@ class Controls_Manager {
 			self::SIZE2,
 			self::ALIGNMENT2,
 			self::COLOR_PALETTE,
+			self::PRO_OVERLAY,
 		];
 	}
 

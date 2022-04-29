@@ -18632,6 +18632,38 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
     };
     /**
+     * Status of responsive enabled property.
+     *
+     * This property is the main switch whether to continue responsive operations or not. For breakpoint related enabled statuses, related properties should be checked
+     *
+     * @param {Object} directive table responsive directive
+     * @return {boolean} responsive enabled status
+     */
+
+
+    var isMainResponsiveEnabled = function isMainResponsiveEnabled(directive) {
+      return directive ? directive.responsiveEnabled : false;
+    };
+    /**
+     * Whether current responsive breakpoint enabled for responsive operations.
+     *
+     * @param {Object} directive table responsive directive
+     * @param {number} size relative size
+     */
+
+
+    var isCurrentBreakpointEnabled = function isCurrentBreakpointEnabled(directive, size) {
+      var sizeRangeId = _this3.calculateRangeId(size, directive.breakpoints);
+
+      if (sizeRangeId === 'desktop') {
+        return false;
+      }
+
+      var mode = directive.responsiveMode;
+      var modeOptions = directive.modeOptions[mode];
+      return modeOptions.disabled && !modeOptions.disabled[sizeRangeId];
+    };
+    /**
      * Rebuild table according to its responsive directives.
      *
      * @private
@@ -18646,7 +18678,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       var directive = _this3.getDirective(el);
 
       if (directive) {
-        if (!directive.responsiveEnabled) {
+        if (!isMainResponsiveEnabled(directive)) {
           // this.buildDefault(tableObj);
           return;
         }
@@ -18665,7 +18697,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         if (buildCallable) {
           var modeOptions = directive.modeOptions[mode]; // if current breakpoint is disabled, render default table instead
 
-          if (modeOptions.disabled && modeOptions.disabled[sizeRangeId]) {
+          if (!isCurrentBreakpointEnabled(directive, size)) {
             tableObj.clearTable();
 
             _this3.buildDefault(tableObj);
@@ -18692,6 +18724,42 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
     };
     /**
+     * Calculate inner size which will be used to decide breakpoint operations.
+     *
+     * @param {HTMLTableElement} tableElement table element
+     * @return {number} inner size width
+     */
+
+
+    var calculateInnerSize = function calculateInnerSize(tableElement) {
+      var innerSize = window.innerWidth;
+
+      var directives = _this3.getDirective(tableElement); // calculate size according to relative width directive
+
+
+      if (directives && directives.relativeWidth) {
+        switch (directives.relativeWidth) {
+          case 'window':
+            // eslint-disable-next-line no-param-reassign
+            innerSize = window.innerWidth;
+            break;
+
+          case 'container':
+            // get the size of the container table is in
+            // eslint-disable-next-line no-param-reassign
+            innerSize = tableElement.parentNode.parentNode.parentNode.clientWidth;
+            break;
+
+          default:
+            // eslint-disable-next-line no-param-reassign
+            innerSize = window.innerWidth;
+            break;
+        }
+      }
+
+      return innerSize;
+    };
+    /**
      * Rebuild tables with the given screen size.
      *
      * @param {number} size screen size
@@ -18705,34 +18773,23 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
         if (!size) {
           // eslint-disable-next-line no-param-reassign
-          innerSize = window.innerWidth;
-
-          var directives = _this3.getDirective(o.el); // calculate size according to relative width directive
-
-
-          if (directives && directives.relativeWidth) {
-            switch (directives.relativeWidth) {
-              case 'window':
-                // eslint-disable-next-line no-param-reassign
-                innerSize = window.innerWidth;
-                break;
-
-              case 'container':
-                // get the size of the container table is in
-                // eslint-disable-next-line no-param-reassign
-                innerSize = o.el.parentNode.parentNode.parentNode.clientWidth;
-                break;
-
-              default:
-                // eslint-disable-next-line no-param-reassign
-                innerSize = window.innerWidth;
-                break;
-            }
-          }
+          innerSize = calculateInnerSize(o.el);
         }
 
         _this3.rebuildTable(o.el, innerSize, o.tableObject);
       });
+    };
+    /**
+     * Check if current breakpoint is enabled for responsive operations.
+     *
+     * @param {HTMLTableElement} tableElement table element
+     */
+
+
+    this.isResponsiveEnabledForCurrentBreakpoint = function (tableElement) {
+      var tableDirectives = _this3.getDirective(tableElement);
+
+      return tableDirectives && isMainResponsiveEnabled(tableDirectives) && isCurrentBreakpointEnabled(tableDirectives, calculateInnerSize(tableElement));
     };
 
     if (this.options.bindToResize) {
@@ -18742,7 +18799,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     return {
       rebuildTables: this.rebuildTables,
       getDirective: this.getDirective,
-      calculateRangeId: this.calculateRangeId
+      calculateRangeId: this.calculateRangeId,
+      isResponsiveEnabledForCurrentBreakpoint: this.isResponsiveEnabledForCurrentBreakpoint
     };
   }
 
@@ -45485,7 +45543,134 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/EmbedWindow":"containers/EmbedWindow.vue","$Mixins/withGlobalStoreVue":"mixins/withGlobalStoreVue.js"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/EmbedWindow":"containers/EmbedWindow.vue","$Mixins/withGlobalStoreVue":"mixins/withGlobalStoreVue.js"}],"containers/ProOverlay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    ModalWindow: _ModalWindow.default
+  },
+  data: function data() {
+    return {
+      showModal: false
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      var container = _this.$refs.container;
+
+      if (container) {
+        var parentContainer = container.parentNode.parentNode.parentNode;
+        parentContainer.style.position = 'relative';
+      }
+    });
+  },
+  methods: {
+    toggleModal: function toggleModal() {
+      this.showModal = !this.showModal;
+    }
+  }
+};
+exports.default = _default;
+        var $4ee90e = exports.default || module.exports;
+      
+      if (typeof $4ee90e === 'function') {
+        $4ee90e = $4ee90e.options;
+      }
+    
+        /* template */
+        Object.assign($4ee90e, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      ref: "container",
+      staticClass: "wptb-upsells-pro-overlay",
+      on: { click: _vm.toggleModal }
+    },
+    [
+      _c("ModalWindow", {
+        attrs: {
+          "is-fixed": true,
+          visible: _vm.showModal,
+          "icon-name": "lock",
+          "icon-classes": ["pro-overlay-screen-popup-icon"],
+          "close-callback": _vm.toggleModal
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$Components/ModalWindow":"components/ModalWindow.vue"}],"mountPoints/WPTB_ProOverlay.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _ProOverlay = _interopRequireDefault(require("$Containers/ProOverlay"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Range slider control.
+ */
+
+/* eslint-disable camelcase */
+var _default = {
+  name: 'ProOverlay',
+  handler: function rangeControlJS(uniqueId) {
+    new _vue.default({
+      components: {
+        ProOverlay: _ProOverlay.default
+      }
+    }).$mount("#".concat(uniqueId));
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ProOverlay":"containers/ProOverlay.vue"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -46191,6 +46376,8 @@ var _WPTB_ColorPaletteControl = _interopRequireDefault(require("$MountPoints/WPT
 
 var _WPTB_Embed = _interopRequireDefault(require("$MountPoints/WPTB_Embed"));
 
+var _WPTB_ProOverlay = _interopRequireDefault(require("$MountPoints/WPTB_ProOverlay"));
+
 var _globalStore = require("$Functions/globalStore");
 
 var _filters = _interopRequireDefault(require("$Plugins/filters"));
@@ -46218,7 +46405,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default, _WPTB_ColorPaletteControl.default, _WPTB_Embed.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default, _WPTB_ColorPaletteControl.default, _WPTB_Embed.default, _WPTB_ProOverlay.default];
 /**
  * Register control element.
  *
@@ -46230,5 +46417,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_Embed":"mountPoints/WPTB_Embed.js","$Functions/globalStore":"functions/globalStore.js","$Plugins/filters":"plugins/filters.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_Embed":"mountPoints/WPTB_Embed.js","$MountPoints/WPTB_ProOverlay":"mountPoints/WPTB_ProOverlay.js","$Functions/globalStore":"functions/globalStore.js","$Plugins/filters":"plugins/filters.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map
