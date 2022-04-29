@@ -90,10 +90,7 @@ class Elements_Manager extends Elements_Manager_Base {
 	 * Elements_Manager constructor.
 	 */
 	public function __construct() {
-		// add dummy pro elements to elements manager
-		if ( Addon_Manager::check_pro_status() === false ) {
-			$this->_build_elements_name = array_merge( $this->_build_elements_name, $this->pro_dummy_elements_name );
-		}
+		$this->_build_elements_name = apply_filters( 'wp-table-builder/filter/elements-manager-init', $this->_build_elements_name );
 	}
 
 

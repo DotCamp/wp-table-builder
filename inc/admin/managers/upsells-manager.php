@@ -22,6 +22,27 @@ if ( ! defined( 'WPINC' ) ) {
 class Upsells_Manager {
 
 	/**
+	 * Pro elements list to use in dummy display.
+	 * @var string[]
+	 */
+	protected static $pro_dummy_elements_name = [
+		'circle_rating',
+		'icon',
+		'ribbon',
+		'styled_list',
+		'text_icon',
+	];
+
+	/**
+	 * Pro controls list to use in dummy display.
+	 * @var string[]
+	 */
+	protected static $pro_dummy_controls = [
+		'spacing'
+	];
+
+
+	/**
 	 * Upsells messages
 	 * @var array
 	 */
@@ -60,6 +81,27 @@ class Upsells_Manager {
 
 			add_filter( 'wp-table-builder/filter/builder_script_data', [ __CLASS__, 'builder_data' ], 10, 1 );
 		}
+	}
+
+	/**
+	 * Initialize upsells manager at main init thread.
+	 * @return void
+	 */
+	public static function independent_init() {
+		Upsells_Dummy_Controls_Manager::init( [ 'dummy_controls' => static::$pro_dummy_controls ], '\WP_Table_Builder\Inc\Admin\Managers\Upsells_Dummy_Controls_Manager' );
+		add_filter( 'wp-table-builder/filter/elements-manager-init', [ __CLASS__, 'add_pro_dummy_elements' ], 10, 1 );
+
+	}
+
+	/**
+	 * Add pro dummy elements to element stack.
+	 *
+	 * @param array $all_elements all available table elements
+	 *
+	 * @return array table element
+	 */
+	public static function add_pro_dummy_elements( $all_elements ) {
+		return array_merge( $all_elements, static::$pro_dummy_elements_name );
 	}
 
 
@@ -113,7 +155,7 @@ class Upsells_Manager {
 	 */
 	public static function generate_data_filter( $generate_data ) {
 		extract( static::get_upsell_data( 'generate_menu' ) );
-		$upsell_element  =static::prepare_upsell_element( $message, $url ,false);
+		$upsell_element = static::prepare_upsell_element( $message, $url, false );
 
 		$generate_data['upsell'] = $upsell_element;
 
