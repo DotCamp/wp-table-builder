@@ -7128,6 +7128,7 @@ label.wptb-control-row {
 /*endregion*/
 
 .wptb-upsells-pro-overlay {
+  font-size: 13px;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -7278,4 +7279,8 @@ label.wptb-control-row {
 .pro-overlay-screen-popup-icon {
   color: $gold !important;
   width: 30px !important;
+}
+
+.pro-overlay-modal-button {
+  background-color: $green-500;
 }

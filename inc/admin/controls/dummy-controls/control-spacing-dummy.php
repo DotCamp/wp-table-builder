@@ -27,7 +27,7 @@ class Control_Spacing_Dummy extends Dummy_Control_Base {
 		return [
 			'proControlPadding' => [
 				'type'          => Controls_Manager::SIDES,
-				'label'         => esc_html__( 'Padding', 'wp-table-builder-pro' ),
+				'label'         => esc_html__( 'Padding', 'wp-table-builder' ),
 				'selectors'     => [
 				],
 				'defaultValue'  => '0 0 0 0',
@@ -35,16 +35,15 @@ class Control_Spacing_Dummy extends Dummy_Control_Base {
 			],
 			'proControlMargin'  => [
 				'type'          => Controls_Manager::SIDES,
-				'label'         => esc_html__( 'Margin', 'wp-table-builder-pro' ),
+				'label'         => esc_html__( 'Margin', 'wp-table-builder' ),
 				'selectors'     => [
 				],
 				'defaultValue'  => '0 0 0 0',
 				'allowNegative' => true
 			],
 			'spacingProOverlay' => [
-				'type'      => Controls_Manager::PRO_OVERLAY,
-				'selectors' => [
-				],
+				'type'        => Controls_Manager::PRO_OVERLAY,
+				'featureName' => esc_html__( 'Spacing', 'wp-table-builder' ),
 			],
 		];
 	}

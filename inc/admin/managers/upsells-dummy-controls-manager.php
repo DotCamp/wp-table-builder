@@ -15,6 +15,16 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	 */
 	protected function init_process() {
 		add_action( 'wp-table-builder/elements_registered', [ __CLASS__, 'add_dummy_controls' ], 10, 1 );
+
+		Frontend_Data_Manager::add_builder_translations( [
+			'proFeature'   => esc_html__( "Pro feature", 'wp-table-builder' ),
+			'upgradeToPro' => esc_html__( "Please upgrade to pro plan to unlock all exclusive features.", 'wp-table-builder' ),
+			'unlockNow'    => esc_html__( "unlock now", 'wp-table-builder' ),
+		] );
+
+		Frontend_Data_Manager::add_builder_data( [
+			'upsellUrl' => 'https://wptablebuilder.com/pricing/?utm_source=dashboard&utm_medium=elements-section&utm_campaign=wptb'
+		], 'upsells', true );
 	}
 
 	/**
@@ -45,7 +55,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 
 		foreach ( $element_controls as $element ) {
 			foreach ( $registered_dummy_controls as $control_name ) {
-				$control_instance = static::get_dummy_control_instance($control_name);
+				$control_instance = static::get_dummy_control_instance( $control_name );
 
 				if ( $control_instance instanceof Dummy_Control_Base ) {
 					$control_instance->add_controls( $element );

@@ -10,6 +10,10 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * Control for adding pro overlay to certain elements of table builder.
+ *
+ *
+ * Accepted options
+ *  featureName => target feature name
  */
 class Control_Pro_Overlay extends Base_Control {
 
@@ -37,10 +41,11 @@ class Control_Pro_Overlay extends Base_Control {
 		?>
         <#
         const uniqueItemClass = data.elementControlTargetUnicClass;
+        WPTB_ControlsManager.setControlData(uniqueItemClass, data);
         const elemContainer = data.elemContainer;
         #>
         <div id="{{{uniqueItemClass}}}">
-            <pro-overlay></pro-overlay>
+            <pro-overlay :feature-name="featureName"></pro-overlay>
         </div>
         <wptb-template-script>
             WPTB_ControlsManager.callControlScript('ProOverlay', '{{{uniqueItemClass}}}');

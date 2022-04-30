@@ -18632,38 +18632,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
     };
     /**
-     * Status of responsive enabled property.
-     *
-     * This property is the main switch whether to continue responsive operations or not. For breakpoint related enabled statuses, related properties should be checked
-     *
-     * @param {Object} directive table responsive directive
-     * @return {boolean} responsive enabled status
-     */
-
-
-    var isMainResponsiveEnabled = function isMainResponsiveEnabled(directive) {
-      return directive ? directive.responsiveEnabled : false;
-    };
-    /**
-     * Whether current responsive breakpoint enabled for responsive operations.
-     *
-     * @param {Object} directive table responsive directive
-     * @param {number} size relative size
-     */
-
-
-    var isCurrentBreakpointEnabled = function isCurrentBreakpointEnabled(directive, size) {
-      var sizeRangeId = _this3.calculateRangeId(size, directive.breakpoints);
-
-      if (sizeRangeId === 'desktop') {
-        return false;
-      }
-
-      var mode = directive.responsiveMode;
-      var modeOptions = directive.modeOptions[mode];
-      return modeOptions.disabled && !modeOptions.disabled[sizeRangeId];
-    };
-    /**
      * Rebuild table according to its responsive directives.
      *
      * @private
@@ -18678,7 +18646,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       var directive = _this3.getDirective(el);
 
       if (directive) {
-        if (!isMainResponsiveEnabled(directive)) {
+        if (!directive.responsiveEnabled) {
           // this.buildDefault(tableObj);
           return;
         }
@@ -18697,7 +18665,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         if (buildCallable) {
           var modeOptions = directive.modeOptions[mode]; // if current breakpoint is disabled, render default table instead
 
-          if (!isCurrentBreakpointEnabled(directive, size)) {
+          if (modeOptions.disabled && modeOptions.disabled[sizeRangeId]) {
             tableObj.clearTable();
 
             _this3.buildDefault(tableObj);
@@ -18724,42 +18692,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
     };
     /**
-     * Calculate inner size which will be used to decide breakpoint operations.
-     *
-     * @param {HTMLTableElement} tableElement table element
-     * @return {number} inner size width
-     */
-
-
-    var calculateInnerSize = function calculateInnerSize(tableElement) {
-      var innerSize = window.innerWidth;
-
-      var directives = _this3.getDirective(tableElement); // calculate size according to relative width directive
-
-
-      if (directives && directives.relativeWidth) {
-        switch (directives.relativeWidth) {
-          case 'window':
-            // eslint-disable-next-line no-param-reassign
-            innerSize = window.innerWidth;
-            break;
-
-          case 'container':
-            // get the size of the container table is in
-            // eslint-disable-next-line no-param-reassign
-            innerSize = tableElement.parentNode.parentNode.parentNode.clientWidth;
-            break;
-
-          default:
-            // eslint-disable-next-line no-param-reassign
-            innerSize = window.innerWidth;
-            break;
-        }
-      }
-
-      return innerSize;
-    };
-    /**
      * Rebuild tables with the given screen size.
      *
      * @param {number} size screen size
@@ -18773,23 +18705,34 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
         if (!size) {
           // eslint-disable-next-line no-param-reassign
-          innerSize = calculateInnerSize(o.el);
+          innerSize = window.innerWidth;
+
+          var directives = _this3.getDirective(o.el); // calculate size according to relative width directive
+
+
+          if (directives && directives.relativeWidth) {
+            switch (directives.relativeWidth) {
+              case 'window':
+                // eslint-disable-next-line no-param-reassign
+                innerSize = window.innerWidth;
+                break;
+
+              case 'container':
+                // get the size of the container table is in
+                // eslint-disable-next-line no-param-reassign
+                innerSize = o.el.parentNode.parentNode.parentNode.clientWidth;
+                break;
+
+              default:
+                // eslint-disable-next-line no-param-reassign
+                innerSize = window.innerWidth;
+                break;
+            }
+          }
         }
 
         _this3.rebuildTable(o.el, innerSize, o.tableObject);
       });
-    };
-    /**
-     * Check if current breakpoint is enabled for responsive operations.
-     *
-     * @param {HTMLTableElement} tableElement table element
-     */
-
-
-    this.isResponsiveEnabledForCurrentBreakpoint = function (tableElement) {
-      var tableDirectives = _this3.getDirective(tableElement);
-
-      return tableDirectives && isMainResponsiveEnabled(tableDirectives) && isCurrentBreakpointEnabled(tableDirectives, calculateInnerSize(tableElement));
     };
 
     if (this.options.bindToResize) {
@@ -18799,8 +18742,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     return {
       rebuildTables: this.rebuildTables,
       getDirective: this.getDirective,
-      calculateRangeId: this.calculateRangeId,
-      isResponsiveEnabledForCurrentBreakpoint: this.isResponsiveEnabledForCurrentBreakpoint
+      calculateRangeId: this.calculateRangeId
     };
   }
 
@@ -19677,6 +19619,11 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
 var _default = {
   props: {
     click: {
@@ -19728,8 +19675,9 @@ exports.default = _default;
       class: _vm.buttonClass,
       attrs: { disabled: _vm.disabled },
       on: {
-        click: function($event) {
+        "!click": function($event) {
           $event.preventDefault()
+          $event.stopPropagation()
           return _vm.handleClick($event)
         }
       }
@@ -19931,8 +19879,9 @@ exports.default = _default;
                 {
                   staticClass: "wptb-plugin-modal-header-close",
                   on: {
-                    click: function($event) {
+                    "!click": function($event) {
                       $event.preventDefault()
+                      $event.stopPropagation()
                       return _vm.closeCallback($event)
                     }
                   }
@@ -45551,23 +45500,28 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _vuex = require("vuex");
+
 var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+var _createNamespacedHelp = (0, _vuex.createNamespacedHelpers)('upsells'),
+    mapUpsellsGetters = _createNamespacedHelp.mapGetters;
+
 var _default = {
+  props: {
+    featureName: {
+      type: String,
+      default: 'This is'
+    }
+  },
   components: {
     ModalWindow: _ModalWindow.default
   },
@@ -45588,9 +45542,17 @@ var _default = {
       }
     });
   },
+  computed: _objectSpread(_objectSpread({
+    generatedMessage: function generatedMessage() {
+      return "".concat(this.featureName, " is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'));
+    }
+  }, (0, _vuex.mapGetters)(['getTranslation'])), mapUpsellsGetters(['getUpsellUrl'])),
   methods: {
     toggleModal: function toggleModal() {
       this.showModal = !this.showModal;
+    },
+    handleUnlock: function handleUnlock() {
+      window.open(this.getUpsellUrl);
     }
   }
 };
@@ -45621,7 +45583,12 @@ exports.default = _default;
           visible: _vm.showModal,
           "icon-name": "lock",
           "icon-classes": ["pro-overlay-screen-popup-icon"],
-          "close-callback": _vm.toggleModal
+          "close-callback": _vm.toggleModal,
+          "window-title": _vm.getTranslation("proFeature"),
+          message: _vm.generatedMessage,
+          "button-label": _vm.getTranslation("unlockNow"),
+          "button-extra-classes": ["pro-overlay-modal-button"],
+          callback: _vm.handleUnlock
         }
       })
     ],
@@ -45640,7 +45607,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Components/ModalWindow":"components/ModalWindow.vue"}],"mountPoints/WPTB_ProOverlay.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/ModalWindow":"components/ModalWindow.vue"}],"mountPoints/WPTB_ProOverlay.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45652,6 +45619,8 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _ProOverlay = _interopRequireDefault(require("$Containers/ProOverlay"));
 
+var _WPTB_ControlsManager = _interopRequireDefault(require("$Functions/WPTB_ControlsManager"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -45661,8 +45630,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* eslint-disable camelcase */
 var _default = {
   name: 'ProOverlay',
-  handler: function rangeControlJS(uniqueId) {
+  handler: function proOverlayControlJS(uniqueId) {
+    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
+
     new _vue.default({
+      data: data,
+      store: WPTB_Store,
       components: {
         ProOverlay: _ProOverlay.default
       }
@@ -45670,7 +45643,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ProOverlay":"containers/ProOverlay.vue"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ProOverlay":"containers/ProOverlay.vue","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45839,6 +45812,36 @@ var embed = {
 
 var _default = embed;
 exports.default = _default;
+},{}],"stores/builderStore/modules/upsells/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Upsell store module.
+ *
+ * @type {Object}
+ */
+var upsellsModule = {
+  namespaced: true,
+  state: {
+    upsellUrl: ''
+  },
+  getters: {
+    getUpsellUrl: function getUpsellUrl(state) {
+      return state.upsellUrl;
+    }
+  }
+};
+/**
+ * @module upsellsModule
+ */
+
+var _default = upsellsModule;
+exports.default = _default;
 },{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -45853,6 +45856,8 @@ var _nightMode = _interopRequireDefault(require("$Stores/builderStore/modules/ni
 
 var _embed = _interopRequireDefault(require("$Stores/builderStore/modules/embed"));
 
+var _upsells = _interopRequireDefault(require("$Stores/builderStore/modules/upsells"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -45863,7 +45868,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var modules = {
   colorPicker: _colorPicker.default,
   nightMode: _nightMode.default,
-  embed: _embed.default
+  embed: _embed.default,
+  upsells: _upsells.default
 };
 /**
  * @module modules
@@ -45871,7 +45877,7 @@ var modules = {
 
 var _default = modules;
 exports.default = _default;
-},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js","$Stores/builderStore/modules/upsells":"stores/builderStore/modules/upsells/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -46184,8 +46190,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _vue = _interopRequireDefault(require("vue"));
 
 var _vuex = _interopRequireDefault(require("vuex"));
@@ -46204,9 +46208,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+/* eslint-disable no-param-reassign */
 
 /**
  * Default store for builder.
@@ -46243,7 +46245,7 @@ function BuilderStore() {
   var _wptb_admin_object = wptb_admin_object,
       storeData = _wptb_admin_object.store;
   var extraStoreOptions = {
-    state: _objectSpread({}, storeData),
+    state: {},
     getters: {
       proStatus: function proStatus(state) {
         return state.pro;
@@ -46264,6 +46266,7 @@ function BuilderStore() {
     }
   };
   var builderStore = createStore(extraStoreOptions);
+  builderStore.replaceState((0, _deepmerge.default)(builderStore.state, storeData));
   var savedState = (0, _plugin.getPersistentState)();
 
   if (savedState) {
@@ -46302,7 +46305,7 @@ function BuilderStore() {
 var _default = new BuilderStore();
 
 exports.default = _default;
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"functions/globalStore.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"functions/globalStore.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 

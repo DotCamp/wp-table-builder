@@ -26735,6 +26735,11 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
 var _default = {
   props: {
     click: {
@@ -26786,8 +26791,9 @@ exports.default = _default;
       class: _vm.buttonClass,
       attrs: { disabled: _vm.disabled },
       on: {
-        click: function($event) {
+        "!click": function($event) {
           $event.preventDefault()
+          $event.stopPropagation()
           return _vm.handleClick($event)
         }
       }
@@ -27083,8 +27089,9 @@ exports.default = _default;
                 {
                   staticClass: "wptb-plugin-modal-header-close",
                   on: {
-                    click: function($event) {
+                    "!click": function($event) {
                       $event.preventDefault()
+                      $event.stopPropagation()
                       return _vm.closeCallback($event)
                     }
                   }
@@ -34317,6 +34324,36 @@ var embed = {
 
 var _default = embed;
 exports.default = _default;
+},{}],"stores/builderStore/modules/upsells/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Upsell store module.
+ *
+ * @type {Object}
+ */
+var upsellsModule = {
+  namespaced: true,
+  state: {
+    upsellUrl: ''
+  },
+  getters: {
+    getUpsellUrl: function getUpsellUrl(state) {
+      return state.upsellUrl;
+    }
+  }
+};
+/**
+ * @module upsellsModule
+ */
+
+var _default = upsellsModule;
+exports.default = _default;
 },{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -34331,6 +34368,8 @@ var _nightMode = _interopRequireDefault(require("$Stores/builderStore/modules/ni
 
 var _embed = _interopRequireDefault(require("$Stores/builderStore/modules/embed"));
 
+var _upsells = _interopRequireDefault(require("$Stores/builderStore/modules/upsells"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -34341,7 +34380,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var modules = {
   colorPicker: _colorPicker.default,
   nightMode: _nightMode.default,
-  embed: _embed.default
+  embed: _embed.default,
+  upsells: _upsells.default
 };
 /**
  * @module modules
@@ -34349,7 +34389,7 @@ var modules = {
 
 var _default = modules;
 exports.default = _default;
-},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js","$Stores/builderStore/modules/upsells":"stores/builderStore/modules/upsells/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -34662,8 +34702,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _vue = _interopRequireDefault(require("vue"));
 
 var _vuex = _interopRequireDefault(require("vuex"));
@@ -34682,9 +34720,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+/* eslint-disable no-param-reassign */
 
 /**
  * Default store for builder.
@@ -34721,7 +34757,7 @@ function BuilderStore() {
   var _wptb_admin_object = wptb_admin_object,
       storeData = _wptb_admin_object.store;
   var extraStoreOptions = {
-    state: _objectSpread({}, storeData),
+    state: {},
     getters: {
       proStatus: function proStatus(state) {
         return state.pro;
@@ -34742,6 +34778,7 @@ function BuilderStore() {
     }
   };
   var builderStore = createStore(extraStoreOptions);
+  builderStore.replaceState((0, _deepmerge.default)(builderStore.state, storeData));
   var savedState = (0, _plugin.getPersistentState)();
 
   if (savedState) {
@@ -34780,7 +34817,7 @@ function BuilderStore() {
 var _default = new BuilderStore();
 
 exports.default = _default;
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"functions/globalStore.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"functions/globalStore.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 

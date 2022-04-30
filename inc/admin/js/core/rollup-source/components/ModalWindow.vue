@@ -3,7 +3,7 @@
 		<div class="wptb-plugin-modal-inner-window">
 			<div class="wptb-plugin-modal-header" v-if="windowTitle">
 				<div class="wptb-plugin-modal-header-title">{{ windowTitle | cap }}</div>
-				<div class="wptb-plugin-modal-header-close" @click.prevent="closeCallback">
+				<div class="wptb-plugin-modal-header-close" @click.prevent.capture.stop="closeCallback">
 					<div class="wptb-plugin-modal-close-wrapper">X</div>
 				</div>
 			</div>

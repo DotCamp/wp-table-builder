@@ -38,11 +38,12 @@ class Frontend_Data_Manager {
 	 *
 	 * @param array | callable $data data, or a callback function which returns data
 	 * @param String $id data id, access to data in frontend will be provided with that id
+	 * @param bool $store whether store data under store or not
 	 *
 	 * @return void
 	 */
-	public static function add_builder_data( $data, $id = null ) {
-		add_filter( 'wp-table-builder/filter/builder_script_data', function ( $builder_data ) use ( $data, $id ) {
+	public static function add_builder_data( $data, $id = null, $store = false ) {
+		add_filter( 'wp-table-builder/filter/builder_script_data', function ( $builder_data ) use ( $data, $id, $store ) {
 			$final_data = static::process_data( $data );
 
 			if ( empty( $final_data ) ) {
@@ -53,7 +54,11 @@ class Frontend_Data_Manager {
 			if ( is_null( $id ) ) {
 				$builder_data = array_merge( $builder_data, $final_data );
 			} else {
-				$builder_data[ $id ] = $final_data;
+				if ( $store ) {
+					$builder_data['store'][ $id ] = $final_data;
+				} else {
+					$builder_data[ $id ] = $final_data;
+				}
 			}
 
 			return $builder_data;

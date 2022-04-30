@@ -40,9 +40,7 @@ function BuilderStore() {
 	const { store: storeData } = wptb_admin_object;
 
 	const extraStoreOptions = {
-		state: {
-			...storeData,
-		},
+		state: {},
 		getters: {
 			proStatus(state) {
 				return state.pro;
@@ -64,6 +62,8 @@ function BuilderStore() {
 	};
 
 	const builderStore = createStore(extraStoreOptions);
+
+	builderStore.replaceState(merge(builderStore.state, storeData));
 
 	const savedState = getPersistentState();
 	if (savedState) {
