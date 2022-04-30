@@ -1,5 +1,5 @@
 <template>
-	<div ref="container" class="wptb-upsells-pro-overlay" @click="toggleModal">
+	<div ref="container" style="font-size: 15px" class="wptb-upsells-pro-overlay" @click="toggleModal">
 		<ModalWindow
 			:is-fixed="true"
 			:visible="showModal"
