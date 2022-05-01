@@ -20,6 +20,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 			'proFeature'   => esc_html__( "Pro feature", 'wp-table-builder' ),
 			'upgradeToPro' => esc_html__( "Please upgrade to pro plan to unlock all exclusive features.", 'wp-table-builder' ),
 			'unlockNow'    => esc_html__( "unlock now", 'wp-table-builder' ),
+			'useCode'      => __( "Use code <code style='font-size: 120%'>WPTB10</code> to get a 10% discount.", 'wp-table-builder' ),
 		] );
 
 		Frontend_Data_Manager::add_builder_data( [

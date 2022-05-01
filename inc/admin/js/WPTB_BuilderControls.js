@@ -45578,20 +45578,28 @@ exports.default = _default;
       on: { click: _vm.toggleModal }
     },
     [
-      _c("ModalWindow", {
-        attrs: {
-          "is-fixed": true,
-          visible: _vm.showModal,
-          "icon-name": "lock",
-          "icon-classes": ["pro-overlay-screen-popup-icon"],
-          "close-callback": _vm.toggleModal,
-          "window-title": _vm.getTranslation("proFeature"),
-          message: _vm.generatedMessage,
-          "button-label": _vm.getTranslation("unlockNow"),
-          "button-extra-classes": ["pro-overlay-modal-button"],
-          callback: _vm.handleUnlock
-        }
-      })
+      _c(
+        "ModalWindow",
+        {
+          attrs: {
+            "is-fixed": true,
+            visible: _vm.showModal,
+            "icon-name": "lock",
+            "icon-classes": ["pro-overlay-screen-popup-icon"],
+            "close-callback": _vm.toggleModal,
+            "window-title": _vm.getTranslation("proFeature"),
+            message: _vm.generatedMessage,
+            "button-label": _vm.getTranslation("unlockNow"),
+            "button-extra-classes": ["pro-overlay-modal-button"],
+            callback: _vm.handleUnlock
+          }
+        },
+        [
+          _c("div", {
+            domProps: { innerHTML: _vm._s(_vm.getTranslation("useCode")) }
+          })
+        ]
+      )
     ],
     1
   )

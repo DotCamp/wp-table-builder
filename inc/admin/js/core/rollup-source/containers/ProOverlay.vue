@@ -11,7 +11,9 @@
 			:button-label="getTranslation('unlockNow')"
 			:button-extra-classes="['pro-overlay-modal-button']"
 			:callback="handleUnlock"
-		></ModalWindow>
+		>
+			<div v-html="getTranslation('useCode')"></div>
+		</ModalWindow>
 	</div>
 </template>
 
