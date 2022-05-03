@@ -34570,17 +34570,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * @type {Object}
  */
-var stateWatchList = {
-  proStatus: {
-    watch: 'pro',
-    callBack: function callBack(store, n, o) {
-      if (n && !o) {
-        // disable pro status changes from outside sources
-        store.state.pro = false;
-      }
-    }
-  }
-};
+var stateWatchList = {};
 /**
  * Get persistent state of global store.
  *

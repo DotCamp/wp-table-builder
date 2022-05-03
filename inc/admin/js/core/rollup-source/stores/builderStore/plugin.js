@@ -8,17 +8,7 @@ import { objectPropertyFromString } from '$Functions/index';
  *
  * @type {Object}
  */
-const stateWatchList = {
-	proStatus: {
-		watch: 'pro',
-		callBack: (store, n, o) => {
-			if (n && !o) {
-				// disable pro status changes from outside sources
-				store.state.pro = false;
-			}
-		},
-	},
-};
+const stateWatchList = {};
 
 /**
  * Get persistent state of global store.

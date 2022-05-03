@@ -45547,7 +45547,7 @@ var _default = {
     generatedMessage: function generatedMessage() {
       return "<span><span style=\"font-weight:bold\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
     }
-  }, (0, _vuex.mapGetters)(['getTranslation'])), mapUpsellsGetters(['getUpsellUrl'])),
+  }, (0, _vuex.mapGetters)(['getTranslation', 'proStatus'])), mapUpsellsGetters(['getUpsellUrl'])),
   methods: {
     toggleModal: function toggleModal() {
       this.showModal = !this.showModal;
@@ -45570,40 +45570,42 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      ref: "container",
-      staticClass: "wptb-upsells-pro-overlay",
-      staticStyle: { "font-size": "15px" },
-      on: { click: _vm.toggleModal }
-    },
-    [
-      _c(
-        "ModalWindow",
+  return !_vm.proStatus
+    ? _c(
+        "div",
         {
-          attrs: {
-            "is-fixed": true,
-            visible: _vm.showModal,
-            "icon-name": "lock",
-            "icon-classes": ["pro-overlay-screen-popup-icon"],
-            "close-callback": _vm.toggleModal,
-            "window-title": _vm.getTranslation("proFeature"),
-            message: _vm.generatedMessage,
-            "button-label": _vm.getTranslation("unlockNow"),
-            "button-extra-classes": ["pro-overlay-modal-button"],
-            callback: _vm.handleUnlock
-          }
+          ref: "container",
+          staticClass: "wptb-upsells-pro-overlay",
+          staticStyle: { "font-size": "15px" },
+          on: { click: _vm.toggleModal }
         },
         [
-          _c("div", {
-            domProps: { innerHTML: _vm._s(_vm.getTranslation("useCode")) }
-          })
-        ]
+          _c(
+            "ModalWindow",
+            {
+              attrs: {
+                "is-fixed": true,
+                visible: _vm.showModal,
+                "icon-name": "lock",
+                "icon-classes": ["pro-overlay-screen-popup-icon"],
+                "close-callback": _vm.toggleModal,
+                "window-title": _vm.getTranslation("proFeature"),
+                message: _vm.generatedMessage,
+                "button-label": _vm.getTranslation("unlockNow"),
+                "button-extra-classes": ["pro-overlay-modal-button"],
+                callback: _vm.handleUnlock
+              }
+            },
+            [
+              _c("div", {
+                domProps: { innerHTML: _vm._s(_vm.getTranslation("useCode")) }
+              })
+            ]
+          )
+        ],
+        1
       )
-    ],
-    1
-  )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -46067,17 +46069,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * @type {Object}
  */
-var stateWatchList = {
-  proStatus: {
-    watch: 'pro',
-    callBack: function callBack(store, n, o) {
-      if (n && !o) {
-        // disable pro status changes from outside sources
-        store.state.pro = false;
-      }
-    }
-  }
-};
+var stateWatchList = {};
 /**
  * Get persistent state of global store.
  *

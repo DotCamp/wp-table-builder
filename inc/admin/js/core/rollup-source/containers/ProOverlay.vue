@@ -1,5 +1,11 @@
 <template>
-	<div ref="container" style="font-size: 15px" class="wptb-upsells-pro-overlay" @click="toggleModal">
+	<div
+		v-if="!proStatus"
+		ref="container"
+		style="font-size: 15px"
+		class="wptb-upsells-pro-overlay"
+		@click="toggleModal"
+	>
 		<ModalWindow
 			:is-fixed="true"
 			:visible="showModal"
@@ -52,7 +58,7 @@ export default {
 				this.featureName
 			}</span> is not available on your free plan. ${this.getTranslation('upgradeToPro')}</span>`;
 		},
-		...mapGetters(['getTranslation']),
+		...mapGetters(['getTranslation', 'proStatus']),
 		...mapUpsellsGetters(['getUpsellUrl']),
 	},
 	methods: {

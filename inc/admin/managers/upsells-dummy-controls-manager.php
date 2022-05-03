@@ -51,18 +51,19 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	 * @return void
 	 */
 	public static function add_dummy_controls( $elements_manager ) {
-		$element_controls          = $elements_manager->get_element_objects();
-		$registered_dummy_controls = static::get_instance()->get_class_options()['dummy_controls'];
+		if ( ! Addon_Manager::check_pro_status() ) {
+			$element_controls          = $elements_manager->get_element_objects();
+			$registered_dummy_controls = static::get_instance()->get_class_options()['dummy_controls'];
+			foreach ( $element_controls as $element ) {
+				foreach ( $registered_dummy_controls as $control_name ) {
+					$control_instance = static::get_dummy_control_instance( $control_name );
 
-		foreach ( $element_controls as $element ) {
-			foreach ( $registered_dummy_controls as $control_name ) {
-				$control_instance = static::get_dummy_control_instance( $control_name );
-
-				if ( $control_instance instanceof Dummy_Control_Base ) {
-					$control_instance->add_controls( $element );
+					if ( $control_instance instanceof Dummy_Control_Base ) {
+						$control_instance->add_controls( $element );
+					}
 				}
-			}
 
+			}
 		}
 	}
 }

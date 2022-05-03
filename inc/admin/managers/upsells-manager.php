@@ -101,7 +101,11 @@ class Upsells_Manager {
 	 * @return array table element
 	 */
 	public static function add_pro_dummy_elements( $all_elements ) {
-		return array_merge( $all_elements, static::$pro_dummy_elements_name );
+		if ( ! Addon_Manager::check_pro_status() ) {
+			return array_merge( $all_elements, static::$pro_dummy_elements_name );
+		}
+
+		return $all_elements;
 	}
 
 
