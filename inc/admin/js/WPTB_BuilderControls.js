@@ -19913,9 +19913,10 @@ exports.default = _default;
             1
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "wptb-plugin-modal-message" }, [
-            _vm._v(_vm._s(_vm.message))
-          ]),
+          _c("div", {
+            staticClass: "wptb-plugin-modal-message",
+            domProps: { innerHTML: _vm._s(_vm.message) }
+          }),
           _vm._v(" "),
           _c(
             "div",
@@ -45544,7 +45545,7 @@ var _default = {
   },
   computed: _objectSpread(_objectSpread({
     generatedMessage: function generatedMessage() {
-      return "".concat(this.featureName, " is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'));
+      return "<span><span style=\"font-weight:bold\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
     }
   }, (0, _vuex.mapGetters)(['getTranslation'])), mapUpsellsGetters(['getUpsellUrl'])),
   methods: {

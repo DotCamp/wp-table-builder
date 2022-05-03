@@ -48,7 +48,9 @@ export default {
 	},
 	computed: {
 		generatedMessage() {
-			return `${this.featureName} is not available on your free plan. ${this.getTranslation('upgradeToPro')}`;
+			return `<span><span style="font-weight:bold">${
+				this.featureName
+			}</span> is not available on your free plan. ${this.getTranslation('upgradeToPro')}</span>`;
 		},
 		...mapGetters(['getTranslation']),
 		...mapUpsellsGetters(['getUpsellUrl']),

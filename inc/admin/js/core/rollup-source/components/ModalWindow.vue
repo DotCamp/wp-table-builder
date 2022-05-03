@@ -15,7 +15,7 @@
 						:extra-classes="iconFinalClasses"
 					></icon>
 				</div>
-				<div class="wptb-plugin-modal-message">{{ message }}</div>
+				<div class="wptb-plugin-modal-message" v-html="message"></div>
 				<div class="wptb-plugin-modal-slot-container">
 					<slot></slot>
 				</div>

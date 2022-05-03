@@ -2,8 +2,6 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
-use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager_Base;
-use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Core\Init;
 
 // If this file is called directly, abort.

@@ -7086,12 +7086,11 @@ label.wptb-control-row {
 }
 
 /*region dummy table element*/
-.wptb-element[data-wptb-dummy="true"] {
-  pointer-events: none;
-  color: var(--wptb-plugin-gray-400) !important;
+.wptb-element[data-wptb-pro-dummy="true"] {
+  cursor: pointer;
 }
 
-.wptb-element[data-wptb-dummy="true"] svg {
+.wptb-element[data-wptb-pro-dummy="true"] svg {
   fill: currentColor !important;
 }
 
@@ -7278,6 +7277,11 @@ label.wptb-control-row {
 .pro-overlay-screen-popup-icon {
   color: $gold !important;
   width: 30px !important;
+}
+
+.upsell-pro-indicator {
+  color: $logo-color;
+  font-weight: bold;
 }
 
 .pro-overlay-modal-button {

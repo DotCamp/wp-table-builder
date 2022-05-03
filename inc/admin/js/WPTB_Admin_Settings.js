@@ -27123,9 +27123,10 @@ exports.default = _default;
             1
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "wptb-plugin-modal-message" }, [
-            _vm._v(_vm._s(_vm.message))
-          ]),
+          _c("div", {
+            staticClass: "wptb-plugin-modal-message",
+            domProps: { innerHTML: _vm._s(_vm.message) }
+          }),
           _vm._v(" "),
           _c(
             "div",
