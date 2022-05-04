@@ -29,11 +29,20 @@ import ModalWindow from '$Components/ModalWindow';
 
 const { mapGetters: mapUpsellsGetters } = createNamespacedHelpers('upsells');
 
+export const targetTypes = {
+	SECTIONCONTAINER: 'sectionContainer',
+	TARGETELEMENT: 'targetelement',
+};
+
 export default {
 	props: {
 		featureName: {
 			type: String,
 			default: 'This is',
+		},
+		target: {
+			type: String,
+			default: targetTypes.SECTIONCONTAINER,
 		},
 	},
 	components: { ModalWindow },
@@ -47,8 +56,7 @@ export default {
 			const { container } = this.$refs;
 
 			if (container) {
-				const parentContainer = container.parentNode.parentNode.parentNode;
-				parentContainer.style.position = 'relative';
+				this.positionOverlay();
 			}
 		});
 	},
@@ -67,6 +75,18 @@ export default {
 		},
 		handleUnlock() {
 			window.open(this.getUpsellUrl);
+		},
+		positionSectionContainer(container) {
+			const parentContainer = container.parentNode.parentNode.parentNode;
+			parentContainer.style.position = 'relative';
+		},
+		positionOverlay() {
+			const { container } = this.$refs;
+			switch (this.target) {
+				case targetTypes.SECTIONCONTAINER:
+					this.positionSectionContainer(container);
+					break;
+			}
 		},
 	},
 };

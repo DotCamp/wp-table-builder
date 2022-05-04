@@ -18,16 +18,17 @@
 					:label="translationM('oddRow')"
 				></color-picker>
 			</section-group-collapse>
-			<section-group-collapse v-if="proStatus" :label="translationM('customSelection')" :start-collapsed="false">
-				<panel-plain-message v-if="currentSelection.item === null">
+			<section-group-collapse :label="translationM('customSelection')" :start-collapsed="false">
+				<panel-plain-message v-if="proStatus && currentSelection.item === null">
 					<i>{{ translationM('emptySelectionMessage') }}</i>
 				</panel-plain-message>
 				<div v-else>
 					<color-picker
-						@colorChanged="setSelectedBackground"
+						@colorChanged="proStatus ? setSelectedBackground : () => {}"
 						:color="backgroundBuffer.color"
 						:label="customColorControlLabel"
 					></color-picker>
+					<pro-overlay :feature-name="translationM('customColorSelectionFeatureName')"></pro-overlay>
 					<panel-message-row
 						v-if="columnMixedMessageVisibility"
 						:message="translationM('mixedColumnColorMessage')"
@@ -45,9 +46,11 @@ import ColorPicker from '$Components/ColorPicker';
 import withNativeTranslationStore from '$Mixins/withNativeTranslationStore';
 import PanelPlainMessage from '$Components/leftPanel/PanelPlainMessage';
 import PanelMessageRow from '$Components/leftPanel/PanelMessageRow';
+import ProOverlay from '$Containers/ProOverlay';
+import BuilderStore from '$Stores/builderStore';
 
 export default {
-	components: { PanelMessageRow, PanelPlainMessage, ColorPicker, SectionGroupCollapse },
+	components: { ProOverlay, PanelMessageRow, PanelPlainMessage, ColorPicker, SectionGroupCollapse },
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
@@ -94,6 +97,9 @@ export default {
 		});
 	},
 	computed: {
+		proStatus() {
+			return BuilderStore.getters.proStatus;
+		},
 		customColorControlLabel() {
 			const currentType = this.currentSelection.type;
 
@@ -105,7 +111,7 @@ export default {
 				case this.types.selected.column:
 					return this.translationM('selectedColumn');
 				default:
-					return '';
+					return this.translationM('selectedCell');
 			}
 		},
 		columnMixedMessageVisibility() {

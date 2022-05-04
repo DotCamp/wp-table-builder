@@ -31,6 +31,7 @@ export default {
 						'Select a row/column/cell to change their background properties.',
 						'wp-table-builder'
 					),
+					customColorSelectionFeatureName: __('custom item color', 'wp-table-builder'),
 				},
 			},
 		};

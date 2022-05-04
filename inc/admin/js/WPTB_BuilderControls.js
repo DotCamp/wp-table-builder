@@ -32095,7 +32095,941 @@ render._withStripped = true
           };
         })());
       
-},{}],"containers/TableBackgroundMenu.vue":[function(require,module,exports) {
+},{}],"containers/ProOverlay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.targetTypes = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _vuex = require("vuex");
+
+var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+var _createNamespacedHelp = (0, _vuex.createNamespacedHelpers)('upsells'),
+    mapUpsellsGetters = _createNamespacedHelp.mapGetters;
+
+var targetTypes = {
+  SECTIONCONTAINER: 'sectionContainer',
+  TARGETELEMENT: 'targetelement'
+};
+exports.targetTypes = targetTypes;
+var _default = {
+  props: {
+    featureName: {
+      type: String,
+      default: 'This is'
+    },
+    target: {
+      type: String,
+      default: targetTypes.SECTIONCONTAINER
+    }
+  },
+  components: {
+    ModalWindow: _ModalWindow.default
+  },
+  data: function data() {
+    return {
+      showModal: false
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      var container = _this.$refs.container;
+
+      if (container) {
+        _this.positionOverlay();
+      }
+    });
+  },
+  computed: _objectSpread(_objectSpread({
+    generatedMessage: function generatedMessage() {
+      return "<span><span style=\"font-weight:bold\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
+    }
+  }, (0, _vuex.mapGetters)(['getTranslation', 'proStatus'])), mapUpsellsGetters(['getUpsellUrl'])),
+  methods: {
+    toggleModal: function toggleModal() {
+      this.showModal = !this.showModal;
+    },
+    handleUnlock: function handleUnlock() {
+      window.open(this.getUpsellUrl);
+    },
+    positionSectionContainer: function positionSectionContainer(container) {
+      var parentContainer = container.parentNode.parentNode.parentNode;
+      parentContainer.style.position = 'relative';
+    },
+    positionOverlay: function positionOverlay() {
+      var container = this.$refs.container;
+
+      switch (this.target) {
+        case targetTypes.SECTIONCONTAINER:
+          this.positionSectionContainer(container);
+          break;
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $4ee90e = exports.default || module.exports;
+      
+      if (typeof $4ee90e === 'function') {
+        $4ee90e = $4ee90e.options;
+      }
+    
+        /* template */
+        Object.assign($4ee90e, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return !_vm.proStatus
+    ? _c(
+        "div",
+        {
+          ref: "container",
+          staticClass: "wptb-upsells-pro-overlay",
+          staticStyle: { "font-size": "15px" },
+          on: { click: _vm.toggleModal }
+        },
+        [
+          _c(
+            "ModalWindow",
+            {
+              attrs: {
+                "is-fixed": true,
+                visible: _vm.showModal,
+                "icon-name": "lock",
+                "icon-classes": ["pro-overlay-screen-popup-icon"],
+                "close-callback": _vm.toggleModal,
+                "window-title": _vm.getTranslation("proFeature"),
+                message: _vm.generatedMessage,
+                "button-label": _vm.getTranslation("unlockNow"),
+                "button-extra-classes": ["pro-overlay-modal-button"],
+                callback: _vm.handleUnlock
+              }
+            },
+            [
+              _c("div", {
+                domProps: { innerHTML: _vm._s(_vm.getTranslation("useCode")) }
+              })
+            ]
+          )
+        ],
+        1
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/ModalWindow":"components/ModalWindow.vue"}],"stores/general.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.stateWatchFunction = exports.mutationWatchFunction = exports.createBasicStore = exports.objectDeepMerge = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
+var _vuex = _interopRequireDefault(require("vuex"));
+
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _index = require("$Functions/index");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * Deep merge object.
+ *
+ * @param {Object} source source object
+ * @param {Object} target target object
+ * @return {Object} merged object
+ */
+// eslint-disable-next-line import/prefer-default-export
+var objectDeepMerge = function objectDeepMerge(source, target) {
+  // eslint-disable-next-line array-callback-return
+  Object.keys(target).map(function (k) {
+    if (Object.prototype.hasOwnProperty.call(target, k)) {
+      if (Object.prototype.hasOwnProperty.call(source, k)) {
+        if ((0, _typeof2.default)(source[k]) === 'object') {
+          // eslint-disable-next-line no-param-reassign
+          source[k] = _objectSpread(_objectSpread({}, source[k]), target[k]);
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          source[k] = target[k];
+        }
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        source[k] = target[k];
+      }
+    }
+  });
+  return source;
+};
+/**
+ * Create a basic store with the given store object.
+ *
+ * @param {Object} defaultStore default store object
+ * @param {Object} extraStore extra store object
+ * @return {Object} Vuex store
+ */
+
+
+exports.objectDeepMerge = objectDeepMerge;
+
+var createBasicStore = function createBasicStore(defaultStore, extraStore) {
+  return new _vuex.default.Store((0, _deepmerge.default)(defaultStore, extraStore));
+};
+/**
+ * Watch function to be used at store event subscriptions.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Function} function to be called at action dispatch
+ */
+
+
+exports.createBasicStore = createBasicStore;
+
+var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var payload = args[0];
+
+    if (watchList[payload.type]) {
+      watchList[payload.type].apply(watchList, args.concat([store]));
+    }
+  };
+};
+/**
+ * State watch function.
+ *
+ * @param {Object} store vuex store object
+ * @param {Object} watchList watch list */
+
+
+exports.mutationWatchFunction = mutationWatchFunction;
+
+var stateWatchFunction = function stateWatchFunction(store, watchList) {
+  // eslint-disable-next-line array-callback-return
+  Object.keys(watchList).map(function (k) {
+    if (Object.prototype.hasOwnProperty.call(watchList, k)) {
+      var _watchList$k = watchList[k],
+          watch = _watchList$k.watch,
+          callBack = _watchList$k.callBack,
+          callAtStart = _watchList$k.callAtStart;
+
+      if (!Array.isArray(watch)) {
+        watch = [watch];
+      }
+
+      var stateGetter = function stateGetter(keyString, storeObject) {
+        return function () {
+          return (0, _index.objectPropertyFromString)(keyString, storeObject.state);
+        };
+      }; // eslint-disable-next-line array-callback-return
+
+
+      watch.map(function (w) {
+        if (callAtStart) {
+          callBack(store)(stateGetter(w, store)());
+        }
+
+        store.watch(stateGetter(w, store), function (newVal, oldVal) {
+          return callBack(store, newVal, oldVal);
+        }, {
+          deep: true
+        });
+      });
+    }
+  });
+};
+
+exports.stateWatchFunction = stateWatchFunction;
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Functions/index":"functions/index.js"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Color picker store module.
+ *
+ * @type {Object}
+ */
+var colorPickerModule = {
+  namespaced: true,
+  state: function state() {
+    return {
+      activeId: null
+    };
+  },
+  getters: {
+    /**
+     * Get active color picker id.
+     *
+     * @param {Object} state store state
+     * @return {null|string} active color picker id
+     */
+    getActiveColorPickerId: function getActiveColorPickerId(state) {
+      return state.activeId;
+    }
+  },
+  mutations: {
+    /**
+     * Set active color picker id.
+     *
+     * @param {Object} state store state
+     * @param {string} id new color picker id
+     */
+    setActiveColorPicker: function setActiveColorPicker(state, id) {
+      // eslint-disable-next-line no-param-reassign
+      state.activeId = id;
+    }
+  }
+};
+/**
+ * @module colorPickerModule
+ */
+
+var _default = colorPickerModule;
+exports.default = _default;
+},{}],"stores/builderStore/modules/nightMode/state/cssVariableMaps.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Variable mappings for night mode.
+ *
+ * @type {Object}
+ */
+var cssVariableMaps = {
+  // gray-500
+  '--wptb-plugin-theme-color-light': '#A0AEC0',
+  // gray-300
+  '--wptb-plugin-theme-text-color-main': '#E2E8F0',
+  // gray-600
+  '--wptb-plugin-gray-100': '#718096',
+  // gray-400
+  '--wptb-plugin-theme-sidebar-bg': '#CBD5E0',
+  // gray-700
+  '--wptb-plugin-logo-color': '#4A5568'
+};
+/**
+ * @module cssVariableMaps
+ */
+
+var _default = cssVariableMaps;
+exports.default = _default;
+},{}],"stores/builderStore/modules/nightMode/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _cssVariableMaps = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode/state/cssVariableMaps"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Night mode store module.
+ *
+ * @type {Object}
+ */
+var nightMode = {
+  namespaced: true,
+  state: function state() {
+    return {
+      activated: {
+        value: false,
+        _persistent: true
+      },
+      cssVariableMaps: _cssVariableMaps.default
+    };
+  },
+  getters: {
+    isActive: function isActive(state) {
+      return state.activated.value;
+    }
+  },
+  mutations: {
+    setNightMode: function setNightMode(state, status) {
+      // eslint-disable-next-line no-param-reassign
+      state.activated.value = status;
+    }
+  }
+};
+/**
+ * @module nightMode
+ */
+
+var _default = nightMode;
+exports.default = _default;
+},{"$Stores/builderStore/modules/nightMode/state/cssVariableMaps":"stores/builderStore/modules/nightMode/state/cssVariableMaps.js"}],"stores/builderStore/modules/embed/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * Embed store module.
+ *
+ * @type {Object}
+ */
+var embed = {
+  namespaced: true,
+  state: function state() {
+    return {
+      modalVisibility: false
+    };
+  },
+  getters: {
+    visibility: function visibility(state) {
+      return state.modalVisibility;
+    }
+  },
+  mutations: {
+    showModal: function showModal(state) {
+      state.modalVisibility = true;
+    },
+    hideModal: function hideModal(state) {
+      state.modalVisibility = false;
+    }
+  }
+};
+/**
+ * @module embed
+ */
+
+var _default = embed;
+exports.default = _default;
+},{}],"stores/builderStore/modules/upsells/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Upsell store module.
+ *
+ * @type {Object}
+ */
+var upsellsModule = {
+  namespaced: true,
+  state: {
+    upsellUrl: ''
+  },
+  getters: {
+    getUpsellUrl: function getUpsellUrl(state) {
+      return state.upsellUrl;
+    }
+  }
+};
+/**
+ * @module upsellsModule
+ */
+
+var _default = upsellsModule;
+exports.default = _default;
+},{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _colorPicker = _interopRequireDefault(require("$Stores/builderStore/modules/colorPicker"));
+
+var _nightMode = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode"));
+
+var _embed = _interopRequireDefault(require("$Stores/builderStore/modules/embed"));
+
+var _upsells = _interopRequireDefault(require("$Stores/builderStore/modules/upsells"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Default modules for builder store.
+ *
+ * @type {Object}
+ */
+var modules = {
+  colorPicker: _colorPicker.default,
+  nightMode: _nightMode.default,
+  embed: _embed.default,
+  upsells: _upsells.default
+};
+/**
+ * @module modules
+ */
+
+var _default = modules;
+exports.default = _default;
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js","$Stores/builderStore/modules/upsells":"stores/builderStore/modules/upsells/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
+var define;
+var global = arguments[3];
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/*! js-cookie v3.0.1 | MIT */
+;
+
+(function (global, factory) {
+  (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global = global || self, function () {
+    var current = global.Cookies;
+    var exports = global.Cookies = factory();
+
+    exports.noConflict = function () {
+      global.Cookies = current;
+      return exports;
+    };
+  }());
+})(this, function () {
+  'use strict';
+  /* eslint-disable no-var */
+
+  function assign(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        target[key] = source[key];
+      }
+    }
+
+    return target;
+  }
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+
+
+  var defaultConverter = {
+    read: function read(value) {
+      if (value[0] === '"') {
+        value = value.slice(1, -1);
+      }
+
+      return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent);
+    },
+    write: function write(value) {
+      return encodeURIComponent(value).replace(/%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g, decodeURIComponent);
+    }
+  };
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+
+  function init(converter, defaultAttributes) {
+    function set(key, value, attributes) {
+      if (typeof document === 'undefined') {
+        return;
+      }
+
+      attributes = assign({}, defaultAttributes, attributes);
+
+      if (typeof attributes.expires === 'number') {
+        attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
+      }
+
+      if (attributes.expires) {
+        attributes.expires = attributes.expires.toUTCString();
+      }
+
+      key = encodeURIComponent(key).replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent).replace(/[()]/g, escape);
+      var stringifiedAttributes = '';
+
+      for (var attributeName in attributes) {
+        if (!attributes[attributeName]) {
+          continue;
+        }
+
+        stringifiedAttributes += '; ' + attributeName;
+
+        if (attributes[attributeName] === true) {
+          continue;
+        } // Considers RFC 6265 section 5.2:
+        // ...
+        // 3.  If the remaining unparsed-attributes contains a %x3B (";")
+        //     character:
+        // Consume the characters of the unparsed-attributes up to,
+        // not including, the first %x3B (";") character.
+        // ...
+
+
+        stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
+      }
+
+      return document.cookie = key + '=' + converter.write(value, key) + stringifiedAttributes;
+    }
+
+    function get(key) {
+      if (typeof document === 'undefined' || arguments.length && !key) {
+        return;
+      } // To prevent the for loop in the first place assign an empty array
+      // in case there are no cookies at all.
+
+
+      var cookies = document.cookie ? document.cookie.split('; ') : [];
+      var jar = {};
+
+      for (var i = 0; i < cookies.length; i++) {
+        var parts = cookies[i].split('=');
+        var value = parts.slice(1).join('=');
+
+        try {
+          var foundKey = decodeURIComponent(parts[0]);
+          jar[foundKey] = converter.read(value, foundKey);
+
+          if (key === foundKey) {
+            break;
+          }
+        } catch (e) {}
+      }
+
+      return key ? jar[key] : jar;
+    }
+
+    return Object.create({
+      set: set,
+      get: get,
+      remove: function remove(key, attributes) {
+        set(key, '', assign({}, attributes, {
+          expires: -1
+        }));
+      },
+      withAttributes: function withAttributes(attributes) {
+        return init(this.converter, assign({}, this.attributes, attributes));
+      },
+      withConverter: function withConverter(converter) {
+        return init(assign({}, this.converter, converter), this.attributes);
+      }
+    }, {
+      attributes: {
+        value: Object.freeze(defaultAttributes)
+      },
+      converter: {
+        value: Object.freeze(converter)
+      }
+    });
+  }
+
+  var api = init(defaultConverter, {
+    path: '/'
+  });
+  /* eslint-enable no-var */
+
+  return api;
+});
+},{}],"stores/builderStore/plugin.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.getPersistentState = void 0;
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
+var _jsCookie = _interopRequireDefault(require("js-cookie"));
+
+var _general = require("$Stores/general");
+
+var _index = require("$Functions/index");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * State watch list.
+ *
+ * @type {Object}
+ */
+var stateWatchList = {};
+/**
+ * Get persistent state of global store.
+ *
+ * @return {undefined | store} persistent state
+ */
+
+var getPersistentState = function getPersistentState() {
+  var wptbCookie = _jsCookie.default.get('wptb');
+
+  if (wptbCookie) {
+    try {
+      wptbCookie = JSON.parse(atob(wptbCookie));
+    } catch (e) {// do nothing...
+    }
+  }
+
+  return wptbCookie;
+};
+/**
+ * Write state to document cookie.
+ *
+ * @param {Object} state store state
+ * @param {Array} addresses an array of addresses to use while preparing data for write operation
+ */
+
+
+exports.getPersistentState = getPersistentState;
+
+var writePersistentState = function writePersistentState(state) {
+  var addresses = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var dataToWrite = {}; // eslint-disable-next-line array-callback-return
+
+  addresses.map(function (addr) {
+    var parts = addr.split('.');
+    parts.reduce(function (carry, key, index) {
+      if (index < parts.length - 1) {
+        if (!carry[key]) {
+          carry[key] = {};
+        }
+      } else {
+        carry[key] = (0, _index.objectPropertyFromString)(addr, state);
+      }
+
+      return carry[key];
+    }, dataToWrite);
+  });
+
+  _jsCookie.default.set('wptb', btoa(JSON.stringify(dataToWrite)));
+};
+/**
+ * Prepare a map array for state values with persistent functionality enabled.
+ *
+ * @param {Object} state store state
+ * @return {Array} an array of JSON style addresses for persistent state keys
+ */
+
+
+var preparePersistentMap = function preparePersistentMap(state) {
+  var map = [];
+  /**
+   * Get persistent addresses of values in store state.
+   *
+   * This function will push those addresses to map array in its closure
+   *
+   * @param {any} storeVal current store value
+   * @param {string} carryAddr carried address
+   */
+
+  function getPersistentAddr(storeVal) {
+    var carryAddr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+    if ((0, _typeof2.default)(storeVal) === 'object' && storeVal !== null) {
+      // eslint-disable-next-line no-underscore-dangle
+      if (Object.prototype.hasOwnProperty.call(storeVal, '_persistent')) {
+        map.push(carryAddr);
+      } else {
+        // eslint-disable-next-line array-callback-return
+        Object.keys(storeVal).map(function (key) {
+          if (Object.prototype.hasOwnProperty.call(storeVal, key)) {
+            getPersistentAddr(storeVal[key], "".concat(carryAddr).concat(carryAddr === '' ? '' : '.').concat(key));
+          }
+        });
+      }
+    }
+  }
+
+  getPersistentAddr(state);
+  return map;
+};
+/**
+ * Store subscriptions to watch various store events.
+ *
+ * @param {Object} store flux store
+ */
+
+
+var subscriptions = function subscriptions(store) {
+  var persistentMap = preparePersistentMap(store.state);
+  stateWatchList.stateWrite = {
+    watch: persistentMap,
+    callBack: function callBack(currentStore) {
+      // only values of state which are marked as persistent will trigger a save operation for store state
+      writePersistentState(currentStore.state, persistentMap);
+    }
+  };
+  (0, _general.stateWatchFunction)(store, stateWatchList);
+};
+/**
+ * @module subscriptions
+ */
+
+
+var _default = subscriptions;
+exports.default = _default;
+},{"@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","js-cookie":"../../../../../node_modules/js-cookie/dist/js.cookie.js","$Stores/general":"stores/general.js","$Functions/index":"functions/index.js"}],"stores/builderStore/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _vuex = _interopRequireDefault(require("vuex"));
+
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _general = require("$Stores/general");
+
+var _modules = _interopRequireDefault(require("./modules"));
+
+var _plugin = _interopRequireWildcard(require("$Stores/builderStore/plugin"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * Default store for builder.
+ *
+ * @type {Object}
+ */
+var defaultStore = {
+  strict: true,
+  modules: _modules.default,
+  plugins: [_plugin.default]
+};
+/**
+ * Create a store for builder.
+ *
+ * @param {Object} extraStoreOptions extra store options to add to default one
+ * @return {Object} vuex store for builder
+ */
+
+var createStore = function createStore(extraStoreOptions) {
+  return (0, _general.createBasicStore)(defaultStore, extraStoreOptions);
+};
+/**
+ * WPTB data store.
+ *
+ * @return {Object} data store instance
+ * @class
+ */
+
+
+function BuilderStore() {
+  _vue.default.use(_vuex.default); // eslint-disable-next-line camelcase
+
+
+  var _wptb_admin_object = wptb_admin_object,
+      storeData = _wptb_admin_object.store;
+  var extraStoreOptions = {
+    state: {},
+    getters: {
+      proStatus: function proStatus(state) {
+        return state.pro;
+      },
+      getTranslation: function getTranslation(state) {
+        return function (id) {
+          return state.translations[id];
+        };
+      },
+      tableId: function tableId(state) {
+        return state.tableId;
+      }
+    },
+    mutations: {
+      setTableId: function setTableId(state, tableId) {
+        state.tableId = tableId;
+      }
+    }
+  };
+  var builderStore = createStore(extraStoreOptions);
+  builderStore.replaceState((0, _deepmerge.default)(builderStore.state, storeData));
+  var savedState = (0, _plugin.getPersistentState)();
+
+  if (savedState) {
+    builderStore.replaceState((0, _deepmerge.default)(builderStore.state, savedState));
+  }
+  /**
+   * Compatibility function for store getters.
+   *
+   * @param {string} getterId getter id
+   * @return {any} getter operation result
+   */
+
+
+  builderStore.get = function (getterId) {
+    return builderStore.getters[getterId];
+  };
+  /**
+   * Get translation of a string.
+   *
+   * @param {string} translationId translation id
+   * @return {undefined | string} translated string
+   */
+
+
+  builderStore.getTranslation = function (translationId) {
+    return builderStore.getters.getTranslation(translationId);
+  };
+
+  return builderStore;
+}
+/**
+ * @module createStore
+ */
+
+
+var _default = new BuilderStore();
+
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"containers/TableBackgroundMenu.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32117,6 +33051,10 @@ var _PanelPlainMessage = _interopRequireDefault(require("$Components/leftPanel/P
 
 var _PanelMessageRow = _interopRequireDefault(require("$Components/leftPanel/PanelMessageRow"));
 
+var _ProOverlay = _interopRequireDefault(require("$Containers/ProOverlay"));
+
+var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -32125,6 +33063,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 var _default = {
   components: {
+    ProOverlay: _ProOverlay.default,
     PanelMessageRow: _PanelMessageRow.default,
     PanelPlainMessage: _PanelPlainMessage.default,
     ColorPicker: _ColorPicker.default,
@@ -32183,6 +33122,9 @@ var _default = {
     });
   },
   computed: _objectSpread(_objectSpread({
+    proStatus: function proStatus() {
+      return _builderStore.default.getters.proStatus;
+    },
     customColorControlLabel: function customColorControlLabel() {
       var currentType = this.currentSelection.type;
 
@@ -32197,7 +33139,7 @@ var _default = {
           return this.translationM('selectedColumn');
 
         default:
-          return '';
+          return this.translationM('selectedCell');
       }
     },
     columnMixedMessageVisibility: function columnMixedMessageVisibility() {
@@ -32346,51 +33288,59 @@ exports.default = _default;
           1
         ),
         _vm._v(" "),
-        _vm.proStatus
-          ? _c(
-              "section-group-collapse",
-              {
-                attrs: {
-                  label: _vm.translationM("customSelection"),
-                  "start-collapsed": false
-                }
-              },
-              [
-                _vm.currentSelection.item === null
-                  ? _c("panel-plain-message", [
-                      _c("i", [
-                        _vm._v(
-                          _vm._s(_vm.translationM("emptySelectionMessage"))
+        _c(
+          "section-group-collapse",
+          {
+            attrs: {
+              label: _vm.translationM("customSelection"),
+              "start-collapsed": false
+            }
+          },
+          [
+            _vm.proStatus && _vm.currentSelection.item === null
+              ? _c("panel-plain-message", [
+                  _c("i", [
+                    _vm._v(_vm._s(_vm.translationM("emptySelectionMessage")))
+                  ])
+                ])
+              : _c(
+                  "div",
+                  [
+                    _c("color-picker", {
+                      attrs: {
+                        color: _vm.backgroundBuffer.color,
+                        label: _vm.customColorControlLabel
+                      },
+                      on: {
+                        colorChanged: function($event) {
+                          _vm.proStatus
+                            ? _vm.setSelectedBackground
+                            : function() {}
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("pro-overlay", {
+                      attrs: {
+                        "feature-name": _vm.translationM(
+                          "customColorSelectionFeatureName"
                         )
-                      ])
-                    ])
-                  : _c(
-                      "div",
-                      [
-                        _c("color-picker", {
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.columnMixedMessageVisibility
+                      ? _c("panel-message-row", {
                           attrs: {
-                            color: _vm.backgroundBuffer.color,
-                            label: _vm.customColorControlLabel
-                          },
-                          on: { colorChanged: _vm.setSelectedBackground }
-                        }),
-                        _vm._v(" "),
-                        _vm.columnMixedMessageVisibility
-                          ? _c("panel-message-row", {
-                              attrs: {
-                                message: _vm.translationM(
-                                  "mixedColumnColorMessage"
-                                )
-                              }
-                            })
-                          : _vm._e()
-                      ],
-                      1
-                    )
-              ],
-              1
-            )
-          : _vm._e()
+                            message: _vm.translationM("mixedColumnColorMessage")
+                          }
+                        })
+                      : _vm._e()
+                  ],
+                  1
+                )
+          ],
+          1
+        )
       ],
       1
     )
@@ -32408,142 +33358,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Components/ColorPicker":"components/ColorPicker.vue","$Mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","$Components/leftPanel/PanelPlainMessage":"components/leftPanel/PanelPlainMessage.vue","$Components/leftPanel/PanelMessageRow":"components/leftPanel/PanelMessageRow.vue"}],"stores/general.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.stateWatchFunction = exports.mutationWatchFunction = exports.createBasicStore = exports.objectDeepMerge = void 0;
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
-var _vuex = _interopRequireDefault(require("vuex"));
-
-var _deepmerge = _interopRequireDefault(require("deepmerge"));
-
-var _index = require("$Functions/index");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-/**
- * Deep merge object.
- *
- * @param {Object} source source object
- * @param {Object} target target object
- * @return {Object} merged object
- */
-// eslint-disable-next-line import/prefer-default-export
-var objectDeepMerge = function objectDeepMerge(source, target) {
-  // eslint-disable-next-line array-callback-return
-  Object.keys(target).map(function (k) {
-    if (Object.prototype.hasOwnProperty.call(target, k)) {
-      if (Object.prototype.hasOwnProperty.call(source, k)) {
-        if ((0, _typeof2.default)(source[k]) === 'object') {
-          // eslint-disable-next-line no-param-reassign
-          source[k] = _objectSpread(_objectSpread({}, source[k]), target[k]);
-        } else {
-          // eslint-disable-next-line no-param-reassign
-          source[k] = target[k];
-        }
-      } else {
-        // eslint-disable-next-line no-param-reassign
-        source[k] = target[k];
-      }
-    }
-  });
-  return source;
-};
-/**
- * Create a basic store with the given store object.
- *
- * @param {Object} defaultStore default store object
- * @param {Object} extraStore extra store object
- * @return {Object} Vuex store
- */
-
-
-exports.objectDeepMerge = objectDeepMerge;
-
-var createBasicStore = function createBasicStore(defaultStore, extraStore) {
-  return new _vuex.default.Store((0, _deepmerge.default)(defaultStore, extraStore));
-};
-/**
- * Watch function to be used at store event subscriptions.
- *
- * @param {Object} watchList watch list to be used
- * @param {Object} store store object
- * @return {Function} function to be called at action dispatch
- */
-
-
-exports.createBasicStore = createBasicStore;
-
-var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
-  return function () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    var payload = args[0];
-
-    if (watchList[payload.type]) {
-      watchList[payload.type].apply(watchList, args.concat([store]));
-    }
-  };
-};
-/**
- * State watch function.
- *
- * @param {Object} store vuex store object
- * @param {Object} watchList watch list */
-
-
-exports.mutationWatchFunction = mutationWatchFunction;
-
-var stateWatchFunction = function stateWatchFunction(store, watchList) {
-  // eslint-disable-next-line array-callback-return
-  Object.keys(watchList).map(function (k) {
-    if (Object.prototype.hasOwnProperty.call(watchList, k)) {
-      var _watchList$k = watchList[k],
-          watch = _watchList$k.watch,
-          callBack = _watchList$k.callBack,
-          callAtStart = _watchList$k.callAtStart;
-
-      if (!Array.isArray(watch)) {
-        watch = [watch];
-      }
-
-      var stateGetter = function stateGetter(keyString, storeObject) {
-        return function () {
-          return (0, _index.objectPropertyFromString)(keyString, storeObject.state);
-        };
-      }; // eslint-disable-next-line array-callback-return
-
-
-      watch.map(function (w) {
-        if (callAtStart) {
-          callBack(store)(stateGetter(w, store)());
-        }
-
-        store.watch(stateGetter(w, store), function (newVal, oldVal) {
-          return callBack(store, newVal, oldVal);
-        }, {
-          deep: true
-        });
-      });
-    }
-  });
-};
-
-exports.stateWatchFunction = stateWatchFunction;
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Functions/index":"functions/index.js"}],"stores/index.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Components/ColorPicker":"components/ColorPicker.vue","$Mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","$Components/leftPanel/PanelPlainMessage":"components/leftPanel/PanelPlainMessage.vue","$Components/leftPanel/PanelMessageRow":"components/leftPanel/PanelMessageRow.vue","$Containers/ProOverlay":"containers/ProOverlay.vue","$Stores/builderStore":"stores/builderStore/index.js"}],"stores/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32996,7 +33811,8 @@ var _default = {
           selectedRow: (0, _i18n.__)('selected row background', 'wp-table-builder'),
           selectedColumn: (0, _i18n.__)('selected column background', 'wp-table-builder'),
           mixedColumnColorMessage: (0, _i18n.__)('There are cells with different color values on this column, applying column wide color values will override those.', 'wp-table-builder'),
-          emptySelectionMessage: (0, _i18n.__)('Select a row/column/cell to change their background properties.', 'wp-table-builder')
+          emptySelectionMessage: (0, _i18n.__)('Select a row/column/cell to change their background properties.', 'wp-table-builder'),
+          customColorSelectionFeatureName: (0, _i18n.__)('custom item color', 'wp-table-builder')
         }
       }
     };
@@ -45493,133 +46309,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/EmbedWindow":"containers/EmbedWindow.vue","$Mixins/withGlobalStoreVue":"mixins/withGlobalStoreVue.js"}],"containers/ProOverlay.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _vuex = require("vuex");
-
-var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-var _createNamespacedHelp = (0, _vuex.createNamespacedHelpers)('upsells'),
-    mapUpsellsGetters = _createNamespacedHelp.mapGetters;
-
-var _default = {
-  props: {
-    featureName: {
-      type: String,
-      default: 'This is'
-    }
-  },
-  components: {
-    ModalWindow: _ModalWindow.default
-  },
-  data: function data() {
-    return {
-      showModal: false
-    };
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    this.$nextTick(function () {
-      var container = _this.$refs.container;
-
-      if (container) {
-        var parentContainer = container.parentNode.parentNode.parentNode;
-        parentContainer.style.position = 'relative';
-      }
-    });
-  },
-  computed: _objectSpread(_objectSpread({
-    generatedMessage: function generatedMessage() {
-      return "<span><span style=\"font-weight:bold\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
-    }
-  }, (0, _vuex.mapGetters)(['getTranslation', 'proStatus'])), mapUpsellsGetters(['getUpsellUrl'])),
-  methods: {
-    toggleModal: function toggleModal() {
-      this.showModal = !this.showModal;
-    },
-    handleUnlock: function handleUnlock() {
-      window.open(this.getUpsellUrl);
-    }
-  }
-};
-exports.default = _default;
-        var $4ee90e = exports.default || module.exports;
-      
-      if (typeof $4ee90e === 'function') {
-        $4ee90e = $4ee90e.options;
-      }
-    
-        /* template */
-        Object.assign($4ee90e, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return !_vm.proStatus
-    ? _c(
-        "div",
-        {
-          ref: "container",
-          staticClass: "wptb-upsells-pro-overlay",
-          staticStyle: { "font-size": "15px" },
-          on: { click: _vm.toggleModal }
-        },
-        [
-          _c(
-            "ModalWindow",
-            {
-              attrs: {
-                "is-fixed": true,
-                visible: _vm.showModal,
-                "icon-name": "lock",
-                "icon-classes": ["pro-overlay-screen-popup-icon"],
-                "close-callback": _vm.toggleModal,
-                "window-title": _vm.getTranslation("proFeature"),
-                message: _vm.generatedMessage,
-                "button-label": _vm.getTranslation("unlockNow"),
-                "button-extra-classes": ["pro-overlay-modal-button"],
-                callback: _vm.handleUnlock
-              }
-            },
-            [
-              _c("div", {
-                domProps: { innerHTML: _vm._s(_vm.getTranslation("useCode")) }
-              })
-            ]
-          )
-        ],
-        1
-      )
-    : _vm._e()
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/ModalWindow":"components/ModalWindow.vue"}],"mountPoints/WPTB_ProOverlay.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/EmbedWindow":"containers/EmbedWindow.vue","$Mixins/withGlobalStoreVue":"mixins/withGlobalStoreVue.js"}],"mountPoints/WPTB_ProOverlay.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45655,659 +46345,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ProOverlay":"containers/ProOverlay.vue","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * Color picker store module.
- *
- * @type {Object}
- */
-var colorPickerModule = {
-  namespaced: true,
-  state: function state() {
-    return {
-      activeId: null
-    };
-  },
-  getters: {
-    /**
-     * Get active color picker id.
-     *
-     * @param {Object} state store state
-     * @return {null|string} active color picker id
-     */
-    getActiveColorPickerId: function getActiveColorPickerId(state) {
-      return state.activeId;
-    }
-  },
-  mutations: {
-    /**
-     * Set active color picker id.
-     *
-     * @param {Object} state store state
-     * @param {string} id new color picker id
-     */
-    setActiveColorPicker: function setActiveColorPicker(state, id) {
-      // eslint-disable-next-line no-param-reassign
-      state.activeId = id;
-    }
-  }
-};
-/**
- * @module colorPickerModule
- */
-
-var _default = colorPickerModule;
-exports.default = _default;
-},{}],"stores/builderStore/modules/nightMode/state/cssVariableMaps.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * Variable mappings for night mode.
- *
- * @type {Object}
- */
-var cssVariableMaps = {
-  // gray-500
-  '--wptb-plugin-theme-color-light': '#A0AEC0',
-  // gray-300
-  '--wptb-plugin-theme-text-color-main': '#E2E8F0',
-  // gray-600
-  '--wptb-plugin-gray-100': '#718096',
-  // gray-400
-  '--wptb-plugin-theme-sidebar-bg': '#CBD5E0',
-  // gray-700
-  '--wptb-plugin-logo-color': '#4A5568'
-};
-/**
- * @module cssVariableMaps
- */
-
-var _default = cssVariableMaps;
-exports.default = _default;
-},{}],"stores/builderStore/modules/nightMode/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _cssVariableMaps = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode/state/cssVariableMaps"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Night mode store module.
- *
- * @type {Object}
- */
-var nightMode = {
-  namespaced: true,
-  state: function state() {
-    return {
-      activated: {
-        value: false,
-        _persistent: true
-      },
-      cssVariableMaps: _cssVariableMaps.default
-    };
-  },
-  getters: {
-    isActive: function isActive(state) {
-      return state.activated.value;
-    }
-  },
-  mutations: {
-    setNightMode: function setNightMode(state, status) {
-      // eslint-disable-next-line no-param-reassign
-      state.activated.value = status;
-    }
-  }
-};
-/**
- * @module nightMode
- */
-
-var _default = nightMode;
-exports.default = _default;
-},{"$Stores/builderStore/modules/nightMode/state/cssVariableMaps":"stores/builderStore/modules/nightMode/state/cssVariableMaps.js"}],"stores/builderStore/modules/embed/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/* eslint-disable no-param-reassign */
-
-/**
- * Embed store module.
- *
- * @type {Object}
- */
-var embed = {
-  namespaced: true,
-  state: function state() {
-    return {
-      modalVisibility: false
-    };
-  },
-  getters: {
-    visibility: function visibility(state) {
-      return state.modalVisibility;
-    }
-  },
-  mutations: {
-    showModal: function showModal(state) {
-      state.modalVisibility = true;
-    },
-    hideModal: function hideModal(state) {
-      state.modalVisibility = false;
-    }
-  }
-};
-/**
- * @module embed
- */
-
-var _default = embed;
-exports.default = _default;
-},{}],"stores/builderStore/modules/upsells/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * Upsell store module.
- *
- * @type {Object}
- */
-var upsellsModule = {
-  namespaced: true,
-  state: {
-    upsellUrl: ''
-  },
-  getters: {
-    getUpsellUrl: function getUpsellUrl(state) {
-      return state.upsellUrl;
-    }
-  }
-};
-/**
- * @module upsellsModule
- */
-
-var _default = upsellsModule;
-exports.default = _default;
-},{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _colorPicker = _interopRequireDefault(require("$Stores/builderStore/modules/colorPicker"));
-
-var _nightMode = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode"));
-
-var _embed = _interopRequireDefault(require("$Stores/builderStore/modules/embed"));
-
-var _upsells = _interopRequireDefault(require("$Stores/builderStore/modules/upsells"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Default modules for builder store.
- *
- * @type {Object}
- */
-var modules = {
-  colorPicker: _colorPicker.default,
-  nightMode: _nightMode.default,
-  embed: _embed.default,
-  upsells: _upsells.default
-};
-/**
- * @module modules
- */
-
-var _default = modules;
-exports.default = _default;
-},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js","$Stores/builderStore/modules/upsells":"stores/builderStore/modules/upsells/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
-var define;
-var global = arguments[3];
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-/*! js-cookie v3.0.1 | MIT */
-;
-
-(function (global, factory) {
-  (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global = global || self, function () {
-    var current = global.Cookies;
-    var exports = global.Cookies = factory();
-
-    exports.noConflict = function () {
-      global.Cookies = current;
-      return exports;
-    };
-  }());
-})(this, function () {
-  'use strict';
-  /* eslint-disable no-var */
-
-  function assign(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        target[key] = source[key];
-      }
-    }
-
-    return target;
-  }
-  /* eslint-enable no-var */
-
-  /* eslint-disable no-var */
-
-
-  var defaultConverter = {
-    read: function read(value) {
-      if (value[0] === '"') {
-        value = value.slice(1, -1);
-      }
-
-      return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent);
-    },
-    write: function write(value) {
-      return encodeURIComponent(value).replace(/%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g, decodeURIComponent);
-    }
-  };
-  /* eslint-enable no-var */
-
-  /* eslint-disable no-var */
-
-  function init(converter, defaultAttributes) {
-    function set(key, value, attributes) {
-      if (typeof document === 'undefined') {
-        return;
-      }
-
-      attributes = assign({}, defaultAttributes, attributes);
-
-      if (typeof attributes.expires === 'number') {
-        attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
-      }
-
-      if (attributes.expires) {
-        attributes.expires = attributes.expires.toUTCString();
-      }
-
-      key = encodeURIComponent(key).replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent).replace(/[()]/g, escape);
-      var stringifiedAttributes = '';
-
-      for (var attributeName in attributes) {
-        if (!attributes[attributeName]) {
-          continue;
-        }
-
-        stringifiedAttributes += '; ' + attributeName;
-
-        if (attributes[attributeName] === true) {
-          continue;
-        } // Considers RFC 6265 section 5.2:
-        // ...
-        // 3.  If the remaining unparsed-attributes contains a %x3B (";")
-        //     character:
-        // Consume the characters of the unparsed-attributes up to,
-        // not including, the first %x3B (";") character.
-        // ...
-
-
-        stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
-      }
-
-      return document.cookie = key + '=' + converter.write(value, key) + stringifiedAttributes;
-    }
-
-    function get(key) {
-      if (typeof document === 'undefined' || arguments.length && !key) {
-        return;
-      } // To prevent the for loop in the first place assign an empty array
-      // in case there are no cookies at all.
-
-
-      var cookies = document.cookie ? document.cookie.split('; ') : [];
-      var jar = {};
-
-      for (var i = 0; i < cookies.length; i++) {
-        var parts = cookies[i].split('=');
-        var value = parts.slice(1).join('=');
-
-        try {
-          var foundKey = decodeURIComponent(parts[0]);
-          jar[foundKey] = converter.read(value, foundKey);
-
-          if (key === foundKey) {
-            break;
-          }
-        } catch (e) {}
-      }
-
-      return key ? jar[key] : jar;
-    }
-
-    return Object.create({
-      set: set,
-      get: get,
-      remove: function remove(key, attributes) {
-        set(key, '', assign({}, attributes, {
-          expires: -1
-        }));
-      },
-      withAttributes: function withAttributes(attributes) {
-        return init(this.converter, assign({}, this.attributes, attributes));
-      },
-      withConverter: function withConverter(converter) {
-        return init(assign({}, this.converter, converter), this.attributes);
-      }
-    }, {
-      attributes: {
-        value: Object.freeze(defaultAttributes)
-      },
-      converter: {
-        value: Object.freeze(converter)
-      }
-    });
-  }
-
-  var api = init(defaultConverter, {
-    path: '/'
-  });
-  /* eslint-enable no-var */
-
-  return api;
-});
-},{}],"stores/builderStore/plugin.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = exports.getPersistentState = void 0;
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
-var _jsCookie = _interopRequireDefault(require("js-cookie"));
-
-var _general = require("$Stores/general");
-
-var _index = require("$Functions/index");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/* eslint-disable no-param-reassign */
-
-/**
- * State watch list.
- *
- * @type {Object}
- */
-var stateWatchList = {};
-/**
- * Get persistent state of global store.
- *
- * @return {undefined | store} persistent state
- */
-
-var getPersistentState = function getPersistentState() {
-  var wptbCookie = _jsCookie.default.get('wptb');
-
-  if (wptbCookie) {
-    try {
-      wptbCookie = JSON.parse(atob(wptbCookie));
-    } catch (e) {// do nothing...
-    }
-  }
-
-  return wptbCookie;
-};
-/**
- * Write state to document cookie.
- *
- * @param {Object} state store state
- * @param {Array} addresses an array of addresses to use while preparing data for write operation
- */
-
-
-exports.getPersistentState = getPersistentState;
-
-var writePersistentState = function writePersistentState(state) {
-  var addresses = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-  var dataToWrite = {}; // eslint-disable-next-line array-callback-return
-
-  addresses.map(function (addr) {
-    var parts = addr.split('.');
-    parts.reduce(function (carry, key, index) {
-      if (index < parts.length - 1) {
-        if (!carry[key]) {
-          carry[key] = {};
-        }
-      } else {
-        carry[key] = (0, _index.objectPropertyFromString)(addr, state);
-      }
-
-      return carry[key];
-    }, dataToWrite);
-  });
-
-  _jsCookie.default.set('wptb', btoa(JSON.stringify(dataToWrite)));
-};
-/**
- * Prepare a map array for state values with persistent functionality enabled.
- *
- * @param {Object} state store state
- * @return {Array} an array of JSON style addresses for persistent state keys
- */
-
-
-var preparePersistentMap = function preparePersistentMap(state) {
-  var map = [];
-  /**
-   * Get persistent addresses of values in store state.
-   *
-   * This function will push those addresses to map array in its closure
-   *
-   * @param {any} storeVal current store value
-   * @param {string} carryAddr carried address
-   */
-
-  function getPersistentAddr(storeVal) {
-    var carryAddr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-
-    if ((0, _typeof2.default)(storeVal) === 'object' && storeVal !== null) {
-      // eslint-disable-next-line no-underscore-dangle
-      if (Object.prototype.hasOwnProperty.call(storeVal, '_persistent')) {
-        map.push(carryAddr);
-      } else {
-        // eslint-disable-next-line array-callback-return
-        Object.keys(storeVal).map(function (key) {
-          if (Object.prototype.hasOwnProperty.call(storeVal, key)) {
-            getPersistentAddr(storeVal[key], "".concat(carryAddr).concat(carryAddr === '' ? '' : '.').concat(key));
-          }
-        });
-      }
-    }
-  }
-
-  getPersistentAddr(state);
-  return map;
-};
-/**
- * Store subscriptions to watch various store events.
- *
- * @param {Object} store flux store
- */
-
-
-var subscriptions = function subscriptions(store) {
-  var persistentMap = preparePersistentMap(store.state);
-  stateWatchList.stateWrite = {
-    watch: persistentMap,
-    callBack: function callBack(currentStore) {
-      // only values of state which are marked as persistent will trigger a save operation for store state
-      writePersistentState(currentStore.state, persistentMap);
-    }
-  };
-  (0, _general.stateWatchFunction)(store, stateWatchList);
-};
-/**
- * @module subscriptions
- */
-
-
-var _default = subscriptions;
-exports.default = _default;
-},{"@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","js-cookie":"../../../../../node_modules/js-cookie/dist/js.cookie.js","$Stores/general":"stores/general.js","$Functions/index":"functions/index.js"}],"stores/builderStore/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vue = _interopRequireDefault(require("vue"));
-
-var _vuex = _interopRequireDefault(require("vuex"));
-
-var _deepmerge = _interopRequireDefault(require("deepmerge"));
-
-var _general = require("$Stores/general");
-
-var _modules = _interopRequireDefault(require("./modules"));
-
-var _plugin = _interopRequireWildcard(require("$Stores/builderStore/plugin"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/* eslint-disable no-param-reassign */
-
-/**
- * Default store for builder.
- *
- * @type {Object}
- */
-var defaultStore = {
-  strict: true,
-  modules: _modules.default,
-  plugins: [_plugin.default]
-};
-/**
- * Create a store for builder.
- *
- * @param {Object} extraStoreOptions extra store options to add to default one
- * @return {Object} vuex store for builder
- */
-
-var createStore = function createStore(extraStoreOptions) {
-  return (0, _general.createBasicStore)(defaultStore, extraStoreOptions);
-};
-/**
- * WPTB data store.
- *
- * @return {Object} data store instance
- * @class
- */
-
-
-function BuilderStore() {
-  _vue.default.use(_vuex.default); // eslint-disable-next-line camelcase
-
-
-  var _wptb_admin_object = wptb_admin_object,
-      storeData = _wptb_admin_object.store;
-  var extraStoreOptions = {
-    state: {},
-    getters: {
-      proStatus: function proStatus(state) {
-        return state.pro;
-      },
-      getTranslation: function getTranslation(state) {
-        return function (id) {
-          return state.translations[id];
-        };
-      },
-      tableId: function tableId(state) {
-        return state.tableId;
-      }
-    },
-    mutations: {
-      setTableId: function setTableId(state, tableId) {
-        state.tableId = tableId;
-      }
-    }
-  };
-  var builderStore = createStore(extraStoreOptions);
-  builderStore.replaceState((0, _deepmerge.default)(builderStore.state, storeData));
-  var savedState = (0, _plugin.getPersistentState)();
-
-  if (savedState) {
-    builderStore.replaceState((0, _deepmerge.default)(builderStore.state, savedState));
-  }
-  /**
-   * Compatibility function for store getters.
-   *
-   * @param {string} getterId getter id
-   * @return {any} getter operation result
-   */
-
-
-  builderStore.get = function (getterId) {
-    return builderStore.getters[getterId];
-  };
-  /**
-   * Get translation of a string.
-   *
-   * @param {string} translationId translation id
-   * @return {undefined | string} translated string
-   */
-
-
-  builderStore.getTranslation = function (translationId) {
-    return builderStore.getters.getTranslation(translationId);
-  };
-
-  return builderStore;
-}
-/**
- * @module createStore
- */
-
-
-var _default = new BuilderStore();
-
-exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"functions/globalStore.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ProOverlay":"containers/ProOverlay.vue","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"functions/globalStore.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
