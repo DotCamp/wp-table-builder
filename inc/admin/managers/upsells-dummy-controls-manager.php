@@ -17,14 +17,39 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	 */
 	protected function init_process() {
 		// add upsell pro controls
-		add_action( 'wp-table-builder/elements_registered', [ __CLASS__, 'add_dummy_controls' ], 10, 1 );
+		$this->add_element_controls();
 
 		// add upsell table setting controls
+		$this->add_settings_controls();
+
+		// add builder related data to frontend
+		$this->add_builder_data();
+	}
+
+	/**
+	 * Add table settings related upsells.
+	 * @return void
+	 */
+	private function add_settings_controls() {
 		add_action( 'wp-table-builder/table_settings_registered', [
-			static::get_instance(),
+			$this,
 			'upsell_setting_controls'
 		], 1, 1 );
+	}
 
+	/**
+	 * Add elements' controls related upsells.
+	 * @return void
+	 */
+	private function add_element_controls() {
+		add_action( 'wp-table-builder/elements_registered', [ $this, 'add_dummy_controls' ], 10, 1 );
+	}
+
+	/**
+	 * Add builder related data to frontend.
+	 * @return void
+	 */
+	private function add_builder_data() {
 		Frontend_Data_Manager::add_builder_translations( [
 			'proFeature'   => esc_html__( "Pro feature", 'wp-table-builder' ),
 			'upgradeToPro' => __( 'Please get the <span class="upsell-pro-indicator">PRO</span> add-on to unlock all exclusive features.', 'wp-table-builder' ),
@@ -37,6 +62,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 		], 'upsells', true );
 	}
 
+
 	/**
 	 * Add pro setting controls for tables with upsell.
 	 *
@@ -44,7 +70,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	 *
 	 * @return void
 	 */
-	public static function upsell_setting_controls( $context ) {
+	public function upsell_setting_controls( $context ) {
 		$sticky_controls = [
 			'topRowSticky'      =>
 				[
@@ -79,7 +105,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	 *
 	 * @return Dummy_Control_Base control instance
 	 */
-	private static function get_dummy_control_instance( $name ) {
+	private function get_dummy_control_instance( $name ) {
 		$compatible_dummy_control_class_name = implode( '_', array_map( 'ucfirst', explode( '_', $name ) ) );
 
 		$class_namespace = '\WP_Table_Builder\Inc\Admin\Controls\Dummy_Controls\\' . $compatible_dummy_control_class_name;
@@ -94,13 +120,13 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	 *
 	 * @return void
 	 */
-	public static function add_dummy_controls( $elements_manager ) {
+	public function add_dummy_controls( $elements_manager ) {
 		if ( ! Addon_Manager::check_pro_status() ) {
 			$element_controls          = $elements_manager->get_element_objects();
-			$registered_dummy_controls = static::get_instance()->get_class_options()['dummy_controls'];
+			$registered_dummy_controls = $this->get_class_options()['dummy_controls'];
 			foreach ( $element_controls as $element ) {
 				foreach ( $registered_dummy_controls as $control_name ) {
-					$control_instance = static::get_dummy_control_instance( $control_name );
+					$control_instance = $this->get_dummy_control_instance( $control_name );
 
 					if ( $control_instance instanceof Dummy_Control_Base ) {
 						$control_instance->add_controls( $element );
