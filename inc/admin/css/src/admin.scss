@@ -237,6 +237,11 @@ body > img {
   position: relative;
 }
 
+.wptb-save .static-active.active {
+  background-color: $logo-color !important;
+  color: $white !important;
+}
+
 #wptb_builder[data-wptb-saving] .wptb-save-btn {
   opacity: 0 !important;
 }
