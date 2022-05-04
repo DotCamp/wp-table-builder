@@ -7,6 +7,7 @@
 		@click="toggleModal"
 	>
 		<ModalWindow
+			ref="modalWindow"
 			:is-fixed="true"
 			:visible="showModal"
 			icon-name="lock"
@@ -26,12 +27,14 @@
 <script>
 import { mapGetters, createNamespacedHelpers } from 'vuex';
 import ModalWindow from '$Components/ModalWindow';
+import BuilderStore from '$Stores/builderStore';
 
 const { mapGetters: mapUpsellsGetters } = createNamespacedHelpers('upsells');
 
 export const targetTypes = {
 	SECTIONCONTAINER: 'sectionContainer',
-	TARGETELEMENT: 'targetelement',
+	PARENT: 'parent',
+	APPEND: 'append',
 };
 
 export default {
@@ -44,6 +47,18 @@ export default {
 			type: String,
 			default: targetTypes.SECTIONCONTAINER,
 		},
+		explicitStore: {
+			type: Boolean,
+			default: false,
+		},
+		appendTarget: {
+			type: Node,
+			default: null,
+		},
+		appendTargetQuery: {
+			type: String,
+			default: null,
+		},
 	},
 	components: { ModalWindow },
 	data: () => {
@@ -51,12 +66,20 @@ export default {
 			showModal: false,
 		};
 	},
+	created() {
+		// if enabled, use builder store explicitly
+		if (this.explicitStore) {
+			this.$store = BuilderStore;
+		}
+	},
 	mounted() {
 		this.$nextTick(() => {
-			const { container } = this.$refs;
+			const { container, modalWindow } = this.$refs;
 
 			if (container) {
 				this.positionOverlay();
+
+				this.positionModalWindow(modalWindow.$el);
 			}
 		});
 	},
@@ -80,11 +103,32 @@ export default {
 			const parentContainer = container.parentNode.parentNode.parentNode;
 			parentContainer.style.position = 'relative';
 		},
+
+		positionParent(container) {
+			const parentContainer = container.parentNode;
+			parentContainer.style.position = 'relative';
+		},
+		appendToTarget(container) {
+			const finalTarget = this.appendTarget ?? document.querySelector(this.appendTargetQuery);
+			if (finalTarget) {
+				finalTarget.style.position = 'relative';
+				finalTarget.appendChild(container);
+			}
+		},
+		positionModalWindow(modalWindowElement) {
+			document.body.appendChild(modalWindowElement);
+		},
 		positionOverlay() {
 			const { container } = this.$refs;
 			switch (this.target) {
 				case targetTypes.SECTIONCONTAINER:
 					this.positionSectionContainer(container);
+					break;
+				case targetTypes.PARENT:
+					this.positionParent(container);
+					break;
+				case targetTypes.APPEND:
+					this.appendToTarget(container);
 					break;
 			}
 		},

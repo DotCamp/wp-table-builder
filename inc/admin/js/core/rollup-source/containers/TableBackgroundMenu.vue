@@ -28,7 +28,23 @@
 						:color="backgroundBuffer.color"
 						:label="customColorControlLabel"
 					></color-picker>
-					<pro-overlay :feature-name="translationM('customColorSelectionFeatureName')"></pro-overlay>
+					<pro-overlay
+						:explicit-store="true"
+						:target="targetTypes.PARENT"
+						:feature-name="translationM('customColorSelectionFeatureName')"
+					></pro-overlay>
+					<pro-overlay
+						:explicit-store="true"
+						:target="targetTypes.APPEND"
+						append-target-query=".wptb-row-selection .wptb-bg-selection-item-inner-wrapper"
+						:feature-name="translationM('customColorSelectionFeatureName')"
+					></pro-overlay>
+					<pro-overlay
+						:explicit-store="true"
+						:target="targetTypes.APPEND"
+						append-target-query=".wptb-col-selection .wptb-bg-selection-item-inner-wrapper"
+						:feature-name="translationM('customColorSelectionFeatureName')"
+					></pro-overlay>
 					<panel-message-row
 						v-if="columnMixedMessageVisibility"
 						:message="translationM('mixedColumnColorMessage')"
@@ -46,7 +62,7 @@ import ColorPicker from '$Components/ColorPicker';
 import withNativeTranslationStore from '$Mixins/withNativeTranslationStore';
 import PanelPlainMessage from '$Components/leftPanel/PanelPlainMessage';
 import PanelMessageRow from '$Components/leftPanel/PanelMessageRow';
-import ProOverlay from '$Containers/ProOverlay';
+import ProOverlay, { targetTypes } from '$Containers/ProOverlay';
 import BuilderStore from '$Stores/builderStore';
 
 export default {
@@ -97,6 +113,9 @@ export default {
 		});
 	},
 	computed: {
+		targetTypes() {
+			return targetTypes;
+		},
 		proStatus() {
 			return BuilderStore.getters.proStatus;
 		},

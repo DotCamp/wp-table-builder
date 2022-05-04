@@ -32095,154 +32095,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"containers/ProOverlay.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = exports.targetTypes = void 0;
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _vuex = require("vuex");
-
-var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-var _createNamespacedHelp = (0, _vuex.createNamespacedHelpers)('upsells'),
-    mapUpsellsGetters = _createNamespacedHelp.mapGetters;
-
-var targetTypes = {
-  SECTIONCONTAINER: 'sectionContainer',
-  TARGETELEMENT: 'targetelement'
-};
-exports.targetTypes = targetTypes;
-var _default = {
-  props: {
-    featureName: {
-      type: String,
-      default: 'This is'
-    },
-    target: {
-      type: String,
-      default: targetTypes.SECTIONCONTAINER
-    }
-  },
-  components: {
-    ModalWindow: _ModalWindow.default
-  },
-  data: function data() {
-    return {
-      showModal: false
-    };
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    this.$nextTick(function () {
-      var container = _this.$refs.container;
-
-      if (container) {
-        _this.positionOverlay();
-      }
-    });
-  },
-  computed: _objectSpread(_objectSpread({
-    generatedMessage: function generatedMessage() {
-      return "<span><span style=\"font-weight:bold\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
-    }
-  }, (0, _vuex.mapGetters)(['getTranslation', 'proStatus'])), mapUpsellsGetters(['getUpsellUrl'])),
-  methods: {
-    toggleModal: function toggleModal() {
-      this.showModal = !this.showModal;
-    },
-    handleUnlock: function handleUnlock() {
-      window.open(this.getUpsellUrl);
-    },
-    positionSectionContainer: function positionSectionContainer(container) {
-      var parentContainer = container.parentNode.parentNode.parentNode;
-      parentContainer.style.position = 'relative';
-    },
-    positionOverlay: function positionOverlay() {
-      var container = this.$refs.container;
-
-      switch (this.target) {
-        case targetTypes.SECTIONCONTAINER:
-          this.positionSectionContainer(container);
-          break;
-      }
-    }
-  }
-};
-exports.default = _default;
-        var $4ee90e = exports.default || module.exports;
-      
-      if (typeof $4ee90e === 'function') {
-        $4ee90e = $4ee90e.options;
-      }
-    
-        /* template */
-        Object.assign($4ee90e, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return !_vm.proStatus
-    ? _c(
-        "div",
-        {
-          ref: "container",
-          staticClass: "wptb-upsells-pro-overlay",
-          staticStyle: { "font-size": "15px" },
-          on: { click: _vm.toggleModal }
-        },
-        [
-          _c(
-            "ModalWindow",
-            {
-              attrs: {
-                "is-fixed": true,
-                visible: _vm.showModal,
-                "icon-name": "lock",
-                "icon-classes": ["pro-overlay-screen-popup-icon"],
-                "close-callback": _vm.toggleModal,
-                "window-title": _vm.getTranslation("proFeature"),
-                message: _vm.generatedMessage,
-                "button-label": _vm.getTranslation("unlockNow"),
-                "button-extra-classes": ["pro-overlay-modal-button"],
-                callback: _vm.handleUnlock
-              }
-            },
-            [
-              _c("div", {
-                domProps: { innerHTML: _vm._s(_vm.getTranslation("useCode")) }
-              })
-            ]
-          )
-        ],
-        1
-      )
-    : _vm._e()
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/ModalWindow":"components/ModalWindow.vue"}],"stores/general.js":[function(require,module,exports) {
+},{}],"stores/general.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33029,7 +32882,205 @@ function BuilderStore() {
 var _default = new BuilderStore();
 
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"containers/TableBackgroundMenu.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"containers/ProOverlay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.targetTypes = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _vuex = require("vuex");
+
+var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
+
+var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+var _createNamespacedHelp = (0, _vuex.createNamespacedHelpers)('upsells'),
+    mapUpsellsGetters = _createNamespacedHelp.mapGetters;
+
+var targetTypes = {
+  SECTIONCONTAINER: 'sectionContainer',
+  PARENT: 'parent',
+  APPEND: 'append'
+};
+exports.targetTypes = targetTypes;
+var _default = {
+  props: {
+    featureName: {
+      type: String,
+      default: 'This is'
+    },
+    target: {
+      type: String,
+      default: targetTypes.SECTIONCONTAINER
+    },
+    explicitStore: {
+      type: Boolean,
+      default: false
+    },
+    appendTarget: {
+      type: Node,
+      default: null
+    },
+    appendTargetQuery: {
+      type: String,
+      default: null
+    }
+  },
+  components: {
+    ModalWindow: _ModalWindow.default
+  },
+  data: function data() {
+    return {
+      showModal: false
+    };
+  },
+  created: function created() {
+    // if enabled, use builder store explicitly
+    if (this.explicitStore) {
+      this.$store = _builderStore.default;
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      var _this$$refs = _this.$refs,
+          container = _this$$refs.container,
+          modalWindow = _this$$refs.modalWindow;
+
+      if (container) {
+        _this.positionOverlay();
+
+        _this.positionModalWindow(modalWindow.$el);
+      }
+    });
+  },
+  computed: _objectSpread(_objectSpread({
+    generatedMessage: function generatedMessage() {
+      return "<span><span style=\"font-weight:bold\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
+    }
+  }, (0, _vuex.mapGetters)(['getTranslation', 'proStatus'])), mapUpsellsGetters(['getUpsellUrl'])),
+  methods: {
+    toggleModal: function toggleModal() {
+      this.showModal = !this.showModal;
+    },
+    handleUnlock: function handleUnlock() {
+      window.open(this.getUpsellUrl);
+    },
+    positionSectionContainer: function positionSectionContainer(container) {
+      var parentContainer = container.parentNode.parentNode.parentNode;
+      parentContainer.style.position = 'relative';
+    },
+    positionParent: function positionParent(container) {
+      var parentContainer = container.parentNode;
+      parentContainer.style.position = 'relative';
+    },
+    appendToTarget: function appendToTarget(container) {
+      var _this$appendTarget;
+
+      var finalTarget = (_this$appendTarget = this.appendTarget) !== null && _this$appendTarget !== void 0 ? _this$appendTarget : document.querySelector(this.appendTargetQuery);
+
+      if (finalTarget) {
+        finalTarget.style.position = 'relative';
+        finalTarget.appendChild(container);
+      }
+    },
+    positionModalWindow: function positionModalWindow(modalWindowElement) {
+      document.body.appendChild(modalWindowElement);
+    },
+    positionOverlay: function positionOverlay() {
+      var container = this.$refs.container;
+
+      switch (this.target) {
+        case targetTypes.SECTIONCONTAINER:
+          this.positionSectionContainer(container);
+          break;
+
+        case targetTypes.PARENT:
+          this.positionParent(container);
+          break;
+
+        case targetTypes.APPEND:
+          this.appendToTarget(container);
+          break;
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $4ee90e = exports.default || module.exports;
+      
+      if (typeof $4ee90e === 'function') {
+        $4ee90e = $4ee90e.options;
+      }
+    
+        /* template */
+        Object.assign($4ee90e, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return !_vm.proStatus
+    ? _c(
+        "div",
+        {
+          ref: "container",
+          staticClass: "wptb-upsells-pro-overlay",
+          staticStyle: { "font-size": "15px" },
+          on: { click: _vm.toggleModal }
+        },
+        [
+          _c(
+            "ModalWindow",
+            {
+              ref: "modalWindow",
+              attrs: {
+                "is-fixed": true,
+                visible: _vm.showModal,
+                "icon-name": "lock",
+                "icon-classes": ["pro-overlay-screen-popup-icon"],
+                "close-callback": _vm.toggleModal,
+                "window-title": _vm.getTranslation("proFeature"),
+                message: _vm.generatedMessage,
+                "button-label": _vm.getTranslation("unlockNow"),
+                "button-extra-classes": ["pro-overlay-modal-button"],
+                callback: _vm.handleUnlock
+              }
+            },
+            [
+              _c("div", {
+                domProps: { innerHTML: _vm._s(_vm.getTranslation("useCode")) }
+              })
+            ]
+          )
+        ],
+        1
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/ModalWindow":"components/ModalWindow.vue","$Stores/builderStore":"stores/builderStore/index.js"}],"containers/TableBackgroundMenu.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33051,9 +33102,13 @@ var _PanelPlainMessage = _interopRequireDefault(require("$Components/leftPanel/P
 
 var _PanelMessageRow = _interopRequireDefault(require("$Components/leftPanel/PanelMessageRow"));
 
-var _ProOverlay = _interopRequireDefault(require("$Containers/ProOverlay"));
+var _ProOverlay = _interopRequireWildcard(require("$Containers/ProOverlay"));
 
 var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33122,6 +33177,9 @@ var _default = {
     });
   },
   computed: _objectSpread(_objectSpread({
+    targetTypes: function targetTypes() {
+      return _ProOverlay.targetTypes;
+    },
     proStatus: function proStatus() {
       return _builderStore.default.getters.proStatus;
     },
@@ -33322,6 +33380,32 @@ exports.default = _default;
                     _vm._v(" "),
                     _c("pro-overlay", {
                       attrs: {
+                        "explicit-store": true,
+                        target: _vm.targetTypes.PARENT,
+                        "feature-name": _vm.translationM(
+                          "customColorSelectionFeatureName"
+                        )
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("pro-overlay", {
+                      attrs: {
+                        "explicit-store": true,
+                        target: _vm.targetTypes.APPEND,
+                        "append-target-query":
+                          ".wptb-row-selection .wptb-bg-selection-item-inner-wrapper",
+                        "feature-name": _vm.translationM(
+                          "customColorSelectionFeatureName"
+                        )
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("pro-overlay", {
+                      attrs: {
+                        "explicit-store": true,
+                        target: _vm.targetTypes.APPEND,
+                        "append-target-query":
+                          ".wptb-col-selection .wptb-bg-selection-item-inner-wrapper",
                         "feature-name": _vm.translationM(
                           "customColorSelectionFeatureName"
                         )
@@ -33812,7 +33896,7 @@ var _default = {
           selectedColumn: (0, _i18n.__)('selected column background', 'wp-table-builder'),
           mixedColumnColorMessage: (0, _i18n.__)('There are cells with different color values on this column, applying column wide color values will override those.', 'wp-table-builder'),
           emptySelectionMessage: (0, _i18n.__)('Select a row/column/cell to change their background properties.', 'wp-table-builder'),
-          customColorSelectionFeatureName: (0, _i18n.__)('custom item color', 'wp-table-builder')
+          customColorSelectionFeatureName: (0, _i18n.__)('Individual cell/row/column color', 'wp-table-builder')
         }
       }
     };
