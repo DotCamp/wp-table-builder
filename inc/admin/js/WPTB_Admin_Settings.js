@@ -34355,6 +34355,57 @@ var upsellsModule = {
 
 var _default = upsellsModule;
 exports.default = _default;
+},{}],"stores/builderStore/modules/app/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Store module related app specific operations.
+ *
+ * @type {Object}
+ */
+var appModule = {
+  namespaced: true,
+  state: function state() {
+    return {
+      saveOperation: {
+        enabled: false
+      }
+    };
+  },
+  getters: {
+    /**
+     * Current availability of save operation.
+     *
+     * @param {Object} state store state
+     */
+    isSavingEnabled: function isSavingEnabled(state) {
+      return state.saveOperation.enabled;
+    }
+  },
+  mutations: {
+    /**
+     * Set save operation availability.
+     *
+     * @param {Object} state store state
+     * @param {boolean} status status
+     */
+    setSaveStatus: function setSaveStatus(state, status) {
+      // eslint-disable-next-line no-param-reassign
+      state.saveOperation.enabled = status;
+    }
+  }
+};
+/**
+ * @module appModule
+ */
+
+var _default = appModule;
+exports.default = _default;
 },{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -34371,6 +34422,8 @@ var _embed = _interopRequireDefault(require("$Stores/builderStore/modules/embed"
 
 var _upsells = _interopRequireDefault(require("$Stores/builderStore/modules/upsells"));
 
+var _app = _interopRequireDefault(require("$Stores/builderStore/modules/app"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -34382,7 +34435,8 @@ var modules = {
   colorPicker: _colorPicker.default,
   nightMode: _nightMode.default,
   embed: _embed.default,
-  upsells: _upsells.default
+  upsells: _upsells.default,
+  app: _app.default
 };
 /**
  * @module modules
@@ -34390,7 +34444,7 @@ var modules = {
 
 var _default = modules;
 exports.default = _default;
-},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js","$Stores/builderStore/modules/upsells":"stores/builderStore/modules/upsells/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js","$Stores/builderStore/modules/upsells":"stores/builderStore/modules/upsells/index.js","$Stores/builderStore/modules/app":"stores/builderStore/modules/app/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }

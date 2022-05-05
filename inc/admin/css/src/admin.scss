@@ -237,6 +237,12 @@ body > img {
   position: relative;
 }
 
+.wptb-save-button-down {
+  margin: 2px;
+  width: 15px;
+  cursor: pointer;
+}
+
 .wptb-save .static-active.active {
   background-color: $logo-color !important;
   color: $white !important;
@@ -7302,3 +7308,14 @@ label.wptb-control-row {
 .pro-overlay-modal-button {
   background-color: $green-500;
 }
+
+//region builder save button
+.main-save-button-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+//endregion

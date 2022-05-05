@@ -111,6 +111,9 @@ var WPTB_Initializer = function () {
 		);
 	});
 
+    // call table embed
+    WPTB_ControlsManager.callControlScript('SaveButton', 'saveButton');
+
     // @deprecated
     // // add scroll operation calculations to window
     // new WPTB_RowMove().attachScrollOperationCalculations();
