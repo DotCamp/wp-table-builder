@@ -33091,7 +33091,13 @@ exports.default = _default;
           ref: "container",
           staticClass: "wptb-upsells-pro-overlay",
           staticStyle: { "font-size": "15px" },
-          on: { click: _vm.toggleModal }
+          on: {
+            "!click": function($event) {
+              $event.preventDefault()
+              $event.stopPropagation()
+              return _vm.toggleModal($event)
+            }
+          }
         },
         [
           _c(

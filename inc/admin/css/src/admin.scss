@@ -7156,6 +7156,7 @@ label.wptb-control-row {
   height: 100%;
   top: 0;
   left: 0;
+  z-index: 100000;
   background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, #3299D13C 15px, #3299D13C 30px);
   cursor: pointer;
   //animation: linear-gradient-move 40s linear infinite reverse;

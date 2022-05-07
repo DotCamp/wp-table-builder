@@ -4,7 +4,7 @@
 		ref="container"
 		style="font-size: 15px"
 		class="wptb-upsells-pro-overlay"
-		@click="toggleModal"
+		@click.prevent.stop.capture="toggleModal"
 	>
 		<ModalWindow
 			ref="modalWindow"
