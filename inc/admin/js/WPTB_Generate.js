@@ -17426,9 +17426,9 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard"));
-
 require("regenerator-runtime/runtime");
+
+var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard"));
 
 var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
 
@@ -17443,6 +17443,10 @@ var _default = {
     PrebuiltCard: _PrebuiltCard.default
   },
   props: {
+    dummyProCss: {
+      type: String,
+      default: null
+    },
     version: {
       type: String,
       default: 'normal'
@@ -17867,11 +17871,7 @@ exports.default = _default;
           ],
           ref: "search",
           staticClass: "wptb-generate-search",
-          attrs: {
-            type: "text",
-            placeholder: _vm.strings.searchPlaceholder,
-            disabled: !_vm.isPro
-          },
+          attrs: { type: "text", placeholder: _vm.strings.searchPlaceholder },
           domProps: { value: _vm.searchString },
           on: {
             input: function($event) {
@@ -17890,34 +17890,42 @@ exports.default = _default;
       _c(
         "div",
         { staticClass: "wptb-generate-menu-listing" },
-        _vm._l(_vm.sortedTables(), function(v) {
-          return _c("prebuilt-card", {
-            key: v.id,
-            attrs: {
-              id: v.id,
-              name: v.title,
-              fav: v.fav,
-              "is-active": _vm.isCardActive(v.id),
-              disabled: _vm.generating,
-              table: v.content,
-              "search-string": _vm.searchString,
-              "fav-icon": _vm.cardFavIcon(v.id),
-              "delete-icon": _vm.cardDeleteIcon(v.id)
-            },
-            on: {
-              cardActive: _vm.cardActive,
-              cardGenerate: _vm.cardGenerate,
-              cardEdit: _vm.cardEdit,
-              favAction: _vm.favAction,
-              deleteAction: _vm.deleteAction
-            }
+        [
+          _vm.dummyProCss
+            ? _c("link", {
+                attrs: { href: _vm.dummyProCss, rel: "stylesheet" }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.sortedTables(), function(v) {
+            return _c("prebuilt-card", {
+              key: v.id,
+              attrs: {
+                id: v.id,
+                name: v.title,
+                fav: v.fav,
+                "is-active": _vm.isCardActive(v.id),
+                disabled: _vm.generating,
+                table: v.content,
+                "search-string": _vm.searchString,
+                "fav-icon": _vm.cardFavIcon(v.id),
+                "delete-icon": _vm.cardDeleteIcon(v.id)
+              },
+              on: {
+                cardActive: _vm.cardActive,
+                cardGenerate: _vm.cardGenerate,
+                cardEdit: _vm.cardEdit,
+                favAction: _vm.favAction,
+                deleteAction: _vm.deleteAction
+              }
+            })
           })
-        }),
-        1
+        ],
+        2
       )
     ]),
     _vm._v(" "),
-    !_vm.isPro
+    false
       ? _c("div", { domProps: { innerHTML: _vm._s(_vm.upsell) } })
       : _vm._e()
   ])
@@ -17934,7 +17942,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/regenerator":"../../../../../node_modules/@babel/runtime/regenerator/index.js","../components/PrebuiltCard":"components/PrebuiltCard.vue","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js","$Stores/builderStore":"stores/builderStore/index.js"}],"plugins/filters.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/regenerator":"../../../../../node_modules/@babel/runtime/regenerator/index.js","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js","../components/PrebuiltCard":"components/PrebuiltCard.vue","$Stores/builderStore":"stores/builderStore/index.js"}],"plugins/filters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18102,7 +18110,7 @@ var vm = new _vue.default({
   components: {
     GenerateMain: _GenerateMain.default
   },
-  template: '<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
+  template: '<generate-main :dummy-pro-css="dummyProCss" :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
   data: data
 }).$mount("#".concat(data.mountId));
 var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container

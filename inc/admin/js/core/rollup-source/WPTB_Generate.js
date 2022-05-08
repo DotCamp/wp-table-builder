@@ -35,7 +35,7 @@ Vue.use(strings, data);
 const vm = new Vue({
 	components: { GenerateMain },
 	template:
-		'<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
+		'<generate-main :dummy-pro-css="dummyProCss" :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
 	data,
 }).$mount(`#${data.mountId}`);
 

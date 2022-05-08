@@ -5,7 +5,9 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use WP_Table_Builder\Inc\Core\Init;
+use WP_Table_Builder as NS;
 use function add_filter;
+use function trailingslashit;
 
 /**
  * Template manager.
@@ -13,7 +15,6 @@ use function add_filter;
 class Template_Manager {
 	use Init_Once;
 	use Singleton_Trait;
-
 
 	/**
 	 * Function to be called during initialization process.
@@ -44,7 +45,12 @@ class Template_Manager {
 				'checkIcon'  => Init::instance()->get_icon_manager()->get_icon( 'check-circle' ),
 				'crossIcon'  => Init::instance()->get_icon_manager()->get_icon( 'times-circle' ),
 			];
+
+			$generate_data['dummyProCss'] = trailingslashit( NS\WP_TABLE_BUILDER_URL ) . 'inc/admin/css/dummy-pro.css';
+		} else {
+			$generate_data['dummyProCss'] = null;
 		}
+
 
 		return $generate_data;
 	}

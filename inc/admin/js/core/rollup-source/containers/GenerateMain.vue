@@ -8,10 +8,10 @@
 					class="wptb-generate-search"
 					type="text"
 					:placeholder="strings.searchPlaceholder"
-					:disabled="!isPro"
 				/>
 			</div>
 			<div class="wptb-generate-menu-listing">
+				<link v-if="dummyProCss" :href="dummyProCss" rel="stylesheet" />
 				<prebuilt-card
 					v-for="v in sortedTables()"
 					:key="v.id"
@@ -32,17 +32,21 @@
 				></prebuilt-card>
 			</div>
 		</div>
-		<div v-if="!isPro" v-html="upsell"></div>
+		<div v-if="false" v-html="upsell"></div>
 	</div>
 </template>
 <script>
-import PrebuiltCard from '../components/PrebuiltCard';
 import 'regenerator-runtime/runtime';
+import PrebuiltCard from '../components/PrebuiltCard';
 import BuilderStore from '$Stores/builderStore';
 
 export default {
 	components: { PrebuiltCard },
 	props: {
+		dummyProCss: {
+			type: String,
+			default: null,
+		},
 		version: {
 			type: String,
 			default: 'normal',
