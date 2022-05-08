@@ -159,6 +159,10 @@ body > img {
   height: 100%;
   border-left: 1px solid var(--wptb-plugin-theme-sidebar-bg);
   border-right: 1px solid var(--wptb-plugin-theme-sidebar-bg);
+
+  .wptb-settings-section-item {
+    border-bottom: 0 !important;
+  }
 }
 
 .wptb-panel-night-mode-container {
@@ -237,11 +241,6 @@ body > img {
   position: relative;
 }
 
-.wptb-save-button-down {
-  margin: 2px;
-  width: 15px;
-  cursor: pointer;
-}
 
 .wptb-save .static-active.active {
   background-color: $logo-color !important;
@@ -7312,18 +7311,44 @@ label.wptb-control-row {
 
 //region builder save button
 .main-save-button-wrapper {
+  @extend %default-transition;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #CBD5E0 !important;
+  color: $white;
+  background-color: $logo-color;
 
-  .save-btn {
-    text-decoration: none;
-    color: inherit;
+  &[data-disabled] {
+    color: #CBD5E0 !important;
+    background-color: transparent !important;
+
+    .save-btn {
+      cursor: not-allowed !important;
+    }
   }
 
+  .save-btn {
+    @extend %default-transition;
+    @extend %flex-center-all;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+
+    &:hover {
+      background-color: unset !important;
+    }
+
+    .save-button-down {
+      margin: 0 5px;
+      cursor: inherit;
+
+      svg {
+        width: 15px;
+      }
+    }
+  }
 }
 
 //endregion

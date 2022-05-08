@@ -46555,23 +46555,21 @@ exports.default = _default;
     },
     [
       _c(
-        "a",
-        {
-          staticClass:
-            "save-btn wptb-save-disabled wptb-settings-section-item static-active",
-          attrs: { href: "#" }
-        },
-        [_vm._v(" Save ")]
+        "div",
+        { staticClass: "save-btn wptb-settings-section-item static-active" },
+        [
+          _c("span", [_vm._v("Save")]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "save-button-down" },
+            [_c("icon", { attrs: { name: "caret-down" } })],
+            1
+          )
+        ]
       ),
       _vm._v(" "),
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "wptb-save-button-down" },
-        [_c("icon", { attrs: { name: "caret-down" } })],
-        1
-      )
+      _vm._m(0)
     ]
   )
 }
