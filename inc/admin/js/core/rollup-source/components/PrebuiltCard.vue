@@ -297,6 +297,7 @@ export default {
 	methods: {
 		scalePrebuiltPreview(prebuilt) {
 			const { tablePreview } = this.$refs;
+			// eslint-disable-next-line no-unused-vars
 			const { width: wrapperWidth, height: wrapperHeight } = tablePreview.getBoundingClientRect();
 
 			const maxWidth = prebuilt.dataset.wptbTableContainerMaxWidth;

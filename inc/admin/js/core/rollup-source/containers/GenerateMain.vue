@@ -76,6 +76,7 @@ export default {
 		};
 	},
 	mounted() {
+		// eslint-disable-next-line @wordpress/no-global-event-listener
 		window.addEventListener('keyup', this.focusToSearch);
 
 		// add correct translation of blank at mounted
@@ -89,11 +90,14 @@ export default {
 		},
 	},
 	methods: {
+		isBaseAllowed(cardId) {
+			return this.isPro || cardId === 'blank';
+		},
 		deselect() {
 			this.activeCard = '';
 		},
 		favAction(cardId) {
-			if (this.isPro) {
+			if (this.isBaseAllowed(cardId)) {
 				const { favAction, favNonce, ajaxUrl } = this.security;
 
 				const formData = new FormData();
@@ -119,6 +123,7 @@ export default {
 						}
 					})
 					.catch((e) => {
+						// eslint-disable-next-line no-console
 						console.error('an error occurred with fav operation request: ', e);
 					});
 			}
@@ -186,12 +191,12 @@ export default {
 			return this.activeCard === id;
 		},
 		cardActive(cardId) {
-			if (this.isPro) {
+			if (cardId === 'blank' || this.isPro) {
 				this.activeCard = cardId;
 			}
 		},
 		cardEdit(cardId) {
-			if (this.isPro) {
+			if (this.isBaseAllowed(cardId)) {
 				this.cardGenerate(cardId, 0, 0, [], true);
 				const currentUrl = new URL(window.location.href);
 				currentUrl.searchParams.append('table', encodeURIComponent(cardId));
@@ -199,7 +204,7 @@ export default {
 			}
 		},
 		cardGenerate(cardId, cols, rows, selectedCells, edit = false) {
-			if (this.isPro) {
+			if (this.isBaseAllowed(cardId)) {
 				this.generating = true;
 				if (cardId === 'blank') {
 					WPTB_Table(cols, rows);
@@ -220,7 +225,7 @@ export default {
 
 					if (!edit) {
 						// unmark inserted template as prebuilt table
-						// only unmark it if edit mode is not enabled
+						// only unmark if edit mode is not enabled
 						delete table.dataset.wptbPrebuiltTable;
 
 						const tableRows = Array.from(table.querySelectorAll('tr'));
@@ -279,8 +284,7 @@ export default {
 						/**
 						 * Increment id of plugin element.
 						 *
-						 * @param HTMLElement divEl div element
-						 * @param divEl
+						 * @param {HTMLElement} divEl div element
 						 */
 						const incrementIds = (divEl) => {
 							let className = null;
@@ -369,7 +373,7 @@ export default {
 			}
 		},
 		deleteAction(cardId) {
-			if (this.isPro) {
+			if (this.isBaseAllowed()) {
 				const { ajaxUrl, deleteAction, deleteNonce, devModeNonce } = this.security;
 
 				const form = new FormData();
@@ -403,12 +407,14 @@ export default {
 						}
 					})
 					.catch((e) => {
+						// eslint-disable-next-line no-console
 						console.error(e.message);
 					});
 			}
 		},
 	},
 	beforeDestroy() {
+		// eslint-disable-next-line @wordpress/no-global-event-listener
 		window.removeEventListener('keyup', this.focusToSearch);
 	},
 };

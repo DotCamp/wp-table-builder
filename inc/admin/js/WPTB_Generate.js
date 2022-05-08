@@ -12175,9 +12175,9 @@ var runtime = (function (exports) {
   // This is a polyfill for %IteratorPrototype% for environments that
   // don't natively support it.
   var IteratorPrototype = {};
-  IteratorPrototype[iteratorSymbol] = function () {
+  define(IteratorPrototype, iteratorSymbol, function () {
     return this;
-  };
+  });
 
   var getProto = Object.getPrototypeOf;
   var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
@@ -12191,8 +12191,9 @@ var runtime = (function (exports) {
 
   var Gp = GeneratorFunctionPrototype.prototype =
     Generator.prototype = Object.create(IteratorPrototype);
-  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
-  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunction.prototype = GeneratorFunctionPrototype;
+  define(Gp, "constructor", GeneratorFunctionPrototype);
+  define(GeneratorFunctionPrototype, "constructor", GeneratorFunction);
   GeneratorFunction.displayName = define(
     GeneratorFunctionPrototype,
     toStringTagSymbol,
@@ -12306,9 +12307,9 @@ var runtime = (function (exports) {
   }
 
   defineIteratorMethods(AsyncIterator.prototype);
-  AsyncIterator.prototype[asyncIteratorSymbol] = function () {
+  define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
     return this;
-  };
+  });
   exports.AsyncIterator = AsyncIterator;
 
   // Note that simple async functions are implemented on top of
@@ -12501,13 +12502,13 @@ var runtime = (function (exports) {
   // iterator prototype chain incorrectly implement this, causing the Generator
   // object to not be returned from this call. This ensures that doesn't happen.
   // See https://github.com/facebook/regenerator/issues/274 for more details.
-  Gp[iteratorSymbol] = function() {
+  define(Gp, iteratorSymbol, function() {
     return this;
-  };
+  });
 
-  Gp.toString = function() {
+  define(Gp, "toString", function() {
     return "[object Generator]";
-  };
+  });
 
   function pushTryEntry(locs) {
     var entry = { tryLoc: locs[0] };
@@ -12826,14 +12827,19 @@ try {
 } catch (accidentalStrictMode) {
   // This module should not be running in strict mode, so the above
   // assignment should always work unless something is misconfigured. Just
-  // in case runtime.js accidentally runs in strict mode, we can escape
+  // in case runtime.js accidentally runs in strict mode, in modern engines
+  // we can explicitly access globalThis. In older engines we can escape
   // strict mode using a global Function call. This could conceivably fail
   // if a Content Security Policy forbids using Function, but in that case
   // the proper solution is to fix the accidental strict mode problem. If
   // you've misconfigured your bundler to force strict mode and applied a
   // CSP to forbid Function, and you're not willing to fix either of those
   // problems, please detail your unique predicament in a GitHub issue.
-  Function("r", "regeneratorRuntime = r")(runtime);
+  if (typeof globalThis === "object") {
+    globalThis.regeneratorRuntime = runtime;
+  } else {
+    Function("r", "regeneratorRuntime = r")(runtime);
+  }
 }
 
 },{}],"../../../../../node_modules/@babel/runtime/regenerator/index.js":[function(require,module,exports) {
@@ -17127,7 +17133,7 @@ var _default = {
   },
   methods: {
     scalePrebuiltPreview: function scalePrebuiltPreview(prebuilt) {
-      var tablePreview = this.$refs.tablePreview;
+      var tablePreview = this.$refs.tablePreview; // eslint-disable-next-line no-unused-vars
 
       var _tablePreview$getBoun = tablePreview.getBoundingClientRect(),
           wrapperWidth = _tablePreview$getBoun.width,
@@ -17470,6 +17476,7 @@ var _default = {
     };
   },
   mounted: function mounted() {
+    // eslint-disable-next-line @wordpress/no-global-event-listener
     window.addEventListener('keyup', this.focusToSearch); // add correct translation of blank at mounted
 
     this.fixedTables.blank.title = this.strings.blank;
@@ -17481,13 +17488,16 @@ var _default = {
     }
   },
   methods: {
+    isBaseAllowed: function isBaseAllowed(cardId) {
+      return this.isPro || cardId === 'blank';
+    },
     deselect: function deselect() {
       this.activeCard = '';
     },
     favAction: function favAction(cardId) {
       var _this = this;
 
-      if (this.isPro) {
+      if (this.isBaseAllowed(cardId)) {
         var _this$security = this.security,
             favAction = _this$security.favAction,
             favNonce = _this$security.favNonce,
@@ -17512,6 +17522,7 @@ var _default = {
             _this.fixedTables[cardId].fav = resp.message;
           }
         }).catch(function (e) {
+          // eslint-disable-next-line no-console
           console.error('an error occurred with fav operation request: ', e);
         });
       }
@@ -17608,12 +17619,12 @@ var _default = {
       return this.activeCard === id;
     },
     cardActive: function cardActive(cardId) {
-      if (this.isPro) {
+      if (cardId === 'blank' || this.isPro) {
         this.activeCard = cardId;
       }
     },
     cardEdit: function cardEdit(cardId) {
-      if (this.isPro) {
+      if (this.isBaseAllowed(cardId)) {
         this.cardGenerate(cardId, 0, 0, [], true);
         var currentUrl = new URL(window.location.href);
         currentUrl.searchParams.append('table', encodeURIComponent(cardId));
@@ -17623,7 +17634,7 @@ var _default = {
     cardGenerate: function cardGenerate(cardId, cols, rows, selectedCells) {
       var edit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
 
-      if (this.isPro) {
+      if (this.isBaseAllowed(cardId)) {
         this.generating = true;
 
         if (cardId === 'blank') {
@@ -17642,7 +17653,7 @@ var _default = {
 
           if (!edit) {
             // unmark inserted template as prebuilt table
-            // only unmark it if edit mode is not enabled
+            // only unmark if edit mode is not enabled
             delete table.dataset.wptbPrebuiltTable;
             var tableRows = Array.from(table.querySelectorAll('tr')); // maximum column length
 
@@ -17693,8 +17704,7 @@ var _default = {
             /**
              * Increment id of plugin element.
              *
-             * @param HTMLElement divEl div element
-             * @param divEl
+             * @param {HTMLElement} divEl div element
              */
 
             var incrementIds = function incrementIds(divEl) {
@@ -17782,7 +17792,7 @@ var _default = {
     deleteAction: function deleteAction(cardId) {
       var _this4 = this;
 
-      if (this.isPro) {
+      if (this.isBaseAllowed()) {
         var _this$security2 = this.security,
             ajaxUrl = _this$security2.ajaxUrl,
             deleteAction = _this$security2.deleteAction,
@@ -17818,12 +17828,14 @@ var _default = {
             throw new Error('an error occurred while deleting prebuilt table, try again later');
           }
         }).catch(function (e) {
+          // eslint-disable-next-line no-console
           console.error(e.message);
         });
       }
     }
   },
   beforeDestroy: function beforeDestroy() {
+    // eslint-disable-next-line @wordpress/no-global-event-listener
     window.removeEventListener('keyup', this.focusToSearch);
   }
 };
