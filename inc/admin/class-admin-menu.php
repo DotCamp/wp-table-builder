@@ -368,34 +368,7 @@ class Admin_Menu {
 			// generate controls
 			$generate_path = plugin_dir_path( __FILE__ ) . 'js/WPTB_Generate.js';
 
-			if ( ! isset( $_GET['table'] ) ) { // enqueue file with the same handler name as pro version and with a low priority to load pro version is it is enabled instead of normal version
-				wp_enqueue_script( static::$generate_menu_script_hook, plugin_dir_url( __FILE__ ) . 'js/WPTB_Generate.js', [], filemtime( $generate_path ), true );
-				$generate_data = [
-					'mountId'        => 'wptbGenerate',
-					'version'        => 'normal',
-					'adLink'         => add_query_arg( [
-						'slug' => 'wp-table-builder-pro',
-						'page' => 'wptb-overview-addons'
-					], admin_url( 'admin.php' ) ),
-					'security'       => null,
-					'prebuiltTables' => null,
-					'strings'        => [
-						'blank'              => esc_html__( 'blank', 'wp-table-builder' ),
-						'generate'           => esc_html__( 'generate', 'wp-table-builder' ),
-						'edit'               => esc_html__( 'edit', 'wp-table-builder' ),
-						'searchPlaceholder'  => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
-						'prebuiltAdPart1'    => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
-						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
-						'deleteConfirmation' => esc_html__( 'Delete prebuilt table?', 'wp-table-builder' ),
-					]
 
-				];
-
-				// generate data filter
-				$generate_data = apply_filters( 'wp-table-builder/filter/generate_data', $generate_data );
-
-				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
-			}
 
 			// development version to bypass cache issues
 			$admin_script_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
@@ -416,25 +389,33 @@ class Admin_Menu {
 			wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
 			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
 			wp_enqueue_script( 'wptb-admin-builder-js' );
+			if ( ! isset( $_GET['table'] ) ) { // enqueue file with the same handler name as pro version and with a low priority to load pro version is it is enabled instead of normal version
+				wp_enqueue_script( static::$generate_menu_script_hook, plugin_dir_url( __FILE__ ) . 'js/WPTB_Generate.js', [], filemtime( $generate_path ), true );
+				$generate_data = [
+					'mountId'        => 'wptbGenerate',
+					'version'        => 'normal',
+					'adLink'         => add_query_arg( [
+						'slug' => 'wp-table-builder-pro',
+						'page' => 'wptb-overview-addons'
+					], admin_url( 'admin.php' ) ),
+					'security'       => null,
+					'prebuiltTables' => null,
+					'strings'        => [
+						'blank'              => esc_html__( 'blank', 'wp-table-builder' ),
+						'generate'           => esc_html__( 'generate', 'wp-table-builder' ),
+						'edit'               => esc_html__( 'edit', 'wp-table-builder' ),
+						'searchPlaceholder'  => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
+						'prebuiltAdPart1'    => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
+						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
+						'deleteConfirmation' => esc_html__( 'Delete prebuilt table?', 'wp-table-builder' ),
+					]
+				];
 
-//			$strings = [
-//				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
-//			];
-//
-//			$admin_object = [
-//				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-//				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
-//				'strings'       => $strings,
-//				'store'         => [
-//					'pro' => Addon_Manager::check_pro_status()
-//				]
-//			];
-//
-//			// filter for builder script data
-//			$admin_object = apply_filters( 'wp-table-builder/filter/builder_script_data', $admin_object );
-//
-//			wp_localize_script( 'wptb-admin-builder-js', 'wptb_admin_object', $admin_object );
+				// generate data filter
+				$generate_data = apply_filters( 'wp-table-builder/filter/generate_data', $generate_data );
 
+				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
+			}
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
 
 			Helpers::enqueue_file( 'inc/admin/js/wptb-overview.js', [], true, 'wptb-overview-js' );

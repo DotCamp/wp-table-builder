@@ -1,5 +1,11 @@
 <template>
 	<div class="wptb-prebuilt-card" @click="setCardActive" :class="{ 'wptb-prebuilt-card-active': isActive }">
+		<pro-overlay
+			feature-name="Table Template"
+			v-if="id !== 'blank'"
+			:target="overlayTargetTypes.PARENT"
+			:explicit-store="true"
+		></pro-overlay>
 		<busy-rotate v-if="previewBusy"></busy-rotate>
 		<div class="wptb-prebuilt-card-preview">
 			<div
@@ -79,6 +85,7 @@ import PrebuiltCardControl from './PrebuiltCardControl';
 import PrebuiltLiveDisplay from './PrebuiltLiveDisplay';
 import PrebuiltCardDeleteModule from './PrebuiltCardDeleteModule';
 import BusyRotate from './BusyRotate';
+import ProOverlay, { targetTypes } from '$Containers/ProOverlay';
 
 export default {
 	props: {
@@ -121,7 +128,7 @@ export default {
 			default: '',
 		},
 	},
-	components: { BusyRotate, PrebuiltCardControl, PrebuiltLiveDisplay, PrebuiltCardDeleteModule },
+	components: { ProOverlay, BusyRotate, PrebuiltCardControl, PrebuiltLiveDisplay, PrebuiltCardDeleteModule },
 	watch: {
 		selectedCells: {
 			handler() {
@@ -241,6 +248,9 @@ export default {
 		});
 	},
 	computed: {
+		overlayTargetTypes() {
+			return targetTypes;
+		},
 		transformedName() {
 			if (this.searchString !== '') {
 				const regexp = new RegExp(`(${this.searchString})`, 'ig');

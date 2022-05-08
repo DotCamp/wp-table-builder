@@ -13728,7 +13728,3106 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/PrebuiltCard.vue":[function(require,module,exports) {
+},{}],"../../../../../node_modules/vuex/dist/vuex.esm.js":[function(require,module,exports) {
+var global = arguments[3];
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createLogger = createLogger;
+exports.install = install;
+exports.mapState = exports.mapMutations = exports.mapGetters = exports.mapActions = exports.createNamespacedHelpers = exports.Store = exports.default = void 0;
+
+/*!
+ * vuex v3.6.2
+ * (c) 2021 Evan You
+ * @license MIT
+ */
+function applyMixin(Vue) {
+  var version = Number(Vue.version.split('.')[0]);
+
+  if (version >= 2) {
+    Vue.mixin({
+      beforeCreate: vuexInit
+    });
+  } else {
+    // override init and inject vuex init procedure
+    // for 1.x backwards compatibility.
+    var _init = Vue.prototype._init;
+
+    Vue.prototype._init = function (options) {
+      if (options === void 0) options = {};
+      options.init = options.init ? [vuexInit].concat(options.init) : vuexInit;
+
+      _init.call(this, options);
+    };
+  }
+  /**
+   * Vuex init hook, injected into each instances init hooks list.
+   */
+
+
+  function vuexInit() {
+    var options = this.$options; // store injection
+
+    if (options.store) {
+      this.$store = typeof options.store === 'function' ? options.store() : options.store;
+    } else if (options.parent && options.parent.$store) {
+      this.$store = options.parent.$store;
+    }
+  }
+}
+
+var target = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : {};
+var devtoolHook = target.__VUE_DEVTOOLS_GLOBAL_HOOK__;
+
+function devtoolPlugin(store) {
+  if (!devtoolHook) {
+    return;
+  }
+
+  store._devtoolHook = devtoolHook;
+  devtoolHook.emit('vuex:init', store);
+  devtoolHook.on('vuex:travel-to-state', function (targetState) {
+    store.replaceState(targetState);
+  });
+  store.subscribe(function (mutation, state) {
+    devtoolHook.emit('vuex:mutation', mutation, state);
+  }, {
+    prepend: true
+  });
+  store.subscribeAction(function (action, state) {
+    devtoolHook.emit('vuex:action', action, state);
+  }, {
+    prepend: true
+  });
+}
+/**
+ * Get the first item that pass the test
+ * by second argument function
+ *
+ * @param {Array} list
+ * @param {Function} f
+ * @return {*}
+ */
+
+
+function find(list, f) {
+  return list.filter(f)[0];
+}
+/**
+ * Deep copy the given object considering circular structure.
+ * This function caches all nested objects and its copies.
+ * If it detects circular structure, use cached copy to avoid infinite loop.
+ *
+ * @param {*} obj
+ * @param {Array<Object>} cache
+ * @return {*}
+ */
+
+
+function deepCopy(obj, cache) {
+  if (cache === void 0) cache = []; // just return if obj is immutable value
+
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  } // if obj is hit, it is in circular structure
+
+
+  var hit = find(cache, function (c) {
+    return c.original === obj;
+  });
+
+  if (hit) {
+    return hit.copy;
+  }
+
+  var copy = Array.isArray(obj) ? [] : {}; // put the copy into cache at first
+  // because we want to refer it in recursive deepCopy
+
+  cache.push({
+    original: obj,
+    copy: copy
+  });
+  Object.keys(obj).forEach(function (key) {
+    copy[key] = deepCopy(obj[key], cache);
+  });
+  return copy;
+}
+/**
+ * forEach for object
+ */
+
+
+function forEachValue(obj, fn) {
+  Object.keys(obj).forEach(function (key) {
+    return fn(obj[key], key);
+  });
+}
+
+function isObject(obj) {
+  return obj !== null && typeof obj === 'object';
+}
+
+function isPromise(val) {
+  return val && typeof val.then === 'function';
+}
+
+function assert(condition, msg) {
+  if (!condition) {
+    throw new Error("[vuex] " + msg);
+  }
+}
+
+function partial(fn, arg) {
+  return function () {
+    return fn(arg);
+  };
+} // Base data struct for store's module, package with some attribute and method
+
+
+var Module = function Module(rawModule, runtime) {
+  this.runtime = runtime; // Store some children item
+
+  this._children = Object.create(null); // Store the origin module object which passed by programmer
+
+  this._rawModule = rawModule;
+  var rawState = rawModule.state; // Store the origin module's state
+
+  this.state = (typeof rawState === 'function' ? rawState() : rawState) || {};
+};
+
+var prototypeAccessors = {
+  namespaced: {
+    configurable: true
+  }
+};
+
+prototypeAccessors.namespaced.get = function () {
+  return !!this._rawModule.namespaced;
+};
+
+Module.prototype.addChild = function addChild(key, module) {
+  this._children[key] = module;
+};
+
+Module.prototype.removeChild = function removeChild(key) {
+  delete this._children[key];
+};
+
+Module.prototype.getChild = function getChild(key) {
+  return this._children[key];
+};
+
+Module.prototype.hasChild = function hasChild(key) {
+  return key in this._children;
+};
+
+Module.prototype.update = function update(rawModule) {
+  this._rawModule.namespaced = rawModule.namespaced;
+
+  if (rawModule.actions) {
+    this._rawModule.actions = rawModule.actions;
+  }
+
+  if (rawModule.mutations) {
+    this._rawModule.mutations = rawModule.mutations;
+  }
+
+  if (rawModule.getters) {
+    this._rawModule.getters = rawModule.getters;
+  }
+};
+
+Module.prototype.forEachChild = function forEachChild(fn) {
+  forEachValue(this._children, fn);
+};
+
+Module.prototype.forEachGetter = function forEachGetter(fn) {
+  if (this._rawModule.getters) {
+    forEachValue(this._rawModule.getters, fn);
+  }
+};
+
+Module.prototype.forEachAction = function forEachAction(fn) {
+  if (this._rawModule.actions) {
+    forEachValue(this._rawModule.actions, fn);
+  }
+};
+
+Module.prototype.forEachMutation = function forEachMutation(fn) {
+  if (this._rawModule.mutations) {
+    forEachValue(this._rawModule.mutations, fn);
+  }
+};
+
+Object.defineProperties(Module.prototype, prototypeAccessors);
+
+var ModuleCollection = function ModuleCollection(rawRootModule) {
+  // register root module (Vuex.Store options)
+  this.register([], rawRootModule, false);
+};
+
+ModuleCollection.prototype.get = function get(path) {
+  return path.reduce(function (module, key) {
+    return module.getChild(key);
+  }, this.root);
+};
+
+ModuleCollection.prototype.getNamespace = function getNamespace(path) {
+  var module = this.root;
+  return path.reduce(function (namespace, key) {
+    module = module.getChild(key);
+    return namespace + (module.namespaced ? key + '/' : '');
+  }, '');
+};
+
+ModuleCollection.prototype.update = function update$1(rawRootModule) {
+  update([], this.root, rawRootModule);
+};
+
+ModuleCollection.prototype.register = function register(path, rawModule, runtime) {
+  var this$1 = this;
+  if (runtime === void 0) runtime = true;
+
+  if ("development" !== 'production') {
+    assertRawModule(path, rawModule);
+  }
+
+  var newModule = new Module(rawModule, runtime);
+
+  if (path.length === 0) {
+    this.root = newModule;
+  } else {
+    var parent = this.get(path.slice(0, -1));
+    parent.addChild(path[path.length - 1], newModule);
+  } // register nested modules
+
+
+  if (rawModule.modules) {
+    forEachValue(rawModule.modules, function (rawChildModule, key) {
+      this$1.register(path.concat(key), rawChildModule, runtime);
+    });
+  }
+};
+
+ModuleCollection.prototype.unregister = function unregister(path) {
+  var parent = this.get(path.slice(0, -1));
+  var key = path[path.length - 1];
+  var child = parent.getChild(key);
+
+  if (!child) {
+    if ("development" !== 'production') {
+      console.warn("[vuex] trying to unregister module '" + key + "', which is " + "not registered");
+    }
+
+    return;
+  }
+
+  if (!child.runtime) {
+    return;
+  }
+
+  parent.removeChild(key);
+};
+
+ModuleCollection.prototype.isRegistered = function isRegistered(path) {
+  var parent = this.get(path.slice(0, -1));
+  var key = path[path.length - 1];
+
+  if (parent) {
+    return parent.hasChild(key);
+  }
+
+  return false;
+};
+
+function update(path, targetModule, newModule) {
+  if ("development" !== 'production') {
+    assertRawModule(path, newModule);
+  } // update target module
+
+
+  targetModule.update(newModule); // update nested modules
+
+  if (newModule.modules) {
+    for (var key in newModule.modules) {
+      if (!targetModule.getChild(key)) {
+        if ("development" !== 'production') {
+          console.warn("[vuex] trying to add a new module '" + key + "' on hot reloading, " + 'manual reload is needed');
+        }
+
+        return;
+      }
+
+      update(path.concat(key), targetModule.getChild(key), newModule.modules[key]);
+    }
+  }
+}
+
+var functionAssert = {
+  assert: function (value) {
+    return typeof value === 'function';
+  },
+  expected: 'function'
+};
+var objectAssert = {
+  assert: function (value) {
+    return typeof value === 'function' || typeof value === 'object' && typeof value.handler === 'function';
+  },
+  expected: 'function or object with "handler" function'
+};
+var assertTypes = {
+  getters: functionAssert,
+  mutations: functionAssert,
+  actions: objectAssert
+};
+
+function assertRawModule(path, rawModule) {
+  Object.keys(assertTypes).forEach(function (key) {
+    if (!rawModule[key]) {
+      return;
+    }
+
+    var assertOptions = assertTypes[key];
+    forEachValue(rawModule[key], function (value, type) {
+      assert(assertOptions.assert(value), makeAssertionMessage(path, key, type, value, assertOptions.expected));
+    });
+  });
+}
+
+function makeAssertionMessage(path, key, type, value, expected) {
+  var buf = key + " should be " + expected + " but \"" + key + "." + type + "\"";
+
+  if (path.length > 0) {
+    buf += " in module \"" + path.join('.') + "\"";
+  }
+
+  buf += " is " + JSON.stringify(value) + ".";
+  return buf;
+}
+
+var Vue; // bind on install
+
+var Store = function Store(options) {
+  var this$1 = this;
+  if (options === void 0) options = {}; // Auto install if it is not done yet and `window` has `Vue`.
+  // To allow users to avoid auto-installation in some cases,
+  // this code should be placed here. See #731
+
+  if (!Vue && typeof window !== 'undefined' && window.Vue) {
+    install(window.Vue);
+  }
+
+  if ("development" !== 'production') {
+    assert(Vue, "must call Vue.use(Vuex) before creating a store instance.");
+    assert(typeof Promise !== 'undefined', "vuex requires a Promise polyfill in this browser.");
+    assert(this instanceof Store, "store must be called with the new operator.");
+  }
+
+  var plugins = options.plugins;
+  if (plugins === void 0) plugins = [];
+  var strict = options.strict;
+  if (strict === void 0) strict = false; // store internal state
+
+  this._committing = false;
+  this._actions = Object.create(null);
+  this._actionSubscribers = [];
+  this._mutations = Object.create(null);
+  this._wrappedGetters = Object.create(null);
+  this._modules = new ModuleCollection(options);
+  this._modulesNamespaceMap = Object.create(null);
+  this._subscribers = [];
+  this._watcherVM = new Vue();
+  this._makeLocalGettersCache = Object.create(null); // bind commit and dispatch to self
+
+  var store = this;
+  var ref = this;
+  var dispatch = ref.dispatch;
+  var commit = ref.commit;
+
+  this.dispatch = function boundDispatch(type, payload) {
+    return dispatch.call(store, type, payload);
+  };
+
+  this.commit = function boundCommit(type, payload, options) {
+    return commit.call(store, type, payload, options);
+  }; // strict mode
+
+
+  this.strict = strict;
+  var state = this._modules.root.state; // init root module.
+  // this also recursively registers all sub-modules
+  // and collects all module getters inside this._wrappedGetters
+
+  installModule(this, state, [], this._modules.root); // initialize the store vm, which is responsible for the reactivity
+  // (also registers _wrappedGetters as computed properties)
+
+  resetStoreVM(this, state); // apply plugins
+
+  plugins.forEach(function (plugin) {
+    return plugin(this$1);
+  });
+  var useDevtools = options.devtools !== undefined ? options.devtools : Vue.config.devtools;
+
+  if (useDevtools) {
+    devtoolPlugin(this);
+  }
+};
+
+exports.Store = Store;
+var prototypeAccessors$1 = {
+  state: {
+    configurable: true
+  }
+};
+
+prototypeAccessors$1.state.get = function () {
+  return this._vm._data.$$state;
+};
+
+prototypeAccessors$1.state.set = function (v) {
+  if ("development" !== 'production') {
+    assert(false, "use store.replaceState() to explicit replace store state.");
+  }
+};
+
+Store.prototype.commit = function commit(_type, _payload, _options) {
+  var this$1 = this; // check object-style commit
+
+  var ref = unifyObjectStyle(_type, _payload, _options);
+  var type = ref.type;
+  var payload = ref.payload;
+  var options = ref.options;
+  var mutation = {
+    type: type,
+    payload: payload
+  };
+  var entry = this._mutations[type];
+
+  if (!entry) {
+    if ("development" !== 'production') {
+      console.error("[vuex] unknown mutation type: " + type);
+    }
+
+    return;
+  }
+
+  this._withCommit(function () {
+    entry.forEach(function commitIterator(handler) {
+      handler(payload);
+    });
+  });
+
+  this._subscribers.slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
+  .forEach(function (sub) {
+    return sub(mutation, this$1.state);
+  });
+
+  if ("development" !== 'production' && options && options.silent) {
+    console.warn("[vuex] mutation type: " + type + ". Silent option has been removed. " + 'Use the filter functionality in the vue-devtools');
+  }
+};
+
+Store.prototype.dispatch = function dispatch(_type, _payload) {
+  var this$1 = this; // check object-style dispatch
+
+  var ref = unifyObjectStyle(_type, _payload);
+  var type = ref.type;
+  var payload = ref.payload;
+  var action = {
+    type: type,
+    payload: payload
+  };
+  var entry = this._actions[type];
+
+  if (!entry) {
+    if ("development" !== 'production') {
+      console.error("[vuex] unknown action type: " + type);
+    }
+
+    return;
+  }
+
+  try {
+    this._actionSubscribers.slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
+    .filter(function (sub) {
+      return sub.before;
+    }).forEach(function (sub) {
+      return sub.before(action, this$1.state);
+    });
+  } catch (e) {
+    if ("development" !== 'production') {
+      console.warn("[vuex] error in before action subscribers: ");
+      console.error(e);
+    }
+  }
+
+  var result = entry.length > 1 ? Promise.all(entry.map(function (handler) {
+    return handler(payload);
+  })) : entry[0](payload);
+  return new Promise(function (resolve, reject) {
+    result.then(function (res) {
+      try {
+        this$1._actionSubscribers.filter(function (sub) {
+          return sub.after;
+        }).forEach(function (sub) {
+          return sub.after(action, this$1.state);
+        });
+      } catch (e) {
+        if ("development" !== 'production') {
+          console.warn("[vuex] error in after action subscribers: ");
+          console.error(e);
+        }
+      }
+
+      resolve(res);
+    }, function (error) {
+      try {
+        this$1._actionSubscribers.filter(function (sub) {
+          return sub.error;
+        }).forEach(function (sub) {
+          return sub.error(action, this$1.state, error);
+        });
+      } catch (e) {
+        if ("development" !== 'production') {
+          console.warn("[vuex] error in error action subscribers: ");
+          console.error(e);
+        }
+      }
+
+      reject(error);
+    });
+  });
+};
+
+Store.prototype.subscribe = function subscribe(fn, options) {
+  return genericSubscribe(fn, this._subscribers, options);
+};
+
+Store.prototype.subscribeAction = function subscribeAction(fn, options) {
+  var subs = typeof fn === 'function' ? {
+    before: fn
+  } : fn;
+  return genericSubscribe(subs, this._actionSubscribers, options);
+};
+
+Store.prototype.watch = function watch(getter, cb, options) {
+  var this$1 = this;
+
+  if ("development" !== 'production') {
+    assert(typeof getter === 'function', "store.watch only accepts a function.");
+  }
+
+  return this._watcherVM.$watch(function () {
+    return getter(this$1.state, this$1.getters);
+  }, cb, options);
+};
+
+Store.prototype.replaceState = function replaceState(state) {
+  var this$1 = this;
+
+  this._withCommit(function () {
+    this$1._vm._data.$$state = state;
+  });
+};
+
+Store.prototype.registerModule = function registerModule(path, rawModule, options) {
+  if (options === void 0) options = {};
+
+  if (typeof path === 'string') {
+    path = [path];
+  }
+
+  if ("development" !== 'production') {
+    assert(Array.isArray(path), "module path must be a string or an Array.");
+    assert(path.length > 0, 'cannot register the root module by using registerModule.');
+  }
+
+  this._modules.register(path, rawModule);
+
+  installModule(this, this.state, path, this._modules.get(path), options.preserveState); // reset store to update getters...
+
+  resetStoreVM(this, this.state);
+};
+
+Store.prototype.unregisterModule = function unregisterModule(path) {
+  var this$1 = this;
+
+  if (typeof path === 'string') {
+    path = [path];
+  }
+
+  if ("development" !== 'production') {
+    assert(Array.isArray(path), "module path must be a string or an Array.");
+  }
+
+  this._modules.unregister(path);
+
+  this._withCommit(function () {
+    var parentState = getNestedState(this$1.state, path.slice(0, -1));
+    Vue.delete(parentState, path[path.length - 1]);
+  });
+
+  resetStore(this);
+};
+
+Store.prototype.hasModule = function hasModule(path) {
+  if (typeof path === 'string') {
+    path = [path];
+  }
+
+  if ("development" !== 'production') {
+    assert(Array.isArray(path), "module path must be a string or an Array.");
+  }
+
+  return this._modules.isRegistered(path);
+};
+
+Store.prototype.hotUpdate = function hotUpdate(newOptions) {
+  this._modules.update(newOptions);
+
+  resetStore(this, true);
+};
+
+Store.prototype._withCommit = function _withCommit(fn) {
+  var committing = this._committing;
+  this._committing = true;
+  fn();
+  this._committing = committing;
+};
+
+Object.defineProperties(Store.prototype, prototypeAccessors$1);
+
+function genericSubscribe(fn, subs, options) {
+  if (subs.indexOf(fn) < 0) {
+    options && options.prepend ? subs.unshift(fn) : subs.push(fn);
+  }
+
+  return function () {
+    var i = subs.indexOf(fn);
+
+    if (i > -1) {
+      subs.splice(i, 1);
+    }
+  };
+}
+
+function resetStore(store, hot) {
+  store._actions = Object.create(null);
+  store._mutations = Object.create(null);
+  store._wrappedGetters = Object.create(null);
+  store._modulesNamespaceMap = Object.create(null);
+  var state = store.state; // init all modules
+
+  installModule(store, state, [], store._modules.root, true); // reset vm
+
+  resetStoreVM(store, state, hot);
+}
+
+function resetStoreVM(store, state, hot) {
+  var oldVm = store._vm; // bind store public getters
+
+  store.getters = {}; // reset local getters cache
+
+  store._makeLocalGettersCache = Object.create(null);
+  var wrappedGetters = store._wrappedGetters;
+  var computed = {};
+  forEachValue(wrappedGetters, function (fn, key) {
+    // use computed to leverage its lazy-caching mechanism
+    // direct inline function use will lead to closure preserving oldVm.
+    // using partial to return function with only arguments preserved in closure environment.
+    computed[key] = partial(fn, store);
+    Object.defineProperty(store.getters, key, {
+      get: function () {
+        return store._vm[key];
+      },
+      enumerable: true // for local getters
+
+    });
+  }); // use a Vue instance to store the state tree
+  // suppress warnings just in case the user has added
+  // some funky global mixins
+
+  var silent = Vue.config.silent;
+  Vue.config.silent = true;
+  store._vm = new Vue({
+    data: {
+      $$state: state
+    },
+    computed: computed
+  });
+  Vue.config.silent = silent; // enable strict mode for new vm
+
+  if (store.strict) {
+    enableStrictMode(store);
+  }
+
+  if (oldVm) {
+    if (hot) {
+      // dispatch changes in all subscribed watchers
+      // to force getter re-evaluation for hot reloading.
+      store._withCommit(function () {
+        oldVm._data.$$state = null;
+      });
+    }
+
+    Vue.nextTick(function () {
+      return oldVm.$destroy();
+    });
+  }
+}
+
+function installModule(store, rootState, path, module, hot) {
+  var isRoot = !path.length;
+
+  var namespace = store._modules.getNamespace(path); // register in namespace map
+
+
+  if (module.namespaced) {
+    if (store._modulesNamespaceMap[namespace] && "development" !== 'production') {
+      console.error("[vuex] duplicate namespace " + namespace + " for the namespaced module " + path.join('/'));
+    }
+
+    store._modulesNamespaceMap[namespace] = module;
+  } // set state
+
+
+  if (!isRoot && !hot) {
+    var parentState = getNestedState(rootState, path.slice(0, -1));
+    var moduleName = path[path.length - 1];
+
+    store._withCommit(function () {
+      if ("development" !== 'production') {
+        if (moduleName in parentState) {
+          console.warn("[vuex] state field \"" + moduleName + "\" was overridden by a module with the same name at \"" + path.join('.') + "\"");
+        }
+      }
+
+      Vue.set(parentState, moduleName, module.state);
+    });
+  }
+
+  var local = module.context = makeLocalContext(store, namespace, path);
+  module.forEachMutation(function (mutation, key) {
+    var namespacedType = namespace + key;
+    registerMutation(store, namespacedType, mutation, local);
+  });
+  module.forEachAction(function (action, key) {
+    var type = action.root ? key : namespace + key;
+    var handler = action.handler || action;
+    registerAction(store, type, handler, local);
+  });
+  module.forEachGetter(function (getter, key) {
+    var namespacedType = namespace + key;
+    registerGetter(store, namespacedType, getter, local);
+  });
+  module.forEachChild(function (child, key) {
+    installModule(store, rootState, path.concat(key), child, hot);
+  });
+}
+/**
+ * make localized dispatch, commit, getters and state
+ * if there is no namespace, just use root ones
+ */
+
+
+function makeLocalContext(store, namespace, path) {
+  var noNamespace = namespace === '';
+  var local = {
+    dispatch: noNamespace ? store.dispatch : function (_type, _payload, _options) {
+      var args = unifyObjectStyle(_type, _payload, _options);
+      var payload = args.payload;
+      var options = args.options;
+      var type = args.type;
+
+      if (!options || !options.root) {
+        type = namespace + type;
+
+        if ("development" !== 'production' && !store._actions[type]) {
+          console.error("[vuex] unknown local action type: " + args.type + ", global type: " + type);
+          return;
+        }
+      }
+
+      return store.dispatch(type, payload);
+    },
+    commit: noNamespace ? store.commit : function (_type, _payload, _options) {
+      var args = unifyObjectStyle(_type, _payload, _options);
+      var payload = args.payload;
+      var options = args.options;
+      var type = args.type;
+
+      if (!options || !options.root) {
+        type = namespace + type;
+
+        if ("development" !== 'production' && !store._mutations[type]) {
+          console.error("[vuex] unknown local mutation type: " + args.type + ", global type: " + type);
+          return;
+        }
+      }
+
+      store.commit(type, payload, options);
+    }
+  }; // getters and state object must be gotten lazily
+  // because they will be changed by vm update
+
+  Object.defineProperties(local, {
+    getters: {
+      get: noNamespace ? function () {
+        return store.getters;
+      } : function () {
+        return makeLocalGetters(store, namespace);
+      }
+    },
+    state: {
+      get: function () {
+        return getNestedState(store.state, path);
+      }
+    }
+  });
+  return local;
+}
+
+function makeLocalGetters(store, namespace) {
+  if (!store._makeLocalGettersCache[namespace]) {
+    var gettersProxy = {};
+    var splitPos = namespace.length;
+    Object.keys(store.getters).forEach(function (type) {
+      // skip if the target getter is not match this namespace
+      if (type.slice(0, splitPos) !== namespace) {
+        return;
+      } // extract local getter type
+
+
+      var localType = type.slice(splitPos); // Add a port to the getters proxy.
+      // Define as getter property because
+      // we do not want to evaluate the getters in this time.
+
+      Object.defineProperty(gettersProxy, localType, {
+        get: function () {
+          return store.getters[type];
+        },
+        enumerable: true
+      });
+    });
+    store._makeLocalGettersCache[namespace] = gettersProxy;
+  }
+
+  return store._makeLocalGettersCache[namespace];
+}
+
+function registerMutation(store, type, handler, local) {
+  var entry = store._mutations[type] || (store._mutations[type] = []);
+  entry.push(function wrappedMutationHandler(payload) {
+    handler.call(store, local.state, payload);
+  });
+}
+
+function registerAction(store, type, handler, local) {
+  var entry = store._actions[type] || (store._actions[type] = []);
+  entry.push(function wrappedActionHandler(payload) {
+    var res = handler.call(store, {
+      dispatch: local.dispatch,
+      commit: local.commit,
+      getters: local.getters,
+      state: local.state,
+      rootGetters: store.getters,
+      rootState: store.state
+    }, payload);
+
+    if (!isPromise(res)) {
+      res = Promise.resolve(res);
+    }
+
+    if (store._devtoolHook) {
+      return res.catch(function (err) {
+        store._devtoolHook.emit('vuex:error', err);
+
+        throw err;
+      });
+    } else {
+      return res;
+    }
+  });
+}
+
+function registerGetter(store, type, rawGetter, local) {
+  if (store._wrappedGetters[type]) {
+    if ("development" !== 'production') {
+      console.error("[vuex] duplicate getter key: " + type);
+    }
+
+    return;
+  }
+
+  store._wrappedGetters[type] = function wrappedGetter(store) {
+    return rawGetter(local.state, // local state
+    local.getters, // local getters
+    store.state, // root state
+    store.getters // root getters
+    );
+  };
+}
+
+function enableStrictMode(store) {
+  store._vm.$watch(function () {
+    return this._data.$$state;
+  }, function () {
+    if ("development" !== 'production') {
+      assert(store._committing, "do not mutate vuex store state outside mutation handlers.");
+    }
+  }, {
+    deep: true,
+    sync: true
+  });
+}
+
+function getNestedState(state, path) {
+  return path.reduce(function (state, key) {
+    return state[key];
+  }, state);
+}
+
+function unifyObjectStyle(type, payload, options) {
+  if (isObject(type) && type.type) {
+    options = payload;
+    payload = type;
+    type = type.type;
+  }
+
+  if ("development" !== 'production') {
+    assert(typeof type === 'string', "expects string as the type, but found " + typeof type + ".");
+  }
+
+  return {
+    type: type,
+    payload: payload,
+    options: options
+  };
+}
+
+function install(_Vue) {
+  if (Vue && _Vue === Vue) {
+    if ("development" !== 'production') {
+      console.error('[vuex] already installed. Vue.use(Vuex) should be called only once.');
+    }
+
+    return;
+  }
+
+  Vue = _Vue;
+  applyMixin(Vue);
+}
+/**
+ * Reduce the code which written in Vue.js for getting the state.
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} states # Object's item can be a function which accept state and getters for param, you can do something for state and getters in it.
+ * @param {Object}
+ */
+
+
+var mapState = normalizeNamespace(function (namespace, states) {
+  var res = {};
+
+  if ("development" !== 'production' && !isValidMap(states)) {
+    console.error('[vuex] mapState: mapper parameter must be either an Array or an Object');
+  }
+
+  normalizeMap(states).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    res[key] = function mappedState() {
+      var state = this.$store.state;
+      var getters = this.$store.getters;
+
+      if (namespace) {
+        var module = getModuleByNamespace(this.$store, 'mapState', namespace);
+
+        if (!module) {
+          return;
+        }
+
+        state = module.context.state;
+        getters = module.context.getters;
+      }
+
+      return typeof val === 'function' ? val.call(this, state, getters) : state[val];
+    }; // mark vuex getter for devtools
+
+
+    res[key].vuex = true;
+  });
+  return res;
+});
+/**
+ * Reduce the code which written in Vue.js for committing the mutation
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept another params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
+ * @return {Object}
+ */
+
+exports.mapState = mapState;
+var mapMutations = normalizeNamespace(function (namespace, mutations) {
+  var res = {};
+
+  if ("development" !== 'production' && !isValidMap(mutations)) {
+    console.error('[vuex] mapMutations: mapper parameter must be either an Array or an Object');
+  }
+
+  normalizeMap(mutations).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    res[key] = function mappedMutation() {
+      var args = [],
+          len = arguments.length;
+
+      while (len--) args[len] = arguments[len]; // Get the commit method from store
+
+
+      var commit = this.$store.commit;
+
+      if (namespace) {
+        var module = getModuleByNamespace(this.$store, 'mapMutations', namespace);
+
+        if (!module) {
+          return;
+        }
+
+        commit = module.context.commit;
+      }
+
+      return typeof val === 'function' ? val.apply(this, [commit].concat(args)) : commit.apply(this.$store, [val].concat(args));
+    };
+  });
+  return res;
+});
+/**
+ * Reduce the code which written in Vue.js for getting the getters
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} getters
+ * @return {Object}
+ */
+
+exports.mapMutations = mapMutations;
+var mapGetters = normalizeNamespace(function (namespace, getters) {
+  var res = {};
+
+  if ("development" !== 'production' && !isValidMap(getters)) {
+    console.error('[vuex] mapGetters: mapper parameter must be either an Array or an Object');
+  }
+
+  normalizeMap(getters).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val; // The namespace has been mutated by normalizeNamespace
+
+    val = namespace + val;
+
+    res[key] = function mappedGetter() {
+      if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
+        return;
+      }
+
+      if ("development" !== 'production' && !(val in this.$store.getters)) {
+        console.error("[vuex] unknown getter: " + val);
+        return;
+      }
+
+      return this.$store.getters[val];
+    }; // mark vuex getter for devtools
+
+
+    res[key].vuex = true;
+  });
+  return res;
+});
+/**
+ * Reduce the code which written in Vue.js for dispatch the action
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} actions # Object's item can be a function which accept `dispatch` function as the first param, it can accept anthor params. You can dispatch action and do any other things in this function. specially, You need to pass anthor params from the mapped function.
+ * @return {Object}
+ */
+
+exports.mapGetters = mapGetters;
+var mapActions = normalizeNamespace(function (namespace, actions) {
+  var res = {};
+
+  if ("development" !== 'production' && !isValidMap(actions)) {
+    console.error('[vuex] mapActions: mapper parameter must be either an Array or an Object');
+  }
+
+  normalizeMap(actions).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    res[key] = function mappedAction() {
+      var args = [],
+          len = arguments.length;
+
+      while (len--) args[len] = arguments[len]; // get dispatch function from store
+
+
+      var dispatch = this.$store.dispatch;
+
+      if (namespace) {
+        var module = getModuleByNamespace(this.$store, 'mapActions', namespace);
+
+        if (!module) {
+          return;
+        }
+
+        dispatch = module.context.dispatch;
+      }
+
+      return typeof val === 'function' ? val.apply(this, [dispatch].concat(args)) : dispatch.apply(this.$store, [val].concat(args));
+    };
+  });
+  return res;
+});
+/**
+ * Rebinding namespace param for mapXXX function in special scoped, and return them by simple object
+ * @param {String} namespace
+ * @return {Object}
+ */
+
+exports.mapActions = mapActions;
+
+var createNamespacedHelpers = function (namespace) {
+  return {
+    mapState: mapState.bind(null, namespace),
+    mapGetters: mapGetters.bind(null, namespace),
+    mapMutations: mapMutations.bind(null, namespace),
+    mapActions: mapActions.bind(null, namespace)
+  };
+};
+/**
+ * Normalize the map
+ * normalizeMap([1, 2, 3]) => [ { key: 1, val: 1 }, { key: 2, val: 2 }, { key: 3, val: 3 } ]
+ * normalizeMap({a: 1, b: 2, c: 3}) => [ { key: 'a', val: 1 }, { key: 'b', val: 2 }, { key: 'c', val: 3 } ]
+ * @param {Array|Object} map
+ * @return {Object}
+ */
+
+
+exports.createNamespacedHelpers = createNamespacedHelpers;
+
+function normalizeMap(map) {
+  if (!isValidMap(map)) {
+    return [];
+  }
+
+  return Array.isArray(map) ? map.map(function (key) {
+    return {
+      key: key,
+      val: key
+    };
+  }) : Object.keys(map).map(function (key) {
+    return {
+      key: key,
+      val: map[key]
+    };
+  });
+}
+/**
+ * Validate whether given map is valid or not
+ * @param {*} map
+ * @return {Boolean}
+ */
+
+
+function isValidMap(map) {
+  return Array.isArray(map) || isObject(map);
+}
+/**
+ * Return a function expect two param contains namespace and map. it will normalize the namespace and then the param's function will handle the new namespace and the map.
+ * @param {Function} fn
+ * @return {Function}
+ */
+
+
+function normalizeNamespace(fn) {
+  return function (namespace, map) {
+    if (typeof namespace !== 'string') {
+      map = namespace;
+      namespace = '';
+    } else if (namespace.charAt(namespace.length - 1) !== '/') {
+      namespace += '/';
+    }
+
+    return fn(namespace, map);
+  };
+}
+/**
+ * Search a special module from store by namespace. if module not exist, print error message.
+ * @param {Object} store
+ * @param {String} helper
+ * @param {String} namespace
+ * @return {Object}
+ */
+
+
+function getModuleByNamespace(store, helper, namespace) {
+  var module = store._modulesNamespaceMap[namespace];
+
+  if ("development" !== 'production' && !module) {
+    console.error("[vuex] module namespace not found in " + helper + "(): " + namespace);
+  }
+
+  return module;
+} // Credits: borrowed code from fcomb/redux-logger
+
+
+function createLogger(ref) {
+  if (ref === void 0) ref = {};
+  var collapsed = ref.collapsed;
+  if (collapsed === void 0) collapsed = true;
+  var filter = ref.filter;
+  if (filter === void 0) filter = function (mutation, stateBefore, stateAfter) {
+    return true;
+  };
+  var transformer = ref.transformer;
+  if (transformer === void 0) transformer = function (state) {
+    return state;
+  };
+  var mutationTransformer = ref.mutationTransformer;
+  if (mutationTransformer === void 0) mutationTransformer = function (mut) {
+    return mut;
+  };
+  var actionFilter = ref.actionFilter;
+  if (actionFilter === void 0) actionFilter = function (action, state) {
+    return true;
+  };
+  var actionTransformer = ref.actionTransformer;
+  if (actionTransformer === void 0) actionTransformer = function (act) {
+    return act;
+  };
+  var logMutations = ref.logMutations;
+  if (logMutations === void 0) logMutations = true;
+  var logActions = ref.logActions;
+  if (logActions === void 0) logActions = true;
+  var logger = ref.logger;
+  if (logger === void 0) logger = console;
+  return function (store) {
+    var prevState = deepCopy(store.state);
+
+    if (typeof logger === 'undefined') {
+      return;
+    }
+
+    if (logMutations) {
+      store.subscribe(function (mutation, state) {
+        var nextState = deepCopy(state);
+
+        if (filter(mutation, prevState, nextState)) {
+          var formattedTime = getFormattedTime();
+          var formattedMutation = mutationTransformer(mutation);
+          var message = "mutation " + mutation.type + formattedTime;
+          startMessage(logger, message, collapsed);
+          logger.log('%c prev state', 'color: #9E9E9E; font-weight: bold', transformer(prevState));
+          logger.log('%c mutation', 'color: #03A9F4; font-weight: bold', formattedMutation);
+          logger.log('%c next state', 'color: #4CAF50; font-weight: bold', transformer(nextState));
+          endMessage(logger);
+        }
+
+        prevState = nextState;
+      });
+    }
+
+    if (logActions) {
+      store.subscribeAction(function (action, state) {
+        if (actionFilter(action, state)) {
+          var formattedTime = getFormattedTime();
+          var formattedAction = actionTransformer(action);
+          var message = "action " + action.type + formattedTime;
+          startMessage(logger, message, collapsed);
+          logger.log('%c action', 'color: #03A9F4; font-weight: bold', formattedAction);
+          endMessage(logger);
+        }
+      });
+    }
+  };
+}
+
+function startMessage(logger, message, collapsed) {
+  var startMessage = collapsed ? logger.groupCollapsed : logger.group; // render
+
+  try {
+    startMessage.call(logger, message);
+  } catch (e) {
+    logger.log(message);
+  }
+}
+
+function endMessage(logger) {
+  try {
+    logger.groupEnd();
+  } catch (e) {
+    logger.log('—— log end ——');
+  }
+}
+
+function getFormattedTime() {
+  var time = new Date();
+  return " @ " + pad(time.getHours(), 2) + ":" + pad(time.getMinutes(), 2) + ":" + pad(time.getSeconds(), 2) + "." + pad(time.getMilliseconds(), 3);
+}
+
+function repeat(str, times) {
+  return new Array(times + 1).join(str);
+}
+
+function pad(num, maxLength) {
+  return repeat('0', maxLength - num.toString().length) + num;
+}
+
+var index = {
+  Store: Store,
+  install: install,
+  version: '3.6.2',
+  mapState: mapState,
+  mapMutations: mapMutations,
+  mapGetters: mapGetters,
+  mapActions: mapActions,
+  createNamespacedHelpers: createNamespacedHelpers,
+  createLogger: createLogger
+};
+var _default = index;
+exports.default = _default;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":[function(require,module,exports) {
+var arrayLikeToArray = require("./arrayLikeToArray");
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+}
+
+module.exports = _arrayWithoutHoles;
+},{"./arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArray.js":[function(require,module,exports) {
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+module.exports = _iterableToArray;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableSpread.js":[function(require,module,exports) {
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableSpread;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js":[function(require,module,exports) {
+var arrayWithoutHoles = require("./arrayWithoutHoles");
+
+var iterableToArray = require("./iterableToArray");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray");
+
+var nonIterableSpread = require("./nonIterableSpread");
+
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+}
+
+module.exports = _toConsumableArray;
+},{"./arrayWithoutHoles":"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js","./iterableToArray":"../../../../../node_modules/@babel/runtime/helpers/iterableToArray.js","./unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableSpread":"../../../../../node_modules/@babel/runtime/helpers/nonIterableSpread.js"}],"components/MaterialButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    click: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('Material button clicked');
+      }
+    },
+    size: {
+      type: String,
+      default: 'fit-content'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    buttonClass: function buttonClass() {
+      return ["wptb-plugin-button-material-".concat(this.size)];
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      if (!this.disabled) {
+        this.click();
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $48fd91 = exports.default || module.exports;
+      
+      if (typeof $48fd91 === 'function') {
+        $48fd91 = $48fd91.options;
+      }
+    
+        /* template */
+        Object.assign($48fd91, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-plugin-button-material",
+      class: _vm.buttonClass,
+      attrs: { disabled: _vm.disabled },
+      on: {
+        "!click": function($event) {
+          $event.preventDefault()
+          $event.stopPropagation()
+          return _vm.handleClick($event)
+        }
+      }
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/Icon.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+var defaultClasses = ['wptb-svg-inherit-color'];
+var _default = {
+  props: {
+    name: {
+      type: String,
+      default: ''
+    },
+    extraClasses: {
+      type: Array,
+      default: function _default() {
+        return defaultClasses;
+      }
+    }
+  },
+  watch: {
+    extraClasses: function extraClasses() {
+      this.prepareClasses();
+      this.prepareIcon();
+    },
+    name: function name() {
+      this.prepareIcon();
+    }
+  },
+  data: function data() {
+    return {
+      iconFragment: '',
+      innerExtraClasses: []
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.prepareClasses(_this.extraClasses);
+
+      _this.prepareIcon();
+    });
+  },
+  methods: {
+    prepareIcon: function prepareIcon() {
+      var _this2 = this;
+
+      WPTB_IconManager.getIcon(this.name, this.innerExtraClasses, true).then(function (icon) {
+        _this2.iconFragment = icon;
+      });
+    },
+    prepareClasses: function prepareClasses() {
+      this.innerExtraClasses = Array.from(new Set([].concat((0, _toConsumableArray2.default)(this.extraClasses), defaultClasses)));
+    }
+  }
+};
+exports.default = _default;
+        var $fdfc7a = exports.default || module.exports;
+      
+      if (typeof $fdfc7a === 'function') {
+        $fdfc7a = $fdfc7a.options;
+      }
+    
+        /* template */
+        Object.assign($fdfc7a, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { domProps: { innerHTML: _vm._s(_vm.iconFragment) } })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js"}],"components/ModalWindow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _MaterialButton = _interopRequireDefault(require("$Components/MaterialButton"));
+
+var _Icon = _interopRequireDefault(require("$Components/Icon"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    isFixed: {
+      type: Boolean,
+      default: false
+    },
+    buttonExtraClasses: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
+    windowTitle: {
+      type: null,
+      default: null
+    },
+    message: {
+      type: String,
+      default: 'This is a default message for modal window.'
+    },
+    iconName: {
+      type: String,
+      default: 'exclamation-circle'
+    },
+    iconClasses: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
+    buttonLabel: {
+      type: String,
+      default: 'Okay'
+    },
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    relativeRef: {
+      type: HTMLElement,
+      required: false
+    },
+    callback: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('modal button clicked');
+      }
+    },
+    closeCallback: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('modal window close');
+      }
+    }
+  },
+  components: {
+    Icon: _Icon.default,
+    MaterialButton: _MaterialButton.default
+  },
+  data: function data() {
+    return {
+      iconFinalClasses: []
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      if (!_this.isFixed) {
+        _this.relativeRef.appendChild(_this.$refs.mainWrapper);
+      }
+
+      _this.prepareFinalClasses(_this.iconClasses);
+    });
+  },
+  watch: {
+    iconClasses: function iconClasses() {
+      this.prepareFinalClasses();
+    }
+  },
+  methods: {
+    prepareFinalClasses: function prepareFinalClasses() {
+      var defaultClasses = ['wptb-plugin-modal-icon-inner-wrapper'];
+      this.iconFinalClasses = Array.from(new Set([].concat((0, _toConsumableArray2.default)(this.iconClasses), defaultClasses)));
+    }
+  },
+  beforeDestroy: function beforeDestroy() {
+    if (!this.isFixed) {
+      this.$refs.mainWrapper.parentNode.removeChild(this.$refs.mainWrapper);
+    }
+  }
+};
+exports.default = _default;
+        var $6a3b9d = exports.default || module.exports;
+      
+      if (typeof $6a3b9d === 'function') {
+        $6a3b9d = $6a3b9d.options;
+      }
+    
+        /* template */
+        Object.assign($6a3b9d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.visible,
+          expression: "visible"
+        }
+      ],
+      ref: "mainWrapper",
+      staticClass: "wptb-plugin-modal-window",
+      attrs: { "data-is-fixed": _vm.isFixed }
+    },
+    [
+      _c("div", { staticClass: "wptb-plugin-modal-inner-window" }, [
+        _vm.windowTitle
+          ? _c("div", { staticClass: "wptb-plugin-modal-header" }, [
+              _c("div", { staticClass: "wptb-plugin-modal-header-title" }, [
+                _vm._v(_vm._s(_vm._f("cap")(_vm.windowTitle)))
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "wptb-plugin-modal-header-close",
+                  on: {
+                    "!click": function($event) {
+                      $event.preventDefault()
+                      $event.stopPropagation()
+                      return _vm.closeCallback($event)
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "wptb-plugin-modal-close-wrapper" },
+                    [_vm._v("X")]
+                  )
+                ]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "wptb-plugin-modal-content-container" }, [
+          _c(
+            "div",
+            { staticClass: "wptb-plugin-modal-icon" },
+            [
+              _c("icon", {
+                staticClass: "wptb-plugin-modal-icon-parent-wrapper",
+                attrs: {
+                  name: _vm.iconName,
+                  "extra-classes": _vm.iconFinalClasses
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "wptb-plugin-modal-message",
+            domProps: { innerHTML: _vm._s(_vm.message) }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-plugin-modal-slot-container" },
+            [_vm._t("default")],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-plugin-modal-button-container" },
+            [
+              _c(
+                "material-button",
+                {
+                  class: _vm.buttonExtraClasses,
+                  attrs: { size: "full-size", click: _vm.callback }
+                },
+                [_vm._v(_vm._s(_vm._f("cap")(_vm.buttonLabel)))]
+              )
+            ],
+            1
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"@babel/runtime/helpers/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/toConsumableArray.js","$Components/MaterialButton":"components/MaterialButton.vue","$Components/Icon":"components/Icon.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
+'use strict';
+
+var isMergeableObject = function isMergeableObject(value) {
+  return isNonNullObject(value) && !isSpecial(value);
+};
+
+function isNonNullObject(value) {
+  return !!value && typeof value === 'object';
+}
+
+function isSpecial(value) {
+  var stringValue = Object.prototype.toString.call(value);
+  return stringValue === '[object RegExp]' || stringValue === '[object Date]' || isReactElement(value);
+} // see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
+
+
+var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
+
+function isReactElement(value) {
+  return value.$$typeof === REACT_ELEMENT_TYPE;
+}
+
+function emptyTarget(val) {
+  return Array.isArray(val) ? [] : {};
+}
+
+function cloneUnlessOtherwiseSpecified(value, options) {
+  return options.clone !== false && options.isMergeableObject(value) ? deepmerge(emptyTarget(value), value, options) : value;
+}
+
+function defaultArrayMerge(target, source, options) {
+  return target.concat(source).map(function (element) {
+    return cloneUnlessOtherwiseSpecified(element, options);
+  });
+}
+
+function getMergeFunction(key, options) {
+  if (!options.customMerge) {
+    return deepmerge;
+  }
+
+  var customMerge = options.customMerge(key);
+  return typeof customMerge === 'function' ? customMerge : deepmerge;
+}
+
+function getEnumerableOwnPropertySymbols(target) {
+  return Object.getOwnPropertySymbols ? Object.getOwnPropertySymbols(target).filter(function (symbol) {
+    return target.propertyIsEnumerable(symbol);
+  }) : [];
+}
+
+function getKeys(target) {
+  return Object.keys(target).concat(getEnumerableOwnPropertySymbols(target));
+}
+
+function propertyIsOnObject(object, property) {
+  try {
+    return property in object;
+  } catch (_) {
+    return false;
+  }
+} // Protects from prototype poisoning and unexpected merging up the prototype chain.
+
+
+function propertyIsUnsafe(target, key) {
+  return propertyIsOnObject(target, key) // Properties are safe to merge if they don't exist in the target yet,
+  && !(Object.hasOwnProperty.call(target, key) // unsafe if they exist up the prototype chain,
+  && Object.propertyIsEnumerable.call(target, key)); // and also unsafe if they're nonenumerable.
+}
+
+function mergeObject(target, source, options) {
+  var destination = {};
+
+  if (options.isMergeableObject(target)) {
+    getKeys(target).forEach(function (key) {
+      destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
+    });
+  }
+
+  getKeys(source).forEach(function (key) {
+    if (propertyIsUnsafe(target, key)) {
+      return;
+    }
+
+    if (propertyIsOnObject(target, key) && options.isMergeableObject(source[key])) {
+      destination[key] = getMergeFunction(key, options)(target[key], source[key], options);
+    } else {
+      destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
+    }
+  });
+  return destination;
+}
+
+function deepmerge(target, source, options) {
+  options = options || {};
+  options.arrayMerge = options.arrayMerge || defaultArrayMerge;
+  options.isMergeableObject = options.isMergeableObject || isMergeableObject; // cloneUnlessOtherwiseSpecified is added to `options` so that custom arrayMerge()
+  // implementations can use it. The caller may not replace it.
+
+  options.cloneUnlessOtherwiseSpecified = cloneUnlessOtherwiseSpecified;
+  var sourceIsArray = Array.isArray(source);
+  var targetIsArray = Array.isArray(target);
+  var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
+
+  if (!sourceAndTargetTypesMatch) {
+    return cloneUnlessOtherwiseSpecified(source, options);
+  } else if (sourceIsArray) {
+    return options.arrayMerge(target, source, options);
+  } else {
+    return mergeObject(target, source, options);
+  }
+}
+
+deepmerge.all = function deepmergeAll(array, options) {
+  if (!Array.isArray(array)) {
+    throw new Error('first argument should be an array');
+  }
+
+  return array.reduce(function (prev, next) {
+    return deepmerge(prev, next, options);
+  }, {});
+};
+
+var deepmerge_1 = deepmerge;
+module.exports = deepmerge_1;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/typeof.js":[function(require,module,exports) {
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+},{}],"functions/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.objectPropertyFromString = exports.getMainBuilderTable = exports.generateUniqueId = void 0;
+
+/**
+ * Generate unique id.
+ *
+ * @param {number} length of id to be generated
+ * @return {string} generated unique id
+ */
+// eslint-disable-next-line import/prefer-default-export
+var generateUniqueId = function generateUniqueId() {
+  var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
+  var variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
+  var key = '';
+
+  for (var i = 0; i < length; i += 1) {
+    key += variables[Math.floor(Math.random() * variables.length)];
+  }
+
+  return key;
+};
+/**
+ * Get main table inside builder.
+ *
+ * @return {Element | null} main builder table
+ */
+
+
+exports.generateUniqueId = generateUniqueId;
+
+var getMainBuilderTable = function getMainBuilderTable() {
+  return document.querySelector('.wptb-table-setup .wptb-preview-table');
+};
+/**
+ * Get a property value from an object with a string key.
+ 
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @return {*} property value
+ */
+// eslint-disable-next-line import/prefer-default-export
+
+
+exports.getMainBuilderTable = getMainBuilderTable;
+
+var objectPropertyFromString = function objectPropertyFromString(stringKey, target) {
+  // split string key for inner properties
+  var splitKey = stringKey.split('.');
+
+  if (!Array.isArray(splitKey)) {
+    splitKey = [splitKey];
+  }
+
+  return splitKey.reduce(function (carry, item) {
+    return carry[item];
+  }, target);
+};
+
+exports.objectPropertyFromString = objectPropertyFromString;
+},{}],"stores/general.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.stateWatchFunction = exports.mutationWatchFunction = exports.createBasicStore = exports.objectDeepMerge = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
+var _vuex = _interopRequireDefault(require("vuex"));
+
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _index = require("$Functions/index");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * Deep merge object.
+ *
+ * @param {Object} source source object
+ * @param {Object} target target object
+ * @return {Object} merged object
+ */
+// eslint-disable-next-line import/prefer-default-export
+var objectDeepMerge = function objectDeepMerge(source, target) {
+  // eslint-disable-next-line array-callback-return
+  Object.keys(target).map(function (k) {
+    if (Object.prototype.hasOwnProperty.call(target, k)) {
+      if (Object.prototype.hasOwnProperty.call(source, k)) {
+        if ((0, _typeof2.default)(source[k]) === 'object') {
+          // eslint-disable-next-line no-param-reassign
+          source[k] = _objectSpread(_objectSpread({}, source[k]), target[k]);
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          source[k] = target[k];
+        }
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        source[k] = target[k];
+      }
+    }
+  });
+  return source;
+};
+/**
+ * Create a basic store with the given store object.
+ *
+ * @param {Object} defaultStore default store object
+ * @param {Object} extraStore extra store object
+ * @return {Object} Vuex store
+ */
+
+
+exports.objectDeepMerge = objectDeepMerge;
+
+var createBasicStore = function createBasicStore(defaultStore, extraStore) {
+  return new _vuex.default.Store((0, _deepmerge.default)(defaultStore, extraStore));
+};
+/**
+ * Watch function to be used at store event subscriptions.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Function} function to be called at action dispatch
+ */
+
+
+exports.createBasicStore = createBasicStore;
+
+var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var payload = args[0];
+
+    if (watchList[payload.type]) {
+      watchList[payload.type].apply(watchList, args.concat([store]));
+    }
+  };
+};
+/**
+ * State watch function.
+ *
+ * @param {Object} store vuex store object
+ * @param {Object} watchList watch list */
+
+
+exports.mutationWatchFunction = mutationWatchFunction;
+
+var stateWatchFunction = function stateWatchFunction(store, watchList) {
+  // eslint-disable-next-line array-callback-return
+  Object.keys(watchList).map(function (k) {
+    if (Object.prototype.hasOwnProperty.call(watchList, k)) {
+      var _watchList$k = watchList[k],
+          watch = _watchList$k.watch,
+          callBack = _watchList$k.callBack,
+          callAtStart = _watchList$k.callAtStart;
+
+      if (!Array.isArray(watch)) {
+        watch = [watch];
+      }
+
+      var stateGetter = function stateGetter(keyString, storeObject) {
+        return function () {
+          return (0, _index.objectPropertyFromString)(keyString, storeObject.state);
+        };
+      }; // eslint-disable-next-line array-callback-return
+
+
+      watch.map(function (w) {
+        if (callAtStart) {
+          callBack(store)(stateGetter(w, store)());
+        }
+
+        store.watch(stateGetter(w, store), function (newVal, oldVal) {
+          return callBack(store, newVal, oldVal);
+        }, {
+          deep: true
+        });
+      });
+    }
+  });
+};
+
+exports.stateWatchFunction = stateWatchFunction;
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Functions/index":"functions/index.js"}],"stores/builderStore/modules/colorPicker/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Color picker store module.
+ *
+ * @type {Object}
+ */
+var colorPickerModule = {
+  namespaced: true,
+  state: function state() {
+    return {
+      activeId: null
+    };
+  },
+  getters: {
+    /**
+     * Get active color picker id.
+     *
+     * @param {Object} state store state
+     * @return {null|string} active color picker id
+     */
+    getActiveColorPickerId: function getActiveColorPickerId(state) {
+      return state.activeId;
+    }
+  },
+  mutations: {
+    /**
+     * Set active color picker id.
+     *
+     * @param {Object} state store state
+     * @param {string} id new color picker id
+     */
+    setActiveColorPicker: function setActiveColorPicker(state, id) {
+      // eslint-disable-next-line no-param-reassign
+      state.activeId = id;
+    }
+  }
+};
+/**
+ * @module colorPickerModule
+ */
+
+var _default = colorPickerModule;
+exports.default = _default;
+},{}],"stores/builderStore/modules/nightMode/state/cssVariableMaps.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Variable mappings for night mode.
+ *
+ * @type {Object}
+ */
+var cssVariableMaps = {
+  // gray-500
+  '--wptb-plugin-theme-color-light': '#A0AEC0',
+  // gray-300
+  '--wptb-plugin-theme-text-color-main': '#E2E8F0',
+  // gray-600
+  '--wptb-plugin-gray-100': '#718096',
+  // gray-400
+  '--wptb-plugin-theme-sidebar-bg': '#CBD5E0',
+  // gray-700
+  '--wptb-plugin-logo-color': '#4A5568'
+};
+/**
+ * @module cssVariableMaps
+ */
+
+var _default = cssVariableMaps;
+exports.default = _default;
+},{}],"stores/builderStore/modules/nightMode/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _cssVariableMaps = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode/state/cssVariableMaps"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Night mode store module.
+ *
+ * @type {Object}
+ */
+var nightMode = {
+  namespaced: true,
+  state: function state() {
+    return {
+      activated: {
+        value: false,
+        _persistent: true
+      },
+      cssVariableMaps: _cssVariableMaps.default
+    };
+  },
+  getters: {
+    isActive: function isActive(state) {
+      return state.activated.value;
+    }
+  },
+  mutations: {
+    setNightMode: function setNightMode(state, status) {
+      // eslint-disable-next-line no-param-reassign
+      state.activated.value = status;
+    }
+  }
+};
+/**
+ * @module nightMode
+ */
+
+var _default = nightMode;
+exports.default = _default;
+},{"$Stores/builderStore/modules/nightMode/state/cssVariableMaps":"stores/builderStore/modules/nightMode/state/cssVariableMaps.js"}],"stores/builderStore/modules/embed/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * Embed store module.
+ *
+ * @type {Object}
+ */
+var embed = {
+  namespaced: true,
+  state: function state() {
+    return {
+      modalVisibility: false
+    };
+  },
+  getters: {
+    visibility: function visibility(state) {
+      return state.modalVisibility;
+    }
+  },
+  mutations: {
+    showModal: function showModal(state) {
+      state.modalVisibility = true;
+    },
+    hideModal: function hideModal(state) {
+      state.modalVisibility = false;
+    }
+  }
+};
+/**
+ * @module embed
+ */
+
+var _default = embed;
+exports.default = _default;
+},{}],"stores/builderStore/modules/upsells/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Upsell store module.
+ *
+ * @type {Object}
+ */
+var upsellsModule = {
+  namespaced: true,
+  state: {
+    upsellUrl: ''
+  },
+  getters: {
+    getUpsellUrl: function getUpsellUrl(state) {
+      return state.upsellUrl;
+    }
+  }
+};
+/**
+ * @module upsellsModule
+ */
+
+var _default = upsellsModule;
+exports.default = _default;
+},{}],"stores/builderStore/modules/app/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Store module related app specific operations.
+ *
+ * @type {Object}
+ */
+var appModule = {
+  namespaced: true,
+  state: function state() {
+    return {
+      saveOperation: {
+        enabled: false
+      }
+    };
+  },
+  getters: {
+    /**
+     * Current availability of save operation.
+     *
+     * @param {Object} state store state
+     */
+    isSavingEnabled: function isSavingEnabled(state) {
+      return state.saveOperation.enabled;
+    }
+  },
+  mutations: {
+    /**
+     * Set save operation availability.
+     *
+     * @param {Object} state store state
+     * @param {boolean} status status
+     */
+    setSaveStatus: function setSaveStatus(state, status) {
+      // eslint-disable-next-line no-param-reassign
+      state.saveOperation.enabled = status;
+    }
+  }
+};
+/**
+ * @module appModule
+ */
+
+var _default = appModule;
+exports.default = _default;
+},{}],"stores/builderStore/modules/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _colorPicker = _interopRequireDefault(require("$Stores/builderStore/modules/colorPicker"));
+
+var _nightMode = _interopRequireDefault(require("$Stores/builderStore/modules/nightMode"));
+
+var _embed = _interopRequireDefault(require("$Stores/builderStore/modules/embed"));
+
+var _upsells = _interopRequireDefault(require("$Stores/builderStore/modules/upsells"));
+
+var _app = _interopRequireDefault(require("$Stores/builderStore/modules/app"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Default modules for builder store.
+ *
+ * @type {Object}
+ */
+var modules = {
+  colorPicker: _colorPicker.default,
+  nightMode: _nightMode.default,
+  embed: _embed.default,
+  upsells: _upsells.default,
+  app: _app.default
+};
+/**
+ * @module modules
+ */
+
+var _default = modules;
+exports.default = _default;
+},{"$Stores/builderStore/modules/colorPicker":"stores/builderStore/modules/colorPicker/index.js","$Stores/builderStore/modules/nightMode":"stores/builderStore/modules/nightMode/index.js","$Stores/builderStore/modules/embed":"stores/builderStore/modules/embed/index.js","$Stores/builderStore/modules/upsells":"stores/builderStore/modules/upsells/index.js","$Stores/builderStore/modules/app":"stores/builderStore/modules/app/index.js"}],"../../../../../node_modules/js-cookie/dist/js.cookie.js":[function(require,module,exports) {
+var define;
+var global = arguments[3];
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/*! js-cookie v3.0.1 | MIT */
+;
+
+(function (global, factory) {
+  (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global = global || self, function () {
+    var current = global.Cookies;
+    var exports = global.Cookies = factory();
+
+    exports.noConflict = function () {
+      global.Cookies = current;
+      return exports;
+    };
+  }());
+})(this, function () {
+  'use strict';
+  /* eslint-disable no-var */
+
+  function assign(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        target[key] = source[key];
+      }
+    }
+
+    return target;
+  }
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+
+
+  var defaultConverter = {
+    read: function read(value) {
+      if (value[0] === '"') {
+        value = value.slice(1, -1);
+      }
+
+      return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent);
+    },
+    write: function write(value) {
+      return encodeURIComponent(value).replace(/%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g, decodeURIComponent);
+    }
+  };
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+
+  function init(converter, defaultAttributes) {
+    function set(key, value, attributes) {
+      if (typeof document === 'undefined') {
+        return;
+      }
+
+      attributes = assign({}, defaultAttributes, attributes);
+
+      if (typeof attributes.expires === 'number') {
+        attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
+      }
+
+      if (attributes.expires) {
+        attributes.expires = attributes.expires.toUTCString();
+      }
+
+      key = encodeURIComponent(key).replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent).replace(/[()]/g, escape);
+      var stringifiedAttributes = '';
+
+      for (var attributeName in attributes) {
+        if (!attributes[attributeName]) {
+          continue;
+        }
+
+        stringifiedAttributes += '; ' + attributeName;
+
+        if (attributes[attributeName] === true) {
+          continue;
+        } // Considers RFC 6265 section 5.2:
+        // ...
+        // 3.  If the remaining unparsed-attributes contains a %x3B (";")
+        //     character:
+        // Consume the characters of the unparsed-attributes up to,
+        // not including, the first %x3B (";") character.
+        // ...
+
+
+        stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
+      }
+
+      return document.cookie = key + '=' + converter.write(value, key) + stringifiedAttributes;
+    }
+
+    function get(key) {
+      if (typeof document === 'undefined' || arguments.length && !key) {
+        return;
+      } // To prevent the for loop in the first place assign an empty array
+      // in case there are no cookies at all.
+
+
+      var cookies = document.cookie ? document.cookie.split('; ') : [];
+      var jar = {};
+
+      for (var i = 0; i < cookies.length; i++) {
+        var parts = cookies[i].split('=');
+        var value = parts.slice(1).join('=');
+
+        try {
+          var foundKey = decodeURIComponent(parts[0]);
+          jar[foundKey] = converter.read(value, foundKey);
+
+          if (key === foundKey) {
+            break;
+          }
+        } catch (e) {}
+      }
+
+      return key ? jar[key] : jar;
+    }
+
+    return Object.create({
+      set: set,
+      get: get,
+      remove: function remove(key, attributes) {
+        set(key, '', assign({}, attributes, {
+          expires: -1
+        }));
+      },
+      withAttributes: function withAttributes(attributes) {
+        return init(this.converter, assign({}, this.attributes, attributes));
+      },
+      withConverter: function withConverter(converter) {
+        return init(assign({}, this.converter, converter), this.attributes);
+      }
+    }, {
+      attributes: {
+        value: Object.freeze(defaultAttributes)
+      },
+      converter: {
+        value: Object.freeze(converter)
+      }
+    });
+  }
+
+  var api = init(defaultConverter, {
+    path: '/'
+  });
+  /* eslint-enable no-var */
+
+  return api;
+});
+},{}],"stores/builderStore/plugin.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.getPersistentState = void 0;
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
+var _jsCookie = _interopRequireDefault(require("js-cookie"));
+
+var _general = require("$Stores/general");
+
+var _index = require("$Functions/index");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * State watch list.
+ *
+ * @type {Object}
+ */
+var stateWatchList = {};
+/**
+ * Get persistent state of global store.
+ *
+ * @return {undefined | store} persistent state
+ */
+
+var getPersistentState = function getPersistentState() {
+  var wptbCookie = _jsCookie.default.get('wptb');
+
+  if (wptbCookie) {
+    try {
+      wptbCookie = JSON.parse(atob(wptbCookie));
+    } catch (e) {// do nothing...
+    }
+  }
+
+  return wptbCookie;
+};
+/**
+ * Write state to document cookie.
+ *
+ * @param {Object} state store state
+ * @param {Array} addresses an array of addresses to use while preparing data for write operation
+ */
+
+
+exports.getPersistentState = getPersistentState;
+
+var writePersistentState = function writePersistentState(state) {
+  var addresses = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var dataToWrite = {}; // eslint-disable-next-line array-callback-return
+
+  addresses.map(function (addr) {
+    var parts = addr.split('.');
+    parts.reduce(function (carry, key, index) {
+      if (index < parts.length - 1) {
+        if (!carry[key]) {
+          carry[key] = {};
+        }
+      } else {
+        carry[key] = (0, _index.objectPropertyFromString)(addr, state);
+      }
+
+      return carry[key];
+    }, dataToWrite);
+  });
+
+  _jsCookie.default.set('wptb', btoa(JSON.stringify(dataToWrite)));
+};
+/**
+ * Prepare a map array for state values with persistent functionality enabled.
+ *
+ * @param {Object} state store state
+ * @return {Array} an array of JSON style addresses for persistent state keys
+ */
+
+
+var preparePersistentMap = function preparePersistentMap(state) {
+  var map = [];
+  /**
+   * Get persistent addresses of values in store state.
+   *
+   * This function will push those addresses to map array in its closure
+   *
+   * @param {any} storeVal current store value
+   * @param {string} carryAddr carried address
+   */
+
+  function getPersistentAddr(storeVal) {
+    var carryAddr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+    if ((0, _typeof2.default)(storeVal) === 'object' && storeVal !== null) {
+      // eslint-disable-next-line no-underscore-dangle
+      if (Object.prototype.hasOwnProperty.call(storeVal, '_persistent')) {
+        map.push(carryAddr);
+      } else {
+        // eslint-disable-next-line array-callback-return
+        Object.keys(storeVal).map(function (key) {
+          if (Object.prototype.hasOwnProperty.call(storeVal, key)) {
+            getPersistentAddr(storeVal[key], "".concat(carryAddr).concat(carryAddr === '' ? '' : '.').concat(key));
+          }
+        });
+      }
+    }
+  }
+
+  getPersistentAddr(state);
+  return map;
+};
+/**
+ * Store subscriptions to watch various store events.
+ *
+ * @param {Object} store flux store
+ */
+
+
+var subscriptions = function subscriptions(store) {
+  var persistentMap = preparePersistentMap(store.state);
+  stateWatchList.stateWrite = {
+    watch: persistentMap,
+    callBack: function callBack(currentStore) {
+      // only values of state which are marked as persistent will trigger a save operation for store state
+      writePersistentState(currentStore.state, persistentMap);
+    }
+  };
+  (0, _general.stateWatchFunction)(store, stateWatchList);
+};
+/**
+ * @module subscriptions
+ */
+
+
+var _default = subscriptions;
+exports.default = _default;
+},{"@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","js-cookie":"../../../../../node_modules/js-cookie/dist/js.cookie.js","$Stores/general":"stores/general.js","$Functions/index":"functions/index.js"}],"stores/builderStore/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _vuex = _interopRequireDefault(require("vuex"));
+
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _general = require("$Stores/general");
+
+var _modules = _interopRequireDefault(require("./modules"));
+
+var _plugin = _interopRequireWildcard(require("$Stores/builderStore/plugin"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * Default store for builder.
+ *
+ * @type {Object}
+ */
+var defaultStore = {
+  strict: true,
+  modules: _modules.default,
+  plugins: [_plugin.default]
+};
+/**
+ * Create a store for builder.
+ *
+ * @param {Object} extraStoreOptions extra store options to add to default one
+ * @return {Object} vuex store for builder
+ */
+
+var createStore = function createStore(extraStoreOptions) {
+  return (0, _general.createBasicStore)(defaultStore, extraStoreOptions);
+};
+/**
+ * WPTB data store.
+ *
+ * @return {Object} data store instance
+ * @class
+ */
+
+
+function BuilderStore() {
+  _vue.default.use(_vuex.default); // eslint-disable-next-line camelcase
+
+
+  var _wptb_admin_object = wptb_admin_object,
+      storeData = _wptb_admin_object.store;
+  var extraStoreOptions = {
+    state: {},
+    getters: {
+      proStatus: function proStatus(state) {
+        return state.pro;
+      },
+      getTranslation: function getTranslation(state) {
+        return function (id) {
+          return state.translations[id];
+        };
+      },
+      tableId: function tableId(state) {
+        return state.tableId;
+      }
+    },
+    mutations: {
+      setTableId: function setTableId(state, tableId) {
+        state.tableId = tableId;
+      }
+    }
+  };
+  var builderStore = createStore(extraStoreOptions);
+  builderStore.replaceState((0, _deepmerge.default)(builderStore.state, storeData));
+  var savedState = (0, _plugin.getPersistentState)();
+
+  if (savedState) {
+    builderStore.replaceState((0, _deepmerge.default)(builderStore.state, savedState));
+  }
+  /**
+   * Compatibility function for store getters.
+   *
+   * @param {string} getterId getter id
+   * @return {any} getter operation result
+   */
+
+
+  builderStore.get = function (getterId) {
+    return builderStore.getters[getterId];
+  };
+  /**
+   * Get translation of a string.
+   *
+   * @param {string} translationId translation id
+   * @return {undefined | string} translated string
+   */
+
+
+  builderStore.getTranslation = function (translationId) {
+    return builderStore.getters.getTranslation(translationId);
+  };
+
+  return builderStore;
+}
+/**
+ * @module createStore
+ */
+
+
+var _default = new BuilderStore();
+
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Stores/general":"stores/general.js","./modules":"stores/builderStore/modules/index.js","$Stores/builderStore/plugin":"stores/builderStore/plugin.js"}],"containers/ProOverlay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.targetTypes = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _vuex = require("vuex");
+
+var _ModalWindow = _interopRequireDefault(require("$Components/ModalWindow"));
+
+var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+var _createNamespacedHelp = (0, _vuex.createNamespacedHelpers)('upsells'),
+    mapUpsellsGetters = _createNamespacedHelp.mapGetters;
+
+var targetTypes = {
+  SECTIONCONTAINER: 'sectionContainer',
+  PARENT: 'parent',
+  APPEND: 'append'
+};
+exports.targetTypes = targetTypes;
+var _default = {
+  props: {
+    featureName: {
+      type: String,
+      default: 'This is'
+    },
+    target: {
+      type: String,
+      default: targetTypes.SECTIONCONTAINER
+    },
+    explicitStore: {
+      type: Boolean,
+      default: false
+    },
+    appendTarget: {
+      type: Node,
+      default: null
+    },
+    appendTargetQuery: {
+      type: String,
+      default: null
+    }
+  },
+  components: {
+    ModalWindow: _ModalWindow.default
+  },
+  data: function data() {
+    return {
+      showModal: false
+    };
+  },
+  created: function created() {
+    // if enabled, use builder store explicitly
+    if (this.explicitStore) {
+      this.$store = _builderStore.default;
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      var _this$$refs = _this.$refs,
+          container = _this$$refs.container,
+          modalWindow = _this$$refs.modalWindow;
+
+      if (container) {
+        _this.positionOverlay();
+
+        _this.positionModalWindow(modalWindow.$el);
+      }
+    });
+  },
+  computed: _objectSpread(_objectSpread({
+    generatedMessage: function generatedMessage() {
+      return "<span><span style=\"font-weight:bold\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
+    }
+  }, (0, _vuex.mapGetters)(['getTranslation', 'proStatus'])), mapUpsellsGetters(['getUpsellUrl'])),
+  methods: {
+    toggleModal: function toggleModal() {
+      this.showModal = !this.showModal;
+    },
+    handleUnlock: function handleUnlock() {
+      window.open(this.getUpsellUrl);
+    },
+    positionSectionContainer: function positionSectionContainer(container) {
+      var parentContainer = container.parentNode.parentNode.parentNode;
+      parentContainer.style.position = 'relative';
+    },
+    positionParent: function positionParent(container) {
+      var parentContainer = container.parentNode;
+      parentContainer.style.position = 'relative';
+    },
+    appendToTarget: function appendToTarget(container) {
+      var _this$appendTarget;
+
+      var finalTarget = (_this$appendTarget = this.appendTarget) !== null && _this$appendTarget !== void 0 ? _this$appendTarget : document.querySelector(this.appendTargetQuery);
+
+      if (finalTarget) {
+        finalTarget.style.position = 'relative';
+        finalTarget.appendChild(container);
+      }
+    },
+    positionModalWindow: function positionModalWindow(modalWindowElement) {
+      document.body.appendChild(modalWindowElement);
+    },
+    positionOverlay: function positionOverlay() {
+      var container = this.$refs.container;
+
+      switch (this.target) {
+        case targetTypes.SECTIONCONTAINER:
+          this.positionSectionContainer(container);
+          break;
+
+        case targetTypes.PARENT:
+          this.positionParent(container);
+          break;
+
+        case targetTypes.APPEND:
+          this.appendToTarget(container);
+          break;
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $4ee90e = exports.default || module.exports;
+      
+      if (typeof $4ee90e === 'function') {
+        $4ee90e = $4ee90e.options;
+      }
+    
+        /* template */
+        Object.assign($4ee90e, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return !_vm.proStatus
+    ? _c(
+        "div",
+        {
+          ref: "container",
+          staticClass: "wptb-upsells-pro-overlay",
+          staticStyle: { "font-size": "15px" },
+          on: {
+            "!click": function($event) {
+              $event.preventDefault()
+              $event.stopPropagation()
+              return _vm.toggleModal($event)
+            }
+          }
+        },
+        [
+          _c(
+            "ModalWindow",
+            {
+              ref: "modalWindow",
+              attrs: {
+                "is-fixed": true,
+                visible: _vm.showModal,
+                "icon-name": "lock",
+                "icon-classes": ["pro-overlay-screen-popup-icon"],
+                "close-callback": _vm.toggleModal,
+                "window-title": _vm.getTranslation("proFeature"),
+                message: _vm.generatedMessage,
+                "button-label": _vm.getTranslation("unlockNow"),
+                "button-extra-classes": ["pro-overlay-modal-button"],
+                callback: _vm.handleUnlock
+              }
+            },
+            [
+              _c("div", {
+                domProps: { innerHTML: _vm._s(_vm.getTranslation("useCode")) }
+              })
+            ]
+          )
+        ],
+        1
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/ModalWindow":"components/ModalWindow.vue","$Stores/builderStore":"stores/builderStore/index.js"}],"components/PrebuiltCard.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13746,8 +16845,20 @@ var _PrebuiltCardDeleteModule = _interopRequireDefault(require("./PrebuiltCardDe
 
 var _BusyRotate = _interopRequireDefault(require("./BusyRotate"));
 
+var _ProOverlay = _interopRequireWildcard(require("$Containers/ProOverlay"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -13866,6 +16977,7 @@ var _default = {
     }
   },
   components: {
+    ProOverlay: _ProOverlay.default,
     BusyRotate: _BusyRotate.default,
     PrebuiltCardControl: _PrebuiltCardControl.default,
     PrebuiltLiveDisplay: _PrebuiltLiveDisplay.default,
@@ -13972,6 +17084,9 @@ var _default = {
     });
   },
   computed: {
+    overlayTargetTypes: function overlayTargetTypes() {
+      return _ProOverlay.targetTypes;
+    },
     transformedName: function transformedName() {
       if (this.searchString !== '') {
         var regexp = new RegExp("(".concat(this.searchString, ")"), 'ig');
@@ -14097,6 +17212,16 @@ exports.default = _default;
       on: { click: _vm.setCardActive }
     },
     [
+      _vm.id !== "blank"
+        ? _c("pro-overlay", {
+            attrs: {
+              "feature-name": "Table Template",
+              target: _vm.overlayTargetTypes.PARENT,
+              "explicit-store": true
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
       _vm.previewBusy ? _c("busy-rotate") : _vm._e(),
       _vm._v(" "),
       _c(
@@ -14281,7 +17406,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue","./BusyRotate":"components/BusyRotate.vue"}],"containers/GenerateMain.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue","./BusyRotate":"components/BusyRotate.vue","$Containers/ProOverlay":"containers/ProOverlay.vue"}],"containers/GenerateMain.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14298,6 +17423,8 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard"));
 
 require("regenerator-runtime/runtime");
+
+var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -14350,7 +17477,7 @@ var _default = {
   },
   computed: {
     isPro: function isPro() {
-      return this.version === 'pro';
+      return _builderStore.default.getters.proStatus;
     }
   },
   methods: {
@@ -14360,32 +17487,34 @@ var _default = {
     favAction: function favAction(cardId) {
       var _this = this;
 
-      var _this$security = this.security,
-          favAction = _this$security.favAction,
-          favNonce = _this$security.favNonce,
-          ajaxUrl = _this$security.ajaxUrl;
-      var formData = new FormData();
-      formData.append('action', favAction);
-      formData.append('nonce', favNonce);
-      formData.append('id', cardId);
-      fetch(ajaxUrl, {
-        method: 'POST',
-        body: formData
-      }).then(function (r) {
-        if (r.ok) {
-          return r.json();
-        }
+      if (this.isPro) {
+        var _this$security = this.security,
+            favAction = _this$security.favAction,
+            favNonce = _this$security.favNonce,
+            ajaxUrl = _this$security.ajaxUrl;
+        var formData = new FormData();
+        formData.append('action', favAction);
+        formData.append('nonce', favNonce);
+        formData.append('id', cardId);
+        fetch(ajaxUrl, {
+          method: 'POST',
+          body: formData
+        }).then(function (r) {
+          if (r.ok) {
+            return r.json();
+          }
 
-        throw new Error(r.status);
-      }).then(function (resp) {
-        if (resp.error) {
-          throw new Error(resp.error);
-        } else {
-          _this.fixedTables[cardId].fav = resp.message;
-        }
-      }).catch(function (e) {
-        console.error('an error occurred with fav operation request: ', e);
-      });
+          throw new Error(r.status);
+        }).then(function (resp) {
+          if (resp.error) {
+            throw new Error(resp.error);
+          } else {
+            _this.fixedTables[cardId].fav = resp.message;
+          }
+        }).catch(function (e) {
+          console.error('an error occurred with fav operation request: ', e);
+        });
+      }
     },
     cardFavIcon: function cardFavIcon(cardId) {
       return cardId === 'blank' ? '' : this.appData.icons.favIcon;
@@ -14479,210 +17608,219 @@ var _default = {
       return this.activeCard === id;
     },
     cardActive: function cardActive(cardId) {
-      this.activeCard = cardId;
+      if (this.isPro) {
+        this.activeCard = cardId;
+      }
     },
     cardEdit: function cardEdit(cardId) {
-      this.cardGenerate(cardId, 0, 0, [], true);
-      var currentUrl = new URL(window.location.href);
-      currentUrl.searchParams.append('table', encodeURIComponent(cardId));
-      window.history.pushState(null, null, currentUrl.toString());
+      if (this.isPro) {
+        this.cardGenerate(cardId, 0, 0, [], true);
+        var currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.append('table', encodeURIComponent(cardId));
+        window.history.pushState(null, null, currentUrl.toString());
+      }
     },
     cardGenerate: function cardGenerate(cardId, cols, rows, selectedCells) {
       var edit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-      this.generating = true;
 
-      if (cardId === 'blank') {
-        WPTB_Table(cols, rows);
-        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-      } else {
-        var tableWrapper = document.querySelector('.wptb-table-setup');
-        tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
-        var table = tableWrapper.querySelector('table');
-        var maxWidth = table.dataset.wptbTableContainerMaxWidth; // add defined max width to table wrapper element
+      if (this.isPro) {
+        this.generating = true;
 
-        if (maxWidth) {
-          tableWrapper.style.maxWidth = "".concat(maxWidth, "px");
-        }
+        if (cardId === 'blank') {
+          WPTB_Table(cols, rows);
+          var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+          wptbTableStateSaveManager.tableStateSet();
+        } else {
+          var tableWrapper = document.querySelector('.wptb-table-setup');
+          tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
+          var table = tableWrapper.querySelector('table');
+          var maxWidth = table.dataset.wptbTableContainerMaxWidth; // add defined max width to table wrapper element
 
-        if (!edit) {
-          // unmark inserted template as prebuilt table
-          // only unmark it if edit mode is not enabled
-          delete table.dataset.wptbPrebuiltTable;
-          var tableRows = Array.from(table.querySelectorAll('tr')); // maximum column length
+          if (maxWidth) {
+            tableWrapper.style.maxWidth = "".concat(maxWidth, "px");
+          }
 
-          var maximumCells = tableRows.reduce(function (carry, item) {
-            var cellLength = item.querySelectorAll('td').length;
-            return Math.max(cellLength, carry);
-          }, 0);
-          var extraRows = rows - tableRows.length;
-          var extraCols = cols - maximumCells; // parse table into rows and cols
+          if (!edit) {
+            // unmark inserted template as prebuilt table
+            // only unmark it if edit mode is not enabled
+            delete table.dataset.wptbPrebuiltTable;
+            var tableRows = Array.from(table.querySelectorAll('tr')); // maximum column length
 
-          var parsedTable = tableRows.reduce(function (carry, item, r) {
-            if (!Array.isArray(carry[r])) {
-              // eslint-disable-next-line no-param-reassign
-              carry[r] = [];
-            } // eslint-disable-next-line array-callback-return
+            var maximumCells = tableRows.reduce(function (carry, item) {
+              var cellLength = item.querySelectorAll('td').length;
+              return Math.max(cellLength, carry);
+            }, 0);
+            var extraRows = rows - tableRows.length;
+            var extraCols = cols - maximumCells; // parse table into rows and cols
+
+            var parsedTable = tableRows.reduce(function (carry, item, r) {
+              if (!Array.isArray(carry[r])) {
+                // eslint-disable-next-line no-param-reassign
+                carry[r] = [];
+              } // eslint-disable-next-line array-callback-return
 
 
-            Array.from(item.querySelectorAll('td')).map(function (c) {
-              carry[r].push(c);
-            });
-            return carry;
-          }, []); // sort selected cells by row then by columns
+              Array.from(item.querySelectorAll('td')).map(function (c) {
+                carry[r].push(c);
+              });
+              return carry;
+            }, []); // sort selected cells by row then by columns
 
-          selectedCells.sort();
-          var rowNormalizeConstant = selectedCells.length > 0 ? selectedCells[0].split('-')[0] : 0; // cells that will be used at clone operations
+            selectedCells.sort();
+            var rowNormalizeConstant = selectedCells.length > 0 ? selectedCells[0].split('-')[0] : 0; // cells that will be used at clone operations
 
-          var cellsForClone = selectedCells.reduce(function (carry, item) {
-            var _item$split = item.split('-'),
-                _item$split2 = (0, _slicedToArray2.default)(_item$split, 2),
-                row = _item$split2[0],
-                column = _item$split2[1];
+            var cellsForClone = selectedCells.reduce(function (carry, item) {
+              var _item$split = item.split('-'),
+                  _item$split2 = (0, _slicedToArray2.default)(_item$split, 2),
+                  row = _item$split2[0],
+                  column = _item$split2[1];
 
-            var normalizedRowIndex = row - rowNormalizeConstant;
+              var normalizedRowIndex = row - rowNormalizeConstant;
 
-            if (!Array.isArray(carry[normalizedRowIndex])) {
-              // eslint-disable-next-line no-param-reassign
-              carry[normalizedRowIndex] = [];
-            }
-
-            carry[normalizedRowIndex].push(parsedTable[row][column]);
-            return carry;
-          }, []); // modulo constants for cellsForClone
-
-          var rowModulo = cellsForClone.length;
-          var cellModulo = cellsForClone.reduce(function (carry, item) {
-            return Math.max(carry, item.length);
-          }, 0);
-          /**
-           * Increment id of plugin element.
-           *
-           * @param HTMLElement divEl div element
-           * @param divEl
-           */
-
-          var incrementIds = function incrementIds(divEl) {
-            var className = null; // find the divs related to elements with this unique pattern
-
-            var classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
-            divEl.classList.forEach(function (c) {
-              if (c.match(classRegExp)) {
-                className = c;
+              if (!Array.isArray(carry[normalizedRowIndex])) {
+                // eslint-disable-next-line no-param-reassign
+                carry[normalizedRowIndex] = [];
               }
-            }); // main wrapper div found for an element
 
-            if (className) {
-              divEl.classList.remove(className); // find out the kind of the element
+              carry[normalizedRowIndex].push(parsedTable[row][column]);
+              return carry;
+            }, []); // modulo constants for cellsForClone
 
-              var _classRegExp$exec = classRegExp.exec(className),
-                  _classRegExp$exec2 = (0, _slicedToArray2.default)(_classRegExp$exec, 2),
-                  kind = _classRegExp$exec2[1];
+            var rowModulo = cellsForClone.length;
+            var cellModulo = cellsForClone.reduce(function (carry, item) {
+              return Math.max(carry, item.length);
+            }, 0);
+            /**
+             * Increment id of plugin element.
+             *
+             * @param HTMLElement divEl div element
+             * @param divEl
+             */
 
-              var regExp = new RegExp("^wptb-element-".concat(kind, "-([0-9]+)$"), 'g'); // find out the same kind of element with the biggest number id
+            var incrementIds = function incrementIds(divEl) {
+              var className = null; // find the divs related to elements with this unique pattern
 
-              var highestId = Array.from(table.querySelectorAll('div')).reduce(function (carry, item) {
-                item.classList.forEach(function (c) {
-                  var match = regExp.exec(c);
+              var classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
+              divEl.classList.forEach(function (c) {
+                if (c.match(classRegExp)) {
+                  className = c;
+                }
+              }); // main wrapper div found for an element
 
-                  if (match) {
-                    var numberId = Number.parseInt(match[1], 10); // eslint-disable-next-line no-param-reassign
+              if (className) {
+                divEl.classList.remove(className); // find out the kind of the element
 
-                    carry = carry > numberId ? carry : numberId;
-                  }
-                });
-                return carry;
-              }, 0); // increment unique class id of the element
+                var _classRegExp$exec = classRegExp.exec(className),
+                    _classRegExp$exec2 = (0, _slicedToArray2.default)(_classRegExp$exec, 2),
+                    kind = _classRegExp$exec2[1];
 
-              divEl.classList.add("wptb-element-".concat(kind, "-").concat(highestId + 1));
-            }
-          }; // add extra cols to table
-          // eslint-disable-next-line array-callback-return
+                var regExp = new RegExp("^wptb-element-".concat(kind, "-([0-9]+)$"), 'g'); // find out the same kind of element with the biggest number id
 
+                var highestId = Array.from(table.querySelectorAll('div')).reduce(function (carry, item) {
+                  item.classList.forEach(function (c) {
+                    var match = regExp.exec(c);
 
-          tableRows.map(function (r, ri) {
+                    if (match) {
+                      var numberId = Number.parseInt(match[1], 10); // eslint-disable-next-line no-param-reassign
+
+                      carry = carry > numberId ? carry : numberId;
+                    }
+                  });
+                  return carry;
+                }, 0); // increment unique class id of the element
+
+                divEl.classList.add("wptb-element-".concat(kind, "-").concat(highestId + 1));
+              }
+            }; // add extra cols to table
             // eslint-disable-next-line array-callback-return
-            Array.from(Array(extraCols)).map(function (c, ci) {
-              var clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
-              r.appendChild(clonedCell);
-              Array.from(clonedCell.querySelectorAll('div')).map(incrementIds);
+
+
+            tableRows.map(function (r, ri) {
+              // eslint-disable-next-line array-callback-return
+              Array.from(Array(extraCols)).map(function (c, ci) {
+                var clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
+                r.appendChild(clonedCell);
+                Array.from(clonedCell.querySelectorAll('div')).map(incrementIds);
+              });
+            }); // add extra rows to table
+            // eslint-disable-next-line array-callback-return
+
+            Array.from(Array(extraRows)).map(function (r, ri) {
+              var currentRow = document.createElement('tr');
+              table.appendChild(currentRow); // eslint-disable-next-line array-callback-return
+
+              Array.from(Array(cols)).map(function (c, ci) {
+                var clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
+                currentRow.appendChild(clonedCell);
+              });
+              Array.from(currentRow.querySelectorAll('div')).map(incrementIds);
             });
-          }); // add extra rows to table
-          // eslint-disable-next-line array-callback-return
-
-          Array.from(Array(extraRows)).map(function (r, ri) {
-            var currentRow = document.createElement('tr');
-            table.appendChild(currentRow); // eslint-disable-next-line array-callback-return
-
-            Array.from(Array(cols)).map(function (c, ci) {
-              var clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
-              currentRow.appendChild(clonedCell);
-            });
-            Array.from(currentRow.querySelectorAll('div')).map(incrementIds);
-          });
-        } // edit is enabled
+          } // edit is enabled
 
 
-        if (edit) {
-          // fill in the name of the selected prebuilt table on edit mode
-          document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title; // force enable prebuilt functionality on edit mode
+          if (edit) {
+            // fill in the name of the selected prebuilt table on edit mode
+            document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title; // force enable prebuilt functionality on edit mode
 
-          table.dataset.wptbPrebuiltTable = 1;
+            table.dataset.wptbPrebuiltTable = 1;
+          }
+
+          WPTB_Table();
+          WPTB_Settings();
+
+          var _wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+
+          _wptbTableStateSaveManager.tableStateSet();
+
+          document.counter = new ElementCounters();
+          document.select = new MultipleSelect(); // WPTB_Initializer();
+
+          WPTB_Settings();
         }
-
-        WPTB_Table();
-        WPTB_Settings();
-
-        var _wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-
-        _wptbTableStateSaveManager.tableStateSet();
-
-        document.counter = new ElementCounters();
-        document.select = new MultipleSelect(); // WPTB_Initializer();
-
-        WPTB_Settings();
       }
     },
     deleteAction: function deleteAction(cardId) {
       var _this4 = this;
 
-      var _this$security2 = this.security,
-          ajaxUrl = _this$security2.ajaxUrl,
-          deleteAction = _this$security2.deleteAction,
-          deleteNonce = _this$security2.deleteNonce,
-          devModeNonce = _this$security2.devModeNonce;
-      var form = new FormData();
-      form.append('action', deleteAction);
-      form.append('nonce', deleteNonce);
-      form.append('id', cardId);
+      if (this.isPro) {
+        var _this$security2 = this.security,
+            ajaxUrl = _this$security2.ajaxUrl,
+            deleteAction = _this$security2.deleteAction,
+            deleteNonce = _this$security2.deleteNonce,
+            devModeNonce = _this$security2.devModeNonce;
+        var form = new FormData();
+        form.append('action', deleteAction);
+        form.append('nonce', deleteNonce);
+        form.append('id', cardId);
 
-      if (cardId.startsWith(this.appData.teamTablePrefix)) {
-        form.append('deleteCSV', true);
-        form.append('devModeNonce', devModeNonce);
-      }
-
-      fetch(ajaxUrl, {
-        method: 'POST',
-        body: form
-      }).then(function (r) {
-        if (r.ok) {
-          return r.json();
+        if (cardId.startsWith(this.appData.teamTablePrefix)) {
+          form.append('deleteCSV', true);
+          form.append('devModeNonce', devModeNonce);
         }
 
-        throw new Error('an error occurred while deleting prebuilt table, try again later');
-      }).then(function (resp) {
-        if (resp.error) {
-          throw new Error(resp.error);
-        }
+        fetch(ajaxUrl, {
+          method: 'POST',
+          body: form
+        }).then(function (r) {
+          if (r.ok) {
+            return r.json();
+          }
 
-        if (resp.message === true) {
-          _this4.$delete(_this4.fixedTables, cardId);
-        } else {
           throw new Error('an error occurred while deleting prebuilt table, try again later');
-        }
-      }).catch(function (e) {
-        console.error(e.message);
-      });
+        }).then(function (resp) {
+          if (resp.error) {
+            throw new Error(resp.error);
+          }
+
+          if (resp.message === true) {
+            _this4.$delete(_this4.fixedTables, cardId);
+          } else {
+            throw new Error('an error occurred while deleting prebuilt table, try again later');
+          }
+        }).catch(function (e) {
+          console.error(e.message);
+        });
+      }
     }
   },
   beforeDestroy: function beforeDestroy() {
@@ -14784,7 +17922,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/regenerator":"../../../../../node_modules/@babel/runtime/regenerator/index.js","../components/PrebuiltCard":"components/PrebuiltCard.vue","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js"}],"plugins/filters.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/regenerator":"../../../../../node_modules/@babel/runtime/regenerator/index.js","../components/PrebuiltCard":"components/PrebuiltCard.vue","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js","$Stores/builderStore":"stores/builderStore/index.js"}],"plugins/filters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

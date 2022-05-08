@@ -33,16 +33,12 @@
 			</div>
 		</div>
 		<div v-if="!isPro" v-html="upsell"></div>
-		<!--    @deprecated-->
-		<!--		<div v-if="!isPro" class="wptb-prebuilt-ad">-->
-		<!--			{{ strings.prebuiltAdPart1 }}-->
-		<!--			<a :href="adLink" class="wptb-prebuilt-ad-link">{{ strings.prebuiltAdPart2 }}</a>-->
-		<!--		</div>-->
 	</div>
 </template>
 <script>
 import PrebuiltCard from '../components/PrebuiltCard';
 import 'regenerator-runtime/runtime';
+import BuilderStore from '$Stores/builderStore';
 
 export default {
 	components: { PrebuiltCard },
@@ -89,7 +85,7 @@ export default {
 	},
 	computed: {
 		isPro() {
-			return this.version === 'pro';
+			return BuilderStore.getters.proStatus;
 		},
 	},
 	methods: {
@@ -97,33 +93,35 @@ export default {
 			this.activeCard = '';
 		},
 		favAction(cardId) {
-			const { favAction, favNonce, ajaxUrl } = this.security;
+			if (this.isPro) {
+				const { favAction, favNonce, ajaxUrl } = this.security;
 
-			const formData = new FormData();
-			formData.append('action', favAction);
-			formData.append('nonce', favNonce);
-			formData.append('id', cardId);
+				const formData = new FormData();
+				formData.append('action', favAction);
+				formData.append('nonce', favNonce);
+				formData.append('id', cardId);
 
-			fetch(ajaxUrl, {
-				method: 'POST',
-				body: formData,
-			})
-				.then((r) => {
-					if (r.ok) {
-						return r.json();
-					}
-					throw new Error(r.status);
+				fetch(ajaxUrl, {
+					method: 'POST',
+					body: formData,
 				})
-				.then((resp) => {
-					if (resp.error) {
-						throw new Error(resp.error);
-					} else {
-						this.fixedTables[cardId].fav = resp.message;
-					}
-				})
-				.catch((e) => {
-					console.error('an error occurred with fav operation request: ', e);
-				});
+					.then((r) => {
+						if (r.ok) {
+							return r.json();
+						}
+						throw new Error(r.status);
+					})
+					.then((resp) => {
+						if (resp.error) {
+							throw new Error(resp.error);
+						} else {
+							this.fixedTables[cardId].fav = resp.message;
+						}
+					})
+					.catch((e) => {
+						console.error('an error occurred with fav operation request: ', e);
+					});
+			}
 		},
 		cardFavIcon(cardId) {
 			return cardId === 'blank' ? '' : this.appData.icons.favIcon;
@@ -188,218 +186,226 @@ export default {
 			return this.activeCard === id;
 		},
 		cardActive(cardId) {
-			this.activeCard = cardId;
+			if (this.isPro) {
+				this.activeCard = cardId;
+			}
 		},
 		cardEdit(cardId) {
-			this.cardGenerate(cardId, 0, 0, [], true);
-			const currentUrl = new URL(window.location.href);
-			currentUrl.searchParams.append('table', encodeURIComponent(cardId));
-			window.history.pushState(null, null, currentUrl.toString());
+			if (this.isPro) {
+				this.cardGenerate(cardId, 0, 0, [], true);
+				const currentUrl = new URL(window.location.href);
+				currentUrl.searchParams.append('table', encodeURIComponent(cardId));
+				window.history.pushState(null, null, currentUrl.toString());
+			}
 		},
 		cardGenerate(cardId, cols, rows, selectedCells, edit = false) {
-			this.generating = true;
-			if (cardId === 'blank') {
-				WPTB_Table(cols, rows);
+			if (this.isPro) {
+				this.generating = true;
+				if (cardId === 'blank') {
+					WPTB_Table(cols, rows);
 
-				const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-				wptbTableStateSaveManager.tableStateSet();
-			} else {
-				const tableWrapper = document.querySelector('.wptb-table-setup');
-				tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
-				const table = tableWrapper.querySelector('table');
+					const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+					wptbTableStateSaveManager.tableStateSet();
+				} else {
+					const tableWrapper = document.querySelector('.wptb-table-setup');
+					tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
+					const table = tableWrapper.querySelector('table');
 
-				const maxWidth = table.dataset.wptbTableContainerMaxWidth;
+					const maxWidth = table.dataset.wptbTableContainerMaxWidth;
 
-				// add defined max width to table wrapper element
-				if (maxWidth) {
-					tableWrapper.style.maxWidth = `${maxWidth}px`;
-				}
+					// add defined max width to table wrapper element
+					if (maxWidth) {
+						tableWrapper.style.maxWidth = `${maxWidth}px`;
+					}
 
-				if (!edit) {
-					// unmark inserted template as prebuilt table
-					// only unmark it if edit mode is not enabled
-					delete table.dataset.wptbPrebuiltTable;
+					if (!edit) {
+						// unmark inserted template as prebuilt table
+						// only unmark it if edit mode is not enabled
+						delete table.dataset.wptbPrebuiltTable;
 
-					const tableRows = Array.from(table.querySelectorAll('tr'));
+						const tableRows = Array.from(table.querySelectorAll('tr'));
 
-					// maximum column length
-					const maximumCells = tableRows.reduce((carry, item) => {
-						const cellLength = item.querySelectorAll('td').length;
+						// maximum column length
+						const maximumCells = tableRows.reduce((carry, item) => {
+							const cellLength = item.querySelectorAll('td').length;
 
-						return Math.max(cellLength, carry);
-					}, 0);
+							return Math.max(cellLength, carry);
+						}, 0);
 
-					const extraRows = rows - tableRows.length;
-					const extraCols = cols - maximumCells;
+						const extraRows = rows - tableRows.length;
+						const extraCols = cols - maximumCells;
 
-					// parse table into rows and cols
-					const parsedTable = tableRows.reduce((carry, item, r) => {
-						if (!Array.isArray(carry[r])) {
-							// eslint-disable-next-line no-param-reassign
-							carry[r] = [];
-						}
-
-						// eslint-disable-next-line array-callback-return
-						Array.from(item.querySelectorAll('td')).map((c) => {
-							carry[r].push(c);
-						});
-
-						return carry;
-					}, []);
-
-					// sort selected cells by row then by columns
-					selectedCells.sort();
-
-					const rowNormalizeConstant = selectedCells.length > 0 ? selectedCells[0].split('-')[0] : 0;
-
-					// cells that will be used at clone operations
-					const cellsForClone = selectedCells.reduce((carry, item) => {
-						const [row, column] = item.split('-');
-						const normalizedRowIndex = row - rowNormalizeConstant;
-
-						if (!Array.isArray(carry[normalizedRowIndex])) {
-							// eslint-disable-next-line no-param-reassign
-							carry[normalizedRowIndex] = [];
-						}
-
-						carry[normalizedRowIndex].push(parsedTable[row][column]);
-
-						return carry;
-					}, []);
-
-					// modulo constants for cellsForClone
-					const rowModulo = cellsForClone.length;
-					const cellModulo = cellsForClone.reduce((carry, item) => {
-						return Math.max(carry, item.length);
-					}, 0);
-
-					/**
-					 * Increment id of plugin element.
-					 *
-					 * @param HTMLElement divEl div element
-					 * @param divEl
-					 */
-					const incrementIds = (divEl) => {
-						let className = null;
-						// find the divs related to elements with this unique pattern
-						const classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
-
-						divEl.classList.forEach((c) => {
-							if (c.match(classRegExp)) {
-								className = c;
+						// parse table into rows and cols
+						const parsedTable = tableRows.reduce((carry, item, r) => {
+							if (!Array.isArray(carry[r])) {
+								// eslint-disable-next-line no-param-reassign
+								carry[r] = [];
 							}
-						});
 
-						// main wrapper div found for an element
-						if (className) {
-							divEl.classList.remove(className);
-							// find out the kind of the element
-							const [, kind] = classRegExp.exec(className);
-							const regExp = new RegExp(`^wptb-element-${kind}-([0-9]+)$`, 'g');
+							// eslint-disable-next-line array-callback-return
+							Array.from(item.querySelectorAll('td')).map((c) => {
+								carry[r].push(c);
+							});
 
-							// find out the same kind of element with the biggest number id
-							const highestId = Array.from(table.querySelectorAll('div')).reduce((carry, item) => {
-								item.classList.forEach((c) => {
-									const match = regExp.exec(c);
-									if (match) {
-										const numberId = Number.parseInt(match[1], 10);
-										// eslint-disable-next-line no-param-reassign
-										carry = carry > numberId ? carry : numberId;
-									}
-								});
+							return carry;
+						}, []);
 
-								return carry;
-							}, 0);
+						// sort selected cells by row then by columns
+						selectedCells.sort();
 
-							// increment unique class id of the element
-							divEl.classList.add(`wptb-element-${kind}-${highestId + 1}`);
-						}
-					};
+						const rowNormalizeConstant = selectedCells.length > 0 ? selectedCells[0].split('-')[0] : 0;
 
-					// add extra cols to table
-					// eslint-disable-next-line array-callback-return
-					tableRows.map((r, ri) => {
+						// cells that will be used at clone operations
+						const cellsForClone = selectedCells.reduce((carry, item) => {
+							const [row, column] = item.split('-');
+							const normalizedRowIndex = row - rowNormalizeConstant;
+
+							if (!Array.isArray(carry[normalizedRowIndex])) {
+								// eslint-disable-next-line no-param-reassign
+								carry[normalizedRowIndex] = [];
+							}
+
+							carry[normalizedRowIndex].push(parsedTable[row][column]);
+
+							return carry;
+						}, []);
+
+						// modulo constants for cellsForClone
+						const rowModulo = cellsForClone.length;
+						const cellModulo = cellsForClone.reduce((carry, item) => {
+							return Math.max(carry, item.length);
+						}, 0);
+
+						/**
+						 * Increment id of plugin element.
+						 *
+						 * @param HTMLElement divEl div element
+						 * @param divEl
+						 */
+						const incrementIds = (divEl) => {
+							let className = null;
+							// find the divs related to elements with this unique pattern
+							const classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
+
+							divEl.classList.forEach((c) => {
+								if (c.match(classRegExp)) {
+									className = c;
+								}
+							});
+
+							// main wrapper div found for an element
+							if (className) {
+								divEl.classList.remove(className);
+								// find out the kind of the element
+								const [, kind] = classRegExp.exec(className);
+								const regExp = new RegExp(`^wptb-element-${kind}-([0-9]+)$`, 'g');
+
+								// find out the same kind of element with the biggest number id
+								const highestId = Array.from(table.querySelectorAll('div')).reduce((carry, item) => {
+									item.classList.forEach((c) => {
+										const match = regExp.exec(c);
+										if (match) {
+											const numberId = Number.parseInt(match[1], 10);
+											// eslint-disable-next-line no-param-reassign
+											carry = carry > numberId ? carry : numberId;
+										}
+									});
+
+									return carry;
+								}, 0);
+
+								// increment unique class id of the element
+								divEl.classList.add(`wptb-element-${kind}-${highestId + 1}`);
+							}
+						};
+
+						// add extra cols to table
 						// eslint-disable-next-line array-callback-return
-						Array.from(Array(extraCols)).map((c, ci) => {
-							const clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
-							r.appendChild(clonedCell);
-							Array.from(clonedCell.querySelectorAll('div')).map(incrementIds);
+						tableRows.map((r, ri) => {
+							// eslint-disable-next-line array-callback-return
+							Array.from(Array(extraCols)).map((c, ci) => {
+								const clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
+								r.appendChild(clonedCell);
+								Array.from(clonedCell.querySelectorAll('div')).map(incrementIds);
+							});
 						});
-					});
 
-					// add extra rows to table
-					// eslint-disable-next-line array-callback-return
-					Array.from(Array(extraRows)).map((r, ri) => {
-						const currentRow = document.createElement('tr');
-						table.appendChild(currentRow);
+						// add extra rows to table
 						// eslint-disable-next-line array-callback-return
-						Array.from(Array(cols)).map((c, ci) => {
-							const clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
-							currentRow.appendChild(clonedCell);
+						Array.from(Array(extraRows)).map((r, ri) => {
+							const currentRow = document.createElement('tr');
+							table.appendChild(currentRow);
+							// eslint-disable-next-line array-callback-return
+							Array.from(Array(cols)).map((c, ci) => {
+								const clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
+								currentRow.appendChild(clonedCell);
+							});
+
+							Array.from(currentRow.querySelectorAll('div')).map(incrementIds);
 						});
+					}
 
-						Array.from(currentRow.querySelectorAll('div')).map(incrementIds);
-					});
+					// edit is enabled
+					if (edit) {
+						// fill in the name of the selected prebuilt table on edit mode
+						document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title;
+
+						// force enable prebuilt functionality on edit mode
+						table.dataset.wptbPrebuiltTable = 1;
+					}
+
+					WPTB_Table();
+
+					WPTB_Settings();
+					const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+					wptbTableStateSaveManager.tableStateSet();
+
+					document.counter = new ElementCounters();
+					document.select = new MultipleSelect();
+
+					// WPTB_Initializer();
+					WPTB_Settings();
 				}
-
-				// edit is enabled
-				if (edit) {
-					// fill in the name of the selected prebuilt table on edit mode
-					document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title;
-
-					// force enable prebuilt functionality on edit mode
-					table.dataset.wptbPrebuiltTable = 1;
-				}
-
-				WPTB_Table();
-
-				WPTB_Settings();
-				const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-				wptbTableStateSaveManager.tableStateSet();
-
-				document.counter = new ElementCounters();
-				document.select = new MultipleSelect();
-
-				// WPTB_Initializer();
-				WPTB_Settings();
 			}
 		},
 		deleteAction(cardId) {
-			const { ajaxUrl, deleteAction, deleteNonce, devModeNonce } = this.security;
+			if (this.isPro) {
+				const { ajaxUrl, deleteAction, deleteNonce, devModeNonce } = this.security;
 
-			const form = new FormData();
-			form.append('action', deleteAction);
-			form.append('nonce', deleteNonce);
-			form.append('id', cardId);
+				const form = new FormData();
+				form.append('action', deleteAction);
+				form.append('nonce', deleteNonce);
+				form.append('id', cardId);
 
-			if (cardId.startsWith(this.appData.teamTablePrefix)) {
-				form.append('deleteCSV', true);
-				form.append('devModeNonce', devModeNonce);
-			}
+				if (cardId.startsWith(this.appData.teamTablePrefix)) {
+					form.append('deleteCSV', true);
+					form.append('devModeNonce', devModeNonce);
+				}
 
-			fetch(ajaxUrl, {
-				method: 'POST',
-				body: form,
-			})
-				.then((r) => {
-					if (r.ok) {
-						return r.json();
-					}
-					throw new Error('an error occurred while deleting prebuilt table, try again later');
+				fetch(ajaxUrl, {
+					method: 'POST',
+					body: form,
 				})
-				.then((resp) => {
-					if (resp.error) {
-						throw new Error(resp.error);
-					}
-					if (resp.message === true) {
-						this.$delete(this.fixedTables, cardId);
-					} else {
+					.then((r) => {
+						if (r.ok) {
+							return r.json();
+						}
 						throw new Error('an error occurred while deleting prebuilt table, try again later');
-					}
-				})
-				.catch((e) => {
-					console.error(e.message);
-				});
+					})
+					.then((resp) => {
+						if (resp.error) {
+							throw new Error(resp.error);
+						}
+						if (resp.message === true) {
+							this.$delete(this.fixedTables, cardId);
+						} else {
+							throw new Error('an error occurred while deleting prebuilt table, try again later');
+						}
+					})
+					.catch((e) => {
+						console.error(e.message);
+					});
+			}
 		},
 	},
 	beforeDestroy() {
