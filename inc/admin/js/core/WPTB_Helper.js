@@ -971,11 +971,11 @@ var WPTB_Helper = {
 		}
 	},
 	// TODO switchThirdToggleIf
-	switchThirdToggleIf( dataSwitchThirdToggleIf, dependencyElemClass ) {
+	switchThirdToggleIf(dataSwitchThirdToggleIf, dependencyElemClass) {
 		if (Array.isArray(dataSwitchThirdToggleIf)) {
 			const dependencyElemVal = dataSwitchThirdToggleIf[0];
-			const dependencyElem = document.querySelector('.' + dependencyElemClass);
-			if (dataSwitchThirdToggleIf[1] && typeof dataSwitchThirdToggleIf[1] === 'object'){
+			const dependencyElem = document.querySelector(`.${dependencyElemClass}`);
+			if (dataSwitchThirdToggleIf[1] && typeof dataSwitchThirdToggleIf[1] === 'object') {
 				const dependencyParameters = dataSwitchThirdToggleIf[1];
 				Object.keys(dependencyParameters).map((k) => {
 					const dependentElemVal = dependencyParameters[k];
@@ -984,15 +984,19 @@ var WPTB_Helper = {
 						const controlName = infArr[3];
 						const dependentElemClass = dependencyElemClass.replace(controlName, k);
 						if (dependentElemClass) {
-							const dependentElems = document.getElementsByClassName(
-								dependentElemClass
-							);
+							const dependentElems = document.getElementsByClassName(dependentElemClass);
 							if (dependentElems.length > 0) {
 								const dependentElem = dependentElems[0];
-								console.log(dependentElem)
+								console.log(dependentElem);
 								dependencyElem.addEventListener(
 									'change',
-									switchThirdToggleExecute.bind( null, dependencyElem, dependencyElemVal, dependentElem, dependentElemVal ),
+									switchThirdToggleExecute.bind(
+										null,
+										dependencyElem,
+										dependencyElemVal,
+										dependentElem,
+										dependentElemVal
+									),
 									false
 								);
 							}
@@ -1001,21 +1005,21 @@ var WPTB_Helper = {
 				});
 
 				function switchThirdToggleExecute(dependencyElem, dependencyElemVal, dependentElem, dependentElemVal) {
-					if( 'checked' in dependentElem ) {
-						if( ( dependencyElem.checked === true && dependencyElemVal === 'checked' ) ||
-							( dependencyElem.checked === false && dependencyElemVal === 'unchecked' ) ) {
-							if( dependentElemVal === 'checked' ) {
+					if ('checked' in dependentElem) {
+						if (
+							(dependencyElem.checked === true && dependencyElemVal === 'checked') ||
+							(dependencyElem.checked === false && dependencyElemVal === 'unchecked')
+						) {
+							if (dependentElemVal === 'checked') {
 								dependentElem.checked = true;
-							} else if( dependentElemVal === 'unchecked' ) {
+							} else if (dependentElemVal === 'unchecked') {
 								dependentElem.checked = false;
 							}
 
 							if (dataSwitchThirdToggleIf[2] === undefined || dataSwitchThirdToggleIf[2] === true) {
-								WPTB_Helper.wptbDocumentEventGenerate(
-									'change',
-									dependentElem,
-									{ eventType: 'switchThirdToggleIf' }
-								);
+								WPTB_Helper.wptbDocumentEventGenerate('change', dependentElem, {
+									eventType: 'switchThirdToggleIf',
+								});
 							}
 						}
 					}
@@ -1424,7 +1428,7 @@ var WPTB_Helper = {
 					}
 				}
 
-				if('switchThirdToggleIf' in data) {
+				if ('switchThirdToggleIf' in data) {
 					if (Array.isArray(data.switchThirdToggleIf)) {
 						controlSwitchThirdToggleIf.push([data.switchThirdToggleIf, data.elementControlTargetUnicClass]);
 					}
@@ -2158,12 +2162,14 @@ var WPTB_Helper = {
 						WPTB_NotificationManager.sendNotification({ message: `Table ${t} was successfully updated.` });
 						event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
 
-						let wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
-						if (wptbSaveBtn.length > 0) {
-							wptbSaveBtn = wptbSaveBtn[0];
-							wptbSaveBtn.classList.add('wptb-save-disabled');
-							wptbSaveBtn.classList.remove('active');
-						}
+						new WPTB_TableStateSaveManager().tableStateClear();
+						// @deprecated
+						// let wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+						// if (wptbSaveBtn.length > 0) {
+						// 	wptbSaveBtn = wptbSaveBtn[0];
+						// 	wptbSaveBtn.classList.add('wptb-save-disabled');
+						// 	wptbSaveBtn.classList.remove('active');
+						// }
 					} else if (data[0] == 'preview_edited') {
 						return;
 					} else {

@@ -32882,8 +32882,13 @@ function BuilderStore() {
   var _wptb_admin_object = wptb_admin_object,
       storeData = _wptb_admin_object.store;
   var extraStoreOptions = {
-    state: {},
+    state: {
+      dirtyStatus: false
+    },
     getters: {
+      getTableDirtyStatus: function getTableDirtyStatus(state) {
+        return state.dirtyStatus;
+      },
       proStatus: function proStatus(state) {
         return state.pro;
       },
@@ -32899,6 +32904,12 @@ function BuilderStore() {
     mutations: {
       setTableId: function setTableId(state, tableId) {
         state.tableId = tableId;
+      },
+      setTableDirty: function setTableDirty(state) {
+        state.dirtyStatus = true;
+      },
+      setTableClean: function setTableClean(state) {
+        state.dirtyStatus = false;
       }
     }
   };
@@ -46503,28 +46514,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _vuex = require("vuex");
+
 var _Icon = _interopRequireDefault(require("$Components/Icon"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 var _default = {
   components: {
     Icon: _Icon.default
-  }
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)({
+    dirtyStatus: 'getTableDirtyStatus'
+  }))
 };
 exports.default = _default;
         var $7b13e0 = exports.default || module.exports;
@@ -46539,26 +46547,33 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "main-save-button-wrapper" }, [
-    _c(
-      "a",
-      {
-        staticClass:
-          "wptb-save-btn wptb-save-disabled wptb-settings-section-item static-active",
-        attrs: { href: "#" }
-      },
-      [_vm._v(" Save ")]
-    ),
-    _vm._v(" "),
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "wptb-save-button-down" },
-      [_c("icon", { attrs: { name: "caret-down" } })],
-      1
-    )
-  ])
+  return _c(
+    "div",
+    {
+      staticClass: "main-save-button-wrapper",
+      attrs: { "data-disabled": !_vm.dirtyStatus }
+    },
+    [
+      _c(
+        "a",
+        {
+          staticClass:
+            "save-btn wptb-save-disabled wptb-settings-section-item static-active",
+          attrs: { href: "#" }
+        },
+        [_vm._v(" Save ")]
+      ),
+      _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-save-button-down" },
+        [_c("icon", { attrs: { name: "caret-down" } })],
+        1
+      )
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -46585,7 +46600,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Components/Icon":"components/Icon.vue"}],"mountPoints/WPTB_SaveButton.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/Icon":"components/Icon.vue"}],"mountPoints/WPTB_SaveButton.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

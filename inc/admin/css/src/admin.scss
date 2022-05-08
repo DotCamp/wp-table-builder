@@ -7317,6 +7317,13 @@ label.wptb-control-row {
   align-items: center;
   justify-content: center;
   height: 100%;
+  color: #CBD5E0 !important;
+
+  .save-btn {
+    text-decoration: none;
+    color: inherit;
+  }
+
 }
 
 //endregion

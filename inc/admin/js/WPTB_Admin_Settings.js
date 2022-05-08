@@ -34802,8 +34802,13 @@ function BuilderStore() {
   var _wptb_admin_object = wptb_admin_object,
       storeData = _wptb_admin_object.store;
   var extraStoreOptions = {
-    state: {},
+    state: {
+      dirtyStatus: false
+    },
     getters: {
+      getTableDirtyStatus: function getTableDirtyStatus(state) {
+        return state.dirtyStatus;
+      },
       proStatus: function proStatus(state) {
         return state.pro;
       },
@@ -34819,6 +34824,12 @@ function BuilderStore() {
     mutations: {
       setTableId: function setTableId(state, tableId) {
         state.tableId = tableId;
+      },
+      setTableDirty: function setTableDirty(state) {
+        state.dirtyStatus = true;
+      },
+      setTableClean: function setTableClean(state) {
+        state.dirtyStatus = false;
       }
     }
   };

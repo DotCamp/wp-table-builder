@@ -40,8 +40,13 @@ function BuilderStore() {
 	const { store: storeData } = wptb_admin_object;
 
 	const extraStoreOptions = {
-		state: {},
+		state: {
+			dirtyStatus: false,
+		},
 		getters: {
+			getTableDirtyStatus(state) {
+				return state.dirtyStatus;
+			},
 			proStatus(state) {
 				return state.pro;
 			},
@@ -57,6 +62,12 @@ function BuilderStore() {
 		mutations: {
 			setTableId: (state, tableId) => {
 				state.tableId = tableId;
+			},
+			setTableDirty: (state) => {
+				state.dirtyStatus = true;
+			},
+			setTableClean: (state) => {
+				state.dirtyStatus = false;
 			},
 		},
 	};
