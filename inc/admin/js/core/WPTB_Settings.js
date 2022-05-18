@@ -19,7 +19,7 @@ var WPTB_Settings = function () {
     let wptbUndo = document.getElementsByClassName( 'wptb-undo' );
     if( wptbUndo.length > 0 ) {
         wptbUndo = wptbUndo[0];
-        
+
         wptbUndo.onclick = function( event ) {
             if( ! this.classList.contains( 'wptb-undoredo-disabled' ) ) {
                 wptbTableStateSaveManager.tableStateGet( this.dataset.wptbUndoredo );
@@ -35,11 +35,11 @@ var WPTB_Settings = function () {
             }
         }
     }
-    
+
     let wptbRedo = document.getElementsByClassName( 'wptb-redo' );
     if( wptbRedo.length > 0 ) {
         wptbRedo = wptbRedo[0];
-        
+
         wptbRedo.onclick = function( event ) {
             if( ! this.classList.contains( 'wptb-undoredo-disabled' ) ) {
                 wptbTableStateSaveManager.tableStateGet( this.dataset.wptbUndoredo );
@@ -53,7 +53,7 @@ var WPTB_Settings = function () {
                     }
                 }
             }
-            
+
         }
     }
 
@@ -65,17 +65,13 @@ var WPTB_Settings = function () {
             WPTB_Store.commit('embed/showModal');
         }
     }
-    
+
+    // window beforeunload event callback
     window.onbeforeunload = function(e) {
-        let wptbSaveDisabled = document.getElementsByClassName( 'wptb-save-disabled' );
-        if( wptbSaveDisabled.length == 0 ) {
-            return true;
-        } else {
-            return null;
-        }
+        return WPTB_Store.getters.getTableDirtyStatus? true : null;
     };
-    
-    
+
+
     document.getElementsByClassName( 'wptb-popup-dark-area' )[0].onclick = function () {
         shortcodePopupWindow.classList.remove( 'wptb-popup-show' );
     }
@@ -84,14 +80,14 @@ var WPTB_Settings = function () {
     // document.getElementsByClassName( 'wptb-popup-window-close-icon' )[0].onclick = function () {
     //     shortcodePopupWindow.classList.remove( 'wptb-popup-show' );
     // }
-    
+
     document.getElementsByClassName( 'wptb-preview-btn' )[0].onclick = function ( event ) {
         if( this.classList.contains( 'wptb-button-disable' ) ) {
             return;
-        } 
-        
+        }
+
         let previewId = Math.floor( Math.random() * 10000 );
-        
+
         var newHref = new URL( event.target.href );
         newHref.searchParams.set( 'preview_id', previewId );
         event.target.href = newHref.toString();

@@ -373,11 +373,18 @@ class Admin_Menu {
 			// development version to bypass cache issues
 			$admin_script_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
 
+           // TODO [erdembircan] uncomment for production
+//			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
+//				'jquery',
+//				'wptb-admin-builder-tinymce-js',
+//				'wp-color-picker'
+//			), NS\PLUGIN_VERSION, true );
+
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 				'jquery',
 				'wptb-admin-builder-tinymce-js',
 				'wp-color-picker'
-			), NS\PLUGIN_VERSION, true );
+			), $admin_script_dev_version, true );
 
 			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
