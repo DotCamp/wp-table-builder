@@ -32441,19 +32441,31 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.saveOperationTypes = void 0;
 
+/**
+ * Save operation types.
+ *
+ * @type {Object}
+ */
+var saveOperationTypes = {
+  TABLE: 'table',
+  TEMPLATE: 'template'
+};
 /**
  * Store module related app specific operations.
  *
  * @type {Object}
  */
+
+exports.saveOperationTypes = saveOperationTypes;
 var appModule = {
   namespaced: true,
   state: function state() {
     return {
       saveOperation: {
-        enabled: false
+        enabled: false,
+        currentType: saveOperationTypes.TABLE
       }
     };
   },
@@ -32465,6 +32477,16 @@ var appModule = {
      */
     isSavingEnabled: function isSavingEnabled(state) {
       return state.saveOperation.enabled;
+    },
+
+    /**
+     * Current type of save operation.
+     *
+     * @param {Object} state store state
+     * @return {string} save type
+     */
+    currentSaveType: function currentSaveType(state) {
+      return state.saveOperation.currentType;
     }
   },
   mutations: {
@@ -32477,6 +32499,17 @@ var appModule = {
     setSaveStatus: function setSaveStatus(state, status) {
       // eslint-disable-next-line no-param-reassign
       state.saveOperation.enabled = status;
+    },
+
+    /**
+     * Set type of future save operations.
+     *
+     * @param {Object} state store state
+     * @param {string} type save operation type
+     */
+    setSaveType: function setSaveType(state, type) {
+      // eslint-disable-next-line no-param-reassign
+      state.saveOperation.currentType = type;
     }
   }
 };
@@ -33038,7 +33071,7 @@ var _default = {
   },
   computed: _objectSpread(_objectSpread({
     generatedMessage: function generatedMessage() {
-      return "<span><span style=\"font-weight:bold\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
+      return "<span><span style=\"font-weight:bold; text-transform: capitalize\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
     }
   }, (0, _vuex.mapGetters)(['getTranslation', 'proStatus'])), mapUpsellsGetters(['getUpsellUrl'])),
   methods: {
@@ -46518,7 +46551,15 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _vuex = require("vuex");
 
+var _app = require("$Stores/builderStore/modules/app");
+
 var _Icon = _interopRequireDefault(require("$Components/Icon"));
+
+var _ProOverlay = _interopRequireWildcard(require("$Containers/ProOverlay"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46528,12 +46569,87 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 var _default = {
   components: {
+    ProOverlay: _ProOverlay.default,
     Icon: _Icon.default
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)({
+  data: function data() {
+    return {
+      slide: false
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.assignSize();
+    });
+  },
+  watch: {
+    currentSaveType: function currentSaveType() {
+      var _this2 = this;
+
+      this.$nextTick(function () {
+        _this2.assignSize();
+      });
+    }
+  },
+  computed: _objectSpread(_objectSpread(_objectSpread({
+    overlayTargetTypes: function overlayTargetTypes() {
+      return _ProOverlay.targetTypes;
+    }
+  }, (0, _vuex.mapGetters)('app', ['currentSaveType'])), (0, _vuex.mapGetters)({
     dirtyStatus: 'getTableDirtyStatus',
     getTranslation: 'getTranslation'
-  }))
+  })), {}, {
+    innerSaveOperationTypes: function innerSaveOperationTypes() {
+      return _app.saveOperationTypes;
+    },
+    saveButtonLabel: function saveButtonLabel() {
+      var _translationMap;
+
+      var translationMap = (_translationMap = {}, (0, _defineProperty2.default)(_translationMap, _app.saveOperationTypes.TABLE, 'saveTable'), (0, _defineProperty2.default)(_translationMap, _app.saveOperationTypes.TEMPLATE, 'saveTemplate'), _translationMap);
+      return this.getTranslation(translationMap[this.currentSaveType]);
+    }
+  }),
+  methods: _objectSpread({
+    startSaveOperation: function startSaveOperation(e) {
+      if (this.dirtyStatus) {
+        this.closeSlide();
+        WPTB_Helper.saveTable(e);
+      }
+    },
+    toggleSlide: function toggleSlide() {
+      this.slide = !this.slide;
+    },
+    closeSlide: function closeSlide() {
+      this.slide = false;
+    },
+    innerSetSaveType: function innerSetSaveType(saveOperationType) {
+      this.setSaveType(saveOperationType);
+      this.toggleSlide();
+    },
+    assignSize: function assignSize() {
+      var _this$$refs = this.$refs,
+          wrapper = _this$$refs.wrapper,
+          slideWrapper = _this$$refs.slideWrapper;
+      wrapper.style.width = null;
+      slideWrapper.style.width = null;
+
+      var _wrapper$getBoundingC = wrapper.getBoundingClientRect(),
+          wrapperWidth = _wrapper$getBoundingC.width;
+
+      var _slideWrapper$getBoun = slideWrapper.getBoundingClientRect(),
+          slideWrapperWidth = _slideWrapper$getBoun.width;
+
+      var targetElement = wrapperWidth > slideWrapperWidth ? slideWrapper : wrapper;
+      targetElement.style.width = "".concat(Math.max(wrapperWidth, slideWrapperWidth), "px");
+    },
+    handleCaretDown: function handleCaretDown() {
+      if (this.dirtyStatus) {
+        this.toggleSlide();
+      }
+    }
+  }, (0, _vuex.mapMutations)('app', ['setSaveType']))
 };
 exports.default = _default;
         var $7b13e0 = exports.default || module.exports;
@@ -46551,6 +46667,7 @@ exports.default = _default;
   return _c(
     "div",
     {
+      ref: "wrapper",
       staticClass: "main-save-button-wrapper",
       attrs: { "data-disabled": !_vm.dirtyStatus }
     },
@@ -46559,26 +46676,106 @@ exports.default = _default;
         "div",
         { staticClass: "save-btn wptb-settings-section-item static-active" },
         [
-          _c("span", [_vm._v("Save")]),
+          _c(
+            "div",
+            {
+              on: {
+                "!click": function($event) {
+                  $event.preventDefault()
+                  $event.stopPropagation()
+                  return _vm.startSaveOperation($event)
+                }
+              }
+            },
+            [_vm._v(_vm._s(_vm.saveButtonLabel))]
+          ),
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "save-button-down" },
-            [_c("icon", { attrs: { name: "caret-down" } })],
+            {
+              staticClass: "save-button-down",
+              on: {
+                "!click": function($event) {
+                  $event.preventDefault()
+                  $event.stopPropagation()
+                  return _vm.handleCaretDown($event)
+                }
+              }
+            },
+            [
+              _c("icon", {
+                attrs: { name: _vm.slide ? "caret-up" : "caret-down" }
+              })
+            ],
             1
           )
         ]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "save-button-extra-options-wrapper" }, [
-        _c("div", { staticClass: "extra-save-button" }, [
-          _vm._v(_vm._s(_vm.getTranslation("table")))
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "extra-save-button" }, [
-          _vm._v(_vm._s(_vm.getTranslation("template")))
-        ])
-      ]),
+      _c(
+        "div",
+        {
+          ref: "slideWrapper",
+          staticClass: "save-button-extra-options-wrapper",
+          attrs: { "data-slide": _vm.slide }
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "extra-save-button",
+              on: {
+                "!click": function($event) {
+                  $event.preventDefault()
+                  $event.stopPropagation()
+                  return _vm.innerSetSaveType(_vm.innerSaveOperationTypes.TABLE)
+                }
+              }
+            },
+            [
+              _vm._v(
+                "\n\t\t\t" + _vm._s(_vm.getTranslation("table")) + "\n\t\t"
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            [
+              _c("pro-overlay", {
+                attrs: {
+                  "feature-name": "template",
+                  target: _vm.overlayTargetTypes.PARENT
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "extra-save-button",
+                  on: {
+                    "!click": function($event) {
+                      $event.preventDefault()
+                      $event.stopPropagation()
+                      return _vm.innerSetSaveType(
+                        _vm.innerSaveOperationTypes.TEMPLATE
+                      )
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n\t\t\t\t" +
+                      _vm._s(_vm.getTranslation("template")) +
+                      "\n\t\t\t"
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ]
+      ),
       _vm._v(" "),
       _vm._m(0)
     ]
@@ -46609,7 +46806,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Components/Icon":"components/Icon.vue"}],"mountPoints/WPTB_SaveButton.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","$Stores/builderStore/modules/app":"stores/builderStore/modules/app/index.js","$Components/Icon":"components/Icon.vue","$Containers/ProOverlay":"containers/ProOverlay.vue"}],"mountPoints/WPTB_SaveButton.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

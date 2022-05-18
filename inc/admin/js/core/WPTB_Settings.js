@@ -94,6 +94,7 @@ var WPTB_Settings = function () {
         WPTB_Helper.saveTable( event, false, previewId );
     }
 
+    // @deprecated
     // document.getElementsByClassName( 'wptb-save-btn' )[0].onclick = function ( event ) {
     //     if( ! this.classList.contains( 'wptb-save-disabled' ) ) {
     //         WPTB_Helper.saveTable( event );

@@ -85,7 +85,7 @@ export default {
 	},
 	computed: {
 		generatedMessage() {
-			return `<span><span style="font-weight:bold">${
+			return `<span><span style="font-weight:bold; text-transform: capitalize">${
 				this.featureName
 			}</span> is not available on your free plan. ${this.getTranslation('upgradeToPro')}</span>`;
 		},

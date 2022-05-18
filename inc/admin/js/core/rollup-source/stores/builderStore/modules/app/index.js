@@ -1,4 +1,14 @@
 /**
+ * Save operation types.
+ *
+ * @type {Object}
+ */
+export const saveOperationTypes = {
+	TABLE: 'table',
+	TEMPLATE: 'template',
+};
+
+/**
  * Store module related app specific operations.
  *
  * @type {Object}
@@ -8,6 +18,7 @@ const appModule = {
 	state: () => ({
 		saveOperation: {
 			enabled: false,
+			currentType: saveOperationTypes.TABLE,
 		},
 	}),
 	getters: {
@@ -18,6 +29,15 @@ const appModule = {
 		 */
 		isSavingEnabled(state) {
 			return state.saveOperation.enabled;
+		},
+		/**
+		 * Current type of save operation.
+		 *
+		 * @param {Object} state store state
+		 * @return {string} save type
+		 */
+		currentSaveType(state) {
+			return state.saveOperation.currentType;
 		},
 	},
 	mutations: {
@@ -30,6 +50,16 @@ const appModule = {
 		setSaveStatus(state, status) {
 			// eslint-disable-next-line no-param-reassign
 			state.saveOperation.enabled = status;
+		},
+		/**
+		 * Set type of future save operations.
+		 *
+		 * @param {Object} state store state
+		 * @param {string} type save operation type
+		 */
+		setSaveType(state, type) {
+			// eslint-disable-next-line no-param-reassign
+			state.saveOperation.currentType = type;
 		},
 	},
 };

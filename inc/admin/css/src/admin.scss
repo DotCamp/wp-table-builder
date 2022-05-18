@@ -263,6 +263,7 @@ body > img {
   opacity: 0;
   pointer-events: none;
   transition: all 0.2s ease-out;
+  background-color: $white;
 }
 
 .wptb-busy .wptb-busy-circle {
@@ -1477,6 +1478,7 @@ ul.wptb-tabs {
 
 .wptb-plugin-header-close {
   grid-area: close;
+  background-color: $white;
 }
 
 #wptb-setup-name {
@@ -7156,7 +7158,7 @@ label.wptb-control-row {
   top: 0;
   left: 0;
   z-index: 100000;
-  background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, #3299D13C 15px, #3299D13C 30px);
+  background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4) 15px, #3299D13C 15px, #3299D13C 30px);
   cursor: pointer;
   //animation: linear-gradient-move 40s linear infinite reverse;
   //background-size: 400% 400%;
@@ -7320,12 +7322,17 @@ label.wptb-control-row {
   color: $white;
   background-color: $logo-color;
   position: relative;
+  padding: 0 !important;
 
   &[data-disabled] {
     color: #CBD5E0 !important;
-    background-color: transparent !important;
+    background-color: $white !important;
 
     .save-btn {
+      cursor: not-allowed !important;
+    }
+
+    .save-btn-down {
       cursor: not-allowed !important;
     }
   }
@@ -7342,7 +7349,7 @@ label.wptb-control-row {
     }
 
     .save-button-down {
-      margin: 0 5px;
+      margin-left: 5px;
       cursor: inherit;
 
       svg {
@@ -7355,12 +7362,24 @@ label.wptb-control-row {
     position: absolute;
     left: 0;
     bottom: 0;
-    transform: translateY(100%);
     border: 1px solid;
+    background-color: inherit;
+    z-index: -1;
+    @extend %default-transition;
+
+    &[data-slide=true] {
+      transform: translateY(100%);
+    }
 
     .extra-save-button {
       text-transform: uppercase;
       padding: 10px;
+      border-bottom: 1px solid;
+      cursor: pointer;
+
+      &:last-of-type {
+        border-bottom: 0;
+      }
     }
   }
 }

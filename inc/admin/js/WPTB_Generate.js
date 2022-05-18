@@ -16128,19 +16128,31 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.saveOperationTypes = void 0;
 
+/**
+ * Save operation types.
+ *
+ * @type {Object}
+ */
+var saveOperationTypes = {
+  TABLE: 'table',
+  TEMPLATE: 'template'
+};
 /**
  * Store module related app specific operations.
  *
  * @type {Object}
  */
+
+exports.saveOperationTypes = saveOperationTypes;
 var appModule = {
   namespaced: true,
   state: function state() {
     return {
       saveOperation: {
-        enabled: false
+        enabled: false,
+        currentType: saveOperationTypes.TABLE
       }
     };
   },
@@ -16152,6 +16164,16 @@ var appModule = {
      */
     isSavingEnabled: function isSavingEnabled(state) {
       return state.saveOperation.enabled;
+    },
+
+    /**
+     * Current type of save operation.
+     *
+     * @param {Object} state store state
+     * @return {string} save type
+     */
+    currentSaveType: function currentSaveType(state) {
+      return state.saveOperation.currentType;
     }
   },
   mutations: {
@@ -16164,6 +16186,17 @@ var appModule = {
     setSaveStatus: function setSaveStatus(state, status) {
       // eslint-disable-next-line no-param-reassign
       state.saveOperation.enabled = status;
+    },
+
+    /**
+     * Set type of future save operations.
+     *
+     * @param {Object} state store state
+     * @param {string} type save operation type
+     */
+    setSaveType: function setSaveType(state, type) {
+      // eslint-disable-next-line no-param-reassign
+      state.saveOperation.currentType = type;
     }
   }
 };
@@ -16725,7 +16758,7 @@ var _default = {
   },
   computed: _objectSpread(_objectSpread({
     generatedMessage: function generatedMessage() {
-      return "<span><span style=\"font-weight:bold\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
+      return "<span><span style=\"font-weight:bold; text-transform: capitalize\">".concat(this.featureName, "</span> is not available on your free plan. ").concat(this.getTranslation('upgradeToPro'), "</span>");
     }
   }, (0, _vuex.mapGetters)(['getTranslation', 'proStatus'])), mapUpsellsGetters(['getUpsellUrl'])),
   methods: {
