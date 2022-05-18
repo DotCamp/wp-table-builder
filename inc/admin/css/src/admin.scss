@@ -7319,6 +7319,7 @@ label.wptb-control-row {
   height: 100%;
   color: $white;
   background-color: $logo-color;
+  position: relative;
 
   &[data-disabled] {
     color: #CBD5E0 !important;
@@ -7347,6 +7348,19 @@ label.wptb-control-row {
       svg {
         width: 15px;
       }
+    }
+  }
+
+  .save-button-extra-options-wrapper {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: translateY(100%);
+    border: 1px solid;
+
+    .extra-save-button {
+      text-transform: uppercase;
+      padding: 10px;
     }
   }
 }

@@ -354,11 +354,11 @@ class Admin_Menu {
 			];
 
 			$admin_translations = [
-					'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
-					'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
-					'copyToClipboard'   => esc_html__( 'copy to clipboard', 'wp-table-builder' ),
-					'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
-					'shortcode'         => esc_html__( 'shortcode', 'wp-table-builder' ),
+				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
+				'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
+				'copyToClipboard'   => esc_html__( 'copy to clipboard', 'wp-table-builder' ),
+				'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
+				'shortcode'         => esc_html__( 'shortcode', 'wp-table-builder' ),
 			];
 
 			Frontend_Data_Manager::add_builder_translations( $admin_translations );
@@ -369,22 +369,22 @@ class Admin_Menu {
 			$generate_path = plugin_dir_path( __FILE__ ) . 'js/WPTB_Generate.js';
 
 
-
 			// development version to bypass cache issues
 			$admin_script_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
 
-           // TODO [erdembircan] uncomment for production
+			// TODO [erdembircan] uncomment for production
 //			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 //				'jquery',
 //				'wptb-admin-builder-tinymce-js',
 //				'wp-color-picker'
 //			), NS\PLUGIN_VERSION, true );
 
-			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
+			Helpers::enqueue_file( 'inc/admin/js/admin.js', [
 				'jquery',
 				'wptb-admin-builder-tinymce-js',
 				'wp-color-picker'
-			), $admin_script_dev_version, true );
+
+			], true, 'wptb-admin-builder-js', true );
 
 			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
@@ -392,7 +392,8 @@ class Admin_Menu {
 
 			wp_enqueue_style( 'wp-color-picker' );
 
-			wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/admin.css', array(), NS\PLUGIN_VERSION, 'all' );
+			Helpers::enqueue_file( 'inc/admin/css/admin.css', [], false, 'wptb-builder-css' );
+
 			wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
 			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
 			wp_enqueue_script( 'wptb-admin-builder-js' );

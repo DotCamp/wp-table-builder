@@ -46531,7 +46531,8 @@ var _default = {
     Icon: _Icon.default
   },
   computed: _objectSpread({}, (0, _vuex.mapGetters)({
-    dirtyStatus: 'getTableDirtyStatus'
+    dirtyStatus: 'getTableDirtyStatus',
+    getTranslation: 'getTranslation'
   }))
 };
 exports.default = _default;
@@ -46568,6 +46569,16 @@ exports.default = _default;
           )
         ]
       ),
+      _vm._v(" "),
+      _c("div", { staticClass: "save-button-extra-options-wrapper" }, [
+        _c("div", { staticClass: "extra-save-button" }, [
+          _vm._v(_vm._s(_vm.getTranslation("table")))
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "extra-save-button" }, [
+          _vm._v(_vm._s(_vm.getTranslation("template")))
+        ])
+      ]),
       _vm._v(" "),
       _vm._m(0)
     ]

@@ -6,6 +6,10 @@
 				<icon name="caret-down"></icon>
 			</div>
 		</div>
+		<div class="save-button-extra-options-wrapper">
+			<div class="extra-save-button">{{ getTranslation('table') }}</div>
+			<div class="extra-save-button">{{ getTranslation('template') }}</div>
+		</div>
 		<div class="wptb-busy">
 			<div class="wptb-busy-circle"></div>
 			<div class="wptb-busy-circle"></div>
@@ -23,6 +27,7 @@ export default {
 	computed: {
 		...mapGetters({
 			dirtyStatus: 'getTableDirtyStatus',
+			getTranslation: 'getTranslation',
 		}),
 	},
 };

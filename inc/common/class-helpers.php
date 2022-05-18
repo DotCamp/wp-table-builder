@@ -65,9 +65,9 @@ class Helpers {
 	 * @return bool is development mode active
 	 */
 	public static function is_development() {
-		$dev_mode = defined( 'WPTB_DEV_MODE' );
+		$dev_mode = getenv('WPTB_DEV');
 
-		return $dev_mode ? constant( 'WPTB_DEV_MODE' ) : false;
+		return filter_var($dev_mode, FILTER_VALIDATE_BOOLEAN);
 	}
 
 	/**
@@ -79,10 +79,11 @@ class Helpers {
 	 * @param array $deps file dependencies
 	 * @param bool $footer enqueue file to footer
 	 * @param string $handler handler name for script, if null, will use file name as handler
+	 * @param bool $register whether register or enqueue file
 	 *
 	 * @return string handler name
 	 */
-	public static function enqueue_file( $path, $deps = [], $footer = false, $handler = null ) {
+	public static function enqueue_file( $path, $deps = [], $footer = false, $handler = null, $register = false ) {
 		$path_info = pathinfo( $path );
 
 		$file_path = path_join( NS\WP_TABLE_BUILDER_DIR, $path );
@@ -93,12 +94,14 @@ class Helpers {
 			$handler = $path_info['filename'];
 		}
 
+		$target_function = $register ? 'wp_register_script' : 'wp_enqueue_script';
+
 		switch ( $path_info['extension'] ) {
 			case 'js' :
-				wp_enqueue_script( $handler, $file_url, $deps, $version, $footer );
+				call_user_func_array( $target_function, [ $handler, $file_url, $deps, $version, $footer ] );
 				break;
 			case 'css' :
-				wp_enqueue_style( $handler, $file_url, $deps, $version );
+				wp_enqueue_style( $handler, $file_url, $deps, $version, 'all' );
 		}
 
 		return $handler;

@@ -22,6 +22,19 @@ class Template_Manager {
 	public static function init_process( $options ) {
 		$instance = static::get_instance( $options );
 		add_filter( 'wp-table-builder/filter/generate_data', [ $instance, 'prepare_template_frontend_data' ], 10, 1 );
+
+		Frontend_Data_Manager::add_builder_translations( $instance->template_translations() );
+	}
+
+	/**
+	 * Add frontend translation strings.
+	 * @return array translations
+	 */
+	private function template_translations() {
+		return [
+			'table'    => esc_htmL__( 'table', 'wp-table-builder' ),
+			'template' => esc_htmL__( 'template', 'wp-table-builder' ),
+		];
 	}
 
 	/**
