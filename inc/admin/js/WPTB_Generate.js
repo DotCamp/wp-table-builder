@@ -16152,11 +16152,22 @@ var appModule = {
     return {
       saveOperation: {
         enabled: false,
-        currentType: saveOperationTypes.TABLE
+        currentType: saveOperationTypes.TABLE,
+        saveOperationTypes: saveOperationTypes
       }
     };
   },
   getters: {
+    /**
+     * Predefined save operation types.
+     *
+     * @param {Object} state store state
+     * @return {Object} types
+     */
+    saveOperationTypes: function saveOperationTypes(state) {
+      return state.saveOperation.saveOperationTypes;
+    },
+
     /**
      * Current availability of save operation.
      *

@@ -19,9 +19,19 @@ const appModule = {
 		saveOperation: {
 			enabled: false,
 			currentType: saveOperationTypes.TABLE,
+			saveOperationTypes,
 		},
 	}),
 	getters: {
+		/**
+		 * Predefined save operation types.
+		 *
+		 * @param {Object} state store state
+		 * @return {Object} types
+		 */
+		saveOperationTypes(state) {
+			return state.saveOperation.saveOperationTypes;
+		},
 		/**
 		 * Current availability of save operation.
 		 *

@@ -45,12 +45,14 @@ export default {
 	mounted() {
 		this.$nextTick(() => {
 			this.assignSize();
+			this.preparationsForSaveType();
 		});
 	},
 	watch: {
 		currentSaveType() {
 			this.$nextTick(() => {
 				this.assignSize();
+				this.preparationsForSaveType();
 			});
 		},
 	},
@@ -71,6 +73,22 @@ export default {
 		},
 	},
 	methods: {
+		preparationsForSaveType() {
+			const targetTable = this.$refs.wrapper.ownerDocument.querySelector('.wptb-table-setup .wptb-preview-table');
+
+			if (targetTable) {
+				switch (this.currentSaveType) {
+					case saveOperationTypes.TABLE:
+						delete targetTable.dataset.wptbPrebuiltTable;
+						break;
+					case saveOperationTypes.TEMPLATE:
+						targetTable.dataset.wptbPrebuiltTable = 1;
+						break;
+					default:
+						break;
+				}
+			}
+		},
 		startSaveOperation(e) {
 			if (this.dirtyStatus) {
 				this.closeSlide();

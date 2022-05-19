@@ -32465,11 +32465,22 @@ var appModule = {
     return {
       saveOperation: {
         enabled: false,
-        currentType: saveOperationTypes.TABLE
+        currentType: saveOperationTypes.TABLE,
+        saveOperationTypes: saveOperationTypes
       }
     };
   },
   getters: {
+    /**
+     * Predefined save operation types.
+     *
+     * @param {Object} state store state
+     * @return {Object} types
+     */
+    saveOperationTypes: function saveOperationTypes(state) {
+      return state.saveOperation.saveOperationTypes;
+    },
+
     /**
      * Current availability of save operation.
      *
@@ -46582,6 +46593,8 @@ var _default = {
 
     this.$nextTick(function () {
       _this.assignSize();
+
+      _this.preparationsForSaveType();
     });
   },
   watch: {
@@ -46590,6 +46603,8 @@ var _default = {
 
       this.$nextTick(function () {
         _this2.assignSize();
+
+        _this2.preparationsForSaveType();
       });
     }
   },
@@ -46612,6 +46627,24 @@ var _default = {
     }
   }),
   methods: _objectSpread({
+    preparationsForSaveType: function preparationsForSaveType() {
+      var targetTable = this.$refs.wrapper.ownerDocument.querySelector('.wptb-table-setup .wptb-preview-table');
+
+      if (targetTable) {
+        switch (this.currentSaveType) {
+          case _app.saveOperationTypes.TABLE:
+            delete targetTable.dataset.wptbPrebuiltTable;
+            break;
+
+          case _app.saveOperationTypes.TEMPLATE:
+            targetTable.dataset.wptbPrebuiltTable = 1;
+            break;
+
+          default:
+            break;
+        }
+      }
+    },
     startSaveOperation: function startSaveOperation(e) {
       if (this.dirtyStatus) {
         this.closeSlide();
