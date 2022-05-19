@@ -12845,896 +12845,7 @@ try {
 },{}],"../../../../../node_modules/@babel/runtime/regenerator/index.js":[function(require,module,exports) {
 module.exports = require("regenerator-runtime");
 
-},{"regenerator-runtime":"../../../../../node_modules/regenerator-runtime/runtime.js"}],"components/PrebuiltCardControl.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    orientation: {
-      type: String,
-      default: 'row'
-    },
-    value: {
-      type: Number,
-      default: 0
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    min: {
-      type: Number,
-      default: 1
-    },
-    max: {
-      type: Number,
-      default: 30
-    },
-    step: {
-      type: Number,
-      default: 1
-    }
-  },
-  data: function data() {
-    return {
-      innerValue: 0
-    };
-  },
-  mounted: function mounted() {
-    this.innerValue = this.toNumber(this.value);
-  },
-  watch: {
-    value: function value(n) {
-      this.innerValue = n;
-    },
-    innerValue: function innerValue(n) {
-      this.$emit('input', this.limitVal(n));
-      this.innerValue = this.limitVal(n);
-    }
-  },
-  methods: {
-    valueChanged: function valueChanged(e) {
-      this.innerValue = this.toNumber(e.target.value);
-    },
-    toNumber: function toNumber(n) {
-      return Number.parseInt(n, 10);
-    },
-    limitVal: function limitVal(n) {
-      if (n > this.max) {
-        return this.max;
-      }
-
-      if (n < this.min) {
-        return this.min;
-      }
-
-      return n;
-    },
-    hitToMax: function hitToMax() {
-      return this.innerValue === this.max;
-    },
-    hitToMin: function hitToMin() {
-      return this.innerValue === this.min;
-    },
-    effectValue: function effectValue(effect) {
-      if (!this.disabled) {
-        this.innerValue += effect;
-      }
-    }
-  }
-};
-exports.default = _default;
-        var $43bbee = exports.default || module.exports;
-      
-      if (typeof $43bbee === 'function') {
-        $43bbee = $43bbee.options;
-      }
-    
-        /* template */
-        Object.assign($43bbee, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-prebuilt-control",
-      attrs: { "data-orientation": _vm.orientation }
-    },
-    [
-      _c(
-        "div",
-        {
-          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
-          attrs: { disabled: _vm.disabled || _vm.hitToMin() },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.effectValue(-1 * _vm.step)
-            }
-          }
-        },
-        [_vm._v("\n\t\t-\n\t")]
-      ),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "wptb-prebuilt-control-input",
-        attrs: { disabled: _vm.disabled === true },
-        domProps: { value: _vm.innerValue },
-        on: { input: _vm.valueChanged }
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
-          attrs: { disabled: _vm.disabled || _vm.hitToMax() },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.effectValue(_vm.step)
-            }
-          }
-        },
-        [_vm._v("\n\t\t+\n\t")]
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/PrebuiltDisplayDirectionButton.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    side: {
-      type: String,
-      default: 'up'
-    }
-  },
-  computed: {
-    calculateTransform: function calculateTransform() {
-      var transformDegrees = {
-        up: 0,
-        right: 90,
-        down: 180,
-        left: 270
-      };
-      return {
-        transform: "rotateZ(".concat(transformDegrees[this.side], "deg)")
-      };
-    }
-  },
-  methods: {
-    handleClick: function handleClick() {
-      this.$emit('click', this.side);
-    }
-  }
-};
-exports.default = _default;
-        var $8bc701 = exports.default || module.exports;
-      
-      if (typeof $8bc701 === 'function') {
-        $8bc701 = $8bc701.options;
-      }
-    
-        /* template */
-        Object.assign($8bc701, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-prebuilt-live-control",
-      style: _vm.calculateTransform,
-      attrs: { "data-type": _vm.side },
-      on: {
-        click: function($event) {
-          $event.preventDefault()
-          return _vm.handleClick($event)
-        }
-      }
-    },
-    [_vm._v("\n\t⬇️\n")]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/PrebuiltLiveDisplayCell.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _PrebuiltDisplayDirectionButton = _interopRequireDefault(require("./PrebuiltDisplayDirectionButton"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* eslint-disable no-param-reassign */
-var _default = {
-  props: {
-    row: {
-      type: Number,
-      default: 1
-    },
-    col: {
-      type: Number,
-      default: 1
-    },
-    maxCol: {
-      type: Number,
-      default: 1
-    },
-    maxRow: {
-      type: Number,
-      default: 1
-    },
-    original: {
-      type: Boolean,
-      default: true
-    },
-    selected: {
-      type: Boolean,
-      default: false
-    },
-    controlsEnabled: {
-      type: Boolean,
-      default: true
-    }
-  },
-  components: {
-    PrebuiltDisplayDirectionButton: _PrebuiltDisplayDirectionButton.default
-  },
-  data: function data() {
-    return {
-      enabledControls: []
-    };
-  },
-  mounted: function mounted() {
-    if (this.controlsEnabled) {
-      if (this.row === 0) {
-        this.enabledControls.push('up');
-      }
-
-      if (this.col === 0) {
-        this.enabledControls.push('left');
-      }
-
-      if (this.row === this.maxRow - 1) {
-        this.enabledControls.push('down');
-      }
-
-      if (this.col === this.maxCol - 1) {
-        this.enabledControls.push('right');
-      }
-    }
-  },
-  methods: {
-    getIndex: function getIndex() {
-      return {
-        row: this.row,
-        col: this.col
-      };
-    },
-    handleLeave: function handleLeave(e) {
-      e.target.classList.remove('wptb-prebuilt-live-cell-hover');
-    },
-    handleHover: function handleHover(e) {
-      var controls = Array.from(e.target.querySelectorAll('[data-type]'));
-
-      if (controls.length > 0) {
-        e.target.classList.add('wptb-prebuilt-live-cell-hover');
-      } // eslint-disable-next-line array-callback-return
-
-
-      controls.map(function (c) {
-        var _c$getBoundingClientR = c.getBoundingClientRect(),
-            width = _c$getBoundingClientR.width,
-            height = _c$getBoundingClientR.height;
-
-        var type = c.dataset.type;
-
-        switch (type) {
-          case 'up':
-            c.style.top = "".concat(-height, "px");
-            break;
-
-          case 'left':
-            c.style.left = "".concat(-width, "px");
-            break;
-
-          case 'down':
-            c.style.bottom = "".concat(-height, "px");
-            break;
-
-          case 'right':
-            c.style.right = "".concat(-width, "px");
-            break;
-
-          default:
-            c.style.top = "".concat(-height, "px");
-        }
-      });
-    },
-    handleControlClick: function handleControlClick(side) {
-      this.$emit('cellControlSelected', side, this.row, this.col);
-    }
-  }
-};
-exports.default = _default;
-        var $b60284 = exports.default || module.exports;
-      
-      if (typeof $b60284 === 'function') {
-        $b60284 = $b60284.options;
-      }
-    
-        /* template */
-        Object.assign($b60284, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-prebuilt-live-cell",
-      class: {
-        "wptb-prebuilt-live-control-hide": !_vm.original,
-        "wptb-prebuilt-live-control-active": _vm.selected
-      },
-      on: { mouseover: _vm.handleHover, mouseleave: _vm.handleLeave }
-    },
-    _vm._l(_vm.enabledControls, function(side) {
-      return _c("prebuilt-display-direction-button", {
-        key: side,
-        attrs: { side: side },
-        on: { click: _vm.handleControlClick }
-      })
-    }),
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"./PrebuiltDisplayDirectionButton":"components/PrebuiltDisplayDirectionButton.vue"}],"components/PrebuiltLiveDisplay.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _PrebuiltLiveDisplayCell = _interopRequireDefault(require("./PrebuiltLiveDisplayCell"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    rows: {
-      type: Number,
-      default: 1
-    },
-    cols: {
-      type: Number,
-      default: 1
-    },
-    table: {
-      type: HTMLElement
-    },
-    selectedCells: {
-      type: Object,
-      default: function _default() {
-        return {
-          rowOperation: [],
-          colOperation: []
-        };
-      }
-    },
-    enableNewCellIndicator: {
-      type: Boolean,
-      default: true
-    }
-  },
-  components: {
-    PrebuiltLiveDisplayCell: _PrebuiltLiveDisplayCell.default
-  },
-  data: function data() {
-    return {
-      parsedCells: [],
-      parsedMergeDirectives: [],
-      initial: {
-        rows: 1,
-        cols: 1
-      },
-      innerParsedCells: []
-    };
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    if (this.table) {
-      this.initial.rows = this.table.querySelectorAll('tr').length;
-      this.initial.cols = Array.from(this.table.querySelectorAll('tr')).reduce(function (carry, current) {
-        var cellLength = current.querySelectorAll('td').length;
-        return cellLength > carry ? cellLength : carry;
-      }, 1); // eslint-disable-next-line array-callback-return
-
-      Array.from(this.table.querySelectorAll('tr')).map(function (tr, i) {
-        if (!Array.isArray(_this.parsedCells[i])) {
-          _this.parsedCells[i] = [];
-        } // eslint-disable-next-line array-callback-return
-
-
-        Array.from(tr.querySelectorAll('td')).map(function (td) {
-          _this.parsedCells[i].push(td);
-        });
-      }); // this.innerParsedCells = this.parsedCells.slice(0);
-
-      this.prepareTable();
-    }
-  },
-  watch: {
-    rows: function rows() {
-      this.prepareTable();
-    },
-    cols: function cols() {
-      this.prepareTable();
-    },
-    selectedCells: {
-      handler: function handler() {
-        this.$emit('cellsSelected', this.selectedCells);
-      },
-      deep: true
-    }
-  },
-  computed: {
-    calculateStyle: function calculateStyle() {
-      return {
-        gridTemplateColumns: "repeat(".concat(this.cols, ", 1fr)"),
-        gridTemplateRows: "repeat(".concat(this.rows, ", 1fr)")
-      };
-    }
-  },
-  methods: {
-    prepareTable: function prepareTable() {
-      var _this2 = this;
-
-      this.innerParsedCells = this.parsedCells.map(function (r) {
-        return r.slice(0);
-      });
-      var extraRows = this.rows - this.initial.rows;
-      var extraCols = this.cols - this.initial.cols; // eslint-disable-next-line array-callback-return
-
-      Array.from(Array(this.innerParsedCells.length)).map(function (a, r) {
-        // eslint-disable-next-line array-callback-return
-        Array.from(Array(extraCols)).map(function () {
-          _this2.innerParsedCells[r].push(a);
-        });
-      }); // eslint-disable-next-line array-callback-return
-
-      Array.from(Array(extraRows)).map(function (a, r) {
-        // eslint-disable-next-line array-callback-return
-        Array.from(Array(_this2.cols)).map(function () {
-          var rowIndex = _this2.initial.rows + r;
-
-          if (!Array.isArray(_this2.innerParsedCells[rowIndex])) {
-            _this2.innerParsedCells[rowIndex] = [];
-          }
-
-          _this2.innerParsedCells[rowIndex].push(a);
-        });
-      });
-    },
-    getParsedCellElement: function getParsedCellElement(r, c) {
-      return this.parsedCells[r][c];
-    },
-    cellSpan: function cellSpan(index) {
-      var spanAmount = this.mergeDirectives[index];
-      return {
-        gridColumn: "span ".concat(spanAmount || 1)
-      };
-    },
-    isOriginalCell: function isOriginalCell(r, c) {
-      if (!this.enableNewCellIndicator) {
-        return true;
-      }
-
-      return r < this.initial.rows && c < this.initial.cols;
-    },
-    calculateClass: function calculateClass(r, c) {
-      return {
-        'wptb-prebuilt-added-cell': !this.isOriginalCell(r, c)
-      };
-    },
-    isCellSelected: function isCellSelected(row, col) {
-      return this.selectedCells.colOperation.includes(this.encodeSelectedCell(row, col)) || this.selectedCells.rowOperation.includes(this.encodeSelectedCell(row, col));
-    },
-    encodeSelectedCell: function encodeSelectedCell(row, col) {
-      return "".concat(row, "-").concat(col);
-    },
-    handleCellControlSelect: function handleCellControlSelect(side, row, col) {
-      if (side === 'up' || side === 'down') {
-        var direction = side === 'up' ? 1 : -1;
-
-        for (var i = 0; i < this.initial.rows; i += 1) {
-          this.toggleSelection('colOperation', this.encodeSelectedCell(row + i * direction, col));
-        }
-      } else {
-        for (var _i = 0; _i < this.initial.cols; _i += 1) {
-          var _direction = side === 'left' ? 1 : -1;
-
-          this.toggleSelection('rowOperation', this.encodeSelectedCell(row, col + _i * _direction));
-        }
-      }
-    },
-    toggleSelection: function toggleSelection(operation, encodedCellPosition) {
-      this.selectedCells[operation === 'colOperation' ? 'rowOperation' : 'colOperation'] = [];
-      var index = this.selectedCells[operation].indexOf(encodedCellPosition);
-
-      if (index >= 0) {
-        this.selectedCells[operation].splice(index, 1);
-      } else {
-        this.selectedCells[operation].push(encodedCellPosition);
-      }
-    }
-  }
-};
-exports.default = _default;
-        var $78d93d = exports.default || module.exports;
-      
-      if (typeof $78d93d === 'function') {
-        $78d93d = $78d93d.options;
-      }
-    
-        /* template */
-        Object.assign($78d93d, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "wptb-prebuilt-live-display wptb-unselectable" },
-    [
-      _c(
-        "div",
-        { staticClass: "wptb-prebuilt-live-table", style: _vm.calculateStyle },
-        [
-          _vm._l(_vm.innerParsedCells, function(r, i) {
-            return _vm._l(r, function(c, k) {
-              return _c("prebuilt-live-display-cell", {
-                key: i + "-" + k,
-                class: _vm.calculateClass(i, k),
-                attrs: {
-                  row: i,
-                  col: k,
-                  "max-col": _vm.initial.cols,
-                  "max-row": _vm.initial.rows,
-                  original: _vm.isOriginalCell(i, k),
-                  selected: _vm.isCellSelected(i, k),
-                  "controls-enabled": _vm.enableNewCellIndicator
-                },
-                on: { cellControlSelected: _vm.handleCellControlSelect }
-              })
-            })
-          })
-        ],
-        2
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"./PrebuiltLiveDisplayCell":"components/PrebuiltLiveDisplayCell.vue"}],"components/PrebuiltCardDeleteModule.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    deleteIcon: {
-      type: String,
-      default: ''
-    },
-    message: {
-      type: String,
-      default: 'Delete?'
-    },
-    yesIcon: {
-      type: String,
-      default: 'Y'
-    },
-    noIcon: {
-      type: String,
-      default: 'N'
-    }
-  },
-  data: function data() {
-    return {
-      confirmActive: false
-    };
-  },
-  methods: {
-    toggleConfirmOverlay: function toggleConfirmOverlay() {
-      this.confirmActive = !this.confirmActive;
-    },
-    confirm: function confirm() {
-      this.$emit('confirm');
-    }
-  }
-};
-exports.default = _default;
-        var $61edfa = exports.default || module.exports;
-      
-      if (typeof $61edfa === 'function') {
-        $61edfa = $61edfa.options;
-      }
-    
-        /* template */
-        Object.assign($61edfa, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "wptb-prebuilt-card-delete-module" },
-    [
-      _c("div", {
-        staticClass:
-          "wptb-prebuilt-card-icon wptb-prebuilt-card-delete-icon wptb-plugin-filter-box-shadow-md-close",
-        domProps: { innerHTML: _vm._s(_vm.deleteIcon) },
-        on: {
-          "!click": function($event) {
-            $event.preventDefault()
-            return _vm.toggleConfirmOverlay($event)
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("transition", { attrs: { name: "wptb-fade" } }, [
-        _vm.confirmActive
-          ? _c(
-              "div",
-              {
-                staticClass: "wptb-prebuilt-delete-module-confirmation-overlay"
-              },
-              [
-                _c("div", [
-                  _vm._v("\n\t\t\t\t" + _vm._s(_vm.message) + "\n\t\t\t")
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "wptb-prebuilt-delete-button-container" },
-                  [
-                    _c("div", {
-                      staticClass: "wptb-prebuilt-card-circle-icon-button",
-                      attrs: { "data-wptb-button-type": "positive" },
-                      domProps: { innerHTML: _vm._s(_vm.yesIcon) },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.confirm($event)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", {
-                      staticClass: "wptb-prebuilt-card-circle-icon-button",
-                      attrs: { "data-wptb-button-type": "negative" },
-                      domProps: { innerHTML: _vm._s(_vm.noIcon) },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.toggleConfirmOverlay($event)
-                        }
-                      }
-                    })
-                  ]
-                )
-              ]
-            )
-          : _vm._e()
-      ])
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/BusyRotate.vue":[function(require,module,exports) {
-
-        var $ac8ef1 = exports.default || module.exports;
-      
-      if (typeof $ac8ef1 === 'function') {
-        $ac8ef1 = $ac8ef1.options;
-      }
-    
-        /* template */
-        Object.assign($ac8ef1, (function () {
-          var render = function(_h, _vm) {
-  var _c = _vm._c
-  return _c("span", {
-    staticClass: "dashicons dashicons-image-rotate wptb-settings-fetching"
-  })
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: true
-          };
-        })());
-      
-},{}],"../../../../../node_modules/vuex/dist/vuex.esm.js":[function(require,module,exports) {
+},{"regenerator-runtime":"../../../../../node_modules/regenerator-runtime/runtime.js"}],"../../../../../node_modules/vuex/dist/vuex.esm.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -15101,6 +14212,895 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
+},{}],"components/PrebuiltCardControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    orientation: {
+      type: String,
+      default: 'row'
+    },
+    value: {
+      type: Number,
+      default: 0
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    min: {
+      type: Number,
+      default: 1
+    },
+    max: {
+      type: Number,
+      default: 30
+    },
+    step: {
+      type: Number,
+      default: 1
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: 0
+    };
+  },
+  mounted: function mounted() {
+    this.innerValue = this.toNumber(this.value);
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    },
+    innerValue: function innerValue(n) {
+      this.$emit('input', this.limitVal(n));
+      this.innerValue = this.limitVal(n);
+    }
+  },
+  methods: {
+    valueChanged: function valueChanged(e) {
+      this.innerValue = this.toNumber(e.target.value);
+    },
+    toNumber: function toNumber(n) {
+      return Number.parseInt(n, 10);
+    },
+    limitVal: function limitVal(n) {
+      if (n > this.max) {
+        return this.max;
+      }
+
+      if (n < this.min) {
+        return this.min;
+      }
+
+      return n;
+    },
+    hitToMax: function hitToMax() {
+      return this.innerValue === this.max;
+    },
+    hitToMin: function hitToMin() {
+      return this.innerValue === this.min;
+    },
+    effectValue: function effectValue(effect) {
+      if (!this.disabled) {
+        this.innerValue += effect;
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $43bbee = exports.default || module.exports;
+      
+      if (typeof $43bbee === 'function') {
+        $43bbee = $43bbee.options;
+      }
+    
+        /* template */
+        Object.assign($43bbee, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-control",
+      attrs: { "data-orientation": _vm.orientation }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
+          attrs: { disabled: _vm.disabled || _vm.hitToMin() },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.effectValue(-1 * _vm.step)
+            }
+          }
+        },
+        [_vm._v("\n\t\t-\n\t")]
+      ),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "wptb-prebuilt-control-input",
+        attrs: { disabled: _vm.disabled === true },
+        domProps: { value: _vm.innerValue },
+        on: { input: _vm.valueChanged }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
+          attrs: { disabled: _vm.disabled || _vm.hitToMax() },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.effectValue(_vm.step)
+            }
+          }
+        },
+        [_vm._v("\n\t\t+\n\t")]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltDisplayDirectionButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    side: {
+      type: String,
+      default: 'up'
+    }
+  },
+  computed: {
+    calculateTransform: function calculateTransform() {
+      var transformDegrees = {
+        up: 0,
+        right: 90,
+        down: 180,
+        left: 270
+      };
+      return {
+        transform: "rotateZ(".concat(transformDegrees[this.side], "deg)")
+      };
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      this.$emit('click', this.side);
+    }
+  }
+};
+exports.default = _default;
+        var $8bc701 = exports.default || module.exports;
+      
+      if (typeof $8bc701 === 'function') {
+        $8bc701 = $8bc701.options;
+      }
+    
+        /* template */
+        Object.assign($8bc701, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-live-control",
+      style: _vm.calculateTransform,
+      attrs: { "data-type": _vm.side },
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleClick($event)
+        }
+      }
+    },
+    [_vm._v("\n\t⬇️\n")]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltLiveDisplayCell.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltDisplayDirectionButton = _interopRequireDefault(require("./PrebuiltDisplayDirectionButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* eslint-disable no-param-reassign */
+var _default = {
+  props: {
+    row: {
+      type: Number,
+      default: 1
+    },
+    col: {
+      type: Number,
+      default: 1
+    },
+    maxCol: {
+      type: Number,
+      default: 1
+    },
+    maxRow: {
+      type: Number,
+      default: 1
+    },
+    original: {
+      type: Boolean,
+      default: true
+    },
+    selected: {
+      type: Boolean,
+      default: false
+    },
+    controlsEnabled: {
+      type: Boolean,
+      default: true
+    }
+  },
+  components: {
+    PrebuiltDisplayDirectionButton: _PrebuiltDisplayDirectionButton.default
+  },
+  data: function data() {
+    return {
+      enabledControls: []
+    };
+  },
+  mounted: function mounted() {
+    if (this.controlsEnabled) {
+      if (this.row === 0) {
+        this.enabledControls.push('up');
+      }
+
+      if (this.col === 0) {
+        this.enabledControls.push('left');
+      }
+
+      if (this.row === this.maxRow - 1) {
+        this.enabledControls.push('down');
+      }
+
+      if (this.col === this.maxCol - 1) {
+        this.enabledControls.push('right');
+      }
+    }
+  },
+  methods: {
+    getIndex: function getIndex() {
+      return {
+        row: this.row,
+        col: this.col
+      };
+    },
+    handleLeave: function handleLeave(e) {
+      e.target.classList.remove('wptb-prebuilt-live-cell-hover');
+    },
+    handleHover: function handleHover(e) {
+      var controls = Array.from(e.target.querySelectorAll('[data-type]'));
+
+      if (controls.length > 0) {
+        e.target.classList.add('wptb-prebuilt-live-cell-hover');
+      } // eslint-disable-next-line array-callback-return
+
+
+      controls.map(function (c) {
+        var _c$getBoundingClientR = c.getBoundingClientRect(),
+            width = _c$getBoundingClientR.width,
+            height = _c$getBoundingClientR.height;
+
+        var type = c.dataset.type;
+
+        switch (type) {
+          case 'up':
+            c.style.top = "".concat(-height, "px");
+            break;
+
+          case 'left':
+            c.style.left = "".concat(-width, "px");
+            break;
+
+          case 'down':
+            c.style.bottom = "".concat(-height, "px");
+            break;
+
+          case 'right':
+            c.style.right = "".concat(-width, "px");
+            break;
+
+          default:
+            c.style.top = "".concat(-height, "px");
+        }
+      });
+    },
+    handleControlClick: function handleControlClick(side) {
+      this.$emit('cellControlSelected', side, this.row, this.col);
+    }
+  }
+};
+exports.default = _default;
+        var $b60284 = exports.default || module.exports;
+      
+      if (typeof $b60284 === 'function') {
+        $b60284 = $b60284.options;
+      }
+    
+        /* template */
+        Object.assign($b60284, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-live-cell",
+      class: {
+        "wptb-prebuilt-live-control-hide": !_vm.original,
+        "wptb-prebuilt-live-control-active": _vm.selected
+      },
+      on: { mouseover: _vm.handleHover, mouseleave: _vm.handleLeave }
+    },
+    _vm._l(_vm.enabledControls, function(side) {
+      return _c("prebuilt-display-direction-button", {
+        key: side,
+        attrs: { side: side },
+        on: { click: _vm.handleControlClick }
+      })
+    }),
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./PrebuiltDisplayDirectionButton":"components/PrebuiltDisplayDirectionButton.vue"}],"components/PrebuiltLiveDisplay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltLiveDisplayCell = _interopRequireDefault(require("./PrebuiltLiveDisplayCell"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    rows: {
+      type: Number,
+      default: 1
+    },
+    cols: {
+      type: Number,
+      default: 1
+    },
+    table: {
+      type: HTMLElement
+    },
+    selectedCells: {
+      type: Object,
+      default: function _default() {
+        return {
+          rowOperation: [],
+          colOperation: []
+        };
+      }
+    },
+    enableNewCellIndicator: {
+      type: Boolean,
+      default: true
+    }
+  },
+  components: {
+    PrebuiltLiveDisplayCell: _PrebuiltLiveDisplayCell.default
+  },
+  data: function data() {
+    return {
+      parsedCells: [],
+      parsedMergeDirectives: [],
+      initial: {
+        rows: 1,
+        cols: 1
+      },
+      innerParsedCells: []
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    if (this.table) {
+      this.initial.rows = this.table.querySelectorAll('tr').length;
+      this.initial.cols = Array.from(this.table.querySelectorAll('tr')).reduce(function (carry, current) {
+        var cellLength = current.querySelectorAll('td').length;
+        return cellLength > carry ? cellLength : carry;
+      }, 1); // eslint-disable-next-line array-callback-return
+
+      Array.from(this.table.querySelectorAll('tr')).map(function (tr, i) {
+        if (!Array.isArray(_this.parsedCells[i])) {
+          _this.parsedCells[i] = [];
+        } // eslint-disable-next-line array-callback-return
+
+
+        Array.from(tr.querySelectorAll('td')).map(function (td) {
+          _this.parsedCells[i].push(td);
+        });
+      }); // this.innerParsedCells = this.parsedCells.slice(0);
+
+      this.prepareTable();
+    }
+  },
+  watch: {
+    rows: function rows() {
+      this.prepareTable();
+    },
+    cols: function cols() {
+      this.prepareTable();
+    },
+    selectedCells: {
+      handler: function handler() {
+        this.$emit('cellsSelected', this.selectedCells);
+      },
+      deep: true
+    }
+  },
+  computed: {
+    calculateStyle: function calculateStyle() {
+      return {
+        gridTemplateColumns: "repeat(".concat(this.cols, ", 1fr)"),
+        gridTemplateRows: "repeat(".concat(this.rows, ", 1fr)")
+      };
+    }
+  },
+  methods: {
+    prepareTable: function prepareTable() {
+      var _this2 = this;
+
+      this.innerParsedCells = this.parsedCells.map(function (r) {
+        return r.slice(0);
+      });
+      var extraRows = this.rows - this.initial.rows;
+      var extraCols = this.cols - this.initial.cols; // eslint-disable-next-line array-callback-return
+
+      Array.from(Array(this.innerParsedCells.length)).map(function (a, r) {
+        // eslint-disable-next-line array-callback-return
+        Array.from(Array(extraCols)).map(function () {
+          _this2.innerParsedCells[r].push(a);
+        });
+      }); // eslint-disable-next-line array-callback-return
+
+      Array.from(Array(extraRows)).map(function (a, r) {
+        // eslint-disable-next-line array-callback-return
+        Array.from(Array(_this2.cols)).map(function () {
+          var rowIndex = _this2.initial.rows + r;
+
+          if (!Array.isArray(_this2.innerParsedCells[rowIndex])) {
+            _this2.innerParsedCells[rowIndex] = [];
+          }
+
+          _this2.innerParsedCells[rowIndex].push(a);
+        });
+      });
+    },
+    getParsedCellElement: function getParsedCellElement(r, c) {
+      return this.parsedCells[r][c];
+    },
+    cellSpan: function cellSpan(index) {
+      var spanAmount = this.mergeDirectives[index];
+      return {
+        gridColumn: "span ".concat(spanAmount || 1)
+      };
+    },
+    isOriginalCell: function isOriginalCell(r, c) {
+      if (!this.enableNewCellIndicator) {
+        return true;
+      }
+
+      return r < this.initial.rows && c < this.initial.cols;
+    },
+    calculateClass: function calculateClass(r, c) {
+      return {
+        'wptb-prebuilt-added-cell': !this.isOriginalCell(r, c)
+      };
+    },
+    isCellSelected: function isCellSelected(row, col) {
+      return this.selectedCells.colOperation.includes(this.encodeSelectedCell(row, col)) || this.selectedCells.rowOperation.includes(this.encodeSelectedCell(row, col));
+    },
+    encodeSelectedCell: function encodeSelectedCell(row, col) {
+      return "".concat(row, "-").concat(col);
+    },
+    handleCellControlSelect: function handleCellControlSelect(side, row, col) {
+      if (side === 'up' || side === 'down') {
+        var direction = side === 'up' ? 1 : -1;
+
+        for (var i = 0; i < this.initial.rows; i += 1) {
+          this.toggleSelection('colOperation', this.encodeSelectedCell(row + i * direction, col));
+        }
+      } else {
+        for (var _i = 0; _i < this.initial.cols; _i += 1) {
+          var _direction = side === 'left' ? 1 : -1;
+
+          this.toggleSelection('rowOperation', this.encodeSelectedCell(row, col + _i * _direction));
+        }
+      }
+    },
+    toggleSelection: function toggleSelection(operation, encodedCellPosition) {
+      this.selectedCells[operation === 'colOperation' ? 'rowOperation' : 'colOperation'] = [];
+      var index = this.selectedCells[operation].indexOf(encodedCellPosition);
+
+      if (index >= 0) {
+        this.selectedCells[operation].splice(index, 1);
+      } else {
+        this.selectedCells[operation].push(encodedCellPosition);
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $78d93d = exports.default || module.exports;
+      
+      if (typeof $78d93d === 'function') {
+        $78d93d = $78d93d.options;
+      }
+    
+        /* template */
+        Object.assign($78d93d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-prebuilt-live-display wptb-unselectable" },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-prebuilt-live-table", style: _vm.calculateStyle },
+        [
+          _vm._l(_vm.innerParsedCells, function(r, i) {
+            return _vm._l(r, function(c, k) {
+              return _c("prebuilt-live-display-cell", {
+                key: i + "-" + k,
+                class: _vm.calculateClass(i, k),
+                attrs: {
+                  row: i,
+                  col: k,
+                  "max-col": _vm.initial.cols,
+                  "max-row": _vm.initial.rows,
+                  original: _vm.isOriginalCell(i, k),
+                  selected: _vm.isCellSelected(i, k),
+                  "controls-enabled": _vm.enableNewCellIndicator
+                },
+                on: { cellControlSelected: _vm.handleCellControlSelect }
+              })
+            })
+          })
+        ],
+        2
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./PrebuiltLiveDisplayCell":"components/PrebuiltLiveDisplayCell.vue"}],"components/PrebuiltCardDeleteModule.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    deleteIcon: {
+      type: String,
+      default: ''
+    },
+    message: {
+      type: String,
+      default: 'Delete?'
+    },
+    yesIcon: {
+      type: String,
+      default: 'Y'
+    },
+    noIcon: {
+      type: String,
+      default: 'N'
+    }
+  },
+  data: function data() {
+    return {
+      confirmActive: false
+    };
+  },
+  methods: {
+    toggleConfirmOverlay: function toggleConfirmOverlay() {
+      this.confirmActive = !this.confirmActive;
+    },
+    confirm: function confirm() {
+      this.$emit('confirm');
+    }
+  }
+};
+exports.default = _default;
+        var $61edfa = exports.default || module.exports;
+      
+      if (typeof $61edfa === 'function') {
+        $61edfa = $61edfa.options;
+      }
+    
+        /* template */
+        Object.assign($61edfa, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-prebuilt-card-delete-module" },
+    [
+      _c("div", {
+        staticClass:
+          "wptb-prebuilt-card-icon wptb-prebuilt-card-delete-icon wptb-plugin-filter-box-shadow-md-close",
+        domProps: { innerHTML: _vm._s(_vm.deleteIcon) },
+        on: {
+          "!click": function($event) {
+            $event.preventDefault()
+            return _vm.toggleConfirmOverlay($event)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "wptb-fade" } }, [
+        _vm.confirmActive
+          ? _c(
+              "div",
+              {
+                staticClass: "wptb-prebuilt-delete-module-confirmation-overlay"
+              },
+              [
+                _c("div", [
+                  _vm._v("\n\t\t\t\t" + _vm._s(_vm.message) + "\n\t\t\t")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "wptb-prebuilt-delete-button-container" },
+                  [
+                    _c("div", {
+                      staticClass: "wptb-prebuilt-card-circle-icon-button",
+                      attrs: { "data-wptb-button-type": "positive" },
+                      domProps: { innerHTML: _vm._s(_vm.yesIcon) },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.confirm($event)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "wptb-prebuilt-card-circle-icon-button",
+                      attrs: { "data-wptb-button-type": "negative" },
+                      domProps: { innerHTML: _vm._s(_vm.noIcon) },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.toggleConfirmOverlay($event)
+                        }
+                      }
+                    })
+                  ]
+                )
+              ]
+            )
+          : _vm._e()
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/BusyRotate.vue":[function(require,module,exports) {
+
+        var $ac8ef1 = exports.default || module.exports;
+      
+      if (typeof $ac8ef1 === 'function') {
+        $ac8ef1 = $ac8ef1.options;
+      }
+    
+        /* template */
+        Object.assign($ac8ef1, (function () {
+          var render = function(_h, _vm) {
+  var _c = _vm._c
+  return _c("span", {
+    staticClass: "dashicons dashicons-image-rotate wptb-settings-fetching"
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: true
+          };
+        })());
+      
 },{}],"../../../../../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":[function(require,module,exports) {
 var arrayLikeToArray = require("./arrayLikeToArray");
 
@@ -16898,6 +16898,10 @@ exports.default = void 0;
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _vuex = require("vuex");
+
 var _PrebuiltCardControl = _interopRequireDefault(require("./PrebuiltCardControl"));
 
 var _PrebuiltLiveDisplay = _interopRequireDefault(require("./PrebuiltLiveDisplay"));
@@ -16914,88 +16918,10 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 var _default = {
   props: {
     name: {
@@ -17035,6 +16961,10 @@ var _default = {
     deleteIcon: {
       type: String,
       default: ''
+    },
+    isEnabled: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -17144,7 +17074,7 @@ var _default = {
       }
     });
   },
-  computed: {
+  computed: _objectSpread({
     overlayTargetTypes: function overlayTargetTypes() {
       return _ProOverlay.targetTypes;
     },
@@ -17158,6 +17088,10 @@ var _default = {
       return this.name;
     },
     editEnabled: function editEnabled() {
+      if (!this.proStatus) {
+        return false;
+      }
+
       if (this.isDevBuild()) {
         return this.id !== 'blank' && (this.id.startsWith(this.appData.teamTablePrefix) || !this.id.startsWith(this.appData.teamTablePrefix));
       }
@@ -17185,7 +17119,7 @@ var _default = {
 
       return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
     }
-  },
+  }, (0, _vuex.mapGetters)(['proStatus'])),
   methods: {
     scalePrebuiltPreview: function scalePrebuiltPreview(prebuilt) {
       var tablePreview = this.$refs.tablePreview; // eslint-disable-next-line no-unused-vars
@@ -17273,7 +17207,7 @@ exports.default = _default;
       on: { click: _vm.setCardActive }
     },
     [
-      _vm.id !== "blank"
+      !_vm.isEnabled
         ? _c("pro-overlay", {
             attrs: {
               "feature-name": "Table Template",
@@ -17358,7 +17292,7 @@ exports.default = _default;
               })
             : _vm._e(),
           _vm._v(" "),
-          !_vm.isActive
+          !_vm.isActive && _vm.proStatus
             ? _c("div", {
                 staticClass:
                   "wptb-prebuilt-card-icon wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close",
@@ -17374,7 +17308,7 @@ exports.default = _default;
               })
             : _vm._e(),
           _vm._v(" "),
-          _vm.isActive && _vm.deleteIcon !== ""
+          _vm.isActive && _vm.deleteIcon !== "" && _vm.proStatus
             ? _c("prebuilt-card-delete-module", {
                 attrs: {
                   "delete-icon": _vm.deleteIcon,
@@ -17467,7 +17401,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue","./BusyRotate":"components/BusyRotate.vue","$Containers/ProOverlay":"containers/ProOverlay.vue"}],"containers/GenerateMain.vue":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue","./BusyRotate":"components/BusyRotate.vue","$Containers/ProOverlay":"containers/ProOverlay.vue"}],"containers/GenerateMain.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17483,9 +17417,9 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 require("regenerator-runtime/runtime");
 
-var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard"));
+var _vuex = require("vuex");
 
-var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
+var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17531,7 +17465,8 @@ var _default = {
         }
       },
       activeCard: '',
-      generating: false
+      generating: false,
+      basePreviewTemplateIds: ['wptb_team_nt998', 'blank']
     };
   },
   mounted: function mounted() {
@@ -17541,14 +17476,10 @@ var _default = {
     this.fixedTables.blank.title = this.strings.blank;
     this.fixedTables = _objectSpread(_objectSpread({}, this.fixedTables), this.prebuiltTables);
   },
-  computed: {
-    isPro: function isPro() {
-      return _builderStore.default.getters.proStatus;
-    }
-  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['proStatus', 'getTranslation'])),
   methods: {
     isBaseAllowed: function isBaseAllowed(cardId) {
-      return this.isPro || cardId === 'blank';
+      return this.proStatus || this.basePreviewTemplateIds.includes(cardId);
     },
     deselect: function deselect() {
       this.activeCard = '';
@@ -17626,6 +17557,14 @@ var _default = {
                   return 1;
                 }
 
+                if (_this3.basePreviewTemplateIds.includes(a)) {
+                  return -1;
+                }
+
+                if (_this3.basePreviewTemplateIds.includes(a)) {
+                  return 1;
+                }
+
                 var aTitle = _this3.fixedTables[a].title.replaceAll(' ', '');
 
                 var bTitle = _this3.fixedTables[b].title.replaceAll(' ', '');
@@ -17678,7 +17617,7 @@ var _default = {
       return this.activeCard === id;
     },
     cardActive: function cardActive(cardId) {
-      if (cardId === 'blank' || this.isPro) {
+      if (this.isBaseAllowed(cardId) || this.proStatus) {
         this.activeCard = cardId;
       }
     },
@@ -17946,6 +17885,10 @@ exports.default = _default;
         "div",
         { staticClass: "wptb-generate-menu-listing" },
         [
+          _c("div", { staticClass: "header" }, [
+            _vm._v(_vm._s(_vm.getTranslation("templates")))
+          ]),
+          _vm._v(" "),
           _vm.dummyProCss
             ? _c("link", {
                 attrs: { href: _vm.dummyProCss, rel: "stylesheet" }
@@ -17956,6 +17899,7 @@ exports.default = _default;
             return _c("prebuilt-card", {
               key: v.id,
               attrs: {
+                "is-enabled": _vm.isBaseAllowed(v.id),
                 id: v.id,
                 name: v.title,
                 fav: v.fav,
@@ -17997,7 +17941,7 @@ render._withStripped = true
           };
         })());
       
-},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/regenerator":"../../../../../node_modules/@babel/runtime/regenerator/index.js","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js","../components/PrebuiltCard":"components/PrebuiltCard.vue","$Stores/builderStore":"stores/builderStore/index.js"}],"plugins/filters.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/regenerator":"../../../../../node_modules/@babel/runtime/regenerator/index.js","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/PrebuiltCard":"components/PrebuiltCard.vue"}],"plugins/filters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18119,6 +18063,8 @@ var _strings = _interopRequireDefault(require("./plugins/strings"));
 
 var _genericStore = _interopRequireDefault(require("./plugins/genericStore"));
 
+var _builderStore = _interopRequireDefault(require("$Stores/builderStore"));
+
 var _global$wptbGenerateM;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -18166,7 +18112,8 @@ var vm = new _vue.default({
     GenerateMain: _GenerateMain.default
   },
   template: '<generate-main :dummy-pro-css="dummyProCss" :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
-  data: data
+  data: data,
+  store: _builderStore.default
 }).$mount("#".concat(data.mountId));
 var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container
 
@@ -18189,5 +18136,5 @@ document.addEventListener('wptb:table:generated', function () {
     generateWrapper.classList.add('wptb-plugin-basic-disappear');
   }
 });
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","./containers/GenerateMain":"containers/GenerateMain.vue","./plugins/filters":"plugins/filters.js","./plugins/strings":"plugins/strings.js","./plugins/genericStore":"plugins/genericStore.js"}]},{},["WPTB_Generate.js"], null)
+},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","./containers/GenerateMain":"containers/GenerateMain.vue","./plugins/filters":"plugins/filters.js","./plugins/strings":"plugins/strings.js","./plugins/genericStore":"plugins/genericStore.js","$Stores/builderStore":"stores/builderStore/index.js"}]},{},["WPTB_Generate.js"], null)
 //# sourceMappingURL=/WPTB_Generate.js.map

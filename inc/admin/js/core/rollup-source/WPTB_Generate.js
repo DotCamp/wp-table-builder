@@ -3,6 +3,7 @@ import GenerateMain from './containers/GenerateMain';
 import filters from './plugins/filters';
 import strings from './plugins/strings';
 import genericStore from './plugins/genericStore';
+import BuilderStore from '$Stores/builderStore';
 
 Vue.config.productionTip = false;
 
@@ -37,6 +38,7 @@ const vm = new Vue({
 	template:
 		'<generate-main :dummy-pro-css="dummyProCss" :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
 	data,
+	store: BuilderStore,
 }).$mount(`#${data.mountId}`);
 
 const tableContainer = document.querySelector('.wptb-management_table_container');

@@ -46712,6 +46712,7 @@ exports.default = _default;
           _c(
             "div",
             {
+              staticClass: "inner-button",
               on: {
                 "!click": function($event) {
                   $event.preventDefault()

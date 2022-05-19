@@ -4706,6 +4706,14 @@ label.wptb-control-row {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+
+  .header {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 120%;
+    width: 100%;
+    pointer-events: none;
+  }
 }
 
 .wptb-generate-search {

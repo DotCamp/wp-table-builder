@@ -34,6 +34,7 @@ class Template_Manager {
 		return [
 			'table'    => esc_htmL__( 'table', 'wp-table-builder' ),
 			'template' => esc_htmL__( 'template', 'wp-table-builder' ),
+			'templates' => esc_htmL__( 'templates', 'wp-table-builder' ),
 			'saveAs'   => esc_htmL__( 'save', 'wp-table-builder' ),
 			'saveTable'   => esc_htmL__( 'save', 'wp-table-builder' ),
 			'saveTemplate'   => esc_htmL__( 'save template', 'wp-table-builder' ),

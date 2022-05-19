@@ -1,7 +1,7 @@
 <template>
 	<div ref="wrapper" class="main-save-button-wrapper" :data-disabled="!dirtyStatus">
 		<div class="save-btn wptb-settings-section-item static-active">
-			<div @click.prevent.stop.capture="startSaveOperation">{{ saveButtonLabel }}</div>
+			<div class="inner-button" @click.prevent.stop.capture="startSaveOperation">{{ saveButtonLabel }}</div>
 			<div class="save-button-down" @click.prevent.stop.capture="handleCaretDown">
 				<icon :name="slide ? 'caret-up' : 'caret-down'"></icon>
 			</div>

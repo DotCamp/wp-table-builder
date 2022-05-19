@@ -11,9 +11,11 @@
 				/>
 			</div>
 			<div class="wptb-generate-menu-listing">
+				<div class="header">{{ getTranslation('templates') }}</div>
 				<link v-if="dummyProCss" :href="dummyProCss" rel="stylesheet" />
 				<prebuilt-card
 					v-for="v in sortedTables()"
+					:is-enabled="isBaseAllowed(v.id)"
 					:key="v.id"
 					:id="v.id"
 					:name="v.title"
@@ -37,8 +39,8 @@
 </template>
 <script>
 import 'regenerator-runtime/runtime';
+import { mapGetters } from 'vuex';
 import PrebuiltCard from '../components/PrebuiltCard';
-import BuilderStore from '$Stores/builderStore';
 
 export default {
 	components: { PrebuiltCard },
@@ -77,6 +79,7 @@ export default {
 			},
 			activeCard: '',
 			generating: false,
+			basePreviewTemplateIds: ['wptb_team_nt998', 'blank'],
 		};
 	},
 	mounted() {
@@ -89,13 +92,11 @@ export default {
 		this.fixedTables = { ...this.fixedTables, ...this.prebuiltTables };
 	},
 	computed: {
-		isPro() {
-			return BuilderStore.getters.proStatus;
-		},
+		...mapGetters(['proStatus', 'getTranslation']),
 	},
 	methods: {
 		isBaseAllowed(cardId) {
-			return this.isPro || cardId === 'blank';
+			return this.proStatus || this.basePreviewTemplateIds.includes(cardId);
 		},
 		deselect() {
 			this.activeCard = '';
@@ -163,6 +164,14 @@ export default {
 					return 1;
 				}
 
+				if (this.basePreviewTemplateIds.includes(a)) {
+					return -1;
+				}
+
+				if (this.basePreviewTemplateIds.includes(a)) {
+					return 1;
+				}
+
 				const aTitle = this.fixedTables[a].title.replaceAll(' ', '');
 				const bTitle = this.fixedTables[b].title.replaceAll(' ', '');
 
@@ -195,7 +204,7 @@ export default {
 			return this.activeCard === id;
 		},
 		cardActive(cardId) {
-			if (cardId === 'blank' || this.isPro) {
+			if (this.isBaseAllowed(cardId) || this.proStatus) {
 				this.activeCard = cardId;
 			}
 		},
