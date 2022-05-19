@@ -1,5 +1,10 @@
 <template>
-	<div :disabled="disabled" @click.prevent="handleClick" class="wptb-plugin-button-material" :class="buttonClass">
+	<div
+		:disabled="disabled"
+		@click.prevent.stop.capture="handleClick"
+		class="wptb-plugin-button-material"
+		:class="buttonClass"
+	>
 		<slot></slot>
 	</div>
 </template>

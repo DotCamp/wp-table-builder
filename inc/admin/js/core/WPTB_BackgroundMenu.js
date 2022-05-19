@@ -491,8 +491,13 @@
 			const rowSelector = document.createElement('div');
 			rowSelector.classList.add('wptb-row-selection', 'wptb-bg-selection-item');
 			rowSelector.title = 'Select row';
+
+			const rowSelectorInnerWrapper = document.createElement('div');
+			rowSelectorInnerWrapper.classList.add('wptb-bg-selection-item-inner-wrapper');
+			rowSelector.appendChild(rowSelectorInnerWrapper);
+
 			WPTB_IconManager.getIcon('arrow-alt-circle-right', 'wptb-selector-icon-wrapper').then((icon) => {
-				rowSelector.appendChild(icon);
+				rowSelectorInnerWrapper.appendChild(icon);
 			});
 
 			// column rail
@@ -503,8 +508,13 @@
 			const colSelector = document.createElement('div');
 			colSelector.classList.add('wptb-col-selection', 'wptb-bg-selection-item');
 			colSelector.title = 'Select column';
+
+			const colSelectorInnerWrapper = document.createElement('div');
+			colSelectorInnerWrapper.classList.add('wptb-bg-selection-item-inner-wrapper');
+			colSelector.appendChild(colSelectorInnerWrapper);
+
 			WPTB_IconManager.getIcon('arrow-alt-circle-down', 'wptb-selector-icon-wrapper').then((icon) => {
-				colSelector.appendChild(icon);
+				colSelectorInnerWrapper.appendChild(icon);
 			});
 
 			// add column selector click event
@@ -559,6 +569,15 @@
 
 			if (toolbox) {
 				getSelectorToolbox().dataset.visible = visible;
+			}
+
+			// compatibility setup for upsell
+			if (!WPTB_Store.get('proStatus')) {
+				const builderTable = document.querySelector('.wptb-table-setup');
+
+				if (builderTable) {
+					builderTable.dataset.overflowVisible = visible;
+				}
 			}
 		};
 
@@ -678,6 +697,8 @@
 					if (WPTB_Store.get('proStatus')) {
 						assignCellClickHandlers();
 					}
+
+					assignCellClickHandlers();
 
 					assignRowClickHandler();
 					clearTableIndicators();

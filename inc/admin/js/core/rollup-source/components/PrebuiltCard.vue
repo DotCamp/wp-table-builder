@@ -1,5 +1,11 @@
 <template>
 	<div class="wptb-prebuilt-card" @click="setCardActive" :class="{ 'wptb-prebuilt-card-active': isActive }">
+		<pro-overlay
+			feature-name="Table Template"
+			v-if="!isEnabled"
+			:target="overlayTargetTypes.PARENT"
+			:explicit-store="true"
+		></pro-overlay>
 		<busy-rotate v-if="previewBusy"></busy-rotate>
 		<div class="wptb-prebuilt-card-preview">
 			<div
@@ -35,14 +41,14 @@
 				:enable-new-cell-indicator="id !== 'blank'"
 			></prebuilt-live-display>
 			<div
-				v-if="!isActive"
+				v-if="!isActive && proStatus"
 				class="wptb-prebuilt-card-icon wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close"
 				:class="{ 'is-fav': fav }"
 				v-html="favIcon"
 				@click.capture.prevent.stop="favAction"
 			></div>
 			<prebuilt-card-delete-module
-				v-if="isActive && deleteIcon !== ''"
+				v-if="isActive && deleteIcon !== '' && proStatus"
 				:delete-icon="deleteIcon"
 				:message="strings.deleteConfirmation"
 				:yes-icon="appData.icons.checkIcon"
@@ -75,10 +81,12 @@
 	</div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import PrebuiltCardControl from './PrebuiltCardControl';
 import PrebuiltLiveDisplay from './PrebuiltLiveDisplay';
 import PrebuiltCardDeleteModule from './PrebuiltCardDeleteModule';
 import BusyRotate from './BusyRotate';
+import ProOverlay, { targetTypes } from '$Containers/ProOverlay';
 
 export default {
 	props: {
@@ -120,8 +128,12 @@ export default {
 			type: String,
 			default: '',
 		},
+		isEnabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
-	components: { BusyRotate, PrebuiltCardControl, PrebuiltLiveDisplay, PrebuiltCardDeleteModule },
+	components: { ProOverlay, BusyRotate, PrebuiltCardControl, PrebuiltLiveDisplay, PrebuiltCardDeleteModule },
 	watch: {
 		selectedCells: {
 			handler() {
@@ -241,6 +253,9 @@ export default {
 		});
 	},
 	computed: {
+		overlayTargetTypes() {
+			return targetTypes;
+		},
 		transformedName() {
 			if (this.searchString !== '') {
 				const regexp = new RegExp(`(${this.searchString})`, 'ig');
@@ -254,6 +269,10 @@ export default {
 			return this.name;
 		},
 		editEnabled() {
+			if (!this.proStatus) {
+				return false;
+			}
+
 			if (this.isDevBuild()) {
 				return (
 					this.id !== 'blank' &&
@@ -282,11 +301,13 @@ export default {
 			}
 			return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
 		},
+		...mapGetters(['proStatus']),
 	},
 
 	methods: {
 		scalePrebuiltPreview(prebuilt) {
 			const { tablePreview } = this.$refs;
+			// eslint-disable-next-line no-unused-vars
 			const { width: wrapperWidth, height: wrapperHeight } = tablePreview.getBoundingClientRect();
 
 			const maxWidth = prebuilt.dataset.wptbTableContainerMaxWidth;

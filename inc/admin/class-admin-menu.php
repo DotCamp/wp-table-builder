@@ -354,11 +354,11 @@ class Admin_Menu {
 			];
 
 			$admin_translations = [
-					'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
-					'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
-					'copyToClipboard'   => esc_html__( 'copy to clipboard', 'wp-table-builder' ),
-					'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
-					'shortcode'         => esc_html__( 'shortcode', 'wp-table-builder' ),
+				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ),
+				'embedMessage'      => esc_html__( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ),
+				'copyToClipboard'   => esc_html__( 'copy to clipboard', 'wp-table-builder' ),
+				'copied'            => esc_html__( 'copied', 'wp-table-builder' ),
+				'shortcode'         => esc_html__( 'shortcode', 'wp-table-builder' ),
 			];
 
 			Frontend_Data_Manager::add_builder_translations( $admin_translations );
@@ -368,6 +368,28 @@ class Admin_Menu {
 			// generate controls
 			$generate_path = plugin_dir_path( __FILE__ ) . 'js/WPTB_Generate.js';
 
+
+			// development version to bypass cache issues
+			$admin_script_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
+
+			Helpers::enqueue_file( 'inc/admin/js/admin.js', [
+				'jquery',
+				'wptb-admin-builder-tinymce-js',
+				'wp-color-picker'
+
+			], true, 'wptb-admin-builder-js', true );
+
+			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
+
+			wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
+
+			wp_enqueue_style( 'wp-color-picker' );
+
+			Helpers::enqueue_file( 'inc/admin/css/admin.css', [], false, 'wptb-builder-css' );
+
+			wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
+			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
+			wp_enqueue_script( 'wptb-admin-builder-js' );
 			if ( ! isset( $_GET['table'] ) ) { // enqueue file with the same handler name as pro version and with a low priority to load pro version is it is enabled instead of normal version
 				wp_enqueue_script( static::$generate_menu_script_hook, plugin_dir_url( __FILE__ ) . 'js/WPTB_Generate.js', [], filemtime( $generate_path ), true );
 				$generate_data = [
@@ -388,7 +410,6 @@ class Admin_Menu {
 						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
 						'deleteConfirmation' => esc_html__( 'Delete prebuilt table?', 'wp-table-builder' ),
 					]
-
 				];
 
 				// generate data filter
@@ -396,45 +417,6 @@ class Admin_Menu {
 
 				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
 			}
-
-			// development version to bypass cache issues
-			$admin_script_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
-
-			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
-				'jquery',
-				'wptb-admin-builder-tinymce-js',
-				'wp-color-picker'
-			), NS\PLUGIN_VERSION, true );
-
-			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
-
-			wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
-
-			wp_enqueue_style( 'wp-color-picker' );
-
-			wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/admin.css', array(), NS\PLUGIN_VERSION, 'all' );
-			wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
-			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
-			wp_enqueue_script( 'wptb-admin-builder-js' );
-
-//			$strings = [
-//				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
-//			];
-//
-//			$admin_object = [
-//				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-//				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
-//				'strings'       => $strings,
-//				'store'         => [
-//					'pro' => Addon_Manager::check_pro_status()
-//				]
-//			];
-//
-//			// filter for builder script data
-//			$admin_object = apply_filters( 'wp-table-builder/filter/builder_script_data', $admin_object );
-//
-//			wp_localize_script( 'wptb-admin-builder-js', 'wptb_admin_object', $admin_object );
-
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
 
 			Helpers::enqueue_file( 'inc/admin/js/wptb-overview.js', [], true, 'wptb-overview-js' );

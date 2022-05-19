@@ -2,7 +2,6 @@
 
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Base;
 
-use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager;
 
 /**

@@ -32,9 +32,9 @@ trait Init_Once {
 	/**
 	 * Initialize.
 	 */
-	public static final function init() {
+	public static final function init(...$args) {
 		if ( ! static::is_initialized() ) {
-			static::init_process();
+			static::init_process(...$args);
 		}
 	}
 

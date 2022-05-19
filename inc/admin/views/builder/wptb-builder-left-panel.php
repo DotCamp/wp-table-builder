@@ -66,9 +66,12 @@ use WP_Table_Builder\Inc\Core\Init as Init;
 									do_action( 'wptb_before_elements', $type );
 
 
-									foreach ( $elements as $element ): ?>
-                                        <div class="wptb-element" draggable="true"
-                                             data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>" <?php if ( $element instanceof NS\Inc\Admin\Element_Classes\Base\Dummy_Element_base ): echo 'data-wptb-dummy="true"'; endif; ?>
+									foreach ( $elements as $element ):
+										$is_pro_dummy = $element instanceof NS\Inc\Admin\Element_Classes\Base\Dummy_Element_base;
+										?>
+                                        <div class="wptb-element"
+                                             draggable="<?php echo $is_pro_dummy ? "false" : "true"; ?>"
+                                             data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>" <?php if ( $is_pro_dummy ): echo 'data-wptb-pro-dummy="true"'; endif; ?>
                                              data-wptb-relative-elements="<?php echo esc_attr( $element->position_relative() ); ?>">
                                             <div class="wptb-element-draggable-icon"><span
                                                         class="dashicons dashicons-menu"></span></div>
@@ -92,8 +95,25 @@ use WP_Table_Builder\Inc\Core\Init as Init;
 
                                             </p>
 
-                                        </div>
+											<?php
+											if ( $is_pro_dummy ):
+												$unique_item_id = 'pro-dummy-element-' . $element->get_name();
+												?>
+                                                <div id="<?php echo esc_attr( $unique_item_id ); ?>">
+                                                    <pro-overlay
+                                                            feature-name="<?php $element->get_title(); ?>"></pro-overlay>
+                                                </div>
+                                                <script type="text/javascript">
+                                                    WPTB_ControlsManager.setControlData('<?php echo esc_attr( $unique_item_id ); ?>', {});
 
+                                                    document.addEventListener('DOMContentLoaded', () => {
+                                                        WPTB_ControlsManager.callControlScript('ProOverlay', '<?php echo esc_attr( $unique_item_id ); ?>');
+                                                    })
+                                                </script>
+											<?php
+											endif;
+											?>
+                                        </div>
 									<?php endforeach; ?>
 
                                 </div>

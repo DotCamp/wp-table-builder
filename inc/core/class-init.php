@@ -10,6 +10,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Notification_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Scroll_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Template_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Upsells_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Version_Sync_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\What_Is_New_Manager;
@@ -20,6 +21,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Table_Elements_Manager as Table_Elements
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager as Settings_Manager;
 use function add_action;
+use function trailingslashit;
 
 /**
  * The core plugin class.
@@ -222,6 +224,9 @@ class Init {
 		// initialize gutenberg block manager
 		new Gutenberg_Block_Manager( 'wptb/table-block' );
 
+		// initialize upsells manager functionality which are not dependent on `plugins_loaded` hook
+		Upsells_Manager::independent_init();
+
 		// wait plugins loaded action hook to check availability of pro version
 		add_action( 'plugins_loaded', function () {
 			// initialize upsells manager
@@ -236,6 +241,10 @@ class Init {
 
 		// initialize scroll manager
 		Scroll_Manager::init();
+
+		$template_file = trailingslashit( NS\WP_TABLE_BUILDER_DIR ) . 'assets/templates/templates.csv';
+		// initialize template manager
+		Template_Manager::init( [ 'template_file_path' => $template_file ] );
 	}
 
 	/**

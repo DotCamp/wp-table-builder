@@ -41,9 +41,12 @@ function BuilderStore() {
 
 	const extraStoreOptions = {
 		state: {
-			...storeData,
+			dirtyStatus: false,
 		},
 		getters: {
+			getTableDirtyStatus(state) {
+				return state.dirtyStatus;
+			},
 			proStatus(state) {
 				return state.pro;
 			},
@@ -60,10 +63,18 @@ function BuilderStore() {
 			setTableId: (state, tableId) => {
 				state.tableId = tableId;
 			},
+			setTableDirty: (state) => {
+				state.dirtyStatus = true;
+			},
+			setTableClean: (state) => {
+				state.dirtyStatus = false;
+			},
 		},
 	};
 
 	const builderStore = createStore(extraStoreOptions);
+
+	builderStore.replaceState(merge(builderStore.state, storeData));
 
 	const savedState = getPersistentState();
 	if (savedState) {

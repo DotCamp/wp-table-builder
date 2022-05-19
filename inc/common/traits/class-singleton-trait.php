@@ -12,9 +12,9 @@ trait Singleton_Trait {
 
 	/**
 	 * Instance options
-	 * @var array
+	 * @var mixed
 	 */
-	private $class_options;
+	protected $class_options;
 
 	/**
 	 * Protected class instance
@@ -27,6 +27,14 @@ trait Singleton_Trait {
 	 */
 	protected function __construct( $options ) {
 		$this->class_options = $options;
+	}
+
+	/**
+	 * Get defined class options.
+	 * @return mixed class options
+	 */
+	public function get_class_options() {
+		return $this->class_options;
 	}
 
 	/**
