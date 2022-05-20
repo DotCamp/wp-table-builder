@@ -46646,10 +46646,11 @@ var _default = {
       }
     },
     startSaveOperation: function startSaveOperation(e) {
-      if (this.dirtyStatus) {
-        this.closeSlide();
+      if (this.dirtyStatus && !this.slide) {
         WPTB_Helper.saveTable(e);
       }
+
+      this.closeSlide();
     },
     toggleSlide: function toggleSlide() {
       this.slide = !this.slide;

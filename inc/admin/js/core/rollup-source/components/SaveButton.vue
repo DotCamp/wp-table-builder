@@ -90,10 +90,11 @@ export default {
 			}
 		},
 		startSaveOperation(e) {
-			if (this.dirtyStatus) {
-				this.closeSlide();
+			if (this.dirtyStatus && !this.slide) {
 				WPTB_Helper.saveTable(e);
 			}
+
+			this.closeSlide();
 		},
 		toggleSlide() {
 			this.slide = !this.slide;
