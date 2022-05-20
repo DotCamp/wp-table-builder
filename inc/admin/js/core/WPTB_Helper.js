@@ -2112,6 +2112,9 @@ var WPTB_Helper = {
 						// update centralized data registry with new table id
 						WPTB_Store.commit('setTableId', data[1]);
 
+						// clear table dirty status
+						new WPTB_TableStateSaveManager().tableStateClear();
+
 						const wptbPreviewTable = document.querySelector('.wptb-preview-table');
 						let wptbPreviewBtn = document.getElementsByClassName('wptb-preview-btn');
 						if (wptbPreviewBtn.length > 0) {
