@@ -90,6 +90,11 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.3.18 =
+
+* PRO: NEW: Table templates.
+* IMPROVE: Updated save operations to support multiple save options.
+
 = 1.3.17 =
 
 * FIX: Broken styles for some server installations.

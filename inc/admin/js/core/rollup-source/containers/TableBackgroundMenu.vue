@@ -24,7 +24,13 @@
 				</panel-plain-message>
 				<div v-else>
 					<color-picker
-						@colorChanged="proStatus ? setSelectedBackground : () => {}"
+						@colorChanged="
+							(cVal) => {
+								if (proStatus) {
+									setSelectedBackground(cVal);
+								}
+							}
+						"
 						:color="backgroundBuffer.color"
 						:label="customColorControlLabel"
 					></color-picker>
