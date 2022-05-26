@@ -12668,7 +12668,10 @@ function ControlsManager() {
     return tableSettings;
   }
   /**
+   * @deprecated
    * Subscribe to table settings changes
+   *
+   * use `subscribeToTable` function instead
    *
    * @param {string} id unique id for subscription
    * @param {Function} callback callback when an update happens
@@ -12687,7 +12690,29 @@ function ControlsManager() {
     subscriber.call(tableSettings.settings, previousSettings);
   }
   /**
+   * Subscribe to table settings changes
+   *
+   * @param {string} id unique id for subscription
+   * @param {Function} callback callback when an update happens
+   * @param {boolean} useEventValue use event value instead of target element value
+   */
+
+
+  function subscribeToTable(id, callback) {
+    var useEventValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var subscriber = new Subscriber({
+      id: id,
+      callback: callback,
+      useEventValue: useEventValue
+    });
+    subscribers.push(subscriber);
+    subscriber.call(tableSettings.settings, previousSettings);
+  }
+  /**
+   * @deprecated
    * Subscribe to a table setting control.
+   *
+   * Use `subscribeToTableControl` function instead.
    *
    * @param {string} id subscriber id
    * @param {string} controlId id of the control being subscribed to
@@ -12697,6 +12722,27 @@ function ControlsManager() {
 
 
   function subscribeToControl(id, controlId, callback) {
+    var useEventValue = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    var subscriber = new Subscriber({
+      id: id,
+      controlId: controlId,
+      callback: callback,
+      useEventValue: useEventValue
+    });
+    subscribers.push(subscriber);
+    subscriber.call(tableSettings.settings, previousSettings);
+  }
+  /**
+   * Subscribe to a table setting control.
+   *
+   * @param {string} id subscriber id
+   * @param {string} controlId id of the control being subscribed to
+   * @param {Function} callback callback function that will be executed on control value change
+   * @param {boolean} useEventValue whether to use event value instead of target value
+   */
+
+
+  function subscribeToTableControl(id, controlId, callback) {
     var useEventValue = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     var subscriber = new Subscriber({
       id: id,
@@ -13004,6 +13050,8 @@ function ControlsManager() {
     getControlData: getControlData,
     subscribe: subscribe,
     subscribeToControl: subscribeToControl,
+    subscribeToTable: subscribeToTable,
+    subscribeToTableControl: subscribeToTableControl,
     subscribeToElementControl: subscribeToElementControl,
     getElementControlValue: getElementControlValue,
     updateControlValue: updateControlValue,

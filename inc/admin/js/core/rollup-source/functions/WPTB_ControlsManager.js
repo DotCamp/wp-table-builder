@@ -193,7 +193,10 @@ function ControlsManager() {
 	}
 
 	/**
+	 * @deprecated
 	 * Subscribe to table settings changes
+	 *
+	 * use `subscribeToTable` function instead
 	 *
 	 * @param {string} id unique id for subscription
 	 * @param {Function} callback callback when an update happens
@@ -206,7 +209,23 @@ function ControlsManager() {
 	}
 
 	/**
+	 * Subscribe to table settings changes
+	 *
+	 * @param {string} id unique id for subscription
+	 * @param {Function} callback callback when an update happens
+	 * @param {boolean} useEventValue use event value instead of target element value
+	 */
+	function subscribeToTable(id, callback, useEventValue = false) {
+		const subscriber = new Subscriber({ id, callback, useEventValue });
+		subscribers.push(subscriber);
+		subscriber.call(tableSettings.settings, previousSettings);
+	}
+
+	/**
+	 * @deprecated
 	 * Subscribe to a table setting control.
+	 *
+	 * Use `subscribeToTableControl` function instead.
 	 *
 	 * @param {string} id subscriber id
 	 * @param {string} controlId id of the control being subscribed to
@@ -214,6 +233,20 @@ function ControlsManager() {
 	 * @param {boolean} useEventValue whether to use event value instead of target value
 	 */
 	function subscribeToControl(id, controlId, callback, useEventValue = false) {
+		const subscriber = new Subscriber({ id, controlId, callback, useEventValue });
+		subscribers.push(subscriber);
+		subscriber.call(tableSettings.settings, previousSettings);
+	}
+
+	/**
+	 * Subscribe to a table setting control.
+	 *
+	 * @param {string} id subscriber id
+	 * @param {string} controlId id of the control being subscribed to
+	 * @param {Function} callback callback function that will be executed on control value change
+	 * @param {boolean} useEventValue whether to use event value instead of target value
+	 */
+	function subscribeToTableControl(id, controlId, callback, useEventValue = false) {
 		const subscriber = new Subscriber({ id, controlId, callback, useEventValue });
 		subscribers.push(subscriber);
 		subscriber.call(tableSettings.settings, previousSettings);
@@ -492,6 +525,8 @@ function ControlsManager() {
 		getControlData,
 		subscribe,
 		subscribeToControl,
+		subscribeToTable,
+		subscribeToTableControl,
 		subscribeToElementControl,
 		getElementControlValue,
 		updateControlValue,
