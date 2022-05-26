@@ -27,6 +27,7 @@ import WPTB_ColorPaletteControl from '$MountPoints/WPTB_ColorPaletteControl';
 import WPTB_Embed from '$MountPoints/WPTB_Embed';
 import WPTB_ProOverlay from '$MountPoints/WPTB_ProOverlay';
 import WPTB_SaveButton from '$MountPoints/WPTB_SaveButton';
+import WPTB_Toggle3Control from '$MountPoints/WPTB_Toggle3Control';
 import { setupGlobalStore } from '$Functions/globalStore';
 import filters from '$Plugins/filters';
 
@@ -70,6 +71,7 @@ const controls = [
 	WPTB_Embed,
 	WPTB_ProOverlay,
 	WPTB_SaveButton,
+	WPTB_Toggle3Control,
 ];
 
 /**

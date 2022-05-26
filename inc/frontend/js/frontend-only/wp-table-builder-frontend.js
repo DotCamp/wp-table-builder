@@ -695,6 +695,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		bindToResize: true,
 	});
 
+	// eslint-disable-next-line no-restricted-globals
+	const context = self || global;
+
+	// assign responsive front instance to global context
+	context.wptbResponsiveFrontendInstance = responsiveFront;
+
 	// sorting table
 	function sortingTable() {
 		const tables = document.querySelectorAll('.wptb-preview-table');

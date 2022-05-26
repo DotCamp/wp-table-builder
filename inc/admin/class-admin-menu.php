@@ -361,6 +361,7 @@ class Admin_Menu {
 				'shortcode'         => esc_html__( 'shortcode', 'wp-table-builder' ),
 			];
 
+			// add translations to builder menu data
 			Frontend_Data_Manager::add_builder_translations( $admin_translations );
 
 			Frontend_Data_Manager::localize_builder_data( 'wptb-controls-manager-js', $admin_object );
@@ -417,6 +418,26 @@ class Admin_Menu {
 
 				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
 			}
+
+			// development version to bypass cache issues
+			$admin_script_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
+
+			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
+				'jquery',
+				'wptb-admin-builder-tinymce-js',
+				'wp-color-picker'
+			), NS\PLUGIN_VERSION, true );
+
+			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
+
+			wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
+
+			wp_enqueue_style( 'wp-color-picker' );
+
+			wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/admin.css', array(), NS\PLUGIN_VERSION, 'all' );
+			wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
+			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
+			wp_enqueue_script( 'wptb-admin-builder-js' );
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
 
 			Helpers::enqueue_file( 'inc/admin/js/wptb-overview.js', [], true, 'wptb-overview-js' );
@@ -429,7 +450,6 @@ class Admin_Menu {
 			$script_path = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.js';
 
 			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
-
 
 			$handler        = 'wptb-import-menu';
 			$plugin_version = NS\PLUGIN_VERSION;

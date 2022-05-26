@@ -32,7 +32,9 @@
 		 * Initialize scroll manager processes.
 		 */
 		this.init = () => {
-			const tableElements = Array.from(document.querySelectorAll('table[data-wptb-horizontal-scroll-status]'));
+			const tableElements = Array.from(
+				document.querySelectorAll('table[data-wptb-horizontal-scroll-status=true]')
+			);
 
 			// only start preparing tables for scroll functionality if backend didn't
 			// main factor for that is if server didn't implement `mb_convert_encoding` function

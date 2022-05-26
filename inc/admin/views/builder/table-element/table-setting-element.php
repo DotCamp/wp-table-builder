@@ -269,11 +269,16 @@ class Table_Setting_Element extends Element_Base_Object {
 
 		$scroll_section_group_controls = [
 			'horizontalScrollEnable' => [
-				'label'     => esc_html__( 'Enable horizontal scrolling', 'wp-table-builder-pro' ),
-				'type'      => Controls_Manager::TOGGLE,
-				'selectors' => [
-					'{{{data.container}}}' => [ 'data-wptb-horizontal-scroll-status', '1', null ]
-				]
+				'label'        => esc_html__( 'Enable horizontal scrolling', 'wp-table-builder-pro' ),
+				'type'         => Controls_Manager::TOGGLE3,
+				'selectors'    => [
+					[
+						'query' => '{{{data.container}}}',
+						'type'  => Controls_Manager::DATASET,
+						'key'   => 'wptbHorizontalScrollStatus'
+					]
+				],
+				'defaultValue' => false
 			]
 
 		];

@@ -46,7 +46,7 @@ class What_Is_New_Manager {
 		if ( static::$initialized === false ) {
 			static::$initialized = true;
 
-			add_filter( 'wp-table-builder/filter/builder_script_data', [ __CLASS__, 'add_frontend_script_data' ] );
+			Frontend_Data_Manager::add_builder_data( [ __CLASS__, 'add_frontend_script_data' ], 'whatIsNew' );
 
 //			add_filter( 'plugin_row_meta', [ __CLASS__, 'add_win_plugin_row' ], 10, 3 );
 		}
@@ -209,18 +209,18 @@ class What_Is_New_Manager {
 	 *
 	 * Frontend data will only be added if a what-is-new dialog for current version is not showed yet, so checking availability of this data property will give clue to front-end component to load itself or not.
 	 *
-	 * @param array $admin_data admin data array
-	 *
 	 * @return array modified admin data array
 	 */
-	public static function add_frontend_script_data( $admin_data ) {
+	public static function add_frontend_script_data() {
 		$latest_release_notes               = static::what_is_new_notes();
 		$latest_release_notes_version       = static::current_version();
 		$previously_displayed_notes_version = get_option( static::$previously_displayed_version_number_option_name, '1.0.0' );
 
+		$admin_data = [];
+
 		// only send frontend data if latest release note version is newer
 		if ( version_compare( $latest_release_notes_version, $previously_displayed_notes_version, '>' ) ) {
-			$admin_data['whatIsNew'] = $latest_release_notes;
+			$admin_data = $latest_release_notes;
 
 			// update the latest displayed version number option at database
 			update_option( static::$previously_displayed_version_number_option_name, $latest_release_notes_version );

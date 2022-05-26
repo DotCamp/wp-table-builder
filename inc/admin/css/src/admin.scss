@@ -1251,6 +1251,8 @@ ul.wptb-tabs {
 }
 
 .wptb-panel-toggle .header .wptb-panel-toggle-group-header-icon svg {
+  width: 17px;
+  height: 17px;
   fill: currentColor;
 }
 
@@ -6205,7 +6207,7 @@ label.wptb-control-row {
   justify-content: flex-start;
   align-items: center;
   padding: 0 15px;
-  text-transform: capitalize;
+  //text-transform: capitalize;
   border-width: 1px 0 1px 5px;
   border-style: solid;
   background-color: var(--wptb-plugin-gray-200);
