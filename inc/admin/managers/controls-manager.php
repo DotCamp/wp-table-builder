@@ -72,6 +72,11 @@ class Controls_Manager {
 	const TOGGLE2 = 'toggle2';
 
 	/**
+	 *  Adding on toggle3 control.
+	 */
+	const TOGGLE3 = 'toggle3';
+
+	/**
 	 *  Adding select control.
 	 */
 	const SELECT = 'select';
@@ -242,6 +247,7 @@ class Controls_Manager {
 			self::NUMBER,
 			self::TOGGLE,
 			self::TOGGLE2,
+			self::TOGGLE3,
 			self::SELECT,
 			self::SELECT2,
 			self::CHECKBOX,
