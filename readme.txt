@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.9
-Stable tag: 1.3.18-dev
+Stable tag: 1.4.0
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -90,9 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
-= 1.3.18 =
+= 1.4.0 =
 
 * PRO: NEW: Table templates.
+* PRO: IMPROVE: Updates to sticky first column.
 * IMPROVE: Updated save operations to support multiple save options.
 
 = 1.3.17 =
