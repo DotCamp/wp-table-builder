@@ -17,7 +17,19 @@ import ControlBaseBasicImplementation from '$Mixins/ControlBaseBasicImplementati
 import PanelToggleControl from '$Components/PanelToggleControl';
 
 export default {
-	mixins: [ControlBase, ControlBaseBasicImplementation],
+	mixins: [ControlBase],
 	components: { PanelToggleControl, ControlWrapper },
+	mounted() {
+		this.assignDefaultValue();
+	},
+	watch: {
+		elementMainValue(n) {
+			if (n === 'true' || n === 'false') {
+				this.elementMainValue = n === 'true';
+			} else {
+				this.basicValueUpdate(n, true);
+			}
+		},
+	},
 };
 </script>

@@ -71,7 +71,7 @@ class Scroll_Manager {
 					$table_element            = $table_element[0];
 					$horizontal_scroll_status = $table_element->getAttribute( 'data-wptb-horizontal-scroll-status' );
 
-					if ( ! empty( $horizontal_scroll_status ) ) {
+					if ( ! empty( $horizontal_scroll_status ) && filter_var( $horizontal_scroll_status, FILTER_VALIDATE_BOOLEAN ) ) {
 						$dom_query = new DOMXPath( $dom_handler );
 
 						$parent_container = $dom_query->query( '//div[contains(@class, "wptb-table-container") and not(contains(@class, "wptb-table-container-matrix"))]' );

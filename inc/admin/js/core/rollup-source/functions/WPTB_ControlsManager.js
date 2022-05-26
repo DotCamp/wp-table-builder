@@ -470,6 +470,23 @@ function ControlsManager() {
 	}
 
 	/**
+	 * Update value of a table control.
+	 *
+	 * @param {string} controlId table control id
+	 * @param {any} value control value
+	 * @param {string} property property name to update
+	 */
+	function updateTableControlValue(controlId, value, property) {
+		const targetTable = document.querySelector('.wptb-table-setup .wptb-preview-table');
+
+		const regexp = new RegExp(/(?<elementId>wptb-element-main-table_setting-(\d+))/g);
+		const match = regexp.exec(targetTable.getAttribute('class'));
+		const [, elementId] = match;
+
+		valueUpdateQue.addToUpdateQue(elementId, controlId, value, property);
+	}
+
+	/**
 	 * Register a control base instance.
 	 *
 	 * @param {Object} controlBaseInstance control base instance
@@ -530,6 +547,7 @@ function ControlsManager() {
 		subscribeToElementControl,
 		getElementControlValue,
 		updateControlValue,
+		updateTableControlValue,
 		registerControlBase,
 	};
 }
