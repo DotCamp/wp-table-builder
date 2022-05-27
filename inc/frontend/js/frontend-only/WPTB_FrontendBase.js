@@ -1,5 +1,5 @@
 // eslint-disable-next-line @wordpress/no-global-event-listener
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
 	(function assignToContext(key, factory) {
 		// eslint-disable-next-line no-restricted-globals
 		const context = self || global;

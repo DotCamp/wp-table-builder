@@ -710,6 +710,18 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
+	const textIconFrontendEditFix = () => {
+		const tableObjects = WptbFrontendBase.getTableObjects();
+
+		tableObjects.map(({ mainTable }) => {
+			const textIconElements = Array.from(mainTable.querySelectorAll('.wptb-text_icon_element-container'));
+
+			textIconElements.map((tiEl) => {
+				tiEl.setAttribute('contenteditable', false);
+			});
+		});
+	};
+
 	sortingTable();
 	const responsiveFrontReady = new CustomEvent('responsive:front', {
 		detail: {
@@ -729,6 +741,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// initialize lazy load module
 	WPTB_LazyLoad.init(WptbFrontendData.lazyLoad);
+
+	textIconFrontendEditFix();
 
 	// initialize style pass
 	WPTB_StylePass.init(WptbFrontendData.stylePass);
