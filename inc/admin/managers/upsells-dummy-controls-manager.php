@@ -72,14 +72,14 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	 */
 	public function upsell_setting_controls( $context ) {
 		$sticky_controls = [
-			'topRowSticky'      =>
+			'topRowStickyUpsell'      =>
 				[
 					'label'     => __( 'Make Top Row Sticky', 'wp_table_builder' ),
 					'type'      => Controls_Manager::TOGGLE,
 					'selectors' => [
 					],
 				],
-			'firstColumnSticky' => [
+			'firstColumnStickyUpsell' => [
 				'label'     => esc_html__( 'Make First Column Sticky', 'wp-table-builder' ),
 				'type'      => Controls_Manager::TOGGLE,
 				'selectors' => [

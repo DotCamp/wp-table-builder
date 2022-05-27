@@ -88,12 +88,13 @@ class Upsells_Manager {
 	 * @return void
 	 */
 	public static function independent_init() {
-		// initialize upsell pro controls
-		Upsells_Dummy_Controls_Manager::init( [ 'dummy_controls' => static::$pro_dummy_controls ], '\WP_Table_Builder\Inc\Admin\Managers\Upsells_Dummy_Controls_Manager' );
-
-		// upsell pro elements
-		add_filter( 'wp-table-builder/filter/elements-manager-init', [ __CLASS__, 'add_pro_dummy_elements' ], 10, 1 );
-
+		if ( ! Addon_Manager::check_pro_status() ) { // initialize upsell pro controls
+			Upsells_Dummy_Controls_Manager::init( [ 'dummy_controls' => static::$pro_dummy_controls ], '\WP_Table_Builder\Inc\Admin\Managers\Upsells_Dummy_Controls_Manager' );// upsell pro elements
+			add_filter( 'wp-table-builder/filter/elements-manager-init', [
+				__CLASS__,
+				'add_pro_dummy_elements'
+			], 10, 1 );
+		}
 	}
 
 	/**
