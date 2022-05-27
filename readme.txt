@@ -94,6 +94,7 @@ That's it. You're done!
 
 * PRO: NEW: Table templates.
 * PRO: IMPROVE: Updates to sticky first column.
+* PRO: FIX: Text icon element's text part is editable on front-end.
 * IMPROVE: Updated save operations to support multiple save options.
 
 = 1.3.17 =
