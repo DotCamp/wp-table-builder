@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.4.1 =
 
 * FIX: Plugin settings menu not being loaded.
+* FIX: Duplicate option not visible.
 
 = 1.4.0 =
 
