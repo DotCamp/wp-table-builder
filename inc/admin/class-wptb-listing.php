@@ -207,6 +207,7 @@ class WPTB_Listing extends WP_List_Table {
 
 		$actions = [
 			'edit'      => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>', absint( $item->ID ) ),
+			'duplicate' => '<a href="?' . $query . sprintf( '&action=%s&table_id=%s&_wpnonce=%s', 'duplicate', absint( $item->ID ), $nonce ) . '">Duplicate</a>',
 			'preview_'  => sprintf( '<a href="%s" target="_blank">Preview</a>', $wptb_preview_button_url ),
 			'delete'    => '<a href="?' . $query . sprintf( '&action=%s&table_id=%s&_wpnonce=%s', 'delete', absint( $item->ID ), $nonce ) . '">Delete</a>'
 		];
