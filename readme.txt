@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.4.1 =
+
+* FIX: Plugin settings menu not being loaded.
+
 = 1.4.0 =
 
 * PRO: NEW: Table templates.

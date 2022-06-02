@@ -36,8 +36,17 @@ const createStore = (extraStoreOptions) => {
 function BuilderStore() {
 	Vue.use(Vuex);
 
+	let storeData = {};
+
 	// eslint-disable-next-line camelcase
-	const { store: storeData } = wptb_admin_object;
+	if (wptb_admin_object) {
+		// eslint-disable-next-line camelcase
+		const { store } = wptb_admin_object;
+
+		if (store) {
+			storeData = store;
+		}
+	}
 
 	const extraStoreOptions = {
 		state: {
