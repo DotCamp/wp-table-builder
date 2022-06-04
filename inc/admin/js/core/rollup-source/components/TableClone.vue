@@ -41,6 +41,7 @@ export default {
 			mainTable: null,
 			tableDirectiveDatasetId: 'wptbResponsiveDirectives',
 			tableHaveDirectives: false,
+			startupOperation: true,
 		};
 	},
 	mounted() {
@@ -117,6 +118,16 @@ export default {
 			// switch for determining if we will merge already present directives at main table
 			this.tableHaveDirectives = mainTableDirectives !== undefined;
 
+			if (!this.tableHaveDirectives) {
+				this.startupOperation = false;
+			} else {
+				const responsiveStatus = JSON.parse(atob(mainTableDirectives)).responsiveEnabled;
+
+				if (!responsiveStatus) {
+					this.startupOperation = false;
+				}
+			}
+
 			this.setupCellIdentification(this.clonedTable);
 
 			// emit an event signalling cloning main table is completed
@@ -136,12 +147,23 @@ export default {
 				// add directives to main table
 				this.mainTable.dataset[this.tableDirectiveDatasetId] = n;
 
-				const isChanged = o ? n !== o : false;
+				let isChanged = null;
+
+				if (o === null && !this.startupOperation) {
+					const responsiveStatus = JSON.parse(atob(n)).responsiveEnabled;
+					if (responsiveStatus) {
+						isChanged = true;
+					}
+				} else {
+					isChanged = o ? n !== o : false;
+				}
 
 				// emit an event signalling end of directive copy operation
 				this.$emit('directivesCopied', isChanged);
 
 				this.tableHaveDirectives = false;
+
+				this.startupOperation = false;
 			}
 		},
 		/**
