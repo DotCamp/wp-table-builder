@@ -253,8 +253,8 @@ const WPTB_TableStateSaveManager = function () {
 	};
 
 	this.tableStateClear = function () {
-		delete window.wptbTableStateSaving;
-		delete window.wptbTableStateNumberShow;
+		window.wptbTableStateSaving = window.wptbTableStateSaving.slice(0, 1);
+		window.wptbTableStateNumberShow = 0;
 
 		const wptbSaveBtn = document.querySelector('.main-save-button-wrapper .save-btn');
 		if (wptbSaveBtn) {
