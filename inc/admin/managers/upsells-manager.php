@@ -3,6 +3,7 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 // if called directly, abort
+use WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element\Table_Setting_Element;
 use WP_Table_Builder_Pro\Inc\Admin\Managers\Freemius_Manager;
 use function add_action;
 use function add_filter;
@@ -69,18 +70,58 @@ class Upsells_Manager {
 				'generic_end'     => wp_sprintf( '<br><div>%s %s %s</div>', esc_html_x( 'Get the', 'start of the "Get the Pro Add-On" sentence', 'wp-table-builder' ), '<span class="wptb-upsells-pro-label">PRO</span>', esc_html__( 'Add-On.', 'wp-table-builder' ) )
 			];
 
+			add_action( 'wp-table-builder/register_controls/table_setting', [
+				__CLASS__,
+				'register_manage_cells_upsells'
+			], 10, 1 );
+
 			add_action( 'wp-table-builder/action/after_cell_notselected_left_panel', [
 				__CLASS__,
 				'cell_management_upsell'
-			], 1 );
+			], 10, 1 );
+
 			add_action( 'wp-table-builder/action/cell_option', [
 				__CLASS__,
 				'cell_management_upsell'
-			], 1 );
+			], 10, 1 );
+
 			add_filter( 'wp-table-builder/filter/generate_data', [ __CLASS__, 'generate_data_filter' ], 1, 1 );
 
 			Frontend_Data_Manager::add_builder_data( [ __CLASS__, 'builder_data' ], 'upsells' );;
 		}
+	}
+
+	/**
+	 * Register manage cells upsells.
+	 *
+	 * @param Table_Setting_Element $table_settings_main table setting element instance
+	 *
+	 * @return void
+	 */
+	public static function register_manage_cells_upsells( $table_settings_main ) {
+		$table_settings_main->setDefaultControlArg( 'elementOptionsGroupId', 'wptb-bar-top' );
+
+		$table_settings_main->add_control(
+			'duplicateColumnUpsell',
+			[
+				'label'            => __( 'Duplicate Column', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'title'            => __( 'Duplicate Column', 'wp-table-builder' )
+			],
+			- 6
+		);
+
+		$table_settings_main->add_control(
+			'duplicateRowUpsell',
+			[
+				'label'            => __( 'Duplicate Row', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'title'            => __( 'Duplicate Row', 'wp-table-builder' )
+			],
+			- 6
+		);
 	}
 
 	/**

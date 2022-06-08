@@ -143,44 +143,6 @@ class Table_Setting_Element extends Element_Base_Object {
 				]
 		];
 
-		// @deprecated in favor of new background menu
-//		$background_section_group_controls = [
-//			'tableHeaderBackground'  =>
-//				[
-//					'label'     => __( 'Header Background', 'wp_table_builder' ),
-//					'type'      => Controls_Manager::COLOR,
-//					'selectors' => [
-//						'{{{data.container}}} tbody tr:nth-child(1)' => [ 'background-color', 'data-wptb-bg-color' ]
-//					],
-//					'dataSets' => [
-//						'{{{data.container}}}' => 'wptbHeaderBackgroundColor'
-//					]
-//				],
-//			'tableEvenRowBackground' =>
-//				[
-//					'label'     => __( 'Even Row Background', 'wp_table_builder' ),
-//					'type'      => Controls_Manager::COLOR,
-//					'selectors' => [
-//						'{{{data.container}}} tbody tr:nth-child(2n + 2)' => [ 'background-color', 'data-wptb-bg-color' ]
-//					],
-//					'dataSets' => [
-//						'{{{data.container}}}' => 'wptbEvenRowBackgroundColor'
-//					]
-//				],
-//
-//			'tableOddRowBackground' =>
-//				[
-//					'label'     => __( 'Odd Row Background', 'wp_table_builder' ),
-//					'type'      => Controls_Manager::COLOR,
-//					'selectors' => [
-//						'{{{data.container}}} tbody tr:nth-child(2n + 3)' => [ 'background-color', 'data-wptb-bg-color' ]
-//					],
-//					'dataSets' => [
-//						'{{{data.container}}}' => 'wptbOddRowBackgroundColor'
-//					]
-//				]
-//		];
-
 		$border_section_group_controls = [
 
 			'tableBorder' =>
