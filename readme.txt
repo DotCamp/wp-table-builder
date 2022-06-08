@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.4.2 =
+
+* FIX: Some table changes not triggering dirty status.
+
 = 1.4.1 =
 
 * FIX: Plugin settings menu not being loaded.
