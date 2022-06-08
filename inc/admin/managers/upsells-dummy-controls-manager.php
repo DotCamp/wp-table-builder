@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use Table_Setting_Element;
 use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Base\Dummy_Control_Base;
 use WP_Table_Builder\Inc\Admin\Base\Manager_Base;
@@ -22,9 +23,111 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 		// add upsell table setting controls
 		$this->add_settings_controls();
 
+		// add upsell manage cells controls
+		$this->add_manage_cells_controls();
+
 		// add builder related data to frontend
 		$this->add_builder_data();
 	}
+
+	/**
+	 * Add manage cells controls related upsells.
+	 * @return void
+	 */
+	private function add_manage_cells_controls() {
+		add_action( 'wp-table-builder/register_controls/table_setting', [
+			$this,
+			'register_manage_cells_upsells'
+		], 10, 1 );
+
+		add_action( 'wp-table-builder/register_controls/table_cell_setting', [
+			$this,
+			'register_table_cell_settings_upsells'
+		], 10, 1 );
+	}
+
+	/**
+	 * Register table cell settings upsells
+	 *
+	 * @param Table_Setting_Element $cell_settings_main cell setting element instance
+	 *
+	 * @return void
+	 */
+	public function register_table_cell_settings_upsells( $cell_settings_main ) {
+		$cell_settings_main->add_control(
+			'emptyCellDummy',
+			[
+				'label'    => __( 'Empty Cell Enable', 'wp_table_builder' ),
+				'labelOn'  => __( 'Fixed', 'wp_table_builder' ),
+				'labelOff' => __( 'Auto', 'wp_table_builder' ),
+				'type'     => Controls_Manager::TOGGLE
+			]
+		);
+
+		$cell_settings_main->add_control(
+			'emptyCellDummyUpsellOverlay',
+			[
+				'type'              => Controls_Manager::PRO_OVERLAY,
+				'featureName'       => esc_html__( 'Empty Cell', 'wp-table-builder' ),
+				'target'            => 'append',
+				'appendTargetQuery' => '.wptb-settings-row[id$=emptyCellDummy]'
+			]
+		);
+	}
+
+	/**
+	 * Register manage cells upsells.
+	 *
+	 * @param Table_Setting_Element $table_settings_main table setting element instance
+	 *
+	 * @return void
+	 */
+	public function register_manage_cells_upsells( $table_settings_main ) {
+		$table_settings_main->setDefaultControlArg( 'elementOptionsGroupId', 'wptb-bar-top' );
+
+		$table_settings_main->add_control(
+			'duplicateColumnUpsell',
+			[
+				'label'            => __( 'Duplicate Column', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'title'            => __( 'Duplicate Column', 'wp-table-builder' )
+			],
+			- 6
+		);
+
+		$table_settings_main->add_control(
+			'duplicateRowUpsell',
+			[
+				'label'            => __( 'Duplicate Row', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'title'            => __( 'Duplicate Row', 'wp-table-builder' )
+			],
+			- 6
+		);
+
+		$table_settings_main->add_control(
+			'duplicateColumnUpsellProOverlay',
+			[
+				'type'              => Controls_Manager::PRO_OVERLAY,
+				'featureName'       => esc_html__( 'Duplicate Column', 'wp-table-builder' ),
+				'target'            => 'append',
+				'appendTargetQuery' => '.wptb-table_change_button[class$=duplicateColumnUpsell]'
+			]
+		);
+
+		$table_settings_main->add_control(
+			'duplicateRowUpsellProOverlay',
+			[
+				'type'              => Controls_Manager::PRO_OVERLAY,
+				'featureName'       => esc_html__( 'Duplicate Row', 'wp-table-builder' ),
+				'target'            => 'append',
+				'appendTargetQuery' => '.wptb-table_change_button[class$=duplicateRowUpsell]'
+			]
+		);
+	}
+
 
 	/**
 	 * Add table settings related upsells.
@@ -85,7 +188,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 				'selectors' => [
 				]
 			],
-			'spacingProOverlay' => [
+			'spacingProOverlay'       => [
 				'type'        => Controls_Manager::PRO_OVERLAY,
 				'featureName' => esc_html__( 'Sticky', 'wp-table-builder' ),
 			],

@@ -70,11 +70,6 @@ class Upsells_Manager {
 				'generic_end'     => wp_sprintf( '<br><div>%s %s %s</div>', esc_html_x( 'Get the', 'start of the "Get the Pro Add-On" sentence', 'wp-table-builder' ), '<span class="wptb-upsells-pro-label">PRO</span>', esc_html__( 'Add-On.', 'wp-table-builder' ) )
 			];
 
-			add_action( 'wp-table-builder/register_controls/table_setting', [
-				__CLASS__,
-				'register_manage_cells_upsells'
-			], 10, 1 );
-
 			add_action( 'wp-table-builder/action/after_cell_notselected_left_panel', [
 				__CLASS__,
 				'cell_management_upsell'
@@ -91,58 +86,6 @@ class Upsells_Manager {
 		}
 	}
 
-	/**
-	 * Register manage cells upsells.
-	 *
-	 * @param Table_Setting_Element $table_settings_main table setting element instance
-	 *
-	 * @return void
-	 */
-	public static function register_manage_cells_upsells( $table_settings_main ) {
-		$table_settings_main->setDefaultControlArg( 'elementOptionsGroupId', 'wptb-bar-top' );
-
-		$table_settings_main->add_control(
-			'duplicateColumnUpsell',
-			[
-				'label'            => __( 'Duplicate Column', 'wp_table_builder' ),
-				'type'             => Controls_Manager::BUTTON2,
-				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
-				'title'            => __( 'Duplicate Column', 'wp-table-builder' )
-			],
-			- 6
-		);
-
-		$table_settings_main->add_control(
-			'duplicateRowUpsell',
-			[
-				'label'            => __( 'Duplicate Row', 'wp_table_builder' ),
-				'type'             => Controls_Manager::BUTTON2,
-				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
-				'title'            => __( 'Duplicate Row', 'wp-table-builder' )
-			],
-			- 6
-		);
-
-		$table_settings_main->add_control(
-			'duplicateColumnUpsellProOverlay',
-			[
-				'type'              => Controls_Manager::PRO_OVERLAY,
-				'featureName'       => esc_html__( 'Duplicate Column', 'wp-table-builder' ),
-				'target'            => 'append',
-				'appendTargetQuery' => '.wptb-table_change_button[class$=duplicateColumnUpsell]'
-			]
-		);
-
-		$table_settings_main->add_control(
-			'duplicateRowUpsellProOverlay',
-			[
-				'type'              => Controls_Manager::PRO_OVERLAY,
-				'featureName'       => esc_html__( 'Duplicate Row', 'wp-table-builder' ),
-				'target'            => 'append',
-				'appendTargetQuery' => '.wptb-table_change_button[class$=duplicateRowUpsell]'
-			]
-		);
-	}
 
 	/**
 	 * Initialize upsells manager at main init thread.
