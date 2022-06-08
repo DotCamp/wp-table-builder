@@ -16272,8 +16272,7 @@ var _default = {
       clonedTable: null,
       mainTable: null,
       tableDirectiveDatasetId: 'wptbResponsiveDirectives',
-      tableHaveDirectives: false,
-      startupOperation: true
+      tableHaveDirectives: false
     };
   },
   mounted: function mounted() {
@@ -16346,17 +16345,6 @@ var _default = {
 
 
       this.tableHaveDirectives = mainTableDirectives !== undefined;
-
-      if (!this.tableHaveDirectives) {
-        this.startupOperation = false;
-      } else {
-        var responsiveStatus = JSON.parse(atob(mainTableDirectives)).responsiveEnabled;
-
-        if (!responsiveStatus) {
-          this.startupOperation = false;
-        }
-      }
-
       this.setupCellIdentification(this.clonedTable); // emit an event signalling cloning main table is completed
 
       this.$emit('tableCloned', mainTableDirectives, this.mainTable, this.clonedTable);
@@ -16374,22 +16362,10 @@ var _default = {
         this.clonedTable.dataset[this.tableDirectiveDatasetId] = n; // add directives to main table
 
         this.mainTable.dataset[this.tableDirectiveDatasetId] = n;
-        var isChanged = null;
-
-        if (o === null && !this.startupOperation) {
-          var responsiveStatus = JSON.parse(atob(n)).responsiveEnabled;
-
-          if (responsiveStatus) {
-            isChanged = true;
-          }
-        } else {
-          isChanged = o ? n !== o : false;
-        } // emit an event signalling end of directive copy operation
-
+        var isChanged = o ? n !== o : false; // emit an event signalling end of directive copy operation
 
         this.$emit('directivesCopied', isChanged);
         this.tableHaveDirectives = false;
-        this.startupOperation = false;
       }
     },
 
@@ -33206,7 +33182,7 @@ var _default = {
   props: {
     featureName: {
       type: String,
-      default: 'This is'
+      default: 'This'
     },
     target: {
       type: String,
@@ -33288,7 +33264,7 @@ var _default = {
       document.body.appendChild(modalWindowElement);
     },
     positionOverlay: function positionOverlay() {
-      var container = this.$refs.container;
+      var container = this.$refs.container; // eslint-disable-next-line default-case
 
       switch (this.target) {
         case targetTypes.SECTIONCONTAINER:

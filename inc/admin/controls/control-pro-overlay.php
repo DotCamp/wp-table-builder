@@ -43,9 +43,13 @@ class Control_Pro_Overlay extends Base_Control {
         const uniqueItemClass = data.elementControlTargetUnicClass;
         WPTB_ControlsManager.setControlData(uniqueItemClass, data);
         const elemContainer = data.elemContainer;
+
+        const target = data.target ? data.target : 'sectionContainer';
+        const appendTargetQuery = data.appendTargetQuery ? data.appendTargetQuery : '';
         #>
         <div id="{{{uniqueItemClass}}}">
-            <pro-overlay :feature-name="featureName"></pro-overlay>
+            <pro-overlay :feature-name="featureName" target="{{{target}}}"
+                         append-target-query="{{{appendTargetQuery}}}"></pro-overlay>
         </div>
         <wptb-template-script>
             WPTB_ControlsManager.callControlScript('ProOverlay', '{{{uniqueItemClass}}}');

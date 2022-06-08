@@ -41,7 +41,7 @@ export default {
 	props: {
 		featureName: {
 			type: String,
-			default: 'This is',
+			default: 'This',
 		},
 		target: {
 			type: String,
@@ -120,6 +120,8 @@ export default {
 		},
 		positionOverlay() {
 			const { container } = this.$refs;
+
+			// eslint-disable-next-line default-case
 			switch (this.target) {
 				case targetTypes.SECTIONCONTAINER:
 					this.positionSectionContainer(container);

@@ -122,6 +122,26 @@ class Upsells_Manager {
 			],
 			- 6
 		);
+
+		$table_settings_main->add_control(
+			'duplicateColumnUpsellProOverlay',
+			[
+				'type'              => Controls_Manager::PRO_OVERLAY,
+				'featureName'       => esc_html__( 'Duplicate Column', 'wp-table-builder' ),
+				'target'            => 'append',
+				'appendTargetQuery' => '.wptb-table_change_button[class$=duplicateColumnUpsell]'
+			]
+		);
+
+		$table_settings_main->add_control(
+			'duplicateRowUpsellProOverlay',
+			[
+				'type'              => Controls_Manager::PRO_OVERLAY,
+				'featureName'       => esc_html__( 'Duplicate Row', 'wp-table-builder' ),
+				'target'            => 'append',
+				'appendTargetQuery' => '.wptb-table_change_button[class$=duplicateRowUpsell]'
+			]
+		);
 	}
 
 	/**

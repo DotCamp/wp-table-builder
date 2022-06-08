@@ -16728,7 +16728,7 @@ var _default = {
   props: {
     featureName: {
       type: String,
-      default: 'This is'
+      default: 'This'
     },
     target: {
       type: String,
@@ -16810,7 +16810,7 @@ var _default = {
       document.body.appendChild(modalWindowElement);
     },
     positionOverlay: function positionOverlay() {
-      var container = this.$refs.container;
+      var container = this.$refs.container; // eslint-disable-next-line default-case
 
       switch (this.target) {
         case targetTypes.SECTIONCONTAINER:
