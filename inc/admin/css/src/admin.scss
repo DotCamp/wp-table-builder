@@ -7395,3 +7395,34 @@ label.wptb-control-row {
 }
 
 //endregion
+
+.wptb-manage-cells-move-upsells {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+
+  .cell-move {
+    @extend %flex-center-all;
+    position: fixed;
+    background-color: $logo-color;
+    cursor: pointer;
+
+    .pro-overlay-container {
+      @extend %flex-center-all;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.wptb-move {
+  @extend %flex-center-all;
+  color: inherit;
+
+
+  svg {
+    fill: currentColor;
+  }
+
+}

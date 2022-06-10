@@ -16272,7 +16272,8 @@ var _default = {
       clonedTable: null,
       mainTable: null,
       tableDirectiveDatasetId: 'wptbResponsiveDirectives',
-      tableHaveDirectives: false
+      tableHaveDirectives: false,
+      startupOperation: true
     };
   },
   mounted: function mounted() {
@@ -16345,6 +16346,17 @@ var _default = {
 
 
       this.tableHaveDirectives = mainTableDirectives !== undefined;
+
+      if (!this.tableHaveDirectives) {
+        this.startupOperation = false;
+      } else {
+        var responsiveStatus = JSON.parse(atob(mainTableDirectives)).responsiveEnabled;
+
+        if (!responsiveStatus) {
+          this.startupOperation = false;
+        }
+      }
+
       this.setupCellIdentification(this.clonedTable); // emit an event signalling cloning main table is completed
 
       this.$emit('tableCloned', mainTableDirectives, this.mainTable, this.clonedTable);
@@ -16362,10 +16374,22 @@ var _default = {
         this.clonedTable.dataset[this.tableDirectiveDatasetId] = n; // add directives to main table
 
         this.mainTable.dataset[this.tableDirectiveDatasetId] = n;
-        var isChanged = o ? n !== o : false; // emit an event signalling end of directive copy operation
+        var isChanged = null;
+
+        if (o === null && !this.startupOperation) {
+          var responsiveStatus = JSON.parse(atob(n)).responsiveEnabled;
+
+          if (responsiveStatus) {
+            isChanged = true;
+          }
+        } else {
+          isChanged = o ? n !== o : false;
+        } // emit an event signalling end of directive copy operation
+
 
         this.$emit('directivesCopied', isChanged);
         this.tableHaveDirectives = false;
+        this.startupOperation = false;
       }
     },
 
@@ -47159,7 +47183,477 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/Toggle3Control":"containers/Toggle3Control.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"functions/globalStore.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/Toggle3Control":"containers/Toggle3Control.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"components/MoveVertical.vue":[function(require,module,exports) {
+
+        var $01f3f5 = exports.default || module.exports;
+      
+      if (typeof $01f3f5 === 'function') {
+        $01f3f5 = $01f3f5.options;
+      }
+    
+        /* template */
+        Object.assign($01f3f5, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-move" }, [
+    _c(
+      "svg",
+      {
+        staticStyle: { "enable-background": "new 0 0 511.626 511.627" },
+        attrs: {
+          xmlns: "http://www.w3.org/2000/svg",
+          "xmlns:xlink": "http://www.w3.org/1999/xlink",
+          x: "0px",
+          y: "0px",
+          width: "30",
+          height: "30",
+          viewBox: "0 0 511.626 511.627",
+          "xml:space": "preserve"
+        }
+      },
+      [
+        _c("path", {
+          staticStyle: { fill: "#ffffff" },
+          attrs: {
+            d:
+              "M328.906,401.994h-36.553V109.636h36.553c4.948,0,9.236-1.809,12.847-5.426c3.613-3.615,5.421-7.898,5.421-12.845\n                        c0-4.949-1.801-9.231-5.428-12.851l-73.087-73.09C265.044,1.809,260.76,0,255.813,0c-4.948,0-9.229,1.809-12.847,5.424\n                        l-73.088,73.09c-3.618,3.619-5.424,7.902-5.424,12.851c0,4.946,1.807,9.229,5.424,12.845c3.619,3.617,7.901,5.426,12.85,5.426\n                        h36.545v292.358h-36.542c-4.952,0-9.235,1.808-12.85,5.421c-3.617,3.621-5.424,7.905-5.424,12.854\n                        c0,4.945,1.807,9.227,5.424,12.847l73.089,73.088c3.617,3.617,7.898,5.424,12.847,5.424c4.95,0,9.234-1.807,12.849-5.424\n                        l73.087-73.088c3.613-3.62,5.421-7.901,5.421-12.847c0-4.948-1.808-9.232-5.421-12.854\n                        C338.142,403.802,333.857,401.994,328.906,401.994z"
+          }
+        })
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/MoveHorizontal.vue":[function(require,module,exports) {
+
+        var $077c01 = exports.default || module.exports;
+      
+      if (typeof $077c01 === 'function') {
+        $077c01 = $077c01.options;
+      }
+    
+        /* template */
+        Object.assign($077c01, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-move" }, [
+    _c(
+      "svg",
+      {
+        staticStyle: { "enable-background": "new 0 0 511.626 511.627" },
+        attrs: {
+          xmlns: "http://www.w3.org/2000/svg",
+          "xmlns:xlink": "http://www.w3.org/1999/xlink",
+          x: "0px",
+          y: "0px",
+          width: "30",
+          height: "30",
+          viewBox: "0 0 511.626 511.627",
+          "xml:space": "preserve"
+        }
+      },
+      [
+        _c("path", {
+          staticStyle: { fill: "#ffffff" },
+          attrs: {
+            d:
+              "M506.203,242.966l-73.087-73.089c-3.621-3.617-7.902-5.424-12.847-5.424c-4.949,0-9.233,1.807-12.854,5.424\n                       c-3.613,3.616-5.42,7.898-5.42,12.847v36.547H109.636v-36.547c0-4.949-1.809-9.231-5.426-12.847\n                    c-3.619-3.617-7.902-5.424-12.85-5.424c-4.947,0-9.23,1.807-12.847,5.424L5.424,242.966C1.809,246.58,0,250.865,0,255.813\n                    c0,4.947,1.809,9.232,5.424,12.845l73.089,73.091c3.617,3.613,7.897,5.424,12.847,5.424c4.952,0,9.234-1.811,12.85-5.424\n                    c3.617-3.614,5.426-7.898,5.426-12.847v-36.549h292.359v36.549c0,4.948,1.807,9.232,5.42,12.847\n                    c3.621,3.613,7.905,5.424,12.854,5.424c4.944,0,9.226-1.811,12.847-5.424l73.087-73.091c3.617-3.613,5.424-7.898,5.424-12.845\n                    C511.626,250.865,509.82,246.58,506.203,242.966z"
+          }
+        })
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/CellMoveUpsell.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.moveTypes = void 0;
+
+var _MoveVertical = _interopRequireDefault(require("$Components/MoveVertical"));
+
+var _MoveHorizontal = _interopRequireDefault(require("$Components/MoveHorizontal"));
+
+var _ProOverlay = _interopRequireWildcard(require("$Containers/ProOverlay"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _moveTypes = {
+  VERTICAL: 'vertical',
+  HORIZONTAL: 'horizontal'
+};
+exports.moveTypes = _moveTypes;
+var _default = {
+  components: {
+    ProOverlay: _ProOverlay.default,
+    MoveHorizontal: _MoveHorizontal.default,
+    MoveVertical: _MoveVertical.default
+  },
+  props: {
+    feature: {
+      type: String,
+      default: ''
+    },
+    width: {
+      type: Number,
+      default: null
+    },
+    height: {
+      type: Number,
+      default: null
+    },
+    x: {
+      type: Number,
+      default: 0
+    },
+    y: {
+      type: Number,
+      default: 0
+    },
+    type: {
+      type: String,
+      default: _moveTypes.VERTICAL
+    }
+  },
+  computed: {
+    calculatePosition: function calculatePosition() {
+      var styles = {
+        top: this.toPx(this.y),
+        left: this.toPx(this.x),
+        height: this.toPx(this.height),
+        width: this.toPx(this.width)
+      };
+      return styles;
+    },
+    moveTypes: function moveTypes() {
+      return _moveTypes;
+    },
+    proOverlayTypes: function proOverlayTypes() {
+      return _ProOverlay.targetTypes;
+    }
+  },
+  methods: {
+    toPx: function toPx(val) {
+      return "".concat(val, "px");
+    }
+  }
+};
+exports.default = _default;
+        var $1307b2 = exports.default || module.exports;
+      
+      if (typeof $1307b2 === 'function') {
+        $1307b2 = $1307b2.options;
+      }
+    
+        /* template */
+        Object.assign($1307b2, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "cell-move", style: _vm.calculatePosition }, [
+    _c(
+      "div",
+      { staticClass: "pro-overlay-container" },
+      [
+        _c("pro-overlay", {
+          attrs: {
+            "explicit-store": true,
+            target: _vm.proOverlayTypes.PARENT,
+            "feature-name": _vm.feature
+          }
+        }),
+        _vm._v(" "),
+        _vm.type === _vm.moveTypes.VERTICAL
+          ? _c("move-vertical")
+          : _c("move-horizontal")
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$Components/MoveVertical":"components/MoveVertical.vue","$Components/MoveHorizontal":"components/MoveHorizontal.vue","$Containers/ProOverlay":"containers/ProOverlay.vue"}],"containers/ManageCellsMoveUpsells.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _CellMoveUpsell = _interopRequireWildcard(require("$Components/CellMoveUpsell"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    CellMoveUpsell: _CellMoveUpsell.default
+  },
+  data: function data() {
+    return {
+      visibility: false,
+      posVals: {
+        x: 0,
+        y: 0,
+        width: null,
+        height: null,
+        containerX: 0,
+        containerY: 0,
+        containerWidth: 0,
+        containerHeight: 0
+      },
+      defaultSizes: 30
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      var allowedSections = ['cell_settings', 'manage_cells']; // eslint-disable-next-line @wordpress/no-global-event-listener
+
+      document.addEventListener('wptbSectionChanged', function (e) {
+        if (e.detail) {
+          if (!allowedSections.includes(e.detail)) {
+            _this.visibility = false;
+          }
+        }
+      }); // eslint-disable-next-line @wordpress/no-global-event-listener
+
+      document.addEventListener('wp-table-builder/cell/mark', function (e) {
+        var countMarkedCells = e.detail.countMarkedCells;
+        var cellsMarked = countMarkedCells > 0;
+        _this.visibility = cellsMarked;
+
+        if (cellsMarked) {
+          var targetCell = e.target;
+
+          if (targetCell) {
+            var container = document.querySelector('.wptb-preview-table-manage-cells');
+
+            var _targetCell$getBoundi = targetCell.getBoundingClientRect(),
+                x = _targetCell$getBoundi.x,
+                y = _targetCell$getBoundi.y,
+                width = _targetCell$getBoundi.width,
+                height = _targetCell$getBoundi.height;
+
+            var _container$getBoundin = container.getBoundingClientRect(),
+                containerX = _container$getBoundin.x,
+                containerY = _container$getBoundin.y,
+                containerWidth = _container$getBoundin.width,
+                containerHeight = _container$getBoundin.height;
+
+            _this.posVals.x = x;
+            _this.posVals.y = y;
+            _this.posVals.width = width;
+            _this.posVals.height = height;
+            _this.posVals.containerX = containerX;
+            _this.posVals.containerY = containerY;
+            _this.posVals.containerWidth = containerWidth;
+            _this.posVals.containerHeight = containerHeight;
+          }
+        }
+      });
+    });
+  },
+  computed: {
+    moveTypes: function moveTypes() {
+      return _CellMoveUpsell.moveTypes;
+    }
+  }
+};
+exports.default = _default;
+        var $6f225b = exports.default || module.exports;
+      
+      if (typeof $6f225b === 'function') {
+        $6f225b = $6f225b.options;
+      }
+    
+        /* template */
+        Object.assign($6f225b, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.visibility
+    ? _c(
+        "div",
+        { staticClass: "wptb-manage-cells-move-upsells" },
+        [
+          _c("cell-move-upsell", {
+            attrs: {
+              type: _vm.moveTypes.VERTICAL,
+              x: _vm.posVals.containerX - _vm.defaultSizes,
+              y: _vm.posVals.y,
+              height: _vm.posVals.height,
+              feature: "move row"
+            }
+          }),
+          _vm._v(" "),
+          _c("cell-move-upsell", {
+            attrs: {
+              type: _vm.moveTypes.VERTICAL,
+              x: _vm.posVals.containerX + _vm.posVals.containerWidth,
+              y: _vm.posVals.y,
+              height: _vm.posVals.height,
+              feature: "move row"
+            }
+          }),
+          _vm._v(" "),
+          _c("cell-move-upsell", {
+            attrs: {
+              type: _vm.moveTypes.HORIZONTAL,
+              x: _vm.posVals.x,
+              y: _vm.posVals.containerY - _vm.defaultSizes,
+              width: _vm.posVals.width,
+              feature: "move column"
+            }
+          }),
+          _vm._v(" "),
+          _c("cell-move-upsell", {
+            attrs: {
+              type: _vm.moveTypes.HORIZONTAL,
+              x: _vm.posVals.x,
+              y: _vm.posVals.containerY + _vm.posVals.containerHeight,
+              width: _vm.posVals.width,
+              feature: "move column"
+            }
+          })
+        ],
+        1
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$Components/CellMoveUpsell":"components/CellMoveUpsell.vue"}],"mountPoints/WPTB_ManageCellsMoveUpsells.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _ManageCellsMoveUpsells = _interopRequireDefault(require("$Containers/ManageCellsMoveUpsells"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Tag control.
+ */
+var _default = {
+  name: 'ManageCellsMoveUpsells',
+  handler: function manageCellsMoveUpsellsJS(uniqueId) {
+    new _vue.default({
+      components: {
+        ManageCellsMoveUpsells: _ManageCellsMoveUpsells.default
+      },
+      template: '<manage-cells-move-upsells></manage-cells-move-upsells>'
+    }).$mount("#".concat(uniqueId));
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$Containers/ManageCellsMoveUpsells":"containers/ManageCellsMoveUpsells.vue"}],"functions/globalStore.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -47239,6 +47733,8 @@ var _WPTB_SaveButton = _interopRequireDefault(require("$MountPoints/WPTB_SaveBut
 
 var _WPTB_Toggle3Control = _interopRequireDefault(require("$MountPoints/WPTB_Toggle3Control"));
 
+var _WPTB_ManageCellsMoveUpsells = _interopRequireDefault(require("$MountPoints/WPTB_ManageCellsMoveUpsells"));
+
 var _globalStore = require("$Functions/globalStore");
 
 var _filters = _interopRequireDefault(require("$Plugins/filters"));
@@ -47266,7 +47762,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default, _WPTB_ColorPaletteControl.default, _WPTB_Embed.default, _WPTB_ProOverlay.default, _WPTB_SaveButton.default, _WPTB_Toggle3Control.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_MultiCheckboxControl.default, _WPTB_Size2Control.default, _WPTB_ColorPaletteControl.default, _WPTB_Embed.default, _WPTB_ProOverlay.default, _WPTB_SaveButton.default, _WPTB_Toggle3Control.default, _WPTB_ManageCellsMoveUpsells.default];
 /**
  * Register control element.
  *
@@ -47278,5 +47774,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_Embed":"mountPoints/WPTB_Embed.js","$MountPoints/WPTB_ProOverlay":"mountPoints/WPTB_ProOverlay.js","$MountPoints/WPTB_SaveButton":"mountPoints/WPTB_SaveButton.js","$MountPoints/WPTB_Toggle3Control":"mountPoints/WPTB_Toggle3Control.js","$Functions/globalStore":"functions/globalStore.js","$Plugins/filters":"plugins/filters.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","$MountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","$MountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","$MountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","$MountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","$Functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","$MountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","$MountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","$MountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","$MountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","$MountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","$MountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","$MountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","$MountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","$MountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","$MountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","$MountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","$MountPoints/WPTB_MultiCheckboxControl":"mountPoints/WPTB_MultiCheckboxControl.js","$MountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js","$MountPoints/WPTB_ColorPaletteControl":"mountPoints/WPTB_ColorPaletteControl.js","$MountPoints/WPTB_Embed":"mountPoints/WPTB_Embed.js","$MountPoints/WPTB_ProOverlay":"mountPoints/WPTB_ProOverlay.js","$MountPoints/WPTB_SaveButton":"mountPoints/WPTB_SaveButton.js","$MountPoints/WPTB_Toggle3Control":"mountPoints/WPTB_Toggle3Control.js","$MountPoints/WPTB_ManageCellsMoveUpsells":"mountPoints/WPTB_ManageCellsMoveUpsells.js","$Functions/globalStore":"functions/globalStore.js","$Plugins/filters":"plugins/filters.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map
