@@ -7,6 +7,7 @@ use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Base\Dummy_Control_Base;
 use WP_Table_Builder\Inc\Admin\Base\Manager_Base;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
+use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 
 /**
  * Manager responsible for dummy control operations.
@@ -138,6 +139,144 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 			$this,
 			'upsell_setting_controls'
 		], 1, 1 );
+
+		add_filter( 'wp-table-builder/register-controls-section-group/table_settings_general', [
+			$this,
+			'table_settings_general_controls_upsells'
+		], 10, 1 );
+
+		add_filter( 'wp-table-builder/register-controls-section-group/table_settings_border', [
+			$this,
+			'table_settings_border_controls_upsells'
+		], 10, 1 );
+	}
+
+	/**
+	 * Add upsell controls for table settings border section.
+	 *
+	 * @param array $section_controls section controls
+	 *
+	 * @return array filtered section controls
+	 */
+	public function table_settings_border_controls_upsells( $section_controls ) {
+		$general_section_upsell_controls = [
+			'differentBorderColorsUpsell'        =>
+				[
+					'label'     => __( 'Different Border Colors', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
+					'selectors' => [
+					]
+				],
+			'differentBorderColorsUpsellOverlay' =>
+				[
+					'type'              => Controls_Manager::PRO_OVERLAY,
+					'featureName'       => esc_html__( 'Different Border Colors', 'wp-table-builder' ),
+					'target'            => 'append',
+					'appendTargetQuery' => '.wptb-settings-row[id$=differentBorderColorsUpsell]'
+				],
+			'differentBorderColorsWidgetUpsell'  =>
+				[
+					'label'     => __( 'Different Border Colors', 'wp_table_builder' ),
+					'type'      => Controls_Manager::DIFFERENT_BORDER,
+					'selectors' => [
+					]
+				],
+
+			'differentBorderColorsWidgetUpsellOverlay' =>
+				[
+					'type'              => Controls_Manager::PRO_OVERLAY,
+					'featureName'       => esc_html__( 'different border colors', 'wp-table-builder' ),
+					'target'            => 'append',
+					'appendTargetQuery' => 'div .wptb-settings-items [id$=differentBorderColorsWidgetUpsell]'
+				],
+			'columnBorderOnlyUpsell'                   =>
+				[
+					'label'     => __( 'Column Border Only', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
+					'selectors' => [
+					]
+				],
+			'columnBorderOnlyOverlay'                  =>
+				[
+					'type'              => Controls_Manager::PRO_OVERLAY,
+					'featureName'       => esc_html__( 'Column border only', 'wp-table-builder' ),
+					'target'            => 'append',
+					'appendTargetQuery' => '.wptb-settings-row[id$=columnBorderOnlyUpsell]'
+				],
+
+			'rowBorderOnlyUpsell'                 =>
+				[
+					'label'     => __( 'Row Border Only', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
+					'selectors' => [
+					]
+				],
+			'rowBorderOnlyOverlay'                =>
+				[
+					'type'              => Controls_Manager::PRO_OVERLAY,
+					'featureName'       => esc_html__( 'row border only', 'wp-table-builder' ),
+					'target'            => 'append',
+					'appendTargetQuery' => '.wptb-settings-row[id$=rowBorderOnlyUpsell]'
+				],
+			'tableCellsBorderRadiusUpsell'        =>
+				[
+					'label'        => __( 'Table Cells Border Radius', 'wp_table_builder' ),
+					'type'         => Controls_Manager::RANGE,
+					'selectors'    => [
+					],
+					'min'          => 0,
+					'max'          => 50,
+					'defaultValue' => 0,
+					'postFix'      => 'px',
+				],
+			'tableCellsBorderRadiusUpsellOverlay' =>
+				[
+					'type'              => Controls_Manager::PRO_OVERLAY,
+					'featureName'       => esc_html__( 'Table cells border radius', 'wp-table-builder' ),
+					'target'            => 'append',
+					'appendTargetQuery' => 'div .wptb-settings-items [id$=tableCellsBorderRadiusUpsell]'
+				],
+		];
+
+		if ( $section_controls && is_array( $section_controls ) ) {
+			$section_controls = array_merge( $section_controls, $general_section_upsell_controls );
+		}
+
+		return $section_controls;
+
+	}
+
+	/**
+	 * Add upsell controls for table settings general section.
+	 *
+	 * @param array $section_controls section controls
+	 *
+	 * @return array filtered section controls
+	 */
+	public function table_settings_general_controls_upsells( $section_controls ) {
+		$general_section_upsell_controls = [
+			'separateColumnsRowsUpsell'           =>
+				[
+					'label'     => __( 'Separate Columns/Rows', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
+					'selectors' => [
+					]
+				],
+			'separateColumnsRowsUpsellProOverlay' =>
+				[
+					'type'              => Controls_Manager::PRO_OVERLAY,
+					'featureName'       => esc_html__( 'Seperate Columns/Rows', 'wp-table-builder' ),
+					'target'            => 'append',
+					'appendTargetQuery' => '.wptb-settings-row[id$=separateColumnsRowsUpsell]'
+				]
+		];
+
+		if ( $section_controls && is_array( $section_controls ) ) {
+			$section_controls = array_merge( $section_controls, $general_section_upsell_controls );
+		}
+
+		return $section_controls;
+
 	}
 
 	/**

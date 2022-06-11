@@ -56,6 +56,11 @@ class Control_Different_Border extends Base_Control {
         const uniqueItemClass = data.elementControlTargetUnicClass;
         WPTB_ControlsManager.setControlData(uniqueItemClass, data);
         data.strings = JSON.parse('<?php echo $json_strings; ?>');
+
+        if(!data.appearDependOnControl){
+        data.appearDependOnControl = {};
+        }
+
         #>
         <div id="{{{uniqueItemClass}}}">
             <different-border-control :appear-depend-on-control="appearDependOnControl"
