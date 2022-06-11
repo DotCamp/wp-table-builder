@@ -1,7 +1,9 @@
 <template>
 	<div class="wptb-responsive-clone-wrapper">
 		<div class="wptb-responsive-clone-inner-wrapper">
-			<div ref="tableClone" :style="tableStyle"></div>
+			<div :style="tableStyle">
+				<div ref="tableClone"></div>
+			</div>
 		</div>
 	</div>
 </template>
