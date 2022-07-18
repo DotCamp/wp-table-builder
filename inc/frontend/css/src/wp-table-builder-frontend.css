@@ -119,6 +119,7 @@ table.wptb-preview-table {
     overflow-wrap: break-word;
     margin: 0 !important;
     word-break: break-word;
+    cursor: default;
 }
 
 .wptb-table-container table tr td ul {
