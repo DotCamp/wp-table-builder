@@ -208,9 +208,26 @@ class Button_Element extends Element_Base {
 					],
 					'defaultValue' => 'center'
 				],
+			'buttonContentAlignmentCheckbox' =>
+				[
+					'label'        => __( 'Content Alignment', 'wp_table_builder' ),
+					'type'         => Controls_Manager::ALIGNMENT2,
+					'selectors'    => [
+						[
+							'query' => '{{{data.container}}} .wptb-button',
+							'type'  => Controls_Manager::STYLE,
+							'key'   => 'justifyContent',
+						],
+					],
+					'keyMaps'      => [
+						'left'  => 'flex-start',
+						'right' => 'flex-end',
+					],
+					'defaultValue' => 'center'
+				],
 			'button-id'               =>
 				[
-					'label'       => __( 'Button Id', 'wp_table_builder' ),
+					'label'       => __( 'Button ID', 'wp_table_builder' ),
 					'type'        => Controls_Manager::TEXT,
 					'placeholder' => __( 'Insert Button ID Here', 'wp_table_builder' ),
 					'selectors'   => [
