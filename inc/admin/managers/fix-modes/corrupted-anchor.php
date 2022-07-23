@@ -5,7 +5,6 @@ namespace WP_Table_Builder\Inc\Admin\Managers\Fix_Modes;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use Exception;
 use WP_Table_Builder\Inc\Admin\Base\Fix_Mode_Base;
 
 /**

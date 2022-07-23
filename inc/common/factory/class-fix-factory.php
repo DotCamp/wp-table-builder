@@ -22,6 +22,12 @@ class Fix_Factory {
 	public static $available_fixes = [ 'pwa-container', 'lt-highlighter', 'corrupted-anchor' ];
 
 	/**
+	 * Available legacy table support modes.
+	 * @var string[]
+	 */
+	public static $legacy_support = [ 'legacy-tooltip' ];
+
+	/**
 	 * Dictionary for mode type and class mappings.
 	 * @var string[]
 	 */
@@ -29,6 +35,7 @@ class Fix_Factory {
 		'pwa-container'    => 'WP_Table_Builder\Inc\Admin\Managers\Fix_Modes\Pwa_Container',
 		'lt-highlighter'   => 'WP_Table_Builder\Inc\Admin\Managers\Fix_Modes\Lt_Highlighter',
 		'corrupted-anchor' => 'WP_Table_Builder\Inc\Admin\Managers\Fix_Modes\Corrupted_Anchor',
+		'legacy-tooltip'   => 'WP_Table_Builder\Inc\Admin\Managers\Fix_Modes\Legacy_Tooltip',
 	];
 
 	/**

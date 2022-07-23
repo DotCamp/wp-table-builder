@@ -40,6 +40,26 @@ class Table_Fixer {
 		] );
 
 		add_action( 'rest_api_init', [ $instance, 'table_fixer_rest_init' ] );
+
+		// add legacy support for frontend
+		add_filter( 'wp-table-builder/filter/table_html_shortcode', [ $instance, 'table_legacy_support' ] );
+
+		// add legacy support for builder
+		add_filter( 'wp-table-builder/filter/get_table', [ $instance, 'table_legacy_support' ], 10, 1 );
+	}
+
+	/**
+	 * Add support for older tables with legacy functionality.
+	 * @return string table html content.
+	 */
+	public function table_legacy_support( $table_content ) {
+		if ( ! is_null( $table_content ) ) {
+			array_map( function ( $legacy_support_id ) use ( &$table_content ) {
+				$table_content = Fix_Factory::make( $legacy_support_id )->fix_content( $table_content );
+			}, Fix_Factory::$legacy_support );
+		}
+
+		return $table_content;
 	}
 
 	/**

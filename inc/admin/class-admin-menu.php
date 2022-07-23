@@ -170,9 +170,12 @@ class Admin_Menu {
 
 	public function get_table() {
 		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && Init::instance()->settings_manager->current_user_allowed_for_modifications( $_REQUEST['id'] ) ) {
-			$post       = get_post( absint( $_REQUEST['id'] ) );
+			$post = get_post( absint( $_REQUEST['id'] ) );
+
 			$table_html = get_post_meta( absint( $_REQUEST['id'] ), '_wptb_content_', true );
-			$name       = $post->post_title;
+			$table_html = apply_filters( 'wp-table-builder/filter/get_table', $table_html );
+
+			$name = $post->post_title;
 			die( json_encode( [ $name, $table_html ] ) );
 		}
 	}
