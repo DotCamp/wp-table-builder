@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.4.3 =
+
+* FIX: UX Builder stuck on loading for new posts/page.
+
 = 1.4.2 =
 
 * FIX: Some table changes not triggering dirty status.
