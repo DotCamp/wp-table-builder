@@ -104,27 +104,28 @@ class Gutenberg_Block_Manager {
 	 * @return array block data
 	 */
 	protected function prepare_block_data() {
-		$table_query = new WP_Query( [
-			'post_type'  => 'wptb-tables',
-			'meta_query' => [
-				'key'     => '_wptb_prebuilt_',
-				'compare' => 'NOT EXISTS'
-			]
-		] );
-
-		$tables = array_reduce( $table_query->posts, function ( $carry, $table ) {
-			$current_table = [
-				'id'      => $table->ID,
-				'title'   => empty( $table->post_title ) ? esc_html__( 'Table', 'wp-table-builder' ) . ' #' . $table->ID : $table->post_title,
-				'content' => get_post_meta( $table->ID, '_wptb_content_', true )
-			];
-
-			$carry[] = $current_table;
-
-			return $carry;
-		}, [] );
-
-		wp_reset_query();
+		// @deprecated
+//		$table_query = new WP_Query( [
+//			'post_type'  => 'wptb-tables',
+//			'meta_query' => [
+//				'key'     => '_wptb_prebuilt_',
+//				'compare' => 'NOT EXISTS'
+//			]
+//		] );
+//
+//		$tables = array_reduce( $table_query->posts, function ( $carry, $table ) {
+//			$current_table = [
+//				'id'      => $table->ID,
+//				'title'   => empty( $table->post_title ) ? esc_html__( 'Table', 'wp-table-builder' ) . ' #' . $table->ID : $table->post_title,
+//				'content' => get_post_meta( $table->ID, '_wptb_content_', true )
+//			];
+//
+//			$carry[] = $current_table;
+//
+//			return $carry;
+//		}, [] );
+//
+//		wp_reset_query();
 
 		$admin_page       = admin_url( 'admin.php' );
 		$builder_url      = add_query_arg( [ 'page' => 'wptb-builder' ], $admin_page );
@@ -151,7 +152,7 @@ class Gutenberg_Block_Manager {
 		return [
 			'blockName'     => $this->block_name,
 			'icon'          => Init::instance()->get_icon_manager()->get_icon( 'table' ),
-			'tables'        => $tables,
+			'tables'        => [],
 			'builderUrl'    => $builder_url,
 			'tableCssUrl'   => $table_css_url,
 			'tableScripts'  => $table_scripts,
