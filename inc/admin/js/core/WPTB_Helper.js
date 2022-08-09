@@ -2620,7 +2620,7 @@ var WPTB_Helper = {
 					e.preventDefault();
 					e.stopPropagation();
 
-					const isTableClean = document.querySelector('.wptb-save-disabled');
+					const isTableClean = !WPTB_Store.getters.getTableDirtyStatus;
 
 					const tableId = new URL(window.location.href).searchParams.get('table');
 
