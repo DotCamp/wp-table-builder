@@ -92,7 +92,9 @@ That's it. You're done!
 
 = 1.4.3 =
 
+* ADD: Option set alignment for Button content.
 * FIX: UX Builder stuck on loading for new posts/page.
+* FIX: Cursor style for frontend texts.
 
 = 1.4.2 =
 
