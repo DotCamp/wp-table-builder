@@ -91,6 +91,17 @@ class Elements_Manager extends Elements_Manager_Base {
 		$this->_build_elements_name = apply_filters( 'wp-table-builder/filter/elements-manager-init', $this->_build_elements_name );
 	}
 
+	/**
+	 * Add new elements to already registered ones.
+	 *
+	 * @param array $new_elements array of new elements
+	 *
+	 * @return void
+	 */
+	public function add_to_elements( $new_elements ) {
+		$this->_build_elements_name = array_merge( $this->_build_elements_name, $new_elements );
+	}
+
 
 	/**
 	 * Init Elements.

@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 
 // if called directly, abort
 use WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element\Table_Setting_Element;
+use WP_Table_Builder\Inc\Core\Init;
 use WP_Table_Builder_Pro\Inc\Admin\Managers\Freemius_Manager;
 use function add_action;
 use function add_filter;
@@ -70,7 +71,7 @@ class Upsells_Manager {
 				'generic_end'     => wp_sprintf( '<br><div>%s %s %s</div>', esc_html_x( 'Get the', 'start of the "Get the Pro Add-On" sentence', 'wp-table-builder' ), '<span class="wptb-upsells-pro-label">PRO</span>', esc_html__( 'Add-On.', 'wp-table-builder' ) )
 			];
 
-            // @deprecated
+			// @deprecated
 //			add_action( 'wp-table-builder/action/after_cell_notselected_left_panel', [
 //				__CLASS__,
 //				'cell_management_upsell'
@@ -96,14 +97,15 @@ class Upsells_Manager {
 	public static function independent_init() {
 		if ( ! Addon_Manager::check_pro_status() ) { // initialize upsell pro controls
 			Upsells_Dummy_Controls_Manager::init( [ 'dummy_controls' => static::$pro_dummy_controls ], '\WP_Table_Builder\Inc\Admin\Managers\Upsells_Dummy_Controls_Manager' );// upsell pro elements
-			add_filter( 'wp-table-builder/filter/elements-manager-init', [
-				__CLASS__,
-				'add_pro_dummy_elements'
-			], 10, 1 );
+
+            if(Init::instance()->elements_manager){
+	            Init::instance()->elements_manager->add_to_elements(static::$pro_dummy_elements_name);
+            }
 		}
 	}
 
 	/**
+     * @deprecated
 	 * Add pro dummy elements to element stack.
 	 *
 	 * @param array $all_elements all available table elements

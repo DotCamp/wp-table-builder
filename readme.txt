@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.4.4 =
+
+* PRO: FIX: An issue on pro version override base version on update.
+
 = 1.4.3 =
 
 * ADD: Option set alignment for Button content.
