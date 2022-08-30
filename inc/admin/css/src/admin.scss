@@ -7426,3 +7426,14 @@ label.wptb-control-row {
   }
 
 }
+
+.mce-toolbar {
+  .mce-btn-group > div {
+    white-space: nowrap;
+
+  }
+}
+
+#mce-modal-block {
+  z-index: 0 !important;
+}

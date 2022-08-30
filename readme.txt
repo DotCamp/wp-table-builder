@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.4.4 =
 
 * PRO: FIX: An issue on pro version override base version on update.
+* FIX: Theme styles overriding block editor text input styles and functionality.
 
 = 1.4.3 =
 
