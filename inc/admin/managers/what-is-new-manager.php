@@ -130,7 +130,7 @@ class What_Is_New_Manager {
 	 * Read data file related to this component.
 	 * @return array data array
 	 */
-	private final static function read_data_file() {
+	private static function read_data_file() {
 		ob_start();
 		require( trailingslashit( NS\WP_TABLE_BUILDER_DIR ) . 'inc/admin/data/what-is-new.json' );
 		$contents = ob_get_contents();
