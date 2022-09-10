@@ -41,6 +41,7 @@ export default {
 	components: { ProOverlay, Icon },
 	data: () => ({
 		slide: false,
+    dirtyStatus: true
 	}),
 	mounted() {
 		this.$nextTick(() => {
@@ -60,7 +61,6 @@ export default {
 		overlayTargetTypes: () => targetTypes,
 		...mapGetters('app', ['currentSaveType']),
 		...mapGetters({
-			dirtyStatus: 'getTableDirtyStatus',
 			getTranslation: 'getTranslation',
 		}),
 		innerSaveOperationTypes: () => saveOperationTypes,

@@ -46625,7 +46625,8 @@ var _default = {
   },
   data: function data() {
     return {
-      slide: false
+      slide: false,
+      dirtyStatus: true
     };
   },
   mounted: function mounted() {
@@ -46653,7 +46654,6 @@ var _default = {
       return _ProOverlay.targetTypes;
     }
   }, (0, _vuex.mapGetters)('app', ['currentSaveType'])), (0, _vuex.mapGetters)({
-    dirtyStatus: 'getTableDirtyStatus',
     getTranslation: 'getTranslation'
   })), {}, {
     innerSaveOperationTypes: function innerSaveOperationTypes() {
