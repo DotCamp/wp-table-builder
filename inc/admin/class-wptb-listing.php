@@ -7,6 +7,7 @@ use WP_List_Table;
 use WP_Query;
 use WP_Table_Builder\Inc\Core\Init;
 use function apply_filters;
+use function get_post_type;
 use function wp_reset_postdata;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -111,17 +112,19 @@ class WPTB_Listing extends WP_List_Table {
 
 	}
 
+	/**
+     * Delete table.
+     *
+     * Even though function table contains delete, this function will thrash tables instead of permanently deleting them.
+     *
+	 * @param int $id table id
+	 *
+	 * @return void
+	 */
 	public static function delete_table( $id ) {
-
-		global $wpdb;
-
-		delete_post_meta( $id, '_wptb_content_' );
-
-		$wpdb->delete(
-			"{$wpdb->prefix}posts",
-			[ 'ID' => $id ],
-			[ '%d' ]
-		);
+		if ( get_post_type( $id ) === 'wptb-tables' ) {
+			wp_trash_post( $id );
+		}
 	}
 
 	public static function record_count( $per_page, $search_text, $current_user = false ) {
