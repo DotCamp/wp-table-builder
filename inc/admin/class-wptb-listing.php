@@ -6,7 +6,11 @@ namespace WP_Table_Builder\Inc\Admin;
 use WP_List_Table;
 use WP_Query;
 use WP_Table_Builder\Inc\Core\Init;
+use function admin_url;
 use function apply_filters;
+use function esc_attr;
+use function esc_html__;
+use function esc_url;
 use function get_post_type;
 use function wp_reset_postdata;
 
@@ -34,18 +38,33 @@ class WPTB_Listing extends WP_List_Table {
 		] );
 	}
 
-	protected function get_views() {
-		$count        = self::record_count( 10, '' );
-		$status_links = array(
-			"all" => __( '<a href="' . esc_url( admin_url( 'admin.php?page=wptb-overview' ) ) . '">' .
-			             'All ' .
-			             '<span class="count">(' . $count . ')</span></a>', 'wp-table-builde' )
-		);
+	/**
+	 * Prepare view item HTML representations.
+	 *
+	 * @param string $target_href target href
+	 * @param int $count table count belonging to item
+	 * @param string $label item label
+	 * @param boolean $is_active is item current active one
+	 *
+	 * @return string view item HTML
+	 */
+	protected final function prepare_view_item( $target_href, $count, $label, $is_active ) {
+		return sprintf( '<a href="%1$s" class="%4$s">%2$s <span class="count">(%3$d)</span></a>', esc_url( $target_href ), esc_html__( $label ), $count, $is_active ? 'current' : "" );
 
-		return $status_links;
 	}
 
-	public static function get_tables( $search_text, $per_page = 5, $page_number = 1, $current_user = false ) {
+	protected function get_views() {
+		$count             = self::record_count( 10, '' );
+		$count_trash       = self::record_count( 10, '', true, 'trash' );
+		$listing_admin_url = admin_url( 'admin.php?page=wptb-overview' );
+
+		return array(
+			"all"   => $this->prepare_view_item( $listing_admin_url, $count, esc_html__( 'All', 'wp-table-builder' ), ! $this->is_status_trash() ),
+			"trash" => $this->prepare_view_item( add_query_arg( 'post_status', 'trash', $listing_admin_url ), $count_trash, esc_html__( 'Trash', 'wp-table-builder' ), $this->is_status_trash() )
+		);
+	}
+
+	public static function get_tables( $search_text, $per_page = 5, $page_number = 1, $current_user = false, $table_status = 'draft' ) {
 
 		global $wpdb, $post;
 
@@ -61,6 +80,8 @@ class WPTB_Listing extends WP_List_Table {
 		if ( $current_user ) {
 			$params['author'] = get_current_user_id();
 		}
+
+		$params['post_status'] = $table_status;
 
 		$params = apply_filters( 'wp-table-builder/get_tables_args', $params );
 
@@ -113,10 +134,10 @@ class WPTB_Listing extends WP_List_Table {
 	}
 
 	/**
-     * Delete table.
-     *
-     * Even though function table contains delete, this function will thrash tables instead of permanently deleting them.
-     *
+	 * Delete table.
+	 *
+	 * Even though function table contains delete, this function will thrash tables instead of permanently deleting them.
+	 *
 	 * @param int $id table id
 	 *
 	 * @return void
@@ -127,7 +148,7 @@ class WPTB_Listing extends WP_List_Table {
 		}
 	}
 
-	public static function record_count( $per_page, $search_text, $current_user = false ) {
+	public static function record_count( $per_page, $search_text, $current_user = false, $table_status = 'draft' ) {
 
 		global $wpdb, $post;
 
@@ -143,8 +164,9 @@ class WPTB_Listing extends WP_List_Table {
 			$params['author'] = get_current_user_id();
 		}
 
-		$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
-		$params['order']   = isset( $_REQUEST['order'] ) && ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
+		$params['orderby']     = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
+		$params['order']       = isset( $_REQUEST['order'] ) && ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
+		$params['post_status'] = $table_status;
 
 		$loop = new WP_Query( $params );
 
@@ -181,17 +203,23 @@ class WPTB_Listing extends WP_List_Table {
 		// title listing filter hook
 		$title = apply_filters( 'wp-table-builder/title_listing', $title, $item->ID );
 
-		$title = sprintf(
-			'<a class="row-title" href="%s" title="%s"><strong>%s</strong></a>',
-			add_query_arg(
-				array(
-					'table' => $item->ID,
+		// make table title not clickable if current screen is trash
+		if ( $this->is_status_trash() ) {
+			$title = '<strong><span>' . $title . '</strong></span>';
+		} else {
+			$title = sprintf(
+				'<a class="row-title" href="%s" title="%s"><strong>%s</strong></a>',
+				add_query_arg(
+					array(
+						'table' => $item->ID,
+					),
+					esc_url( admin_url( 'admin.php?page=wptb-builder' ) )
 				),
-				esc_url( admin_url( 'admin.php?page=wptb-builder' ) )
-			),
-			esc_html__( 'Edit This Table', 'wp-table-builder' ),
-			$title
-		);
+				esc_html__( 'Edit This Table', 'wp-table-builder' ),
+				$title
+			);
+		}
+
 
 		$wptb_preview_button_url = add_query_arg(
 			array(
@@ -208,15 +236,35 @@ class WPTB_Listing extends WP_List_Table {
 		$server_request_url = remove_query_arg( 'table_id', $server_request_url );
 		$query              = parse_url( $server_request_url, PHP_URL_QUERY );
 
-		$actions = [
-			'edit'      => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>', absint( $item->ID ) ),
-			'duplicate' => '<a href="?' . $query . sprintf( '&action=%s&table_id=%s&_wpnonce=%s', 'duplicate', absint( $item->ID ), $nonce ) . '">Duplicate</a>',
-			'preview_'  => sprintf( '<a href="%s" target="_blank">Preview</a>', $wptb_preview_button_url ),
-			'delete'    => '<a href="?' . $query . sprintf( '&action=%s&table_id=%s&_wpnonce=%s', 'delete', absint( $item->ID ), $nonce ) . '">Delete</a>'
-		];
+		if ( $this->is_status_trash() ) {
+			$actions = [
+				'restore' => '<a>Restore</a>',
+				'delete'  => '<a>Delete Permanently</a>'
+			];
+		} else {
+			$actions = [
+				'edit'      => $this->prepare_action_item(
+					sprintf( '?page=wptb-builder&table=%d', absint( $item->ID ) ), esc_html__( 'Edit', 'wp-table-builder' ) ),
+				'duplicate' => $this->prepare_action_item( sprintf( '?%s&action=%s&table_id=%s&_wpnonce=%s', $query, esc_attr( 'duplicate' ), absint( $item->ID ), $nonce ), esc_html( 'Duplicate', 'wp-table-builder' ) ),
+				'preview_'  => $this->prepare_action_item( $wptb_preview_button_url, esc_html__( 'Preview', 'wp-table-builder' ), '_blank' ),
+				'delete'    => $this->prepare_action_item( sprintf( '?%s&action=%s&table_id=%s&_wpnonce=%s', $query, esc_attr( 'delete' ), absint( $item->ID ), $nonce ), esc_html( 'Trash', 'wp-table-builder' ) )
+			];
+		}
 
 		return $title . $this->row_actions( $actions );
+	}
 
+	/**
+	 * Prepare action item.
+	 *
+	 * @param string $target_href target href
+	 * @param string $title item title
+	 * @param string $target anchor target attribute
+	 *
+	 * @return string action item HTML
+	 */
+	protected final function prepare_action_item( $target_href, $title, $target = '_self' ) {
+		return sprintf( '<a href="%1$s" target="%3$s">%2$s</a>', $target_href, $title, esc_attr( $target ) );
 	}
 
 	/**
@@ -302,14 +350,24 @@ class WPTB_Listing extends WP_List_Table {
 		];
 	}
 
-	public function get_bulk_actions() {
+	/**
+	 * If currently listing trashed tables.
+	 * @return bool status
+	 */
+	protected final function is_status_trash() {
+		return isset( $_GET['post_status'] ) && $_GET['post_status'] === 'trash';
+	}
 
-		$actions = [
-			'bulk-delete' => 'Delete'
-		];
+	public function get_bulk_actions() {
+		if ( $this->is_status_trash() ) {
+			$actions = [];
+		} else {
+			$actions = [
+				'bulk-delete' => 'Delete'
+			];
+		}
 
 		return $actions;
-
 	}
 
 	public function prepare_items() {
@@ -338,7 +396,10 @@ class WPTB_Listing extends WP_List_Table {
 			'total_items' => $total_items, //WE have to calculate the total number of items
 			'per_page'    => $per_page //WE have to determine how many items to show on a page
 		] );
-		$this->items = $this->get_tables( $search_text, $per_page, $current_page, $current_user );
+
+		$table_status = isset( $_GET['post_status'] ) ? sanitize_text_field( $_GET['post_status'] ) : 'draft';
+
+		$this->items = $this->get_tables( $search_text, $per_page, $current_page, $current_user, $table_status );
 	}
 
 	public function request_url_clear() {
