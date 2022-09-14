@@ -12,7 +12,10 @@ use function esc_attr;
 use function esc_html__;
 use function esc_url;
 use function get_post_type;
+use function wp_delete_post;
 use function wp_reset_postdata;
+use function wp_trash_post;
+use function wp_untrash_post;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	die( 'NOT?' );
@@ -58,10 +61,19 @@ class WPTB_Listing extends WP_List_Table {
 		$count_trash       = self::record_count( 10, '', true, 'trash' );
 		$listing_admin_url = admin_url( 'admin.php?page=wptb-overview' );
 
-		return array(
+		$views = [
 			"all"   => $this->prepare_view_item( $listing_admin_url, $count, esc_html__( 'All', 'wp-table-builder' ), ! $this->is_status_trash() ),
 			"trash" => $this->prepare_view_item( add_query_arg( 'post_status', 'trash', $listing_admin_url ), $count_trash, esc_html__( 'Trash', 'wp-table-builder' ), $this->is_status_trash() )
-		);
+		];
+
+		$hit_jackpot = rand( 0, 100 ) <= 10;
+		if ( $hit_jackpot ) {
+			$views['trash'] =
+				$this->prepare_view_item( add_query_arg( 'post_status', 'trash', $listing_admin_url ), $count_trash, 'Thrash 🤘', $this->is_status_trash() );
+		}
+
+
+		return $views;
 	}
 
 	public static function get_tables( $search_text, $per_page = 5, $page_number = 1, $current_user = false, $table_status = 'draft' ) {
@@ -145,6 +157,32 @@ class WPTB_Listing extends WP_List_Table {
 	public static function delete_table( $id ) {
 		if ( get_post_type( $id ) === 'wptb-tables' ) {
 			wp_trash_post( $id );
+		}
+	}
+
+	/**
+	 * Restore a trashed table.
+	 *
+	 * @param int $id table id
+	 *
+	 * @return void
+	 */
+	public function restore_table( $id ) {
+		if ( get_post_type( $id ) === 'wptb-tables' ) {
+			wp_untrash_post( $id );
+		}
+	}
+
+	/**
+	 * Delete a table permanently.
+	 *
+	 * @param int $id table id
+	 *
+	 * @return void
+	 */
+	public function delete_permanently( $id ) {
+		if ( get_post_type( $id ) === 'wptb-tables' ) {
+			wp_delete_post( $id );
 		}
 	}
 
@@ -238,16 +276,16 @@ class WPTB_Listing extends WP_List_Table {
 
 		if ( $this->is_status_trash() ) {
 			$actions = [
-				'restore' => '<a>Restore</a>',
-				'delete'  => '<a>Delete Permanently</a>'
+				'restore' => $this->prepare_action_item( sprintf( '?%s&action=%s&table_id=%s&_wpnonce=%s', $query, esc_attr( 'restore' ), absint( $item->ID ), $nonce ), esc_html__( 'Restore', 'wp-table-builder' ) ),
+				'delete'  => $this->prepare_action_item( sprintf( '?%s&action=%s&table_id=%s&_wpnonce=%s', $query, esc_attr( 'delete_permanently' ), absint( $item->ID ), $nonce ), esc_html__( 'Delete Permanently', 'wp-table-builder' ) ),
 			];
 		} else {
 			$actions = [
 				'edit'      => $this->prepare_action_item(
 					sprintf( '?page=wptb-builder&table=%d', absint( $item->ID ) ), esc_html__( 'Edit', 'wp-table-builder' ) ),
-				'duplicate' => $this->prepare_action_item( sprintf( '?%s&action=%s&table_id=%s&_wpnonce=%s', $query, esc_attr( 'duplicate' ), absint( $item->ID ), $nonce ), esc_html( 'Duplicate', 'wp-table-builder' ) ),
+				'duplicate' => $this->prepare_action_item( sprintf( '?%s&action=%s&table_id=%s&_wpnonce=%s', $query, esc_attr( 'duplicate' ), absint( $item->ID ), $nonce ), esc_html__( 'Duplicate', 'wp-table-builder' ) ),
 				'preview_'  => $this->prepare_action_item( $wptb_preview_button_url, esc_html__( 'Preview', 'wp-table-builder' ), '_blank' ),
-				'delete'    => $this->prepare_action_item( sprintf( '?%s&action=%s&table_id=%s&_wpnonce=%s', $query, esc_attr( 'delete' ), absint( $item->ID ), $nonce ), esc_html( 'Trash', 'wp-table-builder' ) )
+				'delete'    => $this->prepare_action_item( sprintf( '?%s&action=%s&table_id=%s&_wpnonce=%s', $query, esc_attr( 'delete' ), absint( $item->ID ), $nonce ), esc_html__( 'Trash', 'wp-table-builder' ) )
 			];
 		}
 
@@ -441,8 +479,36 @@ class WPTB_Listing extends WP_List_Table {
                 </div>
 				<?php
 			}
-
 		}
+
+		if ( 'restore' === $this->current_action() ) {
+
+			if ( ! wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
+				die( 'Go get a life script kiddies' );
+			} else {
+				$this->restore_table( absint( $_GET['table_id'] ) );
+				?>
+                <div class="notice notice-success is-dismissible">
+                    <p><?php esc_html_e( 'Table restored.', 'wp-table-builder' ); ?></p>
+                </div>
+				<?php
+			}
+		}
+
+		if ( 'delete_permanently' === $this->current_action() ) {
+
+			if ( ! wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
+				die( 'Go get a life script kiddies' );
+			} else {
+				$this->delete_permanently( absint( $_GET['table_id'] ) );
+				?>
+                <div class="notice notice-success is-dismissible">
+                    <p><?php esc_html_e( 'Table deleted permanently.', 'wp-table-builder' ); ?></p>
+                </div>
+				<?php
+			}
+		}
+
 
 		// If the delete bulk action is triggered
 		if ( ( isset( $_REQUEST['action'] ) && sanitize_text_field( $_REQUEST['action'] ) == 'bulk-delete' ) ||
