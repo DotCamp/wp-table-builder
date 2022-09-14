@@ -1,9 +1,8 @@
 {
-  "1.4.0": [
+  "1.4.4": [
     [
-      "Updated save button to support different save options.",
-      "updated_save_button.png",
-      true
+      "Table trash, restore and delete permanently functionality.",
+      "table_trash.png"
     ]
   ]
 }

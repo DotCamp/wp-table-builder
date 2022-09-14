@@ -95,6 +95,8 @@ That's it. You're done!
 * PRO: FIX: An issue on pro version override base version on update.
 * FIX: Theme styles overriding block editor text input styles and functionality.
 * IMPROVE: Save button logic, and always enabled save operation disregard of table dirty status.
+* NEW: Table trash, restore and delete permanently functionality.
+* NEW: Table listing of trashed items.
 
 = 1.4.3 =
 

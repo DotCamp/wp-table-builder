@@ -66,7 +66,7 @@ class WPTB_Listing extends WP_List_Table {
 			"trash" => $this->prepare_view_item( add_query_arg( 'post_status', 'trash', $listing_admin_url ), $count_trash, esc_html__( 'Trash', 'wp-table-builder' ), $this->is_status_trash() )
 		];
 
-		$hit_jackpot = rand( 0, 100 ) <= 10;
+		$hit_jackpot = rand( 0, 100 ) <= 3;
 		if ( $hit_jackpot ) {
 			$views['trash'] =
 				$this->prepare_view_item( add_query_arg( 'post_status', 'trash', $listing_admin_url ), $count_trash, 'Thrash 🤘', $this->is_status_trash() );
