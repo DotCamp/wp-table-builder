@@ -62,16 +62,19 @@ class WPTB_Listing extends WP_List_Table {
 		$listing_admin_url = admin_url( 'admin.php?page=wptb-overview' );
 
 		$views = [
-			"all"   => $this->prepare_view_item( $listing_admin_url, $count, esc_html__( 'All', 'wp-table-builder' ), ! $this->is_status_trash() ),
-			"trash" => $this->prepare_view_item( add_query_arg( 'post_status', 'trash', $listing_admin_url ), $count_trash, esc_html__( 'Trash', 'wp-table-builder' ), $this->is_status_trash() )
+			"all" => $this->prepare_view_item( $listing_admin_url, $count, esc_html__( 'All', 'wp-table-builder' ), ! $this->is_status_trash() ),
 		];
 
-		$hit_jackpot = rand( 0, 100 ) <= 3;
-		if ( $hit_jackpot ) {
-			$views['trash'] =
-				$this->prepare_view_item( add_query_arg( 'post_status', 'trash', $listing_admin_url ), $count_trash, 'Thrash 🤘', $this->is_status_trash() );
-		}
+		// only show trash section if there is any
+		if ( $count_trash > 0 ) {
+			$views['trash'] = $this->prepare_view_item( add_query_arg( 'post_status', 'trash', $listing_admin_url ), $count_trash, esc_html__( 'Trash', 'wp-table-builder' ), $this->is_status_trash() );
 
+			$hit_jackpot = rand( 0, 100 ) <= 3;
+			if ( $hit_jackpot ) {
+				$views['trash'] =
+					$this->prepare_view_item( add_query_arg( 'post_status', 'trash', $listing_admin_url ), $count_trash, 'Thrash 🤘', $this->is_status_trash() );
+			}
+		}
 
 		return $views;
 	}
@@ -213,20 +216,22 @@ class WPTB_Listing extends WP_List_Table {
 	}
 
 	public function no_items() {
-
-		printf(
-			wp_kses(
-			/* translators: %s - admin area page builder page URL. */
-				__( 'Whoops, you haven\'t created a table yet. Want to <a href="%s">give it a go</a>?', 'wp-table-builder' ),
-				array(
-					'a' => array(
-						'href' => array(),
-					),
-				)
-			),
-			admin_url( 'admin.php?page=wptb-builder' )
-		);
-
+		if ( $this->is_status_trash() ) {
+			echo esc_html__( 'No table found in trash.', 'wp-table-builder' );
+		} else {
+			printf(
+				wp_kses(
+				/* translators: %s - admin area page builder page URL. */
+					__( 'Whoops, you haven\'t created a table yet. Want to <a href="%s">give it a go</a>?', 'wp-table-builder' ),
+					array(
+						'a' => array(
+							'href' => array(),
+						),
+					)
+				),
+				admin_url( 'admin.php?page=wptb-builder' )
+			);
+		}
 	}
 
 	function column_name( $item ) {
