@@ -17031,7 +17031,9 @@ var _default = {
       var prebuilt = tablePreview.querySelector('table');
 
       if (prebuilt) {
-        var images = Array.from(prebuilt.querySelectorAll('img'));
+        var images = Array.from(prebuilt.querySelectorAll('img')).filter(function (img) {
+          return img.hasAttribute('href');
+        });
 
         if (images.length > 0) {
           // eslint-disable-next-line no-inner-declarations
@@ -17566,7 +17568,7 @@ var _default2 = {
                   return -1;
                 }
 
-                if (_this3.basePreviewTemplateIds.includes(a)) {
+                if (_this3.basePreviewTemplateIds.includes(b)) {
                   return 1;
                 }
 

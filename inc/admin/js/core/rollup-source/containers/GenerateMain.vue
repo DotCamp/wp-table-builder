@@ -38,6 +38,7 @@
 	</div>
 </template>
 <script>
+// eslint-disable-next-line import/no-extraneous-dependencies
 import 'regenerator-runtime/runtime';
 import { mapGetters } from 'vuex';
 import PrebuiltCard from '../components/PrebuiltCard';
@@ -168,7 +169,7 @@ export default {
 					return -1;
 				}
 
-				if (this.basePreviewTemplateIds.includes(a)) {
+				if (this.basePreviewTemplateIds.includes(b)) {
 					return 1;
 				}
 

@@ -199,7 +199,9 @@ export default {
 			const prebuilt = tablePreview.querySelector('table');
 
 			if (prebuilt) {
-				const images = Array.from(prebuilt.querySelectorAll('img'));
+				const images = Array.from(prebuilt.querySelectorAll('img')).filter((img) => {
+					return img.hasAttribute('href');
+				});
 
 				if (images.length > 0) {
 					const vm = this;

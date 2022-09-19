@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.4.4 =
 
 * PRO: FIX: An issue on pro version override base version on update.
+* PRO NEW: Amazon product listing table template.
 * FIX: Theme styles overriding block editor text input styles and functionality.
 * IMPROVE: Save button logic, and always enabled save operation disregard of table dirty status.
 * NEW: Table trash, restore and delete permanently functionality.
