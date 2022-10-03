@@ -10,6 +10,7 @@ use function absint;
 use function add_filter;
 use function add_submenu_page;
 use function apply_filters;
+use function do_action;
 use function get_admin_url;
 use function get_current_user_id;
 use function get_option;
@@ -38,14 +39,14 @@ class Settings_Manager {
 	public $options_root;
 
 	/**
-	 * Settings menu slug
+	 * Settings menu slug.
 	 *
 	 * @var string
 	 */
 	public $settings_menu_slug;
 
 	/**
-	 * Plugin text domain
+	 * Plugin text domain.
 	 *
 	 * @var string
 	 */
@@ -120,6 +121,7 @@ class Settings_Manager {
 		General_Styles_Manager::init();
 		Lazy_Load_Manager::init();
 		Table_Fixer::init();
+		Emoji_Manager::init();
 
 		// subscribe to version sync
 		Version_Control_Manager::instance()->subscribe_to_version_sync();
@@ -381,6 +383,8 @@ class Settings_Manager {
 				'sanitize_options'
 			]
 		] );
+
+		do_action( 'wp-table-builder/action/settings_registered' );
 	}
 
 	/**

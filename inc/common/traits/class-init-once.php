@@ -2,6 +2,8 @@
 
 namespace WP_Table_Builder\Inc\Common\Traits;
 
+use Exception;
+
 /**
  * Trait Init_Once.
  *
@@ -32,14 +34,16 @@ trait Init_Once {
 	/**
 	 * Initialize.
 	 */
-	public static final function init(...$args) {
+	public static final function init( ...$args ) {
 		if ( ! static::is_initialized() ) {
-			static::init_process(...$args);
+			static::init_process( ...$args );
 		}
 	}
 
 	/**
 	 * Function to be called during initialization process.
 	 */
-	public static function init_process(){}
+	public static function init_process() {
+		throw new Exception( esc_html__( 'init_process function is not implemented', 'wp-table-builder' ) );
+	}
 }
