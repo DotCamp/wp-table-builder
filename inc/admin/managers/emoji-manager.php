@@ -2,6 +2,8 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use DOMDocument;
+use DOMXPath;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use WP_Table_Builder\Inc\Core\Init;
@@ -45,7 +47,58 @@ class Emoji_Manager {
 		add_action( 'init', [
 			$instance,
 			'main_logic'
-		], 10, 0 );
+		], 11, 0 );
+	}
+
+	/**
+	 * Check table for any kind of emoji to image transformations and convert them to codepoint versions.
+	 *
+	 * @param string $table_html target table html
+	 *
+	 * @return string table html
+	 */
+	public function rollback_conversions( $table_html ) {
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$dom_handler = new DOMDocument();
+
+			$charset        = get_bloginfo( 'charset' );
+			$handler_status = $dom_handler->loadHTML( mb_convert_encoding( $table_html, 'HTML-ENTITIES', $charset ), LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED | LIBXML_ERR_ERROR | LIBXML_NOWARNING );
+
+			if ( $handler_status ) {
+				$dom_query = new DOMXPath( $dom_handler );
+
+				// query for converted emoji images, they are under p element with emoji class
+				$converted_emoji_images = $dom_query->query( '//p/img[contains(@class, emoji)]' );
+
+				if ( $converted_emoji_images->length > 0 ) {
+					$images_to_remove = [];
+
+					foreach ( $converted_emoji_images as $converted_emoji ) {
+						$parent_node        = $converted_emoji->parentNode;
+						$images_to_remove[] = $converted_emoji;
+					}
+
+					foreach ( $images_to_remove as $converted_image ) {
+						$parent_node = $converted_image->parentNode;
+						$parent_node->removeChild( $converted_image );
+
+						$src_url   = $converted_image->getAttribute( 'src' );
+						$codepoint = pathinfo( $src_url )['filename'];
+						$emoji     = html_entity_decode( '&#x' . $codepoint . ';' );
+
+						$parent_node->textContent = $emoji . $parent_node->textContent;
+						$parent_node->setAttribute( 'class', trim( join( ' ', [
+							'wp-exclude-emoji',
+							$parent_node->getAttribute( 'class' )
+						] ) ) );
+					}
+				}
+
+				$table_html = $dom_handler->saveHTML();
+			}
+		}
+
+		return $table_html;
 	}
 
 	/**
@@ -78,7 +131,6 @@ class Emoji_Manager {
 		$sanitization_rules[ $this->emoji_status_option_id ] = 'sanitize_text_field';
 
 		return $sanitization_rules;
-
 	}
 
 	/**
@@ -94,6 +146,10 @@ class Emoji_Manager {
 		return $defaults;
 	}
 
+	private function get_emoji_conversion_status() {
+		return Init::instance()->settings_manager->get_option_value( $this->emoji_status_option_id );
+	}
+
 	/**
 	 * Main logic for emoji manager functionality.
 	 * This hook is used to make sure we still use plugin's own setting resolve functionality.
@@ -101,12 +157,15 @@ class Emoji_Manager {
 	 * @return void
 	 */
 	public function main_logic() {
-		if ( Init::instance()->settings_manager->get_option_value( $this->emoji_status_option_id ) ) {
+		if ( $this->get_emoji_conversion_status() ) {
 			remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 			remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
 			remove_action( 'wp_print_styles', 'print_emoji_styles' );
 			remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
 			remove_action( 'admin_print_styles', 'print_emoji_styles' );
+
+			add_filter( 'wp-table-builder/filter/get_table', [ $this, 'rollback_conversions' ], 10, 1 );
+			add_filter( 'wp-table-builder/filter/table_html_shortcode', [ $this, 'rollback_conversions' ], 10, 1 );
 		}
 	}
 }
