@@ -94,6 +94,7 @@ That's it. You're done!
 
 * PRO: FIX: An issue on pro version override base version on update.
 * PRO NEW: Amazon product listing table template.
+* PRO NEW: Class schedule table template.
 * NEW: Option to disable conversion of emoji codes to images by default in WordPress.
 * FIX: Theme styles overriding block editor text input styles and functionality.
 * IMPROVE: Save button logic, and always enabled save operation disregard of table dirty status.

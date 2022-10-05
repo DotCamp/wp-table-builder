@@ -7,6 +7,16 @@
     [
       "Ability to disable conversion of emoji codes to images.",
       "emoji_image_conversion.png"
+    ],
+    [
+      "Amazon product listing table template.",
+      "amazon_product_listing_template.png",
+      true
+    ],
+    [
+      "Class schedule table template.",
+      "class_schedule_template.png",
+      true
     ]
   ]
 }
