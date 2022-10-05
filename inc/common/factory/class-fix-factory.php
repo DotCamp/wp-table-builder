@@ -2,8 +2,8 @@
 
 namespace WP_Table_Builder\Inc\Common\Factory;
 
-
 use WP_Table_Builder\Inc\Admin\Base\Fix_Mode_Base;
+use WP_Table_Builder\Inc\Common\Interfaces\Factory;
 
 // if called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Factory for generating fix mode instances.
  */
-class Fix_Factory {
+class Fix_Factory implements Factory {
 
 	/**
 	 * Available fix methods.

@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use DOMDocument;
 use DOMXPath;
+use WP_Table_Builder\Inc\Common\Factory\Dom_Document_Factory;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use WP_Table_Builder\Inc\Core\Init;
@@ -23,7 +24,7 @@ class Emoji_Manager {
 	 * Option key name for emoji to image conversion setting.
 	 * @var string
 	 */
-	private $emoji_status_option_id = 'emoji_image_conversion_status';
+	private $emoji_status_option_id = 'emoji_image_conversion_disabled_status';
 
 	/**
 	 * Function to be called during initialization process.
@@ -57,40 +58,69 @@ class Emoji_Manager {
 	 *
 	 * @return string table html
 	 */
-	public function rollback_conversions( $table_html ) {
-		if ( function_exists( 'mb_convert_encoding' ) ) {
-			$dom_handler = new DOMDocument();
+	public function remove_conversions( $table_html ) {
+		$dom_handler = Dom_Document_Factory::make( $table_html );
 
-			$charset        = get_bloginfo( 'charset' );
-			$handler_status = $dom_handler->loadHTML( mb_convert_encoding( $table_html, 'HTML-ENTITIES', $charset ), LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED | LIBXML_ERR_ERROR | LIBXML_NOWARNING );
+		if ( ! is_null( $dom_handler ) ) {
+			$dom_query = new DOMXPath( $dom_handler );
 
-			if ( $handler_status ) {
-				$dom_query = new DOMXPath( $dom_handler );
+			// query for converted emoji images, they are under p element with emoji class
+			$converted_emoji_images = $dom_query->query( '//p/img[contains(@class, emoji)]' );
 
-				// query for converted emoji images, they are under p element with emoji class
-				$converted_emoji_images = $dom_query->query( '//p/img[contains(@class, emoji)]' );
+			if ( $converted_emoji_images->length > 0 ) {
+				$images_to_remove = [];
 
-				if ( $converted_emoji_images->length > 0 ) {
-					$images_to_remove = [];
+				foreach ( $converted_emoji_images as $converted_emoji ) {
+					$parent_node        = $converted_emoji->parentNode;
+					$images_to_remove[] = $converted_emoji;
+				}
 
-					foreach ( $converted_emoji_images as $converted_emoji ) {
-						$parent_node        = $converted_emoji->parentNode;
-						$images_to_remove[] = $converted_emoji;
-					}
+				foreach ( $images_to_remove as $converted_image ) {
+					$parent_node = $converted_image->parentNode;
+					$parent_node->removeChild( $converted_image );
 
-					foreach ( $images_to_remove as $converted_image ) {
-						$parent_node = $converted_image->parentNode;
-						$parent_node->removeChild( $converted_image );
+					$src_url   = $converted_image->getAttribute( 'src' );
+					$codepoint = pathinfo( $src_url )['filename'];
+					$emoji     = html_entity_decode( '&#x' . $codepoint . ';' );
 
-						$src_url   = $converted_image->getAttribute( 'src' );
-						$codepoint = pathinfo( $src_url )['filename'];
-						$emoji     = html_entity_decode( '&#x' . $codepoint . ';' );
+					$parent_node->textContent = $emoji . $parent_node->textContent;
+					$parent_node->setAttribute( 'class', trim( join( ' ', [
+						'wp-exclude-emoji',
+						$parent_node->getAttribute( 'class' )
+					] ) ) );
+				}
+			}
 
-						$parent_node->textContent = $emoji . $parent_node->textContent;
-						$parent_node->setAttribute( 'class', trim( join( ' ', [
-							'wp-exclude-emoji',
-							$parent_node->getAttribute( 'class' )
-						] ) ) );
+			$table_html = $dom_handler->saveHTML();
+		}
+
+		return $table_html;
+	}
+
+	/**
+	 * Restore conversion related functionality to table.
+	 *
+	 * @param string $table_html table html
+	 *
+	 * @return string table html
+	 */
+	public function add_conversions( $table_html ) {
+		$dom_handler = Dom_Document_Factory::make( $table_html );
+
+		if ( ! is_null( $dom_handler ) ) {
+			$dom_query = new DOMXPath( $dom_handler );
+
+			$disabled_p_elements = $dom_query->query( '//p[contains(@class, wp-exclude-emoji)]' );
+
+			if ( $disabled_p_elements->length > 0 ) {
+				foreach ( $disabled_p_elements as $p_element ) {
+					$class_list = $p_element->getAttribute( 'class' );
+					$class_list = str_replace( 'wp-exclude-emoji', '', $class_list );
+
+					if ( empty( $class_list ) ) {
+						$p_element->removeAttribute( 'class' );
+					} else {
+						$p_element->setAttribute( 'class', trim( ltrim( $class_list ) ) );
 					}
 				}
 
@@ -146,6 +176,10 @@ class Emoji_Manager {
 		return $defaults;
 	}
 
+	/**
+	 * Get plugin setting related to enabled status of emoji manager.
+	 * @return boolean status
+	 */
 	private function get_emoji_conversion_status() {
 		return Init::instance()->settings_manager->get_option_value( $this->emoji_status_option_id );
 	}
@@ -164,8 +198,21 @@ class Emoji_Manager {
 			remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
 			remove_action( 'admin_print_styles', 'print_emoji_styles' );
 
-			add_filter( 'wp-table-builder/filter/get_table', [ $this, 'rollback_conversions' ], 10, 1 );
-			add_filter( 'wp-table-builder/filter/table_html_shortcode', [ $this, 'rollback_conversions' ], 10, 1 );
+			add_filter( 'wp-table-builder/filter/get_table', [ $this, 'remove_conversions' ], 10, 1 );
+			add_filter( 'wp-table-builder/filter/table_html_shortcode', [ $this, 'remove_conversions' ], 10, 1 );
+		} else {
+			add_filter( 'wp-table-builder/filter/get_table', [ $this, 'add_conversions' ], 10, 1 );
+			add_filter( 'wp-table-builder/filter/table_html_shortcode', [ $this, 'add_conversions' ], 10, 1 );
 		}
+
+		$this->add_builder_data();
+	}
+
+	/**
+	 * Add builder related data to frontend.
+	 * @return void
+	 */
+	private function add_builder_data() {
+		Frontend_Data_Manager::add_plugin_setting( 'emojiConversionDisablerStatus', filter_var( $this->get_emoji_conversion_status(), FILTER_VALIDATE_BOOLEAN ) );
 	}
 }

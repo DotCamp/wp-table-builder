@@ -34858,7 +34858,8 @@ function BuilderStore() {
 
   var extraStoreOptions = {
     state: {
-      dirtyStatus: false
+      dirtyStatus: false,
+      settings: {}
     },
     getters: {
       getTableDirtyStatus: function getTableDirtyStatus(state) {
@@ -34874,6 +34875,11 @@ function BuilderStore() {
       },
       tableId: function tableId(state) {
         return state.tableId;
+      },
+      getSetting: function getSetting(state) {
+        return function (settingId) {
+          return state.settings[settingId];
+        };
       }
     },
     mutations: {

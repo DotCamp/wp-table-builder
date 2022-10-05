@@ -55,7 +55,15 @@ class Frontend_Data_Manager {
 				$builder_data = array_merge( $builder_data, $final_data );
 			} else {
 				if ( $store ) {
-					$builder_data['store'][ $id ] = $final_data;
+					if ( ! isset( $builder_data['store'] ) ) {
+						$builder_data['store'] = [];
+					}
+					if ( ! isset( $builder_data['store'][ $id ] ) ) {
+						$builder_data['store'][ $id ] = $final_data;
+					} else {
+						// if there is already a store option defined with same id, merge all together
+						$builder_data['store'][ $id ] = array_merge( $builder_data['store'][ $id ], $final_data );
+					}
 				} else {
 					$builder_data[ $id ] = $final_data;
 				}
@@ -63,6 +71,25 @@ class Frontend_Data_Manager {
 
 			return $builder_data;
 		}, 10, 1 );
+	}
+
+	/**
+	 * Add plugin setting to builder.
+	 * With this function, plugin settings will be saved to builder store for easy and universal access for all builder elements. It will also remove the necessity to add plugin settings to relevant store modules one by one.
+	 *
+	 * @param array | string $setting_name setting name, if an array with setting_name=>value supplied, that array values will be used as second function argument.
+	 * @param mixed $setting_value setting value, if an array is supplied with first argument, this one will be ignored
+	 *
+	 * @return void
+	 */
+	public static function add_plugin_setting( $setting_name, $setting_value = null ) {
+		$final_settings = $setting_name;
+
+		if ( ! is_array( $setting_name ) ) {
+			$final_settings = [ $setting_name => $setting_value ];
+		}
+
+		static::add_builder_data($final_settings, 'settings', true);
 	}
 
 	/**

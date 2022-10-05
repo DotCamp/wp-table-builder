@@ -68,7 +68,6 @@ class Icon_Manager {
 	 */
 	public function icon_manager_frontend_data() {
 		return $this->get_icon_list();
-
 	}
 
 	/**
