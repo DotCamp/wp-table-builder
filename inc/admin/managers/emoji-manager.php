@@ -11,6 +11,8 @@ use WP_Table_Builder\Inc\Core\Init;
 use function add_action;
 use function add_filter;
 use function esc_html__;
+use function get_post_type;
+use function get_queried_object;
 use function remove_action;
 
 /**
@@ -47,8 +49,26 @@ class Emoji_Manager {
 
 		add_action( 'init', [
 			$instance,
-			'main_logic'
+			'add_table_html_related_logic'
 		], 11, 0 );
+
+		add_action( 'wp_head', [ $instance, 'selective_functionality' ], 1 );
+	}
+
+	/**
+	 * Enable this managers functionality on client side if there is a plugin table on the page.
+	 * @return void
+	 */
+	public function selective_functionality() {
+		$target_obj = get_queried_object();
+
+		if ( ! is_null( $target_obj ) && get_post_type( $target_obj ) === 'post' ) {
+			$content = $target_obj->post_content;
+			$match   = preg_match( '/(\[wptb id=[0-9]+\])/', $content );
+			if ( $match ) {
+				$this->main_logic();
+			}
+		}
 	}
 
 	/**
@@ -196,7 +216,15 @@ class Emoji_Manager {
 			remove_action( 'wp_print_styles', 'print_emoji_styles' );
 			remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
 			remove_action( 'admin_print_styles', 'print_emoji_styles' );
+		}
+	}
 
+	/**
+	 * Logic related to table html string.
+	 * @return void
+	 */
+	public function add_table_html_related_logic() {
+		if ( $this->get_emoji_conversion_status() ) {
 			add_filter( 'wp-table-builder/filter/get_table', [ $this, 'remove_conversions' ], 10, 1 );
 			add_filter( 'wp-table-builder/filter/table_html_shortcode', [ $this, 'remove_conversions' ], 10, 1 );
 		} else {
