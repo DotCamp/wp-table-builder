@@ -4,11 +4,28 @@
  * @param {boolean} status whether conversion is disabled or not
  */
 function EmojiConversionDisabler(status) {
-// TODO [ErdemBircan] remove for production
-console.log(status)	;
-	if (status) {
-		// TODO [ErdemBircan] remove for production
-		console.log('emoji conversion preventer loaded');
+	const targetTable = WPTB_Helper.getPluginTables();
+	if (status && targetTable && !Array.isArray(targetTable)) {
+		const options = { childList: true, subtree: true };
+
+		/**
+		 * Observer callback.
+		 *
+		 * @param {Array<MutationRecord>} mutationList mutation list
+		 */
+		const observeCallback = (mutationList) => {
+			// eslint-disable-next-line array-callback-return
+			mutationList.map(({ addedNodes }) => {
+				Array.from(addedNodes).map((addedElement) => {
+					if (addedElement.nodeName.toLowerCase() === 'p') {
+						addedElement.classList.add('wp-exclude-emoji');
+					}
+				});
+			});
+		};
+		const observer = new MutationObserver(observeCallback);
+
+		observer.observe(targetTable, options);
 	}
 }
 

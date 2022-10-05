@@ -146,7 +146,6 @@ class Emoji_Manager {
 			'label'   => esc_html__( 'Disable emoji to image conversion', 'wp-table-builder' )
 		];
 
-
 		return $frontend_data;
 	}
 

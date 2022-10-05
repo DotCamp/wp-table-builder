@@ -2667,4 +2667,21 @@ var WPTB_Helper = {
 			}
 		}
 	},
+	/**
+	 * Get all plugin related tables on current document.
+	 *
+	 * @return {Array | HTMLTableElement | null } plugin tables, if there is only one a plugin table and null if none found
+	 */
+	getPluginTables() {
+		const availablePluginTables = Array.from(document.querySelectorAll('table.wptb-preview-table'));
+
+		if (availablePluginTables.length === 1) {
+			return availablePluginTables[0];
+		}
+		if (availablePluginTables.length === 0) {
+			return null;
+		}
+
+		return availablePluginTables;
+	},
 };
