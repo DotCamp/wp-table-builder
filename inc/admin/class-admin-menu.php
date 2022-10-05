@@ -7,6 +7,7 @@ use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin\Managers\Addon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Frontend_Data_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
+use WP_Table_Builder\Inc\Common\Factory\Dom_Document_Factory;
 use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Core\Init;
 use function add_query_arg;
@@ -55,6 +56,10 @@ class Admin_Menu {
 		add_action( 'wp_ajax_save_table', array( $this, 'save_table' ) );
 		add_action( 'wp_ajax_get_table', array( $this, 'get_table' ) );
 		add_action( 'admin_bar_menu', array( $this, 'add_wp_admin_bar_new_table_create_page' ), 500 );
+
+		add_filter( 'wp-table-builder/filter/get_table', [ $this, 'strip_tags' ], 10, 1 );
+		add_filter( 'wp-table-builder/filter/table_html_shortcode', [ $this, 'strip_tags' ], 10, 1 );
+		add_filter( 'wp-table-builder/table_content', [ $this, 'strip_tags' ], 10, 1 );
 	}
 
 	public function create_table() {
@@ -178,6 +183,39 @@ class Admin_Menu {
 			$name = $post->post_title;
 			die( json_encode( [ $name, $table_html ] ) );
 		}
+	}
+
+	/**
+	 * Strip unwanted tags from table HTML.
+	 *
+	 * @param string $table_html table html
+	 *
+	 * @return string $table_html
+	 */
+	public function strip_tags( $table_html ) {
+		$no_no_no_list = [ 'script' ];
+
+		$dom_handler = Dom_Document_Factory::make( $table_html );
+		if ( ! is_null( $dom_handler ) ) {
+			$remove_list = [];
+
+			foreach ( $no_no_no_list as $tag ) {
+				$target_tags = iterator_to_array( $dom_handler->getElementsByTagName( $tag ) );
+
+				if ( ! empty( $target_tags ) ) {
+					$remove_list = array_merge( $remove_list, $target_tags );
+				}
+			}
+
+			if ( ! empty( $remove_list ) ) {
+				foreach ( $remove_list as $index => $remove_tag ) {
+					$remove_tag->parentNode->removeChild( $remove_tag );
+				}
+				$table_html = $dom_handler->saveHTML();
+			}
+		}
+
+		return $table_html;
 	}
 
 	/**
