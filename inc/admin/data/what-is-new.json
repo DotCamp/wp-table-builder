@@ -3,6 +3,10 @@
     [
       "Table trash, restore and delete permanently functionality.",
       "table_trash.png"
+    ],
+    [
+      "Ability to disable conversion of emoji codes to images.",
+      "emoji_image_conversion.png"
     ]
   ]
 }
