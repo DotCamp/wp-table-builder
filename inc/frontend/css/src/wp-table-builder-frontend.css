@@ -18,8 +18,8 @@
     overflow-x: auto !important;
 }
 
-.wptb-table-container[data-wptb-horizontal-scroll-status="true"] .wptb-table-container-matrix{
-    padding:10px 0;
+.wptb-table-container[data-wptb-horizontal-scroll-status="true"] .wptb-table-container-matrix {
+    padding: 10px 0;
 }
 
 .wptb-table-container-matrix {
@@ -168,6 +168,10 @@ table.wptb-preview-table {
 
 .wptb-cell .wptb-ph-element a {
     box-shadow: none;
+}
+
+.wptb-cell a p {
+    cursor: unset !important;
 }
 
 .wptb-image-wrapper img {
