@@ -62,7 +62,7 @@ class Emoji_Manager {
 	public function selective_functionality() {
 		$target_obj = get_queried_object();
 
-		if ( ! is_null( $target_obj ) && get_post_type( $target_obj ) === 'post' ) {
+		if ( ! is_null( $target_obj ) && get_post_type( $target_obj ) === 'post' && isset( $target_obj->post_content ) ) {
 			$content = $target_obj->post_content;
 			$match   = preg_match( '/(\[wptb id=[0-9]+\])/', $content );
 			if ( $match ) {

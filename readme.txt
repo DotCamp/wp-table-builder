@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.4.5 =
+
+* FIX: An issue affecting some WooCommerce servers based on emoji manager.
+
 = 1.4.4 =
 
 * PRO: FIX: An issue on pro version override base version on update.
