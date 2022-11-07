@@ -2,8 +2,8 @@
 Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
-Tested up to: 6.0
-Stable tag: 1.4.5-dev
+Tested up to: 6.1
+Stable tag: 1.4.5
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.4.5 =
 
 * FIX: An issue affecting some WooCommerce servers based on emoji manager.
+* IMPROVE: Cursor style updates for anchor elements.
 
 = 1.4.4 =
 
