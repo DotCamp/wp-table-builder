@@ -1492,6 +1492,13 @@ ul.wptb-tabs {
   padding: 0 20px;
 }
 
+@media screen and (max-width: 1250px) {
+  #wptb-setup-name {
+    width: 100%;
+  }
+}
+
+
 .wptb-messaging {
   color: white;
   height: 0;

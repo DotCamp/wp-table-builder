@@ -92,6 +92,8 @@ That's it. You're done!
 
 = 1.4.6 =
 
+* IMPROVE: Builder responsive sizes for different screen width values.
+
 = 1.4.5 =
 
 * FIX: An issue affecting some WooCommerce servers based on emoji manager.
