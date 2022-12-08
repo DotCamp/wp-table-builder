@@ -245,6 +245,21 @@ class Table_Setting_Element extends Element_Base_Object {
 
 		];
 
+		$pagination_section_group_controls = [
+			'paginationEnable' => [
+				'label'        => esc_html__( 'Enable pagination', 'wp-table-builder-pro' ),
+				'type'         => Controls_Manager::TOGGLE3,
+				'selectors'    => [
+					[
+						'query' => '{{{data.container}}}',
+						'type'  => Controls_Manager::DATASET,
+						'key'   => 'wptbPaginationStatus'
+					]
+				],
+				'defaultValue' => false
+			]
+		];
+
 		// general section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_general', esc_html__( 'general', NS\PLUGIN_TEXT_DOMAIN ), $general_section_group_controls, [
 			$this,
@@ -269,6 +284,12 @@ class Table_Setting_Element extends Element_Base_Object {
 			$this,
 			'add_control'
 		], false, 'arrows-alt-h' );
+
+		// pagination section group
+		Control_Section_Group_Collapse::add_section( 'table_settings_pagination', esc_html__( 'pagination', NS\PLUGIN_TEXT_DOMAIN ), $pagination_section_group_controls, [
+			$this,
+			'add_control'
+		], false, 'pager' );
 
 		// table settings registered action hook
 		do_action( 'wp-table-builder/table_settings_registered', $this );
