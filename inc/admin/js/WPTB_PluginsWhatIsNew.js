@@ -12591,14 +12591,14 @@ var _default2 = {
   }
 };
 exports.default = _default2;
-        var $52ed6f = exports.default || module.exports;
+        var $19599b = exports.default || module.exports;
       
-      if (typeof $52ed6f === 'function') {
-        $52ed6f = $52ed6f.options;
+      if (typeof $19599b === 'function') {
+        $19599b = $19599b.options;
       }
     
         /* template */
-        Object.assign($52ed6f, (function () {
+        Object.assign($19599b, (function () {
           var render = function () {
   var _vm = this
   var _h = _vm.$createElement

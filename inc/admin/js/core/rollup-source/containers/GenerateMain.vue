@@ -222,7 +222,6 @@ export default {
 				this.generating = true;
 				if (cardId === 'blank') {
 					WPTB_Table(cols, rows);
-
 					const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
 					wptbTableStateSaveManager.tableStateSet();
 				} else {
@@ -268,7 +267,6 @@ export default {
 
 							return carry;
 						}, []);
-
 						// sort selected cells by row then by columns
 						selectedCells.sort();
 
@@ -347,7 +345,6 @@ export default {
 								Array.from(clonedCell.querySelectorAll('div')).map(incrementIds);
 							});
 						});
-
 						// add extra rows to table
 						// eslint-disable-next-line array-callback-return
 						Array.from(Array(extraRows)).map((r, ri) => {
@@ -373,7 +370,6 @@ export default {
 					}
 
 					WPTB_Table();
-
 					WPTB_Settings();
 					const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
 					wptbTableStateSaveManager.tableStateSet();

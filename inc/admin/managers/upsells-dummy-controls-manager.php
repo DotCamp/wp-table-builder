@@ -313,6 +313,8 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	 * @return void
 	 */
 	public function upsell_setting_controls( $context ) {
+
+		// For sticky section
 		$sticky_controls = [
 			'topRowStickyUpsell'      =>
 				[
@@ -337,6 +339,32 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 			$context,
 			'add_control'
 		], false, 'thumbtack' );
+
+		// For pagination section
+		$pagination_controls = [
+			'paginationEnable' => [
+				'label' => __('Enable Pagination', 'wp-table-builder'),
+				'type' => Controls_Manager::TOGGLE,
+			],
+			'rowsPerPage' => [
+				'label' => __('Rows Per Page ( 3 ~ 50)', 'wp_table_builder'),
+				'type' => Controls_Manager::NUMBER,
+				'defaultValue' => '5'
+			],
+			'rowsChangeable' => [
+				'label' => __('Let visitors change <br />rows per page', 'wp_table_builder'),
+				'type' => Controls_Manager::TOGGLE
+			],
+			'paginationProOverlay'       => [
+				'type'        => Controls_Manager::PRO_OVERLAY,
+				'featureName' => esc_html__( 'Pagination', 'wp-table-builder' ),
+			]
+		];
+
+		Control_Section_Group_Collapse::add_section( 'upsell_pro_table_settings_pagination', esc_html__( 'pagination', 'wp-table-builder' ), $pagination_controls, [
+			$context,
+			'add_control'
+		], false, 'pager' );
 
 	}
 

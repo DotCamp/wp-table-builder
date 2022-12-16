@@ -49,7 +49,6 @@ tableContainer.style.height = '0px';
 
 document.addEventListener('wptb:table:generated', () => {
 	const generateWrapper = document.querySelector('.wptb-generate-wrapper');
-
 	if (generateWrapper) {
 		generateWrapper.addEventListener('animationend', (e) => {
 			if (e.animationName === 'wptb-basic-disappear') {
