@@ -366,6 +366,31 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 			'add_control'
 		], false, 'pager' );
 
+		// For search section
+		$search_controls = [
+      'searchEnable' => [
+        'label' => __('Enable Search', 'wp-table-builder'),
+        'type' => Controls_Manager::TOGGLE
+      ],
+      'searchbarPosition' => [
+				'label'        => esc_html__( 'Search Bar Position', 'wp-table-builder' ),
+				'type'         => Controls_Manager::SELECT2,
+				'options'      => [
+					'left'  => 'left',
+					'right' => 'right',
+				],
+				'defaultValue' => 'left'
+			],
+			'searchProOverlay'       => [
+				'type'        => Controls_Manager::PRO_OVERLAY,
+				'featureName' => esc_html__( 'Search', 'wp-table-builder' ),
+			]
+    ];
+
+    Control_Section_Group_Collapse::add_section('upsell_pro_table_settings_search', esc_html__('search', "wp-table-builder"), $search_controls, [
+      $context,
+      'add_control'
+    ], false, 'search');
 	}
 
 	/**
