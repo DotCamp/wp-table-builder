@@ -57,6 +57,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	public function register_table_cell_settings_upsells( $cell_settings_main ) {
 		$this->register_empty_cell_setting( $cell_settings_main );
 		$this->register_highlight_column_setting( $cell_settings_main );
+		$this->register_highlight_row_setting( $cell_settings_main );		
 	}
 
 	public function register_empty_cell_setting( $cell_settings_main ) {
@@ -99,6 +100,28 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 				'featureName'       => esc_html__( 'Highlight Column', 'wp-table-builder' ),
 				'target'            => 'append',
 				'appendTargetQuery' => '.wptb-settings-row[id$=highlightColumn]'
+			]
+		);
+	}
+
+	public function register_highlight_row_setting( $cell_settings_main ) {
+		$cell_settings_main->add_control(
+			'highlightRow',
+			[
+				'label'    => __( 'Highlight Row', 'wp_table_builder' ),
+				'labelOn'  => __( 'Fixed', 'wp_table_builder' ),
+				'labelOff' => __( 'Auto', 'wp_table_builder' ),
+				'type'     => Controls_Manager::TOGGLE
+			]
+		);
+
+		$cell_settings_main->add_control(
+			'highlightRowOverlay',
+			[
+				'type'              => Controls_Manager::PRO_OVERLAY,
+				'featureName'       => esc_html__( 'Highlight Row', 'wp-table-builder' ),
+				'target'            => 'append',
+				'appendTargetQuery' => '.wptb-settings-row[id$=highlightRow]'
 			]
 		);
 	}
