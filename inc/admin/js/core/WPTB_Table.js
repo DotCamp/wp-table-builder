@@ -183,7 +183,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         /**
          * empty cell | highlight setting
          */
-        // 
+
         const infArr = thisElem.className.match(/wptb-element-table_cell_setting-((.+-)\d+)/i);
         if (infArr && infArr.length > 1) {
             let controlKeys = [ 'emptyCell', 'highlightRow', 'highlightColumn'];
@@ -194,8 +194,12 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                     if(controlKeys[i] == 'emptyCell') {
                         settingElem.querySelector('input[type="checkbox"]').checked = thisElem.classList.contains('wptb-empty');
                     } else if(controlKeys[i] == 'highlightRow') {
+
+                        // Extract highlight class name in the class list
                         const className = thisElem.parentElement.classList[1] || "";
-                        const isHighlighted = className.indexOf("wptb-row-highlighted-") != -1 
+
+                        // Check whether the row is already highlighted
+                        const isHighlighted = className.indexOf("wptb-row-highlighted-") > -1 
                             && thisElem.parentElement.getAttribute("class").indexOf("wptb-row-highlighted-none") == -1;
                         if(isHighlighted) {
 
@@ -208,7 +212,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                         }
                     } else if(controlKeys[i] == 'highlightColumn') {
                         const className = thisElem.getAttribute("class");
-                        const isHighlighted = (className.indexOf("wptb-col-highlighted") != -1
+
+                        // Check whether the column is already highlighted
+                        const isHighlighted = (className.indexOf("wptb-col-highlighted") > -1
                             && className.indexOf("wptb-col-highlighted-none") == -1);
                         if(isHighlighted) {
                             const className = [...thisElem.classList].pop();
