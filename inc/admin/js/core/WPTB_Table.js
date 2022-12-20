@@ -181,16 +181,32 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         }
 
         /**
-         * empty cell setting
+         * empty cell | highlight setting
          */
-        // let emptySetting = document.
+        // 
         const infArr = thisElem.className.match(/wptb-element-table_cell_setting-((.+-)\d+)/i);
         if (infArr && infArr.length > 1) {
-            const controlKey = 'emptyCell';
-            const settingId = `wptb-el-table_cell_setting-${infArr[1]}-${controlKey}`;
-            const settingElem = document.getElementById(settingId);
-            if (settingElem) {
-                settingElem.querySelector('input[type="checkbox"]').checked = thisElem.classList.contains('wptb-empty')
+            let controlKeys = [ 'emptyCell', 'highlightRow', 'highlightColumn'];
+            for(let i in controlKeys) {   
+                const settingId = `wptb-el-table_cell_setting-${infArr[1]}-${controlKeys[i]}`;
+                const settingElem = document.getElementById(settingId);
+                if (settingElem) {
+                    if(controlKeys[i] == 'emptyCell') {
+                        settingElem.querySelector('input[type="checkbox"]').checked = thisElem.classList.contains('wptb-empty');
+                    } else if(controlKeys[i] == 'highlightRow') {
+                        const className = thisElem.parentElement.classList[1] || "";
+                        const isHighlighted = className.indexOf("wptb-row-highlighted-") != -1;
+                        if(isHighlighted) {
+
+                            // Extract the current highlight value
+                            const highlightValue = className.substr(21);
+                            const highlightRowInput = cellSettings.querySelectorAll(`.wptb-el-table_cell_setting-${infArr[1]}-rowTransformScale`);
+                            settingElem.querySelector('input[type="checkbox"]').click();
+                            highlightRowInput[0].value = highlightValue;
+                            highlightRowInput[1].value = highlightValue;
+                        }
+                    }
+                }
             }
         }
 
