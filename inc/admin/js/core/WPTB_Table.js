@@ -181,16 +181,53 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         }
 
         /**
-         * empty cell setting
+         * empty cell | highlight setting
          */
-        // let emptySetting = document.
+
         const infArr = thisElem.className.match(/wptb-element-table_cell_setting-((.+-)\d+)/i);
         if (infArr && infArr.length > 1) {
-            const controlKey = 'emptyCell';
-            const settingId = `wptb-el-table_cell_setting-${infArr[1]}-${controlKey}`;
-            const settingElem = document.getElementById(settingId);
-            if (settingElem) {
-                settingElem.querySelector('input[type="checkbox"]').checked = thisElem.classList.contains('wptb-empty')
+            let controlKeys = [ 'emptyCell', 'highlightRow', 'highlightColumn'];
+            for(let i in controlKeys) {   
+                const settingId = `wptb-el-table_cell_setting-${infArr[1]}-${controlKeys[i]}`;
+                const settingElem = document.getElementById(settingId);
+                if (settingElem) {
+                    if(controlKeys[i] == 'emptyCell') {
+                        settingElem.querySelector('input[type="checkbox"]').checked = thisElem.classList.contains('wptb-empty');
+                    } else if(controlKeys[i] == 'highlightRow') {
+
+                        // Extract highlight class name in the class list
+                        const className = thisElem.parentElement.classList[1] || "";
+
+                        // Check whether the row is already highlighted
+                        const isHighlighted = className.indexOf("wptb-row-highlighted-") > -1 
+                            && thisElem.parentElement.getAttribute("class").indexOf("wptb-row-highlighted-none") == -1;
+                        if(isHighlighted) {
+
+                            // Extract the current highlight value
+                            const highlightValue = className.substr(21);
+                            const highlightRowInput = cellSettings.querySelectorAll(`.wptb-el-table_cell_setting-${infArr[1]}-rowTransformScale`);
+                            settingElem.querySelector('input[type="checkbox"]').click();
+                            highlightRowInput[0].value = highlightValue;
+                            highlightRowInput[1].value = highlightValue;
+                        }
+                    } else if(controlKeys[i] == 'highlightColumn') {
+                        const className = thisElem.getAttribute("class");
+
+                        // Check whether the column is already highlighted
+                        const isHighlighted = (className.indexOf("wptb-col-highlighted") > -1
+                            && className.indexOf("wptb-col-highlighted-none") == -1);
+                        if(isHighlighted) {
+                            const className = [...thisElem.classList].pop();
+
+                            // Extract the current highlight value
+                            const highlightValue = thisElem.classList[0].substr(21);
+                            const highlightColInput = document.querySelectorAll(`.wptb-el-table_cell_setting-${infArr[1]}-columnTransformScale`);
+                            settingElem.querySelector('input[type="checkbox"]').click();
+                            highlightColInput[0].value = highlightValue;
+                            highlightColInput[1].value = highlightValue;
+                        }
+                    }
+                }
             }
         }
 
