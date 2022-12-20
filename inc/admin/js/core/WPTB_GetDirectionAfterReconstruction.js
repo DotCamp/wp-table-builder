@@ -6,7 +6,7 @@
  * @param {func} workFunction
  * @param {object} responsiveFront
  */
-var WPTB_GetDirectionAfterReconstruction = function (table, typeFirst, typeSecond,verticalProp, responsiveFront) {
+var WPTB_GetDirectionAfterReconstruction = function (table, typeFirst, typeSecond, verticalProp, responsiveFront) {
 
     let itemsPerHeader = 0;
     let tableMaxCols = table.maxCols;
@@ -51,7 +51,7 @@ var WPTB_GetDirectionAfterReconstruction = function (table, typeFirst, typeSecon
             } else {
                 itemsPerHeader = 0;
             }
-            return {type, itemsPerHeader}
+            return { type, itemsPerHeader }
         };
     } else {
         switchMode.switch = function (e) {
@@ -59,15 +59,15 @@ var WPTB_GetDirectionAfterReconstruction = function (table, typeFirst, typeSecon
             if (table.classList.contains('wptb-mobile-view-active')) {
                 if (table.classList.contains('wptb-table-preview-head')) {
                     type = [typeSecond, 2];
-                    if(type === verticalProp) {
+                    if (type === verticalProp) {
                         itemsPerHeader = tableMaxCols - 1;
                     }
                 }
                 let newTable = table.parentNode.parentNode.querySelector('.wptb-preview-table-mobile');
-                return {type, itemsPerHeader, newTable};
+                return { type, itemsPerHeader, newTable };
             }
 
-            return {type, itemsPerHeader}
+            return { type, itemsPerHeader }
         };
     }
 

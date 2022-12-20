@@ -1,22 +1,451 @@
-parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcelRequire,u="function"==typeof require&&require;function f(t,n){if(!r[t]){if(!e[t]){var i="function"==typeof parcelRequire&&parcelRequire;if(!n&&i)return i(t,!0);if(o)return o(t,!0);if(u&&"string"==typeof t)return u(t);var c=new Error("Cannot find module '"+t+"'");throw c.code="MODULE_NOT_FOUND",c}p.resolve=function(r){return e[t][1][r]||r},p.cache={};var l=r[t]=new f.Module(t);e[t][0].call(l.exports,p,l,l.exports,this)}return r[t].exports;function p(e){return f(p.resolve(e))}}f.isParcelRequire=!0,f.Module=function(e){this.id=e,this.bundle=f,this.exports={}},f.modules=e,f.cache=r,f.parent=o,f.register=function(r,t){e[r]=[function(e,r){r.exports=t},{}]};for(var c=0;c<t.length;c++)try{f(t[c])}catch(e){i||(i=e)}if(t.length){var l=f(t[t.length-1]);"object"==typeof exports&&"undefined"!=typeof module?module.exports=l:"function"==typeof define&&define.amd?define(function(){return l}):n&&(this[n]=l)}if(parcelRequire=f,i)throw i;return f}({"DCTP":[function(require,module,exports) {
-function r(r){if(Array.isArray(r))return r}module.exports=r;
-},{}],"LoeL":[function(require,module,exports) {
-function r(r,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(r)){var e=[],n=!0,o=!1,l=void 0;try{for(var i,u=r[Symbol.iterator]();!(n=(i=u.next()).done)&&(e.push(i.value),!t||e.length!==t);n=!0);}catch(a){o=!0,l=a}finally{try{n||null==u.return||u.return()}finally{if(o)throw l}}return e}}module.exports=r;
-},{}],"jEQo":[function(require,module,exports) {
-function n(n,r){(null==r||r>n.length)&&(r=n.length);for(var e=0,l=new Array(r);e<r;e++)l[e]=n[e];return l}module.exports=n;
-},{}],"Dbv9":[function(require,module,exports) {
-var r=require("./arrayLikeToArray");function t(t,e){if(t){if("string"==typeof t)return r(t,e);var o=Object.prototype.toString.call(t).slice(8,-1);return"Object"===o&&t.constructor&&(o=t.constructor.name),"Map"===o||"Set"===o?Array.from(t):"Arguments"===o||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(o)?r(t,e):void 0}}module.exports=t;
-},{"./arrayLikeToArray":"jEQo"}],"MWEO":[function(require,module,exports) {
-function e(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}module.exports=e;
-},{}],"DERy":[function(require,module,exports) {
-var r=require("./arrayWithHoles"),e=require("./iterableToArrayLimit"),t=require("./unsupportedIterableToArray"),i=require("./nonIterableRest");function u(u,a){return r(u)||e(u,a)||t(u,a)||i()}module.exports=u;
-},{"./arrayWithHoles":"DCTP","./iterableToArrayLimit":"LoeL","./unsupportedIterableToArray":"Dbv9","./nonIterableRest":"MWEO"}],"cQfh":[function(require,module,exports) {
-function e(e,r,n){return r in e?Object.defineProperty(e,r,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[r]=n,e}module.exports=e;
-},{}],"xOn8":[function(require,module,exports) {
-function o(t){return"function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?module.exports=o=function(o){return typeof o}:module.exports=o=function(o){return o&&"function"==typeof Symbol&&o.constructor===Symbol&&o!==Symbol.prototype?"symbol":typeof o},o(t)}module.exports=o;
-},{}],"l1PD":[function(require,module,exports) {
+// modules are defined as an array
+// [ module function, map of requires ]
+//
+// map of requires is short require name -> numeric require
+//
+// anything defined in a previous bundle is accessed via the
+// orig method which is the require for previous bundles
+parcelRequire = (function (modules, cache, entry, globalName) {
+  // Save the require from previous bundle to this closure if any
+  var previousRequire = typeof parcelRequire === 'function' && parcelRequire;
+  var nodeRequire = typeof require === 'function' && require;
+
+  function newRequire(name, jumped) {
+    if (!cache[name]) {
+      if (!modules[name]) {
+        // if we cannot find the module within our internal map or
+        // cache jump to the current global require ie. the last bundle
+        // that was added to the page.
+        var currentRequire = typeof parcelRequire === 'function' && parcelRequire;
+        if (!jumped && currentRequire) {
+          return currentRequire(name, true);
+        }
+
+        // If there are other bundles on this page the require from the
+        // previous one is saved to 'previousRequire'. Repeat this as
+        // many times as there are bundles until the module is found or
+        // we exhaust the require chain.
+        if (previousRequire) {
+          return previousRequire(name, true);
+        }
+
+        // Try the node require function if it exists.
+        if (nodeRequire && typeof name === 'string') {
+          return nodeRequire(name);
+        }
+
+        var err = new Error('Cannot find module \'' + name + '\'');
+        err.code = 'MODULE_NOT_FOUND';
+        throw err;
+      }
+
+      localRequire.resolve = resolve;
+      localRequire.cache = {};
+
+      var module = cache[name] = new newRequire.Module(name);
+
+      modules[name][0].call(module.exports, localRequire, module, module.exports, this);
+    }
+
+    return cache[name].exports;
+
+    function localRequire(x){
+      return newRequire(localRequire.resolve(x));
+    }
+
+    function resolve(x){
+      return modules[name][1][x] || x;
+    }
+  }
+
+  function Module(moduleName) {
+    this.id = moduleName;
+    this.bundle = newRequire;
+    this.exports = {};
+  }
+
+  newRequire.isParcelRequire = true;
+  newRequire.Module = Module;
+  newRequire.modules = modules;
+  newRequire.cache = cache;
+  newRequire.parent = previousRequire;
+  newRequire.register = function (id, exports) {
+    modules[id] = [function (require, module) {
+      module.exports = exports;
+    }, {}];
+  };
+
+  var error;
+  for (var i = 0; i < entry.length; i++) {
+    try {
+      newRequire(entry[i]);
+    } catch (e) {
+      // Save first error but execute all entries
+      if (!error) {
+        error = e;
+      }
+    }
+  }
+
+  if (entry.length) {
+    // Expose entry point to Node, AMD or browser globals
+    // Based on https://github.com/ForbesLindesay/umd/blob/master/template.js
+    var mainExports = newRequire(entry[entry.length - 1]);
+
+    // CommonJS
+    if (typeof exports === "object" && typeof module !== "undefined") {
+      module.exports = mainExports;
+
+    // RequireJS
+    } else if (typeof define === "function" && define.amd) {
+     define(function () {
+       return mainExports;
+     });
+
+    // <script>
+    } else if (globalName) {
+      this[globalName] = mainExports;
+    }
+  }
+
+  // Override the current require with this new one
+  parcelRequire = newRequire;
+
+  if (error) {
+    // throw error from earlier, _after updating parcelRequire_
+    throw error;
+  }
+
+  return newRequire;
+})({"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+module.exports = _arrayWithHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":[function(require,module,exports) {
+function _iterableToArrayLimit(arr, i) {
+  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
+  if (null != _i) {
+    var _s,
+      _e,
+      _x,
+      _r,
+      _arr = [],
+      _n = !0,
+      _d = !1;
+    try {
+      if (_x = (_i = _i.call(arr)).next, 0 === i) {
+        if (Object(_i) !== _i) return;
+        _n = !1;
+      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) {
+        ;
+      }
+    } catch (err) {
+      _d = !0, _e = err;
+    } finally {
+      try {
+        if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return;
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+    return _arr;
+  }
+}
+module.exports = _iterableToArrayLimit, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+  return arr2;
+}
+module.exports = _arrayLikeToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":[function(require,module,exports) {
+var arrayLikeToArray = require("./arrayLikeToArray.js");
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{"./arrayLikeToArray.js":"../../../../../node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js":[function(require,module,exports) {
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+module.exports = _nonIterableRest, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js":[function(require,module,exports) {
+var arrayWithHoles = require("./arrayWithHoles.js");
+var iterableToArrayLimit = require("./iterableToArrayLimit.js");
+var unsupportedIterableToArray = require("./unsupportedIterableToArray.js");
+var nonIterableRest = require("./nonIterableRest.js");
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+module.exports = _slicedToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{"./arrayWithHoles.js":"../../../../../node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit.js":"../../../../../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray.js":"../../../../../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest.js":"../../../../../node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"../../../../../node_modules/@babel/runtime/helpers/typeof.js":[function(require,module,exports) {
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  return (module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports), _typeof(obj);
+}
+module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/toPrimitive.js":[function(require,module,exports) {
+var _typeof = require("./typeof.js")["default"];
+function _toPrimitive(input, hint) {
+  if (_typeof(input) !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if (_typeof(res) !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (hint === "string" ? String : Number)(input);
+}
+module.exports = _toPrimitive, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{"./typeof.js":"../../../../../node_modules/@babel/runtime/helpers/typeof.js"}],"../../../../../node_modules/@babel/runtime/helpers/toPropertyKey.js":[function(require,module,exports) {
+var _typeof = require("./typeof.js")["default"];
+var toPrimitive = require("./toPrimitive.js");
+function _toPropertyKey(arg) {
+  var key = toPrimitive(arg, "string");
+  return _typeof(key) === "symbol" ? key : String(key);
+}
+module.exports = _toPropertyKey, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{"./typeof.js":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","./toPrimitive.js":"../../../../../node_modules/@babel/runtime/helpers/toPrimitive.js"}],"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js":[function(require,module,exports) {
+var toPropertyKey = require("./toPropertyKey.js");
+function _defineProperty(obj, key, value) {
+  key = toPropertyKey(key);
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
+},{"./toPropertyKey.js":"../../../../../node_modules/@babel/runtime/helpers/toPropertyKey.js"}],"../WPTB_ExtraStyles.js":[function(require,module,exports) {
 var global = arguments[3];
-var e=arguments[3],t=l(require("@babel/runtime/helpers/slicedToArray")),n=l(require("@babel/runtime/helpers/defineProperty")),r=l(require("@babel/runtime/helpers/typeof"));function l(e){return e&&e.__esModule?e:{default:e}}!function(e,t,n){"undefined"!=typeof module&&"object"===("undefined"==typeof exports?"undefined":(0,r.default)(exports))?module.exports=n():t[e]=n()}("WPTB_ExtraStyles",self||e,function(){return new function(){var e,r=this;this.modes={builder:"builder",frontEnd:"frontEnd",block:"block"},this.baseDocument=document,this.currentMode=this.modes.builder,this.generalStyles="";var l=(e={},(0,n.default)(e,this.modes.builder,".wptb-table-setup .wptb-preview-table"),(0,n.default)(e,this.modes.block,".wptb-block-table-setup .wptb-preview-table"),(0,n.default)(e,this.modes.frontEnd,".wptb-table-container .wptb-preview-table"),e),o=function(e,t){var n=t.replaceAll(/(\r?\n)|(\/\*.+?\*\/)|(\s*!important)/g,"").replaceAll(";"," !important;").split("}"),r=[];return n.map(function(t){var n=new RegExp(/(.+?)\{/g).exec(t);n&&r.push(t.replace(n[1],"".concat(e," ").concat(n[1])))}),"".concat(r.join("}"),"}")},a=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null,n=document.createElement("style");n.type="text/css",n.id="wptb-general-styles",t?t.insertAdjacentElement("beforebegin",n):(r.currentMode===r.modes.block?r.baseDocument:r.baseDocument.querySelector("head")).appendChild(n);var l=o(e.parentPrefix,e.styles);n.appendChild(document.createTextNode(l))},d=function(e){var n=e.dataset.wptbExtraStyles;if(n){var l=atob(n),d=e.getAttribute("class").match(/wptb-element-main-table_setting-(?:startedid-)?(\d+)/),s=(0,t.default)(d,2)[1],i="wptb-extra-styles-"+s,c=r.baseDocument.querySelector("head"),u=null==c?void 0:c.querySelector("#".concat(i));u||((u=document.createElement("style")).type="text/css",u.id=i,e.dataset.disableThemeStyles&&r.currentMode===r.modes.frontEnd||r.currentMode===r.modes.block?(e.insertAdjacentElement("beforebegin",u),r.currentMode===r.modes.frontEnd&&r.generalStyles&&a(r.generalStyles,e)):c.appendChild(u));var b=".wptb-element-main-table_setting-".concat(s),p=o(b,l);u.innerHTML="",u.appendChild(document.createTextNode(p))}};this.applyStyles=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:r.modes.frontEnd,t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null,n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:document;r.baseDocument=n,r.currentMode=e,r.generalStyles=t;var o=Array.from(r.baseDocument.querySelectorAll(l[e]));o&&o.map(d),e!==r.modes.frontEnd&&e!==r.modes.block||!t||a(t)}}});
-},{"@babel/runtime/helpers/slicedToArray":"DERy","@babel/runtime/helpers/defineProperty":"cQfh","@babel/runtime/helpers/typeof":"xOn8"}],"fA4i":[function(require,module,exports) {
-"use strict";var e=t(require("../WPTB_ExtraStyles"));function t(e){return e&&e.__esModule?e:{default:e}}var l=document.querySelector("#wptb-block-preview-base").shadowRoot;e.default.applyStyles(e.default.modes.block,null,l);
-},{"../WPTB_ExtraStyles":"l1PD"}]},{},["fA4i"], null)
+"use strict";
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+/**
+ * Extra styles module to add custom css rules defined for individual tables.
+ */
+(function UMD(key, context, factory) {
+  if (typeof module !== 'undefined' && (typeof exports === "undefined" ? "undefined" : (0, _typeof2.default)(exports)) === 'object') {
+    module.exports = factory();
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    context[key] = factory();
+  }
+  // eslint-disable-next-line no-restricted-globals
+})('WPTB_ExtraStyles', self || global, function () {
+  /**
+   * Extra styles frontend manager.
+   *
+   * This component will be responsible for adding and maintaining extra styles defined for tables.
+   *
+   * @class
+   */
+  // eslint-disable-next-line camelcase
+  function WPTB_ExtraStyles() {
+    var _tableQueries,
+      _this = this;
+    /**
+     * Extra styles operation modes
+     *
+     * @type {Object}
+     */
+    this.modes = {
+      builder: 'builder',
+      frontEnd: 'frontEnd',
+      block: 'block'
+    };
+
+    /**
+     * Base document for DOM operations.
+     *
+     * @type {Document}
+     */
+    this.baseDocument = document;
+
+    /**
+     * Current mode extra styles are operating on.
+     *
+     * @type {string}
+     */
+    this.currentMode = this.modes.builder;
+
+    /**
+     * General table styles.
+     *
+     * @type {string}
+     */
+    this.generalStyles = '';
+
+    /**
+     * HTML queries for table element in different plugin modes
+     *
+     * @type {Object}
+     */
+    var tableQueries = (_tableQueries = {}, (0, _defineProperty2.default)(_tableQueries, this.modes.builder, '.wptb-table-setup .wptb-preview-table'), (0, _defineProperty2.default)(_tableQueries, this.modes.block, '.wptb-block-table-setup .wptb-preview-table'), (0, _defineProperty2.default)(_tableQueries, this.modes.frontEnd, '.wptb-table-container .wptb-preview-table'), _tableQueries);
+
+    /**
+     * Format styles.
+     *
+     * @param {string} styles styles
+     * @return {string} formatted styles
+     */
+    var formatStyles = function formatStyles(styles) {
+      // remove all newlines, comments and '!important' from style string to make it a one liner
+      var cleaned = styles.replaceAll(/(\r?\n)|(\/\*.+?\*\/)|(\s*!important)/g, '');
+
+      // add '!important' to all rules to override default style rules
+      return cleaned.replaceAll(';', ' !important;');
+    };
+
+    /**
+     * Reform style rules so they will only affect given table id.
+     *
+     * @param {number} prefix prefix string that will be added to all rules
+     * @param {string} extraStyles extra styles
+     * @return {string} new style properties prefixed with table id class
+     */
+    var prefixStyleRules = function prefixStyleRules(prefix, extraStyles) {
+      // reformat styles into a suitable form for our regexp operations
+      var formattedStyles = formatStyles(extraStyles);
+      var splitStyles = formattedStyles.split('}');
+      var prefixedStylesArray = [];
+
+      // eslint-disable-next-line array-callback-return
+      splitStyles.map(function (split) {
+        var regExp = new RegExp(/(.+?)\{/g);
+        var matches = regExp.exec(split);
+        if (matches) {
+          prefixedStylesArray.push(split.replace(matches[1], "".concat(prefix, " ").concat(matches[1])));
+        }
+      });
+      return "".concat(prefixedStylesArray.join('}'), "}");
+    };
+
+    /**
+     * Apply general styles to document.
+     *
+     * @param {string} generalStyles general style rules
+     * @param {Node} baseElement element to use as base
+     */
+    var applyGeneralStyles = function applyGeneralStyles(generalStyles) {
+      var baseElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var generalStylesheet = document.createElement('style');
+      generalStylesheet.type = 'text/css';
+      generalStylesheet.id = 'wptb-general-styles';
+      if (!baseElement) {
+        var head = _this.currentMode === _this.modes.block ? _this.baseDocument : _this.baseDocument.querySelector('head');
+        head.appendChild(generalStylesheet);
+      } else {
+        baseElement.insertAdjacentElement('beforebegin', generalStylesheet);
+      }
+      var prefixedStyleRules = prefixStyleRules(generalStyles.parentPrefix, generalStyles.styles);
+      generalStylesheet.appendChild(document.createTextNode(prefixedStyleRules));
+    };
+
+    /**
+     * Apply defined extra styles for given table element.
+     *
+     * @param {Element} tableElement table element
+     */
+    var applyExtraStyle = function applyExtraStyle(tableElement) {
+      var extraStylesRaw = tableElement.dataset.wptbExtraStyles;
+      var styleIdPrefix = 'wptb-extra-styles-';
+      if (extraStylesRaw) {
+        var extraStyles = atob(extraStylesRaw);
+        var _tableElement$getAttr = tableElement.getAttribute('class').match(/wptb-element-main-table_setting-(?:startedid-)?(\d+)/),
+          _tableElement$getAttr2 = (0, _slicedToArray2.default)(_tableElement$getAttr, 2),
+          tableId = _tableElement$getAttr2[1];
+        var styleId = styleIdPrefix + tableId;
+        var head = _this.baseDocument.querySelector('head');
+
+        // since stylesheets are created for frontend only once at startup, checking document head for any created style object will work even with theme disabled tables which at builder, they are not inside a shadow-root
+        var styleElement = head === null || head === void 0 ? void 0 : head.querySelector("#".concat(styleId));
+
+        // if no style element is found, create one
+        if (!styleElement) {
+          styleElement = document.createElement('style');
+          styleElement.type = 'text/css';
+          styleElement.id = styleId;
+          var isThemeStylesDisabled = tableElement.dataset.disableThemeStyles;
+
+          // if theme styles are disabled, it means our table is residing inside a shadow-root, place style element inside shadow-root instead of document head
+          if (isThemeStylesDisabled && _this.currentMode === _this.modes.frontEnd || _this.currentMode === _this.modes.block) {
+            tableElement.insertAdjacentElement('beforebegin', styleElement);
+            if (_this.currentMode === _this.modes.frontEnd && _this.generalStyles) {
+              applyGeneralStyles(_this.generalStyles, tableElement);
+            }
+          } else {
+            head.appendChild(styleElement);
+          }
+        }
+        var uniqueClass = ".wptb-element-main-table_setting-".concat(tableId);
+        // reform style rules so they will only affect the table they are assigned to
+        var prefixedStyles = prefixStyleRules(uniqueClass, extraStyles);
+
+        // remove previous styles with updated ones
+        styleElement.innerHTML = '';
+        styleElement.appendChild(document.createTextNode(prefixedStyles));
+      }
+    };
+
+    /**
+     * Apply extra styles to all available tables on DOM.
+     *
+     * @param {string} mode operation mode to apply styles
+     * @param {string} generalStyles general style rules
+     * @param {Object} baseDocument base document for DOM operations
+     */
+    this.applyStyles = function () {
+      var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.modes.frontEnd;
+      var generalStyles = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var baseDocument = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : document;
+      _this.baseDocument = baseDocument;
+      _this.currentMode = mode;
+      _this.generalStyles = generalStyles;
+      var allTables = Array.from(_this.baseDocument.querySelectorAll(tableQueries[mode]));
+      if (allTables) {
+        allTables.map(applyExtraStyle);
+      }
+
+      // only apply general styles on client frontend if any general styles are defined
+      if ((mode === _this.modes.frontEnd || mode === _this.modes.block) && generalStyles) {
+        applyGeneralStyles(generalStyles);
+      }
+    };
+  }
+
+  // send a singleton instance of manager
+  return new WPTB_ExtraStyles();
+});
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js"}],"WPTB_Block_ExtraStyles.js":[function(require,module,exports) {
+"use strict";
+
+var _WPTB_ExtraStyles = _interopRequireDefault(require("../WPTB_ExtraStyles"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var shadowDocument = document.querySelector('#wptb-block-preview-base').shadowRoot;
+_WPTB_ExtraStyles.default.applyStyles(_WPTB_ExtraStyles.default.modes.block, null, shadowDocument);
+},{"../WPTB_ExtraStyles":"../WPTB_ExtraStyles.js"}]},{},["WPTB_Block_ExtraStyles.js"], null)
+//# sourceMappingURL=/WPTB_Block_ExtraStyles.js.map
