@@ -200,6 +200,13 @@ class Control_Textarea extends Base_Control {
                         targetTextarea.oninput = function( event ) {
                             let details = {value: this.value};
                             WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetTextareaAddClass}}}', selectorElement, details );
+
+                            WPTB_Helper.wptbDocumentEventGenerate('wptb-element-control:update', document, {
+                                elementId: '{{{elemContainer}}}',
+                                controlId: '{{{data.controlKey}}}',
+                                value: this.value,
+                            });
+
                             if( '{{{selectorsJson}}}' ) {
                                 let selectors = JSON.parse( '{{{selectorsJson}}}' );
 
