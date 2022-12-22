@@ -15679,7 +15679,6 @@ var _default2 = {
               });
               return carry;
             }, []);
-
             // sort selected cells by row then by columns
             selectedCells.sort();
             var rowNormalizeConstant = selectedCells.length > 0 ? selectedCells[0].split('-')[0] : 0;
@@ -15757,7 +15756,6 @@ var _default2 = {
                 Array.from(clonedCell.querySelectorAll('div')).map(incrementIds);
               });
             });
-
             // add extra rows to table
             // eslint-disable-next-line array-callback-return
             Array.from(Array(extraRows)).map(function (r, ri) {
