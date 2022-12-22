@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.4.6 =
 
 * IMPROVE: Builder responsive sizes for different screen width values.
+* IMPROVE: Security updates.
 
 = 1.4.5 =
 
