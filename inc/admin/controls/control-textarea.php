@@ -36,7 +36,7 @@ class Control_Textarea extends Base_Control {
 	 * @access public
 	 */
 	public function enqueue() {
-        
+
 	}
 
 	/**
@@ -57,12 +57,13 @@ class Control_Textarea extends Base_Control {
                 cols,
                 defaultValue,
                 elemContainer,
+                allowHTML= true,
                 targetTextareaAddClass = '';
-                
+
             if( data.label ) {
                 label = data.label;
             }
-            
+
             let i = 0;
             for ( let prop in data.selectors ) {
                 selectors[i] = [];
@@ -75,51 +76,58 @@ class Control_Textarea extends Base_Control {
                     }
                     continue;
                 }
-                
+
                 selectors[i][0] = prop;
                 selectors[i][1] = data.selectors[prop];
                 i++;
             }
-            
+
             if( selectors && Array.isArray( selectors ) ) {
                 selectorsJson = JSON.stringify( selectors );
             }
-                
+
             if( data.rows ) {
                 rows = data.rows;
             }
-                
+
             if( data.cols ) {
                 cols = data.cols;
             }
-            
+
             if( data.defaultValue ) {
                 defaultValue = data.defaultValue;
             }
-            
+
             if( data.placeholder ) {
                 placeholder = data.placeholder;
             }
-            
+
             if( data.elemContainer ) {
                 elemContainer = data.elemContainer;
             }
-            
+
+            if(data.allowHTML !== undefined){
+                allowHTML = data.allowHTML;
+            }
+
             targetTextareaAddClass = data.elementControlTargetUnicClass;
+
+            const targetElementValueSource = allowHTML ? 'innerHTML':'textContent';
         #>
-        
+
         <div class='wptb-settings-item-header' >
             <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
             <div class="wptb-settings-col-xs-12">
-                <textarea class="wptb-number wptb-element-property {{{targetTextareaAddClass}}}" 
+                <textarea class="wptb-number wptb-element-property {{{targetTextareaAddClass}}}"
                           rows="{{{rows}}}" cols="{{{cols}}}" placeholder="{{{placeholder}}}" data-element="{{{elemContainer}}}" style="width: 100%">{{{defaultValue}}}</textarea>
             </div>
         </div>
-        
+
         <wptb-template-script>
             ( function() {
+                const targetElementValueSource = '{{{targetElementValueSource}}}';
                 let targetTextarea = document.getElementsByClassName( '{{{targetTextareaAddClass}}}' );
                 if( targetTextarea.length > 0 && targetTextarea[0].dataset.element ) {
                     targetTextarea = targetTextarea[0];
@@ -150,9 +158,9 @@ class Control_Textarea extends Base_Control {
                                                             }
                                                         } else {
                                                             if( typeof value != 'undefined' ) {
-                                                                selectorElements[j].innerHTML = value;
-                                                            } else if( selectorElements[j].innerHTML ) {
-                                                                return selectorElements[j].innerHTML;
+                                                                selectorElements[j][targetElementValueSource]= value;
+                                                            } else if( selectorElements[j][targetElementValueSource] ) {
+                                                                return selectorElements[j][targetElementValueSource];
                                                             }
                                                         }
                                                     }
@@ -173,9 +181,9 @@ class Control_Textarea extends Base_Control {
                                                         }
                                                     } else {
                                                         if( typeof value != 'undefined' ) {
-                                                            selectorElements[j].innerHTML = value;
-                                                        } else if( selectorElements[j].innerHTML ) {
-                                                            return selectorElements[j].innerHTML;
+                                                            selectorElements[j][targetElementValueSource] = value;
+                                                        } else if( selectorElements[j][targetElementValueSource]) {
+                                                            return selectorElements[j][targetElementValueSource];
                                                         }
                                                     }
                                                 }
@@ -196,7 +204,7 @@ class Control_Textarea extends Base_Control {
                             let selectors = JSON.parse( '{{{selectorsJson}}}' );
                             targetTextarea.value = getSetElementValue( selectors );
                         }
-                        
+
                         targetTextarea.oninput = function( event ) {
                             let details = {value: this.value};
                             WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetTextareaAddClass}}}', selectorElement, details );
@@ -222,7 +230,7 @@ class Control_Textarea extends Base_Control {
                 }
             } )();
         </wptb-template-script>
-        
+
 		<?php
 	}
 }
