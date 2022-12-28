@@ -73,6 +73,25 @@ class Setting_Section {
 	}
 
 	/**
+	 * Sort sections.
+	 *
+	 * @param Setting_Section $section_a first section
+	 * @param Setting_Section $section_b second section
+	 *
+	 * @return int result
+	 */
+	public static function sort( $section_a, $section_b ) {
+		$a_order = $section_a->get_order();
+		$b_order = $section_b->get_order();
+
+		if ( $a_order === $b_order ) {
+			return 0;
+		}
+
+		return $a_order < $b_order ? - 1 : 1;
+	}
+
+	/**
 	 * Register section to menu.
 	 *
 	 * @param $context Table_Setting_Element

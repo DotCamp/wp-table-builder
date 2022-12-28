@@ -2,12 +2,10 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
-use Table_Setting_Element;
-use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Base\Dummy_Control_Base;
 use WP_Table_Builder\Inc\Admin\Base\Manager_Base;
-use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
+use WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element\Table_Setting_Element;
 
 /**
  * Manager responsible for dummy control operations.
@@ -57,7 +55,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	public function register_table_cell_settings_upsells( $cell_settings_main ) {
 		$this->register_empty_cell_setting( $cell_settings_main );
 		$this->register_highlight_column_setting( $cell_settings_main );
-		$this->register_highlight_row_setting( $cell_settings_main );		
+		$this->register_highlight_row_setting( $cell_settings_main );
 	}
 
 	public function register_empty_cell_setting( $cell_settings_main ) {
@@ -185,10 +183,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	 * @return void
 	 */
 	private function add_settings_controls() {
-		add_action( 'wp-table-builder/table_settings_registered', [
-			$this,
-			'upsell_setting_controls'
-		], 1, 1 );
+		$this->upsell_setting_controls();
 
 		add_filter( 'wp-table-builder/register-controls-section-group/table_settings_general', [
 			$this,
@@ -357,11 +352,9 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 	/**
 	 * Add pro setting controls for tables with upsell.
 	 *
-	 * @param Element_Base_Object $context element base object
-	 *
 	 * @return void
 	 */
-	public function upsell_setting_controls( $context ) {
+	public function upsell_setting_controls() {
 
 		// For sticky section
 		$sticky_controls = [
@@ -384,44 +377,38 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 			],
 		];
 
-		Control_Section_Group_Collapse::add_section( 'upsell_pro_table_settings_sticky', esc_html__( 'sticky', 'wp-table-builder' ), $sticky_controls, [
-			$context,
-			'add_control'
-		], false, 'thumbtack' );
+		Table_Setting_Element::add_settings_section( 'upsell_pro_table_settings_sticky', esc_html__( 'sticky', 'wp-table-builder' ), $sticky_controls, 'thumbtack', 5 );
 
 		// For pagination section
 		$pagination_controls = [
-			'paginationEnable' => [
-				'label' => __('Enable Pagination', 'wp-table-builder'),
-				'type' => Controls_Manager::TOGGLE,
+			'paginationEnable'     => [
+				'label' => __( 'Enable Pagination', 'wp-table-builder' ),
+				'type'  => Controls_Manager::TOGGLE,
 			],
-			'rowsPerPage' => [
-				'label' => __('Rows Per Page ( 3 ~ 50)', 'wp_table_builder'),
-				'type' => Controls_Manager::NUMBER,
+			'rowsPerPage'          => [
+				'label'        => __( 'Rows Per Page ( 3 ~ 50)', 'wp_table_builder' ),
+				'type'         => Controls_Manager::NUMBER,
 				'defaultValue' => '5'
 			],
-			'rowsChangeable' => [
-				'label' => __('Let visitors change <br />rows per page', 'wp_table_builder'),
-				'type' => Controls_Manager::TOGGLE
+			'rowsChangeable'       => [
+				'label' => __( 'Let visitors change <br />rows per page', 'wp_table_builder' ),
+				'type'  => Controls_Manager::TOGGLE
 			],
-			'paginationProOverlay'       => [
+			'paginationProOverlay' => [
 				'type'        => Controls_Manager::PRO_OVERLAY,
 				'featureName' => esc_html__( 'Pagination', 'wp-table-builder' ),
 			]
 		];
 
-		Control_Section_Group_Collapse::add_section( 'upsell_pro_table_settings_pagination', esc_html__( 'pagination', 'wp-table-builder' ), $pagination_controls, [
-			$context,
-			'add_control'
-		], false, 'pager' );
+		Table_Setting_Element::add_settings_section( 'upsell_pro_table_settings_pagination', esc_html__( 'pagination', 'wp-table-builder' ), $pagination_controls, 'pager', 6 );
 
 		// For search section
 		$search_controls = [
-      'searchEnable' => [
-        'label' => __('Enable Search', 'wp-table-builder'),
-        'type' => Controls_Manager::TOGGLE
-      ],
-      'searchbarPosition' => [
+			'searchEnable'      => [
+				'label' => __( 'Enable Search', 'wp-table-builder' ),
+				'type'  => Controls_Manager::TOGGLE
+			],
+			'searchbarPosition' => [
 				'label'        => esc_html__( 'Search Bar Position', 'wp-table-builder' ),
 				'type'         => Controls_Manager::SELECT2,
 				'options'      => [
@@ -430,16 +417,13 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 				],
 				'defaultValue' => 'left'
 			],
-			'searchProOverlay'       => [
+			'searchProOverlay'  => [
 				'type'        => Controls_Manager::PRO_OVERLAY,
 				'featureName' => esc_html__( 'Search', 'wp-table-builder' ),
 			]
-    ];
+		];
 
-    Control_Section_Group_Collapse::add_section('upsell_pro_table_settings_search', esc_html__('search', "wp-table-builder"), $search_controls, [
-      $context,
-      'add_control'
-    ], false, 'search');
+		Table_Setting_Element::add_settings_section( 'upsell_pro_table_settings_search', esc_html__( 'search', "wp-table-builder" ), $search_controls, 'search', 7 );
 	}
 
 	/**

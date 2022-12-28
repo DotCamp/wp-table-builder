@@ -3,7 +3,6 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use WP_Query;
-use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element\Table_Setting_Element;
 use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder as NS;
@@ -62,11 +61,13 @@ class Tag_Manager {
 	 * Initialize tag manager.
 	 */
 	public static function init() {
+		// use pre action hook instead of directly using static section add function since necessary taxonomy functionality is not available inside this init function
+		add_action( 'wp-table-builder/pre_table_settings_registered', [ __CLASS__, 'add_setting_section' ] );
+
 		add_action( 'init', [ __CLASS__, 'register_custom_taxonomy' ] );
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_menu_scripts' ] );
 
 		add_action( 'wptb_admin_menu', [ __CLASS__, 'register_menu' ] );
-		add_action( 'wp-table-builder/table_settings_registered', [ __CLASS__, 'add_setting_section' ], 2, 1 );
 
 		add_action( 'wp-table-builder/new_table_saved', [ __CLASS__, 'save_terms' ], 1, 2 );
 		add_action( 'wp-table-builder/table_edited', [ __CLASS__, 'save_terms' ], 1, 2 );
@@ -300,10 +301,9 @@ class Tag_Manager {
 
 	/**
 	 * Add table tags section to builder settings menu.
-	 *
-	 * @param Table_Setting_Element $context table setting element instance
 	 */
-	public static function add_setting_section( $context ) {
+	public static function add_setting_section() {
+		require_once( ABSPATH . 'wp-includes/pluggable.php' );
 
 		$all_table_tags = get_terms( [
 			'taxonomy'   => static::TAX_ID,
@@ -332,10 +332,7 @@ class Tag_Manager {
 			]
 		];
 
-		Control_Section_Group_Collapse::add_section( 'table_settings_tags', esc_html__( 'Table Tags', 'wp-table-builder' ), $tag_group, [
-			$context,
-			'add_control'
-		], false, 'tags' );
+		Table_Setting_Element::add_settings_section( 'table_settings_tags', esc_html__( 'Table Tags', 'wp-table-builder' ), $tag_group, 'tags' );
 	}
 
 	/**
@@ -391,17 +388,6 @@ class Tag_Manager {
 		];
 
 		register_taxonomy( static::TAX_ID, 'post', $args );
-
-		//@deprecated
-		// add default out of the box terms to taxonomy
-//		wp_insert_term( esc_html__( 'Product', 'wp-table-builder' ), static::TAX_ID, [
-//			'slug'        => 'product',
-//			'description' => esc_html__( 'product table tag', 'wp-table-builder' )
-//		] );
-//		wp_insert_term( esc_html__( 'Compare', 'wp-table-builder' ), static::TAX_ID, [
-//			'slug'        => 'compare',
-//			'description' => esc_html__( 'compare table tag', 'wp-table-builder' )
-//		] );
 
 		// setup screen options for table tags
 		new Tag_Screen_Options( static::screen_options() );

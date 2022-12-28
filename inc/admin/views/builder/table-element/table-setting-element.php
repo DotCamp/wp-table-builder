@@ -25,9 +25,9 @@ class Table_Setting_Element extends Element_Base_Object {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		$this->register_general_controls();
-		$this->register_border_controls();
 		$this->register_scroll_controls();
+		$this->register_border_controls();
+		$this->register_general_controls();
 		$this->register_help_controls();
 	}
 
@@ -75,13 +75,18 @@ class Table_Setting_Element extends Element_Base_Object {
 	 * @param array $section_controls section controls
 	 * @param string $icon section icon
 	 * @param null | int $order section position order in a 1 indexed list, null for register order
+	 * @param boolean $internal_register whether to register section with the defaults one in setting element
 	 *
 	 * @return void
 	 */
-	public static function add_settings_section( $section_id, $section_label, $section_controls, $icon, $order = null ) {
+	public static function add_settings_section( $section_id, $section_label, $section_controls, $icon, $order = null, $internal_register = false ) {
 		$setting_section = new Setting_Section( $section_id, $section_label, $section_controls, $icon, $order );
 
-		static::$registered_settings_sections[] = $setting_section;
+		if ( $internal_register ) {
+			array_unshift( static::$registered_settings_sections, $setting_section );
+		} else {
+			static::$registered_settings_sections[] = $setting_section;
+		}
 	}
 
 	/**
@@ -230,7 +235,7 @@ class Table_Setting_Element extends Element_Base_Object {
 		];
 
 		// border section group
-		static::add_settings_section( 'table_settings_border', esc_html__( 'border', 'wp-table-builder' ), $border_section_group_controls, 'border-style' );
+		static::add_settings_section( 'table_settings_border', esc_html__( 'border', 'wp-table-builder' ), $border_section_group_controls, 'border-style', null, true );
 
 	}
 
@@ -256,7 +261,7 @@ class Table_Setting_Element extends Element_Base_Object {
 		];
 
 		// scroll section group
-		static::add_settings_section( 'table_settings_scroll', esc_html__( 'Scroll', 'wp-table-builder' ), $scroll_section_group_controls, 'arrows-alt-h' );
+		static::add_settings_section( 'table_settings_scroll', esc_html__( 'Scroll', 'wp-table-builder' ), $scroll_section_group_controls, 'arrows-alt-h', null, true );
 	}
 
 	/**
@@ -290,6 +295,8 @@ class Table_Setting_Element extends Element_Base_Object {
 			return ! is_null( $section->get_order() );
 		} ) );
 
+		usort( $position_explicit_sections, [ Setting_Section::class, 'sort' ] );
+
 		foreach ( $position_explicit_sections as $section ) {
 			$section_order = $section->get_order() - 1;
 
@@ -308,16 +315,15 @@ class Table_Setting_Element extends Element_Base_Object {
 	 * @return void
 	 */
 	private function register_settings_sections() {
+		// pre table settings registered action hook
+		do_action( 'wp-table-builder/pre_table_settings_registered', $this );
+
 		// sort sections based on their assigned positions
 		$this->sort_sections();
 
 		foreach ( static::$registered_settings_sections as $section ) {
 			$section->register( $this );
 		}
-
-		// table settings registered action hook
-		// TODO [ErdemBircan] remove after full implementation
-		do_action( 'wp-table-builder/table_settings_registered', $this );
 	}
 
 	/**
