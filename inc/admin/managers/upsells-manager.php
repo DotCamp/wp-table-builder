@@ -3,10 +3,8 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 // if called directly, abort
-use WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element\Table_Setting_Element;
 use WP_Table_Builder\Inc\Core\Init;
 use WP_Table_Builder_Pro\Inc\Admin\Managers\Freemius_Manager;
-use function add_action;
 use function add_filter;
 use function esc_html__;
 use function wp_sprintf;

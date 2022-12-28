@@ -5,6 +5,7 @@ namespace WP_Table_Builder\Inc\Admin;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element\Table_Setting_Element;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use WP_Table_Builder\Inc\Core\Init;
@@ -46,11 +47,12 @@ class Style_Pass {
 	 * Initialize style pass.
 	 */
 	public static function init() {
-		add_action( 'wp-table-builder/table_settings_registered', [ __CLASS__, 'add_setting_controls' ], 1 );
 		add_filter( 'wp-table-builder/filter/wptb_frontend_data', [ __CLASS__, 'frontend_data' ], 99, 1 );
 		add_filter( 'wp-table-builder/filter/settings_manager_frontend_data', [ __CLASS__, 'settings_menu_data' ] );
 
 		add_action( 'wp_ajax_' . static::GENERAL_STYLES_OPTION_NAME, [ __CLASS__, 'update_general_styles' ] );
+
+		static::add_setting_controls();
 	}
 
 	/**
@@ -170,9 +172,8 @@ class Style_Pass {
 	/**
 	 * Add style pass controls to table settings menu.
 	 *
-	 * @param Object $context table settings context
 	 */
-	public static function add_setting_controls( $context ) {
+	public static function add_setting_controls() {
 		$style_pass_controls = [
 			'disableThemeStyles' => [
 				'label'     => esc_html__( 'Disable Theme Styles For Table', 'wp-table-builder' ),
@@ -196,15 +197,13 @@ class Style_Pass {
 			]
 		];
 
-		// remove disable theme styles control if site wide option is enabled
-		$disableThemeStylesForAll = Init::instance()->settings_manager->get_option_value( 'disable_theme_styles_for_all' );
-		if ( filter_var( $disableThemeStylesForAll, FILTER_VALIDATE_BOOLEAN ) ) {
-			unset( $style_pass_controls['disableThemeStyles'] );
-		}
+//		// remove disable theme styles control if site wide option is enabled
+//		$disableThemeStylesForAll = Init::instance()->settings_manager->get_option_value( 'disable_theme_styles_for_all' );
+//		if ( filter_var( $disableThemeStylesForAll, FILTER_VALIDATE_BOOLEAN ) ) {
+//			unset( $style_pass_controls['disableThemeStyles'] );
+//		}
 
-		Control_Section_Group_Collapse::add_section( 'style_pass_settings', esc_html__( 'styles', 'wp-table-builder' ), $style_pass_controls, [
-			$context,
-			'add_control'
-		], false, 'paint-brush' );
+		// add builder settings section
+		Table_Setting_Element::add_settings_section( 'style_pass_settings', esc_html__( 'styles', 'wp-table-builder' ), $style_pass_controls, 'paint-brush' );
 	}
 }

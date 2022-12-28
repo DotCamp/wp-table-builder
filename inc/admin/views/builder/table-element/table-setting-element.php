@@ -3,7 +3,6 @@
 namespace WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element;
 
 use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object as Element_Base_Object;
-use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 use function do_action;
@@ -15,6 +14,24 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 class Table_Setting_Element extends Element_Base_Object {
+
+	/**
+	 * Registered sections for settings menu.
+	 * @var Setting_Section[]
+	 */
+	private static $registered_settings_sections = [];
+
+	/**
+	 * Class constructor.
+	 */
+	public function __construct() {
+		$this->register_general_controls();
+		$this->register_border_controls();
+		$this->register_scroll_controls();
+		$this->register_help_controls();
+	}
+
+
 	/**
 	 * Get name.
 	 *
@@ -51,25 +68,28 @@ class Table_Setting_Element extends Element_Base_Object {
 	}
 
 	/**
-	 * Register the element controls.
+	 * Add a control section to builder settings menu.
 	 *
-	 * Adds different fields to allow the user to change and customize the element settings.
+	 * @param string $section_id section id
+	 * @param string $section_label label
+	 * @param array $section_controls section controls
+	 * @param string $icon section icon
+	 * @param null | int $order section position order in a 1 indexed list, null for register order
 	 *
-	 * @since 1.1.2
-	 *
-	 * @access protected
+	 * @return void
 	 */
-	protected function _register_controls() {
-		$this->setDefaultControlArg( 'elementOptionsGroupId', 'table-settings-group' );
-		$this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
-		$general_section_group_controls = [
-			// @deprecated
-			// 'tableManageCells' =>
-			// 	[
-			// 		'label' => __( 'Manage Cells', 'wp_table_builder' ),
-			// 		'type'  => Controls_Manager::BUTTON,
-			// 	],
+	public static function add_settings_section( $section_id, $section_label, $section_controls, $icon, $order = null ) {
+		$setting_section = new Setting_Section( $section_id, $section_label, $section_controls, $icon, $order );
 
+		static::$registered_settings_sections[] = $setting_section;
+	}
+
+	/**
+	 * Register general related controls.
+	 * @return void
+	 */
+	private function register_general_controls() {
+		$general_section_group_controls = [
 			'tableCellPadding'            =>
 				[
 					'label'        => __( 'Cell Padding', 'wp_table_builder' ),
@@ -143,6 +163,14 @@ class Table_Setting_Element extends Element_Base_Object {
 				]
 		];
 
+		static::add_settings_section( 'table_settings_general', esc_html__( 'general', 'wp-table-builder' ), $general_section_group_controls, 'sliders-h', 1 );
+	}
+
+	/**
+	 * Register border related controls
+	 * @return void
+	 */
+	private function register_border_controls() {
 		$border_section_group_controls = [
 
 			'tableBorder' =>
@@ -201,34 +229,16 @@ class Table_Setting_Element extends Element_Base_Object {
 				]
 		];
 
-		// @deprecated
-//		$responsive_section_group_controls = [
-//			'makeTableResponsive'  =>
-//				[
-//					'label'     => __( 'Make Table Responsive', 'wp_table_builder' ),
-//					'type'      => Controls_Manager::TOGGLE,
-//					'selectors' => [
-//						'{{{data.container}}}' => [ 'data-wptb-adaptive-table', '1', '0' ]
-//					],
-//				],
-//			'tableTopRowsAsHeader' =>
-//				[
-//					'label'     => __( 'Top Rows As Header', 'wp_table_builder' ),
-//					'type'      => Controls_Manager::TOGGLE,
-//					'selectors' => [
-//						'{{{data.container}}}' => [ 'class', 'wptb-table-preview-head', '' ]
-//					],
-//				]
-//		];
+		// border section group
+		static::add_settings_section( 'table_settings_border', esc_html__( 'border', 'wp-table-builder' ), $border_section_group_controls, 'border-style' );
 
-		$help_support_section_group_controls = [
-			'helpSupportLinks' => [
-				'label' => 'test',
-				'type'  => Controls_Manager::HTML_OUTPUT,
-				'html'  => sprintf( '<div class="wptb-help-support-section-wrapper"><div><a href="https://wptablebuilder.com/" target="_blank">%s</a></div><div><a href="https://wptablebuilder.com/docs/" target="_blank">%s</a></div><div><a href="https://www.facebook.com/groups/wptbplugin/" target="_blank">%s</a></div></div>', esc_html__( 'Our Website', 'wp_table_builder' ), esc_html__( 'Documentation', 'wp_table_builder' ), esc_html__( 'Facebook Group', 'wp_table_builder' ) )
-			]
-		];
+	}
 
+	/**
+	 * Register scroll related controls.
+	 * @return void
+	 */
+	private function register_scroll_controls() {
 		$scroll_section_group_controls = [
 			'horizontalScrollEnable' => [
 				'label'        => esc_html__( 'Enable horizontal scrolling', 'wp-table-builder-pro' ),
@@ -245,39 +255,85 @@ class Table_Setting_Element extends Element_Base_Object {
 
 		];
 
-		// general section group
-		Control_Section_Group_Collapse::add_section( 'table_settings_general', esc_html__( 'general', NS\PLUGIN_TEXT_DOMAIN ), $general_section_group_controls, [
-			$this,
-			'add_control'
-		], false, 'sliders-h' );
-
-		// @deprecated in favor of new background menu
-//		// background section group
-//		Control_Section_Group_Collapse::add_section( 'table_settings_background', esc_html__( 'background', NS\PLUGIN_TEXT_DOMAIN ), $background_section_group_controls, [
-//			$this,
-//			'add_control'
-//		], false );
-
-		// border section group
-		Control_Section_Group_Collapse::add_section( 'table_settings_border', esc_html__( 'border', NS\PLUGIN_TEXT_DOMAIN ), $border_section_group_controls, [
-			$this,
-			'add_control'
-		], false, 'border-style' );
-
 		// scroll section group
-		Control_Section_Group_Collapse::add_section( 'table_settings_scroll', esc_html__( 'Scroll', NS\PLUGIN_TEXT_DOMAIN ), $scroll_section_group_controls, [
-			$this,
-			'add_control'
-		], false, 'arrows-alt-h' );
+		static::add_settings_section( 'table_settings_scroll', esc_html__( 'Scroll', 'wp-table-builder' ), $scroll_section_group_controls, 'arrows-alt-h' );
+	}
 
-		// table settings registered action hook
-		do_action( 'wp-table-builder/table_settings_registered', $this );
+	/**
+	 * Register help related controls.
+	 * @return void
+	 */
+	private function register_help_controls() {
+		$help_support_section_group_controls = [
+			'helpSupportLinks' => [
+				'label' => 'test',
+				'type'  => Controls_Manager::HTML_OUTPUT,
+				'html'  => sprintf( '<div class="wptb-help-support-section-wrapper"><div><a href="https://wptablebuilder.com/" target="_blank">%s</a></div><div><a href="https://wptablebuilder.com/docs/" target="_blank">%s</a></div><div><a href="https://www.facebook.com/groups/wptbplugin/" target="_blank">%s</a></div></div>', esc_html__( 'Our Website', 'wp_table_builder' ), esc_html__( 'Documentation', 'wp_table_builder' ), esc_html__( 'Facebook Group', 'wp_table_builder' ) )
+			]
+		];
 
 		// help&support section group
-		Control_Section_Group_Collapse::add_section( 'table_settings_help_support', esc_html__( 'help & support', NS\PLUGIN_TEXT_DOMAIN ), $help_support_section_group_controls, [
-			$this,
-			'add_control'
-		], false, 'info-circle' );
+		static::add_settings_section( 'table_settings_help_support', esc_html__( 'help & support', 'wp-table-builder' ), $help_support_section_group_controls, 'info-circle', - 1 );
+	}
+
+	/**
+	 * Sort registered sections by positions.
+	 *
+	 * @return void
+	 */
+	private function sort_sections() {
+		$position_free_sections = array_values( array_filter( static::$registered_settings_sections, function ( $section ) {
+			return is_null( $section->get_order() );
+		} ) );
+
+		$position_explicit_sections = array_values( array_filter( static::$registered_settings_sections, function ( $section ) {
+			return ! is_null( $section->get_order() );
+		} ) );
+
+		foreach ( $position_explicit_sections as $section ) {
+			$section_order = $section->get_order() - 1;
+
+			if ( $section_order < 0 ) {
+				$position_free_sections[] = $section;
+			} else {
+				array_splice( $position_free_sections, $section_order, 0, [ $section ] );
+			}
+		}
+
+		static::$registered_settings_sections = $position_free_sections;
+	}
+
+	/**
+	 * Register all available menu sections related to table settings
+	 * @return void
+	 */
+	private function register_settings_sections() {
+		// sort sections based on their assigned positions
+		$this->sort_sections();
+
+		foreach ( static::$registered_settings_sections as $section ) {
+			$section->register( $this );
+		}
+
+		// table settings registered action hook
+		// TODO [ErdemBircan] remove after full implementation
+		do_action( 'wp-table-builder/table_settings_registered', $this );
+	}
+
+	/**
+	 * Register the element controls.
+	 *
+	 * Adds different fields to allow the user to change and customize the element settings.
+	 *
+	 * @since 1.1.2
+	 *
+	 * @access protected
+	 */
+	protected function _register_controls() {
+		$this->setDefaultControlArg( 'elementOptionsGroupId', 'table-settings-group' );
+		$this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
+
+		$this->register_settings_sections();
 
 		$this->setDefaultControlArg( 'elementOptionsGroupId', 'wptb-bar-top' );
 		$this->setDefaultControlArg( 'elementOptionsContainerOn', 'false' );
