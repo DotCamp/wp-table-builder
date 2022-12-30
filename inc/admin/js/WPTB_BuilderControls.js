@@ -15301,6 +15301,7 @@ var global = arguments[3];
 var process = require("process");
 "use strict";
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -15692,8 +15693,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     this.parseTable = function () {
       var rows = Array.from(_this2.tableElement.querySelectorAll('tr'));
 
-      // eslint-disable-next-line array-callback-return
-      rows.map(function (r, ri) {
+      // filter rows who are marked as ignored
+      rows.filter(function (rowEl) {
+        return rowEl.dataset.wptbResponsiveIgnore !== 'true';
+        // eslint-disable-next-line array-callback-return
+      }).map(function (r, ri) {
         // cache original rows for future use
         _this2.originals.rows.push(r);
         var cells = Array.from(r.querySelectorAll('td'));
@@ -16650,6 +16654,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     };
 
     /**
+     * Get range id for target table.
+     *
+     * @param {HTMLTableElement} tableElement target table element
+     */
+    this.calculateRangeIdFromTable = function (tableElement) {
+      var directives = _this3.getDirective(tableElement);
+      var innerSize = calculateInnerSize(tableElement);
+      return _this3.calculateRangeId(innerSize, directives.breakpoints);
+    };
+
+    /**
      * Check if current breakpoint is enabled for responsive operations.
      *
      * @param {HTMLTableElement} tableElement table element
@@ -16661,16 +16676,52 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     if (this.options.bindToResize) {
       this.bindRebuildToResize();
     }
+
+    /**
+     * Get cached table element object.
+     *
+     * @param {number} tableId table id to look for
+     * @return {null | Object} table element object
+     */
+    this.getTableElementObject = function (tableId) {
+      var _this3$elementObjects = _this3.elementObjects.filter(function (_ref) {
+          var el = _ref.el;
+          var matrixWrapper = el.parentNode;
+          var regex = new RegExp(/^wptb-table-id-(\d+)$/);
+          var matches = regex.exec(matrixWrapper.getAttribute('id'));
+          return matches && matches[1] && Number.parseInt(matches[1], 10) === tableId;
+        }),
+        _this3$elementObjects2 = (0, _slicedToArray2.default)(_this3$elementObjects, 1),
+        filteredObjects = _this3$elementObjects2[0];
+      return filteredObjects;
+    };
+
+    /**
+     * Hide/show target row element for responsive calculations.
+     *
+     * @param {HTMLTableRowElement} rowElement row element
+     * @param {boolean} status status
+     */
+    this.markRowForResponsive = function (rowElement, status) {
+      // eslint-disable-next-line no-param-reassign
+      rowElement.dataset.wptbResponsiveIgnore = JSON.stringify(status);
+    };
     return {
       rebuildTables: this.rebuildTables,
+      rebuildTable: this.rebuildTable,
       getDirective: this.getDirective,
       calculateRangeId: this.calculateRangeId,
-      isResponsiveEnabledForCurrentBreakpoint: this.isResponsiveEnabledForCurrentBreakpoint
+      calculateRangeIdFromTable: this.calculateRangeIdFromTable,
+      isResponsiveEnabledForCurrentBreakpoint: this.isResponsiveEnabledForCurrentBreakpoint,
+      getTableElementObject: this.getTableElementObject,
+      markRowForResponsive: this.markRowForResponsive,
+      calculateInnerSize: calculateInnerSize,
+      TableObject: TableObject
     };
   }
   return ResponsiveFront;
 });
-},{"@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","process":"../../../../../node_modules/process/browser.js"}],"../WPTB_SortableTable.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"../../../../../node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/typeof":"../../../../../node_modules/@babel/runtime/helpers/typeof.js","process":"../../../../../node_modules/process/browser.js"}],"../WPTB_SortableTable.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
