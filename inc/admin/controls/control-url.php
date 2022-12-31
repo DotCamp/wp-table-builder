@@ -104,9 +104,9 @@ class Control_Url extends Base_Control {
                 <div class="wptb-settings-checkbox-row">
                     <input type="checkbox" data-type="element-rel"
                            value="<?php esc_attr_e($rel);?>"
-                           id="element-rel-{{{postfixIdFor}}}"
+                           id="element-<?php echo esc_attr_e($rel); ?>{{{postfixIdFor}}}"
                            class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
-                    <label for="element-rel-{{{postfixIdFor}}}"><?php echo $rel;?></label>
+                    <label for="element-<?php echo esc_attr_e($rel); ?>{{{postfixIdFor}}}"><?php echo $rel;?></label>
                 </div>
                 <?php endforeach; ?>
             </div>
