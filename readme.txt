@@ -94,6 +94,13 @@ That's it. You're done!
 
 * IMPROVE: Builder responsive sizes for different screen width values.
 * IMPROVE: Security updates.
+* FIX: URL Control attribute issue.
+* PRO: NEW: Pagination for long tables. You can set rows per page.
+* PRO: NEW: Search for tables. Can be placed on right or left top of the table.
+* PRO: NEW: Highlight column/row. Makes the selected column/row zoomed in.
+* PRO: NEW: Global Font Style for tables. Instead of changing font color/size for individual elements, change for the whole table (Text, List, Styled List).
+* PRO: NEW: Link in Icon element. Now you can link the icons to any custom links.
+* PRO: NEW: Prebuilt Tables.
 
 = 1.4.5 =
 
