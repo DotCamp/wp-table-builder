@@ -1,21 +1,33 @@
 {
-  "1.4.4": [
+  "1.4.6": [
     [
-      "Table trash, restore and delete permanently functionality.",
-      "table_trash.png"
-    ],
-    [
-      "Ability to disable conversion of emoji codes to images.",
-      "emoji_image_conversion.png"
-    ],
-    [
-      "Amazon product listing table template.",
-      "amazon_product_listing_template.png",
+      "Pagination for long tables.",
+      "table_pagination.png",
       true
     ],
     [
-      "Class schedule table template.",
-      "class_schedule_template.png",
+      "Table content searching.",
+      "table_search.png",
+      true
+    ],
+    [
+      "Highlight columns/rows.",
+      "column_highlight.png",
+      true
+    ],
+    [
+      "Global font styles for tables and elements (text, list, styled list).",
+      "global_font_styles.png",
+      true
+    ],
+    [
+      "Links for icon element.",
+      "icon_element_link.png",
+      true
+    ],
+    [
+      "New table templates.",
+      "new_template_tables_v_1_4_6.png",
       true
     ]
   ]
