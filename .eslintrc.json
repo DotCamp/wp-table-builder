@@ -67,6 +67,7 @@
     "ElementSubscriber": true,
     "ProxyArray": true,
     "tinyMCE": true,
-    "elementId": true
+    "elementId": true,
+    "wptbResponsiveFrontendInstance": true
   }
 }
