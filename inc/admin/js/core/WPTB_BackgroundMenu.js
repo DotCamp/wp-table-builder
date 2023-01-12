@@ -44,8 +44,6 @@
         const parseOptionsFromTable = () => {
             const currentTable = getCurrentTable();
 
-            console.log(currentTable.dataset.wptbEvenRowHoverBackgroundColor);
-
             const headerBg = currentTable.dataset.wptbHeaderBackgroundColor;
             const evenBg = currentTable.dataset.wptbEvenRowBackgroundColor;
             const oddBg = currentTable.dataset.wptbOddRowBackgroundColor;
@@ -106,15 +104,16 @@
                 currentTable.querySelectorAll("tr")
             );
 
-            // if row bg is set but hover bg is not, set hover bg to row bg
-            if (headerBg && !headerHoverBg) headerHoverBg = headerBg;
-            if (evenBg && !evenHoverBg) evenHoverBg = evenBg;
-            if (oddBg && !oddHoverBg) oddHoverBg = oddBg;
+            const hoverClass = "wptb-row-has-hover";
 
             // apply header row color
             applyColor(headerBg, header);
 
-            header.style.setProperty("--hover-bg-color", headerHoverBg);
+            // add header hover class and style
+            if (headerHoverBg) {
+                header.classList.add(hoverClass);
+                header.style.setProperty("--hover-bg-color", headerHoverBg);
+            } else header.classList.remove(hoverClass);
 
             // apply even/odd row color
             // eslint-disable-next-line array-callback-return
@@ -133,10 +132,18 @@
                     ? evenBg
                     : oddBg;
 
-                row.style.setProperty(
-                    "--hover-bg-color",
-                    index % 2 === 0 ? evenHoverBg : oddHoverBg
-                );
+                // add row hover class and style
+                if (index % 2 === 0) {
+                    if (evenHoverBg) row.classList.add(hoverClass);
+                    else row.classList.remove(hoverClass);
+
+                    row.style.setProperty("--hover-bg-color", evenHoverBg);
+                } else {
+                    if (oddHoverBg) row.classList.add(hoverClass);
+                    else row.classList.remove(hoverClass);
+
+                    row.style.setProperty("--hover-bg-color", oddHoverBg);
+                }
             });
         };
 

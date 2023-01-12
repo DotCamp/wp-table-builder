@@ -1608,7 +1608,7 @@ table.wptb-table {
     background: #bebebe;
 }
 
-.wptb-row:hover {
+.wptb-row-has-hover:hover {
     background-color: var(--hover-bg-color) !important;
 }
 
@@ -3177,10 +3177,9 @@ wptb_shortcode_container_element {
     height: 90%;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(min-content, max-content) minmax(
-            min-content,
-            max-content
-        ) 1fr minmax(min-content, max-content);
+    grid-template-rows:
+        minmax(min-content, max-content) minmax(min-content, max-content)
+        1fr minmax(min-content, max-content);
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
@@ -3188,10 +3187,9 @@ wptb_shortcode_container_element {
 }
 
 .wptb-settings-wrapper .import-export {
-    grid-template-rows: minmax(min-content, max-content) minmax(
-            min-content,
-            max-content
-        ) minmax(min-content, max-content) 1fr minmax(min-content, max-content);
+    grid-template-rows:
+        minmax(min-content, max-content) minmax(min-content, max-content)
+        minmax(min-content, max-content) 1fr minmax(min-content, max-content);
 }
 
 .wptb-settings-header {
@@ -6978,10 +6976,9 @@ label.wptb-control-row {
     height: 100%;
     display: grid;
     grid-template-columns: minmax(150px, max-content);
-    grid-template-rows: minmax(min-content, max-content) minmax(
-            150px,
-            max-content
-        ) minmax(min-content, max-content);
+    grid-template-rows:
+        minmax(min-content, max-content) minmax(150px, max-content)
+        minmax(min-content, max-content);
     justify-content: center;
     justify-items: center;
     align-content: center;

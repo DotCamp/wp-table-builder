@@ -137,7 +137,7 @@ table.wptb-preview-table {
     font-size: 15px;
 }
 
-.wptb-row:hover {
+.wptb-row-has-hover:hover {
     background-color: var(--hover-bg-color) !important;
 }
 
