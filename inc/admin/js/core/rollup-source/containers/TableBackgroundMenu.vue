@@ -36,7 +36,7 @@
                         :label="translationM('oddRow')"
                     ></color-picker>
                 </template>
-                <template v-if="proStatus && currentTab == 'hover'">
+                <template v-if="currentTab == 'hover'">
                     <color-picker
                         :color="generalOptions('headerHoverBg')"
                         @colorChanged="
@@ -67,6 +67,12 @@
                         :color="generalOptions('oddHoverBg')"
                         :label="translationM('oddRowHover')"
                     ></color-picker>
+                    <pro-overlay
+                        v-if="!proStatus"
+                        :explicit-store="true"
+                        :target="targetTypes.PARENT"
+                        :feature-name="translationM('hoverBgFeatureName')"
+                    ></pro-overlay>
                 </template>
             </panel-section-group-tabbed>
             <section-group-collapse

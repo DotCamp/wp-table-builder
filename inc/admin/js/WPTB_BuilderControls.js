@@ -31390,7 +31390,7 @@ exports.default = _default;
                 ]
               : _vm._e(),
             _vm._v(" "),
-            _vm.proStatus && _vm.currentTab == "hover"
+            _vm.currentTab == "hover"
               ? [
                   _c("color-picker", {
                     attrs: {
@@ -31435,7 +31435,17 @@ exports.default = _default;
                         })
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  !_vm.proStatus
+                    ? _c("pro-overlay", {
+                        attrs: {
+                          "explicit-store": true,
+                          target: _vm.targetTypes.PARENT,
+                          "feature-name": _vm.translationM("hoverBgFeatureName")
+                        }
+                      })
+                    : _vm._e()
                 ]
               : _vm._e()
           ],
@@ -31962,7 +31972,8 @@ var _default = {
           selectedColumn: (0, _i18n.__)("selected column background", "wp-table-builder"),
           mixedColumnColorMessage: (0, _i18n.__)("There are cells with different color values on this column, applying column wide color values will override those.", "wp-table-builder"),
           emptySelectionMessage: (0, _i18n.__)("Select a row/column/cell to change their background properties.", "wp-table-builder"),
-          customColorSelectionFeatureName: (0, _i18n.__)("Individual cell/row/column color", "wp-table-builder")
+          customColorSelectionFeatureName: (0, _i18n.__)("Individual cell/row/column color", "wp-table-builder"),
+          hoverBgFeatureName: (0, _i18n.__)("Row hover background color", "wp-table-builder")
         }
       }
     };

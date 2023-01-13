@@ -62,6 +62,10 @@ export default {
                         "Individual cell/row/column color",
                         "wp-table-builder"
                     ),
+                    hoverBgFeatureName: __(
+                        "Row hover background color",
+                        "wp-table-builder"
+                    ),
                 },
             },
         };
