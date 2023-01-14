@@ -90,6 +90,11 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.4.7 =
+
+* PRO: FIX: An issue with generate functionality is not working on some tables.
+* PRO: FIX: An issue with manage cells and background menu toolbox buttons are not visible on older tables.
+
 = 1.4.6 =
 
 * IMPROVE: Builder responsive sizes for different screen width values.

@@ -12245,14 +12245,14 @@ var _default2 = {
   }
 };
 exports.default = _default2;
-        var $540561 = exports.default || module.exports;
+        var $b852ed = exports.default || module.exports;
       
-      if (typeof $540561 === 'function') {
-        $540561 = $540561.options;
+      if (typeof $b852ed === 'function') {
+        $b852ed = $b852ed.options;
       }
     
         /* template */
-        Object.assign($540561, (function () {
+        Object.assign($b852ed, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
