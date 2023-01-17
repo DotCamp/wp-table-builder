@@ -94,7 +94,8 @@ That's it. You're done!
 
 * PRO: IMPROVE: Search and pagination compatibility for tables with disabled theme styles option.
 * PRO: FIX: An issue with generate functionality is not working on some tables.
-* PRO: FIX: An issue with manage cells and background menu toolbox buttons are not visible on older tables.
+* FIX: An issue with manage cells and background menu toolbox buttons are not visible on older tables.
+* FIX: CSS Conflict with theme.
 
 = 1.4.6 =
 
