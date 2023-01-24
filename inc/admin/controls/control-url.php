@@ -76,10 +76,10 @@ class Control_Url extends Base_Control {
             let postfixIdFor = targetInputAddClass.replace( 'wptb-el', '' ).toLowerCase();
         #>
 
-        <div class="wptb-settings-item-header">
+        <div class="wptb-settings-item-header" id="{{{targetInputAddClass}}}-header">
             <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
-        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
+        <div class="wptb-settings-row wptb-settings-middle-xs" id="{{{targetInputAddClass}}}-controls" style="padding-bottom: 10px">
             <div class="wptb-settings-col-xs-8" style="margin: 15px 0;">
                 <input type="text" data-type="element-link"
                        placeholder="<?php esc_attr_e( 'Insert Link Here', NS\PLUGIN_TEXT_DOMAIN ); ?>"
