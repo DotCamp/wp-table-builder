@@ -126,100 +126,193 @@ class Control_Url extends Base_Control {
         </div>
 
         <wptb-template-script>
-            ( function() {
-                let selectorElement = document.querySelector( '{{{selector}}}' );
-                let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
-            const mailLinkCheck = (val) => {
-                const regExp = new RegExp(/^(mailto:(.+)@(.+)\.(.+))$/);
-                return regExp.test(val);
-            };
+            (function () {
+                let selectorElement = document.querySelector("{{{selector}}}");
+                let targetInputs = document.getElementsByClassName(
+                    "{{{targetInputAddClass}}}"
+                );
 
-            for( let i = 0; i < targetInputs.length; i++ ) {
-                    if( targetInputs[i].dataset.type == 'element-link' ) {
-                        let href = selectorElement.getAttribute( 'href' );
-                        targetInputs[i].value = href;
+                const wrapperAnchorExists = () =>
+                    selectorElement.parentElement.tagName.toLowerCase() === "a";
 
-                        targetInputs[i].onchange = function() {
-                            if ( this.value ) {
-                                if(mailLinkCheck(this.value)){
-                                    selectorElement.href = this.value;
-                                }else{
-                                    const convertRelative = selectorElement.dataset.wptbLinkEnableConvertRelative;
-                                    selectorElement.href = WPTB_Helper.linkHttpCheckChange( this.value , convertRelative === 'true' );
+                const addWrapperAnchor = () => {
+                    const newAnchor = document.createElement("a");
+                    const parent = selectorElement.parentElement;
+                    const nextSibling = selectorElement.nextSibling;
 
-                                }
-            } else {
-                                selectorElement.removeAttribute( 'href' );
+                    parent.removeChild(selectorElement);
+                    nextSibling
+                        ? parent.insertBefore(newAnchor, nextSibling)
+                        : parent.appendChild(newAnchor);
+                    newAnchor.appendChild(selectorElement);
+                };
+
+                const removeWrapperAnchor = () => {
+                    const anchor = selectorElement.parentElement;
+                    const parent = anchor.parentElement;
+                    const nextSibling = anchor.nextSibling;
+
+                    parent.removeChild(anchor);
+                    nextSibling
+                        ? parent.insertBefore(selectorElement, nextSibling)
+                        : parent.appendChild(selectorElement);
+                };
+
+                const isMailLink = (val) => {
+                    const regExp = new RegExp(/^(mailto:(.+)@(.+)\.(.+))$/);
+                    return regExp.test(val);
+                };
+
+                function applyLinkChanges(targetInput) {
+                    if (wrapperAnchorExists()) {
+                        let href = selectorElement.getAttribute("href");
+                        targetInput.value = href;
+
+                        if (!href) {
+                            removeWrapperAnchor();
+                        }
+                    }
+
+                    targetInput.onchange = function () {
+                        if (this.value) {
+                            if (!wrapperAnchorExists()) addWrapperAnchor();
+                            const anchor = selectorElement.parentElement;
+
+                            if (isMailLink(this.value)) {
+                                anchor.href = this.value;
+                            } else {
+                                const convertRelative =
+                                    anchor.dataset.wptbLinkEnableConvertRelative;
+                                anchor.href = WPTB_Helper.linkHttpCheckChange(
+                                    this.value,
+                                    convertRelative === "true"
+                                );
                             }
-                            
-                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
+                        } else {
+                            removeWrapperAnchor();
                         }
-                    } else if( targetInputs[i].dataset.type == 'element-target' ) {
-                        const target = selectorElement.getAttribute('target') || '_self';
-                        const controller = targetInputs[i];
-                        controller.value = target;
 
-                        controller.addEventListener('input', (e) => {
+                        new WPTB_TableStateSaveManager().tableStateSet();
+                    };
+                }
+
+                function applyTargetChanges(targetInput) {
+                    if (wrapperAnchorExists()) {
+                        const target =
+                            selectorElement.parentElement.getAttribute("target") || "_self";
+                        targetInput.value = target;
+                    }
+
+                    targetInput.addEventListener("input", (e) => {
+                        if (wrapperAnchorExists()) {
                             const val = e.target.value;
-                            selectorElement.setAttribute('target', val);
+                            selectorElement.parentElement.setAttribute("target", val);
                             new WPTB_TableStateSaveManager().tableStateSet();
-                        });
-                    } else if(targetInputs[i].dataset.type === 'element-rel') {
-                        const rels  = (selectorElement.getAttribute('rel') || '').split(' ');
-                        const currentControl = targetInputs[i];
-                        const currentValue = currentControl.value;
-
-                        if(rels.includes(currentValue)){
-                            currentControl.checked = true;
                         }
+                    });
+                }
 
-                        currentControl.addEventListener('input', (e) => {
-                            const currentRels = (selectorElement.getAttribute('rel') || '').split(' ');
+                function applyRelChanges(targetInput) {
+                    if (wrapperAnchorExists()) {
+                        const rels = (
+                            selectorElement.parentElement.getAttribute("rel") || ""
+                        ).split(" ");
+
+                        if (rels.includes(targetInput.value)) {
+                            targetInput.checked = true;
+                        }
+                    }
+
+                    targetInput.addEventListener("input", (e) => {
+                        if (wrapperAnchorExists()) {
+                            const anchor = selectorElement.parentElement;
+                            const currentValue = targetInput.value;
+                            const currentRels = (anchor.getAttribute("rel") || "").split(
+                                " "
+                            );
                             const index = currentRels.indexOf(currentValue);
 
-                            if(e.target.checked){
-                                if(index < 0){
+                            if (e.target.checked) {
+                                if (index < 0) {
                                     currentRels.push(currentValue);
-                                    selectorElement.setAttribute('rel', currentRels.join(' ').trim());
+                                    anchor.setAttribute(
+                                        "rel",
+                                        currentRels.join(" ").trim()
+                                    );
                                 }
-                            }else {
+                            } else {
                                 currentRels.splice(index, 1);
-                                if(currentRels.length === 0) {
-                                    selectorElement.removeAttribute('rel');
-                                }else{
-                                    selectorElement.setAttribute('rel', currentRels.join(' ').trim());
+                                if (currentRels.length === 0) {
+                                    anchor.removeAttribute("rel");
+                                } else {
+                                    anchor.setAttribute(
+                                        "rel",
+                                        currentRels.join(" ").trim()
+                                    );
                                 }
                             }
+
                             new WPTB_TableStateSaveManager().tableStateSet();
-                        });
+                        }
+                    });
+                }
+
+                function applyConvertRelChanges(targetInput) {
+                    if (wrapperAnchorExists()) {
+                        if (
+                            selectorElement.parentElement.dataset
+                                .wptbLinkEnableConvertRelative === "true"
+                        ) {
+                            targetInput.checked = true;
+                        }
                     }
-            else if(targetInputs[i].dataset.type === 'element-link-convert-relative'){
 
-            const currentCheckbox = targetInputs[i];
-            const relativeDataValue = selectorElement.dataset.wptbLinkEnableConvertRelative;
+                    targetInput.addEventListener("change", function () {
+                        if (wrapperAnchorExists()) {
+                            const anchor = selectorElement.parentElement;
+                            const hrefVal = anchor.href;
 
-            if (relativeDataValue === 'true') {
-            currentCheckbox.checked = true;
-            }
+                            if (!isMailLink(hrefVal)) {
+                                if (this.checked) {
+                                    anchor.dataset.wptbLinkEnableConvertRelative = true;
+                                } else {
+                                    anchor.dataset.wptbLinkEnableConvertRelative = false;
+                                }
+                                anchor.href = WPTB_Helper.linkHttpCheckChange(
+                                    hrefVal,
+                                    this.checked
+                                );
 
-            currentCheckbox.addEventListener('change', function () {
-            const hrefVal = selectorElement.href;
-            if(!mailLinkCheck(hrefVal)){
-            if (this.checked) {
-            selectorElement.dataset.wptbLinkEnableConvertRelative = true;
-            } else {
-            selectorElement.dataset.wptbLinkEnableConvertRelative = false;
-            }
-            selectorElement.href = WPTB_Helper.linkHttpCheckChange(hrefVal, this.checked);
+                                new WPTB_TableStateSaveManager().tableStateSet();
+                            }
+                        }
+                    });
+                }
 
-            new WPTB_TableStateSaveManager().tableStateSet();
-            }
-            })
+                for (const target of targetInputs) {
+                    switch (target.dataset.type) {
+                        case "element-link":
+                            applyLinkChanges(target);
+                            break;
 
+                        case "element-target":
+                            applyTargetChanges(target);
+                            break;
+
+                        case "element-rel":
+                            applyRelChanges(target);
+                            break;
+
+                        case "element-link-convert-relative":
+                            applyConvertRelChanges(target);
+                            break;
+
+                        default:
+                            break;
                     }
                 }
-            } )();
+            })();
+
         </wptb-template-script>
         
 		<?php
