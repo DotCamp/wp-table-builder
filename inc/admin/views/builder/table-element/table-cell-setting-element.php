@@ -9,7 +9,7 @@ use WP_Table_Builder as NS;
 use function sprintf;
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
     die;
 }
 
@@ -36,7 +36,7 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
      *
      */
     public function get_title() {
-        return esc_html_e( 'Cell Settings', 'wp-table-builder' );
+        return esc_html_e('Cell Settings', 'wp-table-builder');
     }
 
     /**
@@ -46,7 +46,7 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
      * @access protected
      */
     public function element_script() {
-        return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/table-element-scripts/table-cell-settings.js' );
+        return wp_normalize_path(NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/table-element-scripts/table-cell-settings.js');
     }
 
     /**
@@ -59,13 +59,13 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
      * @access protected
      */
     protected function _register_controls() {
-        $this->setDefaultControlArg( 'elementOptionsGroupId', 'element-cell-options-group' );
-        $this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
+        $this->setDefaultControlArg('elementOptionsGroupId', 'element-cell-options-group');
+        $this->setDefaultControlArg('elementOptionClass', 'wptb-element-option');
 
         $this->add_control(
             'section_header',
             [
-                'label' => __( 'Cell Settings ', 'wp-table-builder' ),
+                'label' => __('Cell Settings ', 'wp-table-builder'),
                 'type' => Controls_Manager::SECTION_HEADER,
                 'buttonBack' => false
             ]
@@ -74,7 +74,7 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
         $this->add_control(
             'cellWidth',
             [
-                'label' => __( 'Column Width', 'wp-table-builder' ),
+                'label' => __('Column Width', 'wp-table-builder'),
                 'type' => Controls_Manager::SIZE,
                 'selectors' => [
                     '{{{data.container}}}' => 'width',
@@ -89,8 +89,8 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
         $this->add_control(
             'cellWidthFixed',
             [
-                'labelOn' => __( 'Fixed', 'wp-table-builder' ),
-                'labelOff' => __( 'Auto', 'wp-table-builder' ),
+                'labelOn' => __('Fixed', 'wp-table-builder'),
+                'labelOff' => __('Auto', 'wp-table-builder'),
                 'type' => Controls_Manager::TOGGLE2,
             ]
         );
@@ -98,12 +98,12 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
         $this->add_control(
             'cellHeight',
             [
-                'label' => __( 'Row Height', 'wp-table-builder' ),
+                'label' => __('Row Height', 'wp-table-builder'),
                 'type' => Controls_Manager::SIZE,
                 'selectors' => [
                     '{{{data.container}}}' => 'height',
                 ],
-                'min' => 50,
+                'min' => 5,
                 'max' => 500,
                 'defaultValue' => 100,
                 'dimension' => 'px'
@@ -113,20 +113,20 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
         $this->add_control(
             'cellHeightFixed',
             [
-                'labelOn' => __( 'Fixed', 'wp-table-builder' ),
-                'labelOff' => __( 'Auto', 'wp-table-builder' ),
+                'labelOn' => __('Fixed', 'wp-table-builder'),
+                'labelOff' => __('Auto', 'wp-table-builder'),
                 'type' => Controls_Manager::TOGGLE2,
             ]
         );
 
         $this->add_control('cellVerticalAlignment', [
-        	'label' => esc_html__('Cell Vertical Alignment', 'wp-table-builder'),
-	        'type'      => Controls_Manager::ALIGNMENT,
-	        'selected'  => 1,
-	        'alignmentAxis' => 'vertical',
-	        'selectors' => [
-		        '{{{data.container}}}' => 'data-wptb-cell-vertical-alignment'
-	        ]
+            'label' => esc_html__('Cell Vertical Alignment', 'wp-table-builder'),
+            'type'      => Controls_Manager::ALIGNMENT,
+            'selected'  => 1,
+            'alignmentAxis' => 'vertical',
+            'selectors' => [
+                '{{{data.container}}}' => 'data-wptb-cell-vertical-alignment'
+            ]
         ]);
     }
 }
