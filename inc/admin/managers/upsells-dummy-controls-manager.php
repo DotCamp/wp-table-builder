@@ -353,10 +353,12 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
             'globalFontColor' => [
                 'label' => __('Font Color', 'wp_table_builder'),
                 'type' => Controls_Manager::COLOR_PALETTE,
+                'selectors' => []
             ],
             'globalLinkColor' => [
                 'label' => __('Link Color', 'wp_table_builder'),
                 'type' => Controls_Manager::COLOR_PALETTE,
+                'selectors' => []
             ],
             'globalFontSize' => [
                 'label' => __('Font Size', 'wp_table_builder'),
@@ -364,7 +366,8 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
                 'min'          => 10,
                 'max'          => 50,
                 'defaultValue' => 15,
-                'postFix'      => 'px'
+                'postFix'      => 'px',
+                'selectors' => []
             ],
             'globalFontSettingProOverlay' => [
                 'type'        => Controls_Manager::PRO_OVERLAY,
@@ -432,7 +435,8 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
                     'left'  => 'left',
                     'right' => 'right',
                 ],
-                'defaultValue' => 'left'
+                'defaultValue' => 'left',
+                'selectors' => []
             ],
             'searchProOverlay'  => [
                 'type'        => Controls_Manager::PRO_OVERLAY,
