@@ -56,7 +56,8 @@ class Control_Url extends Base_Control {
         <#
             let label,
                 selector,
-                dataElement;
+                dataElement,
+                convertSpan;
 
             if( data.label ) {
                 label = data.label;
@@ -64,6 +65,12 @@ class Control_Url extends Base_Control {
 
             if( data.selector ) {
                 selector = data.selector;
+            }
+
+            if( data.convertSpan ) {
+                convertSpan = data.convertSpan;
+            } else {
+                convertSpan = false;
             }
 
             if( selector ) {
@@ -127,15 +134,28 @@ class Control_Url extends Base_Control {
 
         <wptb-template-script>
             (function () {
+                const getSelectorElement = () => document.querySelector("{{{selector}}}");
                 let selectorElement = document.querySelector("{{{selector}}}");
                 let targetInputs = document.getElementsByClassName(
                     "{{{targetInputAddClass}}}"
                 );
 
-                const wrapperAnchorExists = () =>
-                    selectorElement.parentElement.tagName.toLowerCase() === "a";
+                const wrapperAnchorExists = () => {
+                    return convertSpan()
+                        ? getSelectorElement().tagName.toLowerCase() === "a"
+                        : selectorElement.parentElement.tagName.toLowerCase() === "a";
+                };
+
+                const convertSpan = () => "{{{convertSpan}}}" === "true";
+
+                const copyAttrs = (fromEl, toEl) => {
+                    for (const attr of fromEl.attributes) {
+                        toEl.setAttribute(attr.name, attr.value);
+                    }
+                };
 
                 const addWrapperAnchor = () => {
+                    const selectorElement = getSelectorElement();
                     const newAnchor = document.createElement("a");
                     const parent = selectorElement.parentElement;
                     const nextSibling = selectorElement.nextSibling;
@@ -144,18 +164,40 @@ class Control_Url extends Base_Control {
                     nextSibling
                         ? parent.insertBefore(newAnchor, nextSibling)
                         : parent.appendChild(newAnchor);
-                    newAnchor.appendChild(selectorElement);
+
+                    if (convertSpan()) {
+                        copyAttrs(selectorElement, newAnchor);
+                        newAnchor.append(...selectorElement.childNodes);
+                    } else {
+                        newAnchor.appendChild(selectorElement);
+                    }
                 };
 
                 const removeWrapperAnchor = () => {
-                    const anchor = selectorElement.parentElement;
-                    const parent = anchor.parentElement;
-                    const nextSibling = anchor.nextSibling;
+                    if (convertSpan()) {
+                        const selectorElement = getSelectorElement();
+                        const newSpan = document.createElement("span");
+                        const parent = selectorElement.parentElement;
+                        const nextSibling = selectorElement.nextSibling;
 
-                    parent.removeChild(anchor);
-                    nextSibling
-                        ? parent.insertBefore(selectorElement, nextSibling)
-                        : parent.appendChild(selectorElement);
+                        parent.removeChild(selectorElement);
+                        nextSibling
+                            ? parent.insertBefore(newSpan, nextSibling)
+                            : parent.appendChild(newSpan);
+
+                        copyAttrs(selectorElement, newSpan);
+
+                        newSpan.append(...selectorElement.childNodes);
+                    } else {
+                        const anchor = selectorElement.parentElement;
+                        const parent = anchor.parentElement;
+                        const nextSibling = anchor.nextSibling;
+
+                        parent.removeChild(anchor);
+                        nextSibling
+                            ? parent.insertBefore(selectorElement, nextSibling)
+                            : parent.appendChild(selectorElement);
+                    }
                 };
 
                 const isMailLink = (val) => {
@@ -176,7 +218,9 @@ class Control_Url extends Base_Control {
                     targetInput.onchange = function () {
                         if (this.value) {
                             if (!wrapperAnchorExists()) addWrapperAnchor();
-                            const anchor = selectorElement.parentElement;
+                            const anchor = convertSpan()
+                                ? getSelectorElement()
+                                : selectorElement.parentElement;
 
                             if (isMailLink(this.value)) {
                                 anchor.href = this.value;
@@ -206,7 +250,11 @@ class Control_Url extends Base_Control {
                     targetInput.addEventListener("input", (e) => {
                         if (wrapperAnchorExists()) {
                             const val = e.target.value;
-                            selectorElement.parentElement.setAttribute("target", val);
+
+                            convertSpan()
+                                ? getSelectorElement().setAttribute("target", val)
+                                : selectorElement.parentElement.setAttribute("target", val);
+
                             new WPTB_TableStateSaveManager().tableStateSet();
                         }
                     });
@@ -225,7 +273,9 @@ class Control_Url extends Base_Control {
 
                     targetInput.addEventListener("input", (e) => {
                         if (wrapperAnchorExists()) {
-                            const anchor = selectorElement.parentElement;
+                            const anchor = convertSpan()
+                                ? getSelectorElement()
+                                : selectorElement.parentElement;
                             const currentValue = targetInput.value;
                             const currentRels = (anchor.getAttribute("rel") || "").split(
                                 " "
@@ -259,17 +309,21 @@ class Control_Url extends Base_Control {
 
                 function applyConvertRelChanges(targetInput) {
                     if (wrapperAnchorExists()) {
-                        if (
-                            selectorElement.parentElement.dataset
-                                .wptbLinkEnableConvertRelative === "true"
-                        ) {
+                        const convertRelativeEnabled = convertSpan()
+                            ? getSelectorElement().dataset.wptbLinkEnableConvertRelative
+                            : selectorElement.parentElement.dataset
+                                .wptbLinkEnableConvertRelative;
+
+                        if (convertRelativeEnabled === "true") {
                             targetInput.checked = true;
                         }
                     }
 
                     targetInput.addEventListener("change", function () {
                         if (wrapperAnchorExists()) {
-                            const anchor = selectorElement.parentElement;
+                            const anchor = convertSpan()
+                                ? getSelectorElement()
+                                : selectorElement.parentElement;
                             const hrefVal = anchor.href;
 
                             if (!isMailLink(hrefVal)) {

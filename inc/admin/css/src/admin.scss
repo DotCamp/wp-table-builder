@@ -1842,7 +1842,8 @@ table.wptb-table {
     transition: all 0.2s ease-out;
 }
 
-.wptb-image-wrapper a {
+.wptb-image-wrapper a,
+.wptb-image-wrapper span {
     display: block;
     max-width: 100%;
     position: relative;
