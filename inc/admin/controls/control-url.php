@@ -144,6 +144,27 @@ class Control_Url extends Base_Control {
                     }
                 };
 
+                const disableControls = () => {
+                    const targetInputs = document.getElementsByClassName(
+                        "{{{targetInputAddClass}}}"
+                    );
+
+                    for (const target of targetInputs) {
+                        if (target.dataset.type !== "element-link")
+                            target.setAttribute("disabled", "");
+                    }
+                };
+
+                const enableControls = () => {
+                    const targetInputs = document.getElementsByClassName(
+                        "{{{targetInputAddClass}}}"
+                    );
+
+                    for (const target of targetInputs) {
+                        target.removeAttribute("disabled");
+                    }
+                };
+
                 const convertSpanToAnchor = () => {
                     const newAnchor = document.createElement("a");
                     const parent = selectorElement.parentElement;
@@ -161,6 +182,7 @@ class Control_Url extends Base_Control {
 
                     selectorElement = newAnchor;
                     elementIsAnchor = true;
+                    enableControls();
                 };
 
                 const convertAnchorToSpan = () => {
@@ -180,6 +202,7 @@ class Control_Url extends Base_Control {
 
                     selectorElement = newSpan;
                     elementIsAnchor = false;
+                    disableControls();
                 };
 
                 const isMailLink = (val) => {
@@ -188,7 +211,10 @@ class Control_Url extends Base_Control {
                 };
 
                 function setLinkValue(targetInput) {
-                    if (!elementIsAnchor) return;
+                    if (!elementIsAnchor) {
+                        disableControls();
+                        return;
+                    }
 
                     const href = selectorElement.getAttribute("href");
                     targetInput.value = href;
