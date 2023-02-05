@@ -141,7 +141,6 @@ class Image_Element extends Element_Base {
                 'label'    => __('Image Link', 'wp_table_builder'),
                 'type'     => Controls_Manager::URL,
                 'selector' => '{{{data.container}}} .wptb-image-wrapper .wptb-link-target',
-                'convertSpan' => true
             ]
         ];
 
