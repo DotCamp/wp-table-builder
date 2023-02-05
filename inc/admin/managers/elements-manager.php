@@ -82,7 +82,8 @@ class Elements_Manager extends Elements_Manager_Base {
         'ribbon',
         'styled_list',
         'text_icon',
-        'progress_bar'
+        'progress_bar',
+        'badge'
     ];
 
     /**

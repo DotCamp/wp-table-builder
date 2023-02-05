@@ -31,7 +31,8 @@ class Upsells_Manager {
         'ribbon',
         'styled_list',
         'text_icon',
-        'progress_bar'
+        'progress_bar',
+        'badge'
     ];
 
     /**
