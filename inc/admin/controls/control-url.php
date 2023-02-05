@@ -210,6 +210,11 @@ class Control_Url extends Base_Control {
                     return regExp.test(val);
                 };
 
+                const isTelLink = (val) => {
+                    const regExp = new RegExp(/^(tel:)([\d\(\) \+\-]+)$/);
+                    return regExp.test(val);
+                };
+
                 function setLinkValue(targetInput) {
                     if (!elementIsAnchor) {
                         disableControls();
@@ -256,7 +261,7 @@ class Control_Url extends Base_Control {
                     if (this.value) {
                         if (!elementIsAnchor) convertSpanToAnchor();
 
-                        if (isMailLink(this.value)) {
+                        if (isMailLink(this.value) || isTelLink(this.value)) {
                             selectorElement.href = this.value;
                         } else {
                             const convertRelative =
@@ -319,7 +324,7 @@ class Control_Url extends Base_Control {
 
                     const hrefVal = selectorElement.href;
 
-                    if (!isMailLink(hrefVal)) {
+                    if (!isMailLink(hrefVal) || !isTelLink(hrefVal)) {
                         if (this.checked) {
                             selectorElement.dataset.wptbLinkEnableConvertRelative = true;
                         } else {
