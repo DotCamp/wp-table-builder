@@ -45,7 +45,8 @@ if (target) {
                     pText = pText.replace(/&nbsp;/g, "").trim();
                     if (pText !== window.buttonElemPTextKeyDown) {
                         e.target.onblur = function () {
-                            const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            const wptbTableStateSaveManager =
+                                new WPTB_TableStateSaveManager();
                             wptbTableStateSaveManager.tableStateSet();
 
                             window.buttonElemPTextKeyDown = "";
@@ -59,9 +60,9 @@ if (target) {
             init_instance_callback(editor) {
                 window.currentEditor = editor;
                 editor.on("focus", function (e) {
-                    const totalWidth = document.getElementsByClassName(
-                        "wptb-builder-panel"
-                    )[0].offsetWidth;
+                    const totalWidth =
+                        document.getElementsByClassName("wptb-builder-panel")[0]
+                            .offsetWidth;
                     if (
                         window.currentEditor &&
                         document.getElementById("wptb_builder").scrollTop >=
@@ -101,24 +102,31 @@ if (target) {
     element.addEventListener("mouseover", tinyMceInitStart, false);
 }
 
-// for old elements which were before the change of structure of the plugin
-const infArr = element.className.match(/wptb-size-([A-Z]+)/i);
-if (infArr && Array.isArray(infArr)) {
-    const wptbSize = infArr[0];
-    const wptbSizeNew = wptbSize.toLowerCase();
+(function addBackwardsCompatibility() {
+    // for old elements which were before the change of structure of the plugin
+    const infArr = element.className.match(/wptb-size-([A-Z]+)/i);
+    if (infArr && Array.isArray(infArr)) {
+        const wptbSize = infArr[0];
+        const wptbSizeNew = wptbSize.toLowerCase();
 
-    element.classList.remove(wptbSize);
+        element.classList.remove(wptbSize);
 
-    const wptbButtonWrapper = element.querySelector(".wptb-button-wrapper");
-    if (wptbButtonWrapper) {
-        wptbButtonWrapper.classList.add(wptbSizeNew);
+        const wptbButtonWrapper = element.querySelector(".wptb-button-wrapper");
+        if (wptbButtonWrapper) {
+            wptbButtonWrapper.classList.add(wptbSizeNew);
+        }
     }
-}
+
+    const anchor = element.querySelector("a");
+    if (anchor && !anchor.className) {
+        anchor.className = "wptb-link-target";
+    }
+})();
 
 /**
  * Adds hover color change support for supported button elements.
  */
-function addHoverSupport() {
+(function addHoverSupport() {
     const buttons = Array.from(element.querySelectorAll(".wptb-button"));
 
     buttons.map((b) => {
@@ -157,12 +165,12 @@ function addHoverSupport() {
             }
         });
     });
-}
+})();
 
 /**
  * Add icon support for button elements
  */
-function addIconSupport() {
+(function addIconSupport() {
     const buttonElements = Array.from(element.querySelectorAll(".wptb-button"));
 
     // eslint-disable-next-line array-callback-return
@@ -173,14 +181,10 @@ function addIconSupport() {
 
             const iconElementString =
                 '<div class="wptb-button-icon" data-wptb-button-icon-src=""></div>';
-            const iconElement = range.createContextualFragment(
-                iconElementString
-            );
+            const iconElement =
+                range.createContextualFragment(iconElementString);
 
             b.appendChild(iconElement);
         }
     });
-}
-
-addHoverSupport();
-addIconSupport();
+})();
