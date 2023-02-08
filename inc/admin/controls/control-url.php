@@ -348,7 +348,7 @@ class Control_Url extends Base_Control {
                         switch (target.dataset.type) {
                             case "element-link":
                                 setLinkValue(target);
-                                target.onchange = linkChangeCallback;
+                                target.oninput = linkChangeCallback;
                                 break;
 
                             case "element-target":
