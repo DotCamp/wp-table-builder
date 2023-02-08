@@ -120,7 +120,7 @@ function controlsChange(inputs, element) {
 /**
  * Backward compatibility operations for tables created before.
  */
-function imageElementBackwardCompatibility() {
+(function imageElementBackwardsCompatibility() {
     const imageAnchor = element.querySelector("a");
 
     if (imageAnchor) {
@@ -139,9 +139,11 @@ function imageElementBackwardCompatibility() {
                 floatVal
             );
         }
-    }
-}
 
-imageElementBackwardCompatibility();
+        if (!imageAnchor.className) {
+            imageAnchor.className = "wptb-link-target";
+        }
+    }
+})();
 
 WPTB_Helper.controlsInclude(element, controlsChange, true);
