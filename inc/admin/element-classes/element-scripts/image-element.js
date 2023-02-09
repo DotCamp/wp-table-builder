@@ -1,10 +1,8 @@
-let a = element.getElementsByTagName("a");
-if (a.length > 0) {
-    a = a[0];
-}
-a.onclick = function (e) {
-    e.preventDefault();
-};
+element.querySelectorAll("a").forEach((anchor) => {
+    anchor.addEventListener("click", (e) => e.preventDefault());
+});
+
+const linkTarget = element.querySelector(".wptb-link-target");
 
 const addMedia = function (element, imageChange = false) {
     const img = element.querySelector("img");
@@ -27,20 +25,14 @@ const addMedia = function (element, imageChange = false) {
         if (!img) {
             img = document.createElement("img");
 
-            let a = element.getElementsByTagName("a");
-            if (a.length > 0) {
-                a = a[0];
-                a.innerHTML = "";
-
-                a.appendChild(img);
-            }
+            element.querySelector(".wptb-link-target").appendChild(img);
         }
 
-        const imageButton = a.querySelector(".wptb-icon-image-button");
+        const imageButton = linkTarget.querySelector(".wptb-icon-image-button");
 
         // remove image button that is present when image element is empty
         if (imageButton) {
-            a.removeChild(imageButton);
+            linkTarget.removeChild(imageButton);
         }
 
         // make img tag visible
@@ -105,9 +97,9 @@ const watchList = {
         addMedia(element, true);
     },
     imageAlignment(alignment, element) {
-        const imageAnchor = element.querySelector("a");
+        const linkTarget = element.querySelector(".wptb-link-target");
         // update style float value for more fluid transition between relative modes
-        imageAnchor.style.float = alignment === "center" ? "none" : alignment;
+        linkTarget.style.float = alignment === "center" ? "none" : alignment;
     },
 };
 
@@ -128,7 +120,7 @@ function controlsChange(inputs, element) {
 /**
  * Backward compatibility operations for tables created before.
  */
-function imageElementBackwardCompatibility() {
+(function imageElementBackwardsCompatibility() {
     const imageAnchor = element.querySelector("a");
 
     if (imageAnchor) {
@@ -147,9 +139,11 @@ function imageElementBackwardCompatibility() {
                 floatVal
             );
         }
-    }
-}
 
-imageElementBackwardCompatibility();
+        if (!imageAnchor.className) {
+            imageAnchor.className = "wptb-link-target";
+        }
+    }
+})();
 
 WPTB_Helper.controlsInclude(element, controlsChange, true);

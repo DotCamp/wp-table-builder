@@ -56,7 +56,8 @@ class Control_Url extends Base_Control {
         <#
             let label,
                 selector,
-                dataElement;
+                dataElement,
+                convertSpan;
 
             if( data.label ) {
                 label = data.label;
@@ -64,6 +65,12 @@ class Control_Url extends Base_Control {
 
             if( data.selector ) {
                 selector = data.selector;
+            }
+
+            if( data.convertSpan ) {
+                convertSpan = data.convertSpan;
+            } else {
+                convertSpan = false;
             }
 
             if( selector ) {
@@ -126,100 +133,247 @@ class Control_Url extends Base_Control {
         </div>
 
         <wptb-template-script>
-            ( function() {
-                let selectorElement = document.querySelector( '{{{selector}}}' );
-                let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
-            const mailLinkCheck = (val) => {
-                const regExp = new RegExp(/^(mailto:(.+)@(.+)\.(.+))$/);
-                return regExp.test(val);
-            };
+            (function () {
+                let selectorElement = document.querySelector("{{{selector}}}");
 
-            for( let i = 0; i < targetInputs.length; i++ ) {
-                    if( targetInputs[i].dataset.type == 'element-link' ) {
-                        let href = selectorElement.getAttribute( 'href' );
-                        targetInputs[i].value = href;
+                let elementIsAnchor = selectorElement.tagName.toLowerCase() === "a";
 
-                        targetInputs[i].onchange = function() {
-                            if ( this.value ) {
-                                if(mailLinkCheck(this.value)){
-                                    selectorElement.href = this.value;
-                                }else{
-                                    const convertRelative = selectorElement.dataset.wptbLinkEnableConvertRelative;
-                                    selectorElement.href = WPTB_Helper.linkHttpCheckChange( this.value , convertRelative === 'true' );
-
-                                }
-            } else {
-                                selectorElement.removeAttribute( 'href' );
-                            }
-                            
-                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
-                        }
-                    } else if( targetInputs[i].dataset.type == 'element-target' ) {
-                        const target = selectorElement.getAttribute('target') || '_self';
-                        const controller = targetInputs[i];
-                        controller.value = target;
-
-                        controller.addEventListener('input', (e) => {
-                            const val = e.target.value;
-                            selectorElement.setAttribute('target', val);
-                            new WPTB_TableStateSaveManager().tableStateSet();
-                        });
-                    } else if(targetInputs[i].dataset.type === 'element-rel') {
-                        const rels  = (selectorElement.getAttribute('rel') || '').split(' ');
-                        const currentControl = targetInputs[i];
-                        const currentValue = currentControl.value;
-
-                        if(rels.includes(currentValue)){
-                            currentControl.checked = true;
-                        }
-
-                        currentControl.addEventListener('input', (e) => {
-                            const currentRels = (selectorElement.getAttribute('rel') || '').split(' ');
-                            const index = currentRels.indexOf(currentValue);
-
-                            if(e.target.checked){
-                                if(index < 0){
-                                    currentRels.push(currentValue);
-                                    selectorElement.setAttribute('rel', currentRels.join(' ').trim());
-                                }
-                            }else {
-                                currentRels.splice(index, 1);
-                                if(currentRels.length === 0) {
-                                    selectorElement.removeAttribute('rel');
-                                }else{
-                                    selectorElement.setAttribute('rel', currentRels.join(' ').trim());
-                                }
-                            }
-                            new WPTB_TableStateSaveManager().tableStateSet();
-                        });
+                const copyAttrs = (fromEl, toEl) => {
+                    for (const attr of fromEl.attributes) {
+                        toEl.setAttribute(attr.name, attr.value);
                     }
-            else if(targetInputs[i].dataset.type === 'element-link-convert-relative'){
+                };
 
-            const currentCheckbox = targetInputs[i];
-            const relativeDataValue = selectorElement.dataset.wptbLinkEnableConvertRelative;
+                const disableControls = () => {
+                    const targetInputs = document.getElementsByClassName(
+                        "{{{targetInputAddClass}}}"
+                    );
 
-            if (relativeDataValue === 'true') {
-            currentCheckbox.checked = true;
-            }
+                    for (const target of targetInputs) {
+                        if (target.dataset.type !== "element-link")
+                            target.setAttribute("disabled", "");
+                    }
+                };
 
-            currentCheckbox.addEventListener('change', function () {
-            const hrefVal = selectorElement.href;
-            if(!mailLinkCheck(hrefVal)){
-            if (this.checked) {
-            selectorElement.dataset.wptbLinkEnableConvertRelative = true;
-            } else {
-            selectorElement.dataset.wptbLinkEnableConvertRelative = false;
-            }
-            selectorElement.href = WPTB_Helper.linkHttpCheckChange(hrefVal, this.checked);
+                const enableControls = () => {
+                    const targetInputs = document.getElementsByClassName(
+                        "{{{targetInputAddClass}}}"
+                    );
 
-            new WPTB_TableStateSaveManager().tableStateSet();
-            }
-            })
+                    for (const target of targetInputs) {
+                        target.removeAttribute("disabled");
+                    }
+                };
 
+                const convertSpanToAnchor = () => {
+                    const newAnchor = document.createElement("a");
+                    const parent = selectorElement.parentElement;
+                    const nextSibling = selectorElement.nextSibling;
+
+                    parent.removeChild(selectorElement);
+                    nextSibling
+                        ? parent.insertBefore(newAnchor, nextSibling)
+                        : parent.appendChild(newAnchor);
+
+                    copyAttrs(selectorElement, newAnchor);
+                    newAnchor.append(...selectorElement.childNodes);
+
+                    newAnchor.addEventListener("click", (e) => e.preventDefault());
+
+                    selectorElement = newAnchor;
+                    elementIsAnchor = true;
+                    enableControls();
+                };
+
+                const convertAnchorToSpan = () => {
+                    selectorElement.removeAttribute("href");
+                    const newSpan = document.createElement("span");
+                    const parent = selectorElement.parentElement;
+                    const nextSibling = selectorElement.nextSibling;
+
+                    parent.removeChild(selectorElement);
+                    nextSibling
+                        ? parent.insertBefore(newSpan, nextSibling)
+                        : parent.appendChild(newSpan);
+
+                    copyAttrs(selectorElement, newSpan);
+
+                    newSpan.append(...selectorElement.childNodes);
+
+                    selectorElement = newSpan;
+                    elementIsAnchor = false;
+                    disableControls();
+                };
+
+                const isMailLink = (val) => {
+                    const regExp = new RegExp(/^(mailto:(.+)@(.+)\.(.+))$/);
+                    return regExp.test(val);
+                };
+
+                const isTelLink = (val) => {
+                    const regExp = new RegExp(/^(tel:)([\d\(\) \+\-]+)$/);
+                    return regExp.test(val);
+                };
+
+                function setLinkValue(targetInput) {
+                    if (!elementIsAnchor) {
+                        disableControls();
+                        return;
+                    }
+
+                    const href = selectorElement.getAttribute("href");
+                    targetInput.value = href;
+
+                    if (!href) {
+                        convertAnchorToSpan();
                     }
                 }
-            } )();
+
+                function setTargetInputValue(targetInput) {
+                    if (!elementIsAnchor) return;
+
+                    const target = selectorElement.getAttribute("target") || "_self";
+                    targetInput.value = target;
+                }
+
+                function setRelInputValue(targetInput) {
+                    if (!elementIsAnchor) return;
+
+                    const rels = (selectorElement.getAttribute("rel") || "").split(" ");
+
+                    if (rels.includes(targetInput.value)) {
+                        targetInput.checked = true;
+                    }
+                }
+
+                function setConvertToRelInputValue(targetInput) {
+                    if (!elementIsAnchor) return;
+
+                    const convertRelativeEnabled =
+                        selectorElement.dataset.wptbLinkEnableConvertRelative;
+
+                    if (convertRelativeEnabled === "true") {
+                        targetInput.checked = true;
+                    }
+                }
+
+                function linkChangeCallback() {
+                    if (this.value) {
+                        if (!elementIsAnchor) convertSpanToAnchor();
+
+                        if (isMailLink(this.value) || isTelLink(this.value)) {
+                            selectorElement.href = this.value;
+                        } else {
+                            const convertRelative =
+                                selectorElement.dataset.wptbLinkEnableConvertRelative;
+                            selectorElement.href = WPTB_Helper.linkHttpCheckChange(
+                                this.value,
+                                convertRelative === "true"
+                            );
+                        }
+                    } else {
+                        convertAnchorToSpan();
+                    }
+
+                    new WPTB_TableStateSaveManager().tableStateSet();
+                }
+
+                const targetChangeCallback = (e) => {
+                    if (!elementIsAnchor) return;
+
+                    const val = e.target.value;
+
+                    selectorElement.setAttribute("target", val);
+
+                    new WPTB_TableStateSaveManager().tableStateSet();
+                };
+
+                const relChangeCallback = (e, currentValue) => {
+                    if (!elementIsAnchor) return;
+
+                    const currentRels = (selectorElement.getAttribute("rel") || "").split(
+                        " "
+                    );
+                    const index = currentRels.indexOf(currentValue);
+
+                    if (e.target.checked) {
+                        if (index < 0) {
+                            currentRels.push(currentValue);
+                            selectorElement.setAttribute(
+                                "rel",
+                                currentRels.join(" ").trim()
+                            );
+                        }
+                    } else {
+                        currentRels.splice(index, 1);
+                        if (currentRels.length === 0) {
+                            selectorElement.removeAttribute("rel");
+                        } else {
+                            selectorElement.setAttribute(
+                                "rel",
+                                currentRels.join(" ").trim()
+                            );
+                        }
+                    }
+
+                    new WPTB_TableStateSaveManager().tableStateSet();
+                };
+
+                function convertToRelCallback() {
+                    if (!elementIsAnchor) return;
+
+                    const hrefVal = selectorElement.href;
+
+                    if (!isMailLink(hrefVal) || !isTelLink(hrefVal)) {
+                        if (this.checked) {
+                            selectorElement.dataset.wptbLinkEnableConvertRelative = true;
+                        } else {
+                            selectorElement.dataset.wptbLinkEnableConvertRelative = false;
+                        }
+                        selectorElement.href = WPTB_Helper.linkHttpCheckChange(
+                            hrefVal,
+                            this.checked
+                        );
+
+                        new WPTB_TableStateSaveManager().tableStateSet();
+                    }
+                }
+
+                (function setInputValuesAndCallbacks() {
+                    const targetInputs = document.getElementsByClassName(
+                        "{{{targetInputAddClass}}}"
+                    );
+
+                    for (const target of targetInputs) {
+                        switch (target.dataset.type) {
+                            case "element-link":
+                                setLinkValue(target);
+                                target.oninput = linkChangeCallback;
+                                break;
+
+                            case "element-target":
+                                setTargetInputValue(target);
+                                target.addEventListener("input", targetChangeCallback);
+                                break;
+
+                            case "element-rel":
+                                setRelInputValue(target);
+                                target.addEventListener("input", (e) =>
+                                    relChangeCallback(e, target.value)
+                                );
+                                break;
+
+                            case "element-link-convert-relative":
+                                setConvertToRelInputValue(target);
+                                target.addEventListener("change", convertToRelCallback);
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                })();
+            })();
         </wptb-template-script>
         
 		<?php
