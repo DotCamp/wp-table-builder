@@ -722,6 +722,18 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
+	const badgeFrontendEditFix = () => {
+		const tableObjects = WptbFrontendBase.getTableObjects();
+
+		tableObjects.map(({ mainTable }) => {
+			const textIconElements = Array.from(mainTable.querySelectorAll('.wptb-badge-container'));
+
+			textIconElements.map((tiEl) => {
+				tiEl.setAttribute('contenteditable', false);
+			});
+		});
+	};
+
 	sortingTable();
 	const responsiveFrontReady = new CustomEvent('responsive:front', {
 		detail: {
@@ -743,6 +755,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	WPTB_LazyLoad.init(WptbFrontendData.lazyLoad);
 
 	textIconFrontendEditFix();
+    badgeFrontendEditFix();
 
 	// initialize style pass
 	WPTB_StylePass.init(WptbFrontendData.stylePass);
