@@ -301,6 +301,15 @@ class Admin_Menu {
 			array( $this, 'import' )
 		);
 
+		$database_updater_test = add_submenu_page(
+			'wptb-overview',
+			esc_html__('Table Builder', 'wp-table-builder'),
+			esc_html__('Database Updater', 'wp-table-builder'),
+			$menu_cap,
+			'wptb-db-update',
+			array($this, 'db_update')
+		);
+
 		add_action( 'load-' . $builder_page, [ $this, 'load_assets' ] );
 
 		// @deprecated
@@ -627,6 +636,10 @@ class Admin_Menu {
 	 */
 	public function import() {
 		require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-import.php';
+	}
+
+	public function db_update() {
+		require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-db-update.php';
 	}
 
 	/**
