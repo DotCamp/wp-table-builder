@@ -141,6 +141,7 @@ function controlsChange(inputs, element) {
         }
 
         if (!imageAnchor.className) {
+            console.log("imageAnchor backwards compatibility code running");
             imageAnchor.className = "wptb-link-target";
         }
     }

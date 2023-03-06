@@ -1,0 +1,6 @@
+{
+    "name": "dotcamp/wp-table-builder",
+    "require": {
+        "phpgt/dom": "^4.1"
+    }
+}
