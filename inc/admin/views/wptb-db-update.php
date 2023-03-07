@@ -13,7 +13,21 @@ if (!defined('WPINC')) {
 <div>
     <ul>
         <?php
-        $tables = (new Database_Updater())->get_updated_tables();
+        // echo "starting update";
+        // for ($i = 0; $i < 1000; $i++) {
+        //     $tables = (new Database_Updater())->get_updated_tables();
+        // }
+        // echo "<br>update complete";
+        // (new Database_Updater())->get_updated_tables();
         ?>
+        <button id="test-button">Start update</button>
     </ul>
 </div>
+
+<script>
+    document.querySelector("#test-button").addEventListener("click", async () => {
+        const x = await fetch("http://127.0.0.1/wp-admin/admin-ajax.php?action=start_update");
+        console.log(x);
+        console.log((await x.json()).data);
+    })
+</script>
