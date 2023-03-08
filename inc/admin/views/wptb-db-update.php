@@ -9,25 +9,33 @@ if (!defined('WPINC')) {
 }
 
 ?>
-<div class="wptb-menu-page-wrapper">WPTB Database Updater</div>
+<div class="wptb-menu-page-wrapper">
+    <h1>WPTB Database Updater Synthetic Benchmark</h1>
+</div>
 <div>
-    <ul>
-        <?php
-        // echo "starting update";
-        // for ($i = 0; $i < 1000; $i++) {
-        //     $tables = (new Database_Updater())->get_updated_tables();
-        // }
-        // echo "<br>update complete";
-        // (new Database_Updater())->get_updated_tables();
-        ?>
-        <button id="test-button">Start update</button>
-    </ul>
+    <div>
+        <p>Run benchmark on <input type="number" value="400" id="tables"> tables each with <input type="number" value="4" id="v1_icon"> v1 icons, <input type="number" value="4" id="v2_icon"> v2 icons, and <input type="number" value="5" id="images"> images.</p>
+        <button class="button button-primary" id="bench">Run benchmark</button>
+        <p style="display: inline-block;margin: 0.3rem 0.5rem;" id="result"></p>
+    </div>
+    <?php
+    // $database_updater = new Database_Updater;
+    // $database_updater->load_tables();
+    // $database_updater->print_tables(true);
+    // $database_updater->update_all_tables();
+    // print_r($database_updater->updated_tables);
+    ?>
 </div>
 
 <script>
-    document.querySelector("#test-button").addEventListener("click", async () => {
-        const x = await fetch("http://127.0.0.1/wp-admin/admin-ajax.php?action=start_update");
-        console.log(x);
-        console.log((await x.json()).data);
+    bench.addEventListener("click", async () => {
+        const t0 = performance.now();
+        bench.disabled = true;
+        result.innerText = "Running benchmark...";
+        await fetch(`http://127.0.0.1/wp-admin/admin-ajax.php?action=wptb_synthetic_benchmark&tables=${tables.value}&icon1=${v1_icon.value}&icon2=${v2_icon.value}&images=${images.value}`);
+        const t1 = performance.now();
+
+        bench.disabled = false;
+        result.innerText = `Benchmark complete: ${(t1 - t0)/1000}s`;
     })
 </script>
