@@ -18,12 +18,23 @@ class Database_Updater
     {
         add_action("wp_ajax_update_all", array($this, 'ajax_update_all_tables'));
         add_action("wp_ajax_simulate_update", array($this, 'ajax_simulate_update'));
+        add_action("wp_ajax_get_table_render", array($this, 'ajax_get_table_render'));
+        add_action("wp_ajax_get_tables_num", array($this, 'ajax_num_tables'));
         add_action("wp_ajax_wptb_synthetic_benchmark", array($this, 'ajax_run_synthetic_benchmark'));
     }
 
-    public function ajax_run_synthetic_benchmark()
+    public function ajax_num_tables()
     {
-        $n = $_REQUEST['tables'];
+        wp_send_json(wp_count_posts('wptb-tables')->draft);
+    }
+
+    public function ajax_get_table_render()
+    {
+        wp_send_json($this->generate_table());
+    }
+
+    public function generate_table()
+    {
         $icon1 = $_REQUEST['icon1'];
         $icon2 = $_REQUEST['icon2'];
         $images = $_REQUEST['images'];
@@ -60,7 +71,7 @@ class Database_Updater
                     <?php for ($i = 0; $i < $images; $i++) : ?>
                         <td class="wptb-cell wptb-ondragenter" data-y-index="0" data-x-index="0" style="border: 1px solid rgb(209, 209, 209);" data-wptb-css-td-auto-width="true">
                             <div class="wptb-image-container wptb-ph-element wptb-element-image-1 wptb-ondragenter">
-                                <div class="wptb-image-wrapper"> <a style="display: block; width: 70%; float: none;"><img src="//127.0.0.1/wp-content/uploads/2023/03/alo.png" style="width: 100%;" class="wptb-image-element-target" title="" width="359" height="291"></a> </div>
+                                <div class="wptb-image-wrapper"> <a style="display: block; width: 70%; float: none;"><img src="https://images.unsplash.com/photo-1664825455771-136f0ea03299?iauto=format&fit=crop&w=870&q=80" style="width: 100%;" class="wptb-image-element-target" title="" width="359" height="291"></a> </div>
                             </div>
                         </td>
                     <?php endfor; ?>
@@ -69,7 +80,14 @@ class Database_Updater
         </table>
         <?php
 
-        $table = ob_get_clean();
+        return ob_get_clean();
+    }
+
+    public function ajax_run_synthetic_benchmark()
+    {
+        $n = $_REQUEST['tables'];
+
+        $table = $this->generate_table();
 
         for ($i = 0; $i < $n; $i++) {
             $this->update_table($table);
