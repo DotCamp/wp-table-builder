@@ -237,28 +237,15 @@ class Database_Updater
                 $createNewIcons();
             })();
 
-            (function () use ($element, $table, $iconElementWrapper, $createNewIcons) {
-                $anchor = $element->querySelector('a');
+            (function () use ($element, $createNewIcons) {
+                if ($element->querySelectorAll("a, span")->length !== 1) return;
 
-                if (is_null($anchor)) return;
+                $anchor = $element->querySelector("a");
 
-                $newElement = $anchor->href
-                    ? $table->createElement('a')
-                    : $table->createElement('span');
-                $newElement->classList->add('wptb-icon-link-target-1');
+                $anchor->classList->add("wptb-icon-link-target-1");
 
-                $oldIcon = $element->querySelector('.wptb-icon');
-                $oldIconName = $oldIcon->dataset->wptbIconSrc;
-                $oldStyles = $oldIcon->getAttribute('style');
-
-                $iconElementWrapper->removeChild($element->querySelector('a'));
-                $iconElementWrapper->appendChild($newElement);
-
-                $icon = Init::instance()->get_icon_manager()->get_icon($oldIconName);
-
-                $newElement->innerHTML = "<div class='wptb-icon-1' style='$oldStyles'>$icon</div>";
-
-                if ($anchor->href) $newElement->href = $anchor->href;
+                $iconEl = $anchor->querySelector("->wptb-icon");
+                $iconEl->classList->add("wptb-icon-1");
 
                 $createNewIcons();
             })();
