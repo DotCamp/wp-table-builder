@@ -231,7 +231,7 @@ class Admin_Menu {
 			$wp_admin_bar->add_menu( array(
 				'parent' => 'new-content',
 				'id'     => 'wptb-add-new',
-				'title'  => __( 'Table', 'wp_table_builder' ),
+				'title'  => __( 'Table', 'wp-table-builder' ),
 				'href'   => esc_url( admin_url( 'admin.php?page=wptb-builder' ) ),
 			) );
 		}
@@ -501,7 +501,6 @@ class Admin_Menu {
 			wp_enqueue_script( 'wptb-admin-builder-js' );
 			wp_enqueue_style( 'wptb-settings-manager-style', $style_url, [], $plugin_version );
 
-			$wptb_text_domain = NS\PLUGIN_TEXT_DOMAIN;
 			$plugin_homepage  = get_plugin_data( NS\PLUGIN__FILE__ )['PluginURI'];
 			$plugin_name      = get_plugin_data( NS\PLUGIN__FILE__ )['Name'];
 
@@ -513,23 +512,23 @@ class Admin_Menu {
 			];
 
 			$strings = [
-				'logoAlt'            => esc_attr__( 'WPTB plugin logo', $wptb_text_domain ),
-				'importSection'      => esc_html__( 'Import', $wptb_text_domain ),
-				'exportSection'      => esc_html__( 'Export', $wptb_text_domain ),
-				'plugins'            => esc_html__( 'Plugins', $wptb_text_domain ),
-				'tableResponsive'    => esc_html__( 'Make Table Responsive', $wptb_text_domain ),
-				'topRowHeader'       => esc_html__( 'Top Row as Header', $wptb_text_domain ),
-				'csvDelimiter'       => esc_html__( 'CSV Delimiter', $wptb_text_domain ),
-				'preserveTitles'     => esc_html__( 'Preserve table titles', $wptb_text_domain ),
-				'fileDropHint'       => esc_html__( 'Drag and Drop Files', $wptb_text_domain ),
-				'browse'             => esc_html__( 'Browse', $wptb_text_domain ),
-				'clear'              => esc_html__( 'Clear', $wptb_text_domain ),
-				'tableImported'      => esc_html__( 'Table Imported', $wptb_text_domain ),
-				'errorOccurred'      => esc_html__( 'An Error Occurred', $wptb_text_domain ),
-				'operationSuccess'   => esc_html__( 'Tables Imported', $wptb_text_domain ),
-				'replacedShortcodes' => esc_html__( 'Shortcodes Replaced', $wptb_text_domain ),
-				'file'               => esc_html__( 'file', $wptb_text_domain ),
-				'search'             => esc_html__( 'search', $wptb_text_domain ),
+				'logoAlt'            => esc_attr__( 'WPTB plugin logo', 'wp-table-builder' ),
+				'importSection'      => esc_html__( 'Import', 'wp-table-builder' ),
+				'exportSection'      => esc_html__( 'Export', 'wp-table-builder' ),
+				'plugins'            => esc_html__( 'Plugins', 'wp-table-builder' ),
+				'tableResponsive'    => esc_html__( 'Make Table Responsive', 'wp-table-builder' ),
+				'topRowHeader'       => esc_html__( 'Top Row as Header', 'wp-table-builder' ),
+				'csvDelimiter'       => esc_html__( 'CSV Delimiter', 'wp-table-builder' ),
+				'preserveTitles'     => esc_html__( 'Preserve table titles', 'wp-table-builder' ),
+				'fileDropHint'       => esc_html__( 'Drag and Drop Files', 'wp-table-builder' ),
+				'browse'             => esc_html__( 'Browse', 'wp-table-builder' ),
+				'clear'              => esc_html__( 'Clear', 'wp-table-builder' ),
+				'tableImported'      => esc_html__( 'Table Imported', 'wp-table-builder' ),
+				'errorOccurred'      => esc_html__( 'An Error Occurred', 'wp-table-builder' ),
+				'operationSuccess'   => esc_html__( 'Tables Imported', 'wp-table-builder' ),
+				'replacedShortcodes' => esc_html__( 'Shortcodes Replaced', 'wp-table-builder' ),
+				'file'               => esc_html__( 'file', 'wp-table-builder' ),
+				'search'             => esc_html__( 'search', 'wp-table-builder' ),
 			];
 
 			$import_iframe_url = add_query_arg(
@@ -558,7 +557,7 @@ class Admin_Menu {
 				'security_code'             => wp_create_nonce( 'wptb-import-security-nonce' ),
 				'ajaxUrl'                   => admin_url( 'admin-ajax.php' ),
 				'import_iframe_url'         => $import_iframe_url,
-				'textDomain'                => $wptb_text_domain,
+				'textDomain'                => 'wp-table-builder',
 				'fetchNonce'                => Export::get_instance()->generate_nonce( 'fetch' ),
 				'fetchAjaxAction'           => Export::EXPORT_FETCH_TABLES,
 				'exportNonce'               => Export::get_instance()->generate_nonce( 'export' ),

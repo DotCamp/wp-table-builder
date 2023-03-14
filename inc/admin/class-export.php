@@ -101,14 +101,14 @@ class Export {
 	 */
 	public function wptb_export_fetch_tables() {
 		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_ajax_referer( self::EXPORT_FETCH_TABLES, 'nonce', false ) ) {
-			$this->set_message( esc_html__( 'success', $this->text_domain ) );
+			$this->set_message( esc_html__( 'success', 'wp-table-builder' ) );
 
 			$tables = $this->get_wptb_tables( 'ID', 'post_title', 'post_date' );
 
 			$this->append_response_data( $tables, 'userTables' );
 
 		} else {
-			$this->set_error( esc_html__( 'you are not authorized to access this ajax endpoint', $this->text_domain ) );
+			$this->set_error( esc_html__( 'you are not authorized to access this ajax endpoint', 'wp-table-builder' ) );
 		}
 
 		$this->send_json();
@@ -137,7 +137,7 @@ class Export {
 			$export_type = $_POST['export_type'];
 
 			if ( ! in_array( $export_type, array_keys( $this->supported_export_types ) ) ) {
-				$this->set_error( __( 'invalid export type', $this->text_domain ) );
+				$this->set_error( __( 'invalid export type', 'wp-table-builder' ) );
 
 				return;
 			}
@@ -154,7 +154,7 @@ class Export {
 			// exit ajax output
 			die();
 		} else {
-			$this->set_error( esc_html__( 'you are not authorized to access this ajax endpoint', $this->text_domain ) );
+			$this->set_error( esc_html__( 'you are not authorized to access this ajax endpoint', 'wp-table-builder' ) );
 		}
 
 		$this->send_json();
@@ -194,7 +194,7 @@ class Export {
 		// using WordPress related filesystem methods to minimize the bugs I/O operations can cause on various server/hosting setups
 //		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', false, false, null );
 //		if ( ! WP_Filesystem( $creds ) ) {
-//			$this->set_error( esc_html__( 'you do not have write access to filesystem', $this->text_domain ) );
+//			$this->set_error( esc_html__( 'you do not have write access to filesystem', 'wp-table-builder' ) );
 //
 //			return;
 //		}
@@ -210,7 +210,7 @@ class Export {
 		if ( ! $wp_filesystem->is_dir( $upload_dir ) ) {
 			$dir_create_status = $wp_filesystem->mkdir( $upload_dir );
 			if ( ! $dir_create_status ) {
-				$this->set_error( esc_html__( 'failed in creating temp directory for export zip file', $this->text_domain ) );
+				$this->set_error( esc_html__( 'failed in creating temp directory for export zip file', 'wp-table-builder' ) );
 
 				return;
 			}
@@ -218,7 +218,7 @@ class Export {
 
 		$temp_file_name = tempnam( $upload_dir, 'zip' );
 		if ( ! class_exists( 'ZipArchive' ) ) {
-			$this->set_error( esc_html__( 'your server do not support zip archives', $this->text_domain ) );
+			$this->set_error( esc_html__( 'your server do not support zip archives', 'wp-table-builder' ) );
 
 			return;
 		}

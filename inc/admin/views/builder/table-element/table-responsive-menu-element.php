@@ -85,7 +85,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 			'add_control'
 		] );
 
-		$how_to_text = esc_html__( 'You can check out the layout of your table by selecting any size breakpoint from the top slider menu or from breakpoint tabs on mode options, or even input your custom size to see the reaction of your table. After selecting the breakpoint, you can work on the layout for that breakpoint.' );
+		$how_to_text = esc_html__( 'You can check out the layout of your table by selecting any size breakpoint from the top slider menu or from breakpoint tabs on mode options, or even input your custom size to see the reaction of your table. After selecting the breakpoint, you can work on the layout for that breakpoint.', 'wp-table-builder' );
 
 		// how-to control group
 		$howto_section_group_controls = [

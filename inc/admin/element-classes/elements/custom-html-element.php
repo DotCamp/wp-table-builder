@@ -91,7 +91,7 @@ class Custom_Html_Element extends Element_Base {
 		$this->add_control(
 			'section_header',
 			[
-				'label' => __( 'Custom HTML Options', 'wp_table_builder' ),
+				'label' => __( 'Custom HTML Options', 'wp-table-builder' ),
 				'type' => Controls_Manager::SECTION_HEADER,
                 'buttonBack' => true
 			]
@@ -100,12 +100,12 @@ class Custom_Html_Element extends Element_Base {
         $this->add_control(
             'textarea',
 			[
-				'label' => __( 'Insert HTML', 'wp_table_builder' ),
+				'label' => __( 'Insert HTML', 'wp-table-builder' ),
 				'type' => Controls_Manager::TEXTAREA,
                 'selectors' => [
                     '{{{data.container}}} .wptb-custom-html-wrapper',
                 ],
-                'placeholder' => __( 'Insert HTML Code Here', 'wp_table_builder' ),
+                'placeholder' => __( 'Insert HTML Code Here', 'wp-table-builder' ),
                 'rows' => 5,
                 'defaultValue' => 'Insert Custom HTML'
 			]  
@@ -123,7 +123,7 @@ class Custom_Html_Element extends Element_Base {
 	protected function _content_template() {
 		?>
         <div class="wptb-custom-html-wrapper" data-wptb-new-element="1">
-            <span>Insert Custom HTML</span>
+            <span><?php echo __('Insert Custom HTML', 'wp-table-builder'); ?></span>
         </div>
 		<?php
 	}

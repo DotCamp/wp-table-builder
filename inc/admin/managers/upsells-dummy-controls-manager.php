@@ -62,9 +62,9 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
         $cell_settings_main->add_control(
             'emptyCellDummy',
             [
-                'label'    => __('Empty Cell Enable', 'wp_table_builder'),
-                'labelOn'  => __('Fixed', 'wp_table_builder'),
-                'labelOff' => __('Auto', 'wp_table_builder'),
+                'label'    => __('Empty Cell Enable', 'wp-table-builder'),
+                'labelOn'  => __('Fixed', 'wp-table-builder'),
+                'labelOff' => __('Auto', 'wp-table-builder'),
                 'type'     => Controls_Manager::TOGGLE
             ]
         );
@@ -84,9 +84,9 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
         $cell_settings_main->add_control(
             'highlightColumn',
             [
-                'label'    => __('Highlight Column', 'wp_table_builder'),
-                'labelOn'  => __('Fixed', 'wp_table_builder'),
-                'labelOff' => __('Auto', 'wp_table_builder'),
+                'label'    => __('Highlight Column', 'wp-table-builder'),
+                'labelOn'  => __('Fixed', 'wp-table-builder'),
+                'labelOff' => __('Auto', 'wp-table-builder'),
                 'type'     => Controls_Manager::TOGGLE
             ]
         );
@@ -106,9 +106,9 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
         $cell_settings_main->add_control(
             'highlightRow',
             [
-                'label'    => __('Highlight Row', 'wp_table_builder'),
-                'labelOn'  => __('Fixed', 'wp_table_builder'),
-                'labelOff' => __('Auto', 'wp_table_builder'),
+                'label'    => __('Highlight Row', 'wp-table-builder'),
+                'labelOn'  => __('Fixed', 'wp-table-builder'),
+                'labelOff' => __('Auto', 'wp-table-builder'),
                 'type'     => Controls_Manager::TOGGLE
             ]
         );
@@ -137,7 +137,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
         $table_settings_main->add_control(
             'duplicateColumnUpsell',
             [
-                'label'            => __('Duplicate Column', 'wp_table_builder'),
+                'label'            => __('Duplicate Column', 'wp-table-builder'),
                 'type'             => Controls_Manager::BUTTON2,
                 'additionsClasses' => 'wptb-table_change_button wptb-single-action',
                 'title'            => __('Duplicate Column', 'wp-table-builder')
@@ -148,7 +148,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
         $table_settings_main->add_control(
             'duplicateRowUpsell',
             [
-                'label'            => __('Duplicate Row', 'wp_table_builder'),
+                'label'            => __('Duplicate Row', 'wp-table-builder'),
                 'type'             => Controls_Manager::BUTTON2,
                 'additionsClasses' => 'wptb-table_change_button wptb-single-action',
                 'title'            => __('Duplicate Row', 'wp-table-builder')
@@ -207,7 +207,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
         $general_section_upsell_controls = [
             'differentBorderColorsUpsell'        =>
             [
-                'label'     => __('Different Border Colors', 'wp_table_builder'),
+                'label'     => __('Different Border Colors', 'wp-table-builder'),
                 'type'      => Controls_Manager::TOGGLE,
                 'selectors' => []
             ],
@@ -220,7 +220,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
             ],
             'differentBorderColorsWidgetUpsell'  =>
             [
-                'label'     => __('Different Border Colors', 'wp_table_builder'),
+                'label'     => __('Different Border Colors', 'wp-table-builder'),
                 'type'      => Controls_Manager::DIFFERENT_BORDER,
                 'selectors' => []
             ],
@@ -234,7 +234,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
             ],
             'columnBorderOnlyUpsell'                   =>
             [
-                'label'     => __('Column Border Only', 'wp_table_builder'),
+                'label'     => __('Column Border Only', 'wp-table-builder'),
                 'type'      => Controls_Manager::TOGGLE,
                 'selectors' => []
             ],
@@ -248,7 +248,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
 
             'rowBorderOnlyUpsell'                 =>
             [
-                'label'     => __('Row Border Only', 'wp_table_builder'),
+                'label'     => __('Row Border Only', 'wp-table-builder'),
                 'type'      => Controls_Manager::TOGGLE,
                 'selectors' => []
             ],
@@ -261,7 +261,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
             ],
             'tableCellsBorderRadiusUpsell'        =>
             [
-                'label'        => __('Table Cells Border Radius', 'wp_table_builder'),
+                'label'        => __('Table Cells Border Radius', 'wp-table-builder'),
                 'type'         => Controls_Manager::RANGE,
                 'selectors'    => [],
                 'min'          => 0,
@@ -296,7 +296,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
         $general_section_upsell_controls = [
             'separateColumnsRowsUpsell'           =>
             [
-                'label'     => __('Separate Columns/Rows', 'wp_table_builder'),
+                'label'     => __('Separate Columns/Rows', 'wp-table-builder'),
                 'type'      => Controls_Manager::TOGGLE,
                 'selectors' => []
             ],
@@ -351,17 +351,17 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
         // For global font settings
         $global_font_setting_controls = [
             'globalFontColor' => [
-                'label' => __('Font Color', 'wp_table_builder'),
+                'label' => __('Font Color', 'wp-table-builder'),
                 'type' => Controls_Manager::COLOR_PALETTE,
                 'selectors' => []
             ],
             'globalLinkColor' => [
-                'label' => __('Link Color', 'wp_table_builder'),
+                'label' => __('Link Color', 'wp-table-builder'),
                 'type' => Controls_Manager::COLOR_PALETTE,
                 'selectors' => []
             ],
             'globalFontSize' => [
-                'label' => __('Font Size', 'wp_table_builder'),
+                'label' => __('Font Size', 'wp-table-builder'),
                 'type' => Controls_Manager::RANGE,
                 'min'          => 10,
                 'max'          => 50,
@@ -382,7 +382,7 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
         $sticky_controls = [
             'topRowStickyUpsell'      =>
             [
-                'label'     => __('Make Top Row Sticky', 'wp_table_builder'),
+                'label'     => __('Make Top Row Sticky', 'wp-table-builder'),
                 'type'      => Controls_Manager::TOGGLE,
                 'selectors' => [],
             ],
@@ -406,12 +406,12 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
                 'type'  => Controls_Manager::TOGGLE,
             ],
             'rowsPerPage'          => [
-                'label'        => __('Rows Per Page ( 3 ~ 50)', 'wp_table_builder'),
+                'label'        => __('Rows Per Page ( 3 ~ 50)', 'wp-table-builder'),
                 'type'         => Controls_Manager::NUMBER,
                 'defaultValue' => '5'
             ],
             'rowsChangeable'       => [
-                'label' => __('Let visitors change <br />rows per page', 'wp_table_builder'),
+                'label' => __('Let visitors change <br />rows per page', 'wp-table-builder'),
                 'type'  => Controls_Manager::TOGGLE
             ],
             'paginationProOverlay' => [

@@ -228,13 +228,13 @@ class Settings_Manager {
 
 			// request body validation check
 			if ( $encoded_data === null ) {
-				$data['error'] = esc_html__( "Invalid Request Body", $this->text_domain );
+				$data['error'] = esc_html__( "Invalid Request Body", 'wp-table-builder' );
 			} else {
 				update_option( $this->options_root, $encoded_data );
-				$data['message'] = esc_html__( 'Settings Updated', $this->text_domain );
+				$data['message'] = esc_html__( 'Settings Updated', 'wp-table-builder' );
 			}
 		} else {
-			$data['error'] = esc_html__( "You do not have permission to use this ajax end-point.", $this->text_domain );
+			$data['error'] = esc_html__( "You do not have permission to use this ajax end-point.", 'wp-table-builder' );
 		}
 
 		echo json_encode( $data );

@@ -92,7 +92,7 @@ class Text_Element extends Element_Base {
 		$this->add_control(
 			'section_header',
 			[
-				'label'      => __( 'Text Options', 'wp_table_builder' ),
+				'label'      => __( 'Text Options', 'wp-table-builder' ),
 				'type'       => Controls_Manager::SECTION_HEADER,
 				'buttonBack' => true
 			]
@@ -101,7 +101,7 @@ class Text_Element extends Element_Base {
 		$this->add_control(
 			'color',
 			[
-				'label'     => __( 'Font Color', 'wp_table_builder' ),
+				'label'     => __( 'Font Color', 'wp-table-builder' ),
 				'type'      => Controls_Manager::COLOR_PALETTE,
 				'selectors' => [
 					[
@@ -116,7 +116,7 @@ class Text_Element extends Element_Base {
 		$this->add_control(
 			'linkColor',
 			[
-				'label'     => __( 'Link Font Color', 'wp_table_builder' ),
+				'label'     => __( 'Link Font Color', 'wp-table-builder' ),
 				'type'      => Controls_Manager::COLOR_PALETTE,
 				'selectors' => [
 					[
@@ -131,7 +131,7 @@ class Text_Element extends Element_Base {
 		$this->add_control(
 			'size',
 			[
-				'label'        => __( 'Font Size', 'wp_table_builder' ),
+				'label'        => __( 'Font Size', 'wp-table-builder' ),
 				'type'         => Controls_Manager::RANGE,
 				'selectors'    => [
 					[
@@ -151,7 +151,7 @@ class Text_Element extends Element_Base {
 		$this->add_control(
 			'linkRel',
 			[
-				'label'      => __( 'Link Rel', 'wp_table_builder' ),
+				'label'      => __( 'Link Rel', 'wp-table-builder' ),
 				'type'       => Controls_Manager::MULTI_CHECKBOX,
 				'checkboxes' => [
 					'sponsored'  => 'sponsored',

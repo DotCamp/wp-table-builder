@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 <div class="wptb-settings-items" style="display: block;">
     
     <div id="table-settings-group">
-        <div class="wptb-panel-table-empty-message"><?php esc_html_e( 'Table settings will be available when a new table is generated.', NS\PLUGIN_TEXT_DOMAIN ); ?></div>
+        <div class="wptb-panel-table-empty-message"><?php esc_html_e( 'Table settings will be available when a new table is generated.', 'wp-table-builder' ); ?></div>
     </div>
     
 </div>

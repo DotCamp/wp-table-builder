@@ -92,7 +92,7 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'section_header',
 			[
-				'label'      => __( 'Star Rating Options', 'wp_table_builder' ),
+				'label'      => __( 'Star Rating Options', 'wp-table-builder' ),
 				'type'       => Controls_Manager::SECTION_HEADER,
 				'buttonBack' => true
 			]
@@ -101,7 +101,7 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'starRatingSize',
 			[
-				'label'        => __( 'Star Size', 'wp_table_builder' ),
+				'label'        => __( 'Star Size', 'wp-table-builder' ),
 				'type'         => Controls_Manager::RANGE,
 				'selectors'    => [
 					[
@@ -121,7 +121,7 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'starColor',
 			[
-				'label'        => __( 'Star Color', 'wp_table_builder' ),
+				'label'        => __( 'Star Color', 'wp-table-builder' ),
 				'type'         => Controls_Manager::COLOR_PALETTE,
 				'selectors'    => [
 					[
@@ -137,7 +137,7 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'starCount',
 			[
-				'label'        => __( 'Star Count', 'wp_table_builder' ),
+				'label'        => __( 'Star Count', 'wp-table-builder' ),
 				'type'         => Controls_Manager::NUMBER,
 				'min'          => 1,
 				'max'          => 10,
@@ -151,7 +151,7 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'ratingAlignmentCheckbox',
 			[
-				'label'        => __( 'Rating Alignment', 'wp_table_builder' ),
+				'label'        => __( 'Rating Alignment', 'wp-table-builder' ),
 				'type'         => Controls_Manager::ALIGNMENT2,
 				'selectors'    => [
 					[
@@ -167,7 +167,7 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'numberRatingShowHide',
 			[
-				'label'     => __( 'Show Number Rating', 'wp_table_builder' ),
+				'label'     => __( 'Show Number Rating', 'wp-table-builder' ),
 				'type'      => Controls_Manager::TOGGLE,
 				'selectors' => [
 					'{{{data.container}}} .wptb-rating-stars-box .wptb-number-rating-box' => [
@@ -187,7 +187,7 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'numberRatingSize',
 			[
-				'label'                     => __( 'Number Rating Size', 'wp_table_builder' ),
+				'label'                     => __( 'Number Rating Size', 'wp-table-builder' ),
 				'type'                      => Controls_Manager::SIZE,
 				'selectors'                 => [
 					'{{{data.container}}} .wptb-number-rating' => [ 'fontSize', 'lineHeight', 'height' ]
@@ -205,7 +205,7 @@ class Star_Rating_Element extends Element_Base {
 		$this->add_control(
 			'numberRatingColor',
 			[
-				'label'                     => __( 'Font Color', 'wp_table_builder' ),
+				'label'                     => __( 'Font Color', 'wp-table-builder' ),
 				'type'                      => Controls_Manager::COLOR,
 				'selectors'                 => [
 					'{{{data.container}}} .wptb-number-rating' => 'color',

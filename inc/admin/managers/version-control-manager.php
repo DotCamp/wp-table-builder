@@ -284,7 +284,7 @@ class Version_Control_Manager extends Version_Sync_Base {
 	protected function get_plugin_versions() {
 		require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 
-		$versions = new WP_Error( 501, esc_html__( 'An error occurred while fetching wp-table-builder versions, please try again later' ) );
+		$versions = new WP_Error( 501, esc_html__( 'An error occurred while fetching wp-table-builder versions, please try again later', 'wp-table-builder' ) );
 
 		$info = (array) plugins_api( 'plugin_information', [ 'slug' => $this->get_version_slug() ] );
 

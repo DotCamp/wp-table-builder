@@ -89,7 +89,7 @@ class Control_Url extends Base_Control {
         <div class="wptb-settings-row wptb-settings-middle-xs" id="{{{targetInputAddClass}}}-controls" style="padding-bottom: 10px">
             <div class="wptb-settings-col-xs-8" style="margin: 15px 0;">
                 <input type="text" data-type="element-link"
-                       placeholder="<?php esc_attr_e( 'Insert Link Here', NS\PLUGIN_TEXT_DOMAIN ); ?>"
+                       placeholder="<?php esc_attr_e( 'Insert Link Here', 'wp-table-builder' ); ?>"
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
             </div>
             <div class="wptb-plugin-width-full" style="border:solid var(--wptb-plugin-gray-300); border-width: 1px 0 1px 0; padding: 10px 0;">
@@ -128,7 +128,7 @@ class Control_Url extends Base_Control {
                 <input type="checkbox" data-type="element-link-convert-relative"
                        id="element-convert-relative{{{postfixIdFor}}}"
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
-                <label for="element-convert-relative{{{postfixIdFor}}}"><?php esc_html_e( 'Convert Relative Link to Absolute', NS\PLUGIN_TEXT_DOMAIN ); ?></label>
+                <label for="element-convert-relative{{{postfixIdFor}}}"><?php esc_html_e( 'Convert Relative Link to Absolute', 'wp-table-builder' ); ?></label>
             </div>
         </div>
 

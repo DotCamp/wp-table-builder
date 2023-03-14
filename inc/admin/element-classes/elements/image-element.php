@@ -93,12 +93,12 @@ class Image_Element extends Element_Base {
         $general_controls = [
             'imageReplaceButton'   =>
             [
-                'label' => __('Replace Image', 'wp_table_builder'),
+                'label' => __('Replace Image', 'wp-table-builder'),
                 'type'  => Controls_Manager::BUTTON,
             ],
             'imageAlignment'       =>
             [
-                'label'        => __('Image Alignment', 'wp_table_builder'),
+                'label'        => __('Image Alignment', 'wp-table-builder'),
                 'type'         => Controls_Manager::ALIGNMENT2,
                 'selectors'    => [
                     [
@@ -111,19 +111,19 @@ class Image_Element extends Element_Base {
             ],
             'imageAlternativeText' =>
             [
-                'label'       => __('Image Alternative Text', 'wp_table_builder'),
+                'label'       => __('Image Alternative Text', 'wp-table-builder'),
                 'type'        => Controls_Manager::TEXT,
                 'selectors'   => [
                     '{{{data.container}}} .wptb-image-wrapper img' => 'alt',
                 ],
-                'placeholder' => __('Image Alt Text', 'wp_table_builder'),
+                'placeholder' => __('Image Alt Text', 'wp-table-builder'),
             ]
         ];
 
         $size_controls = [
             'imageSize' =>
             [
-                'label'        => __('Image Size', 'wp_table_builder'),
+                'label'        => __('Image Size', 'wp-table-builder'),
                 'type'         => Controls_Manager::SIZE,
                 'selectors'    => [
                     '{{{data.container}}} .wptb-image-wrapper .wptb-link-target' => 'width',
@@ -138,7 +138,7 @@ class Image_Element extends Element_Base {
         $link_controls = [
             'imageLink' =>
             [
-                'label'    => __('Image Link', 'wp_table_builder'),
+                'label'    => __('Image Link', 'wp-table-builder'),
                 'type'     => Controls_Manager::URL,
                 'selector' => '{{{data.container}}} .wptb-image-wrapper .wptb-link-target',
             ]
@@ -183,7 +183,7 @@ class Image_Element extends Element_Base {
                               28-62.3 62.3S117.3 196.1 151.7 196.1zM151.7 96c20.9 0 37.8 17 37.8 
                               37.8s-17 37.8-37.8 37.8 -37.8-17-37.8-37.8S130.8 96 151.7 96z" />
                     </svg>
-                    <span>Insert Image</span>
+                    <span><?php echo __('Insert Image', 'wp-table-builder');?></span>
                 </span>
                 <img class="wptb-image-element-dummy">
             </span>

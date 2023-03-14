@@ -92,7 +92,7 @@ class Shortcode_Element extends Element_Base {
 		$this->add_control(
 			'section_header',
 			[
-				'label'      => __( 'Element Shortcode Options', 'wp_table_builder' ),
+				'label'      => __( 'Element Shortcode Options', 'wp-table-builder' ),
 				'type'       => Controls_Manager::SECTION_HEADER,
 				'buttonBack' => true
 			]
@@ -101,12 +101,12 @@ class Shortcode_Element extends Element_Base {
 		$this->add_control(
 			'textarea',
 			[
-				'label'        => __( 'Insert Shortcode', 'wp_table_builder' ),
+				'label'        => __( 'Insert Shortcode', 'wp-table-builder' ),
 				'type'         => Controls_Manager::TEXTAREA,
 				'selectors'    => [
 					'{{{data.container}}} div',
 				],
-				'placeholder'  => __( 'Insert Shortcode Here', 'wp_table_builder' ),
+				'placeholder'  => __( 'Insert Shortcode Here', 'wp-table-builder' ),
 				'rows'         => 5,
 				'defaultValue' => '[Shortcode]',
 				'allowHTML'    => false

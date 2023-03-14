@@ -101,10 +101,9 @@ class Admin {
                     <li>
                         <a style="margin-right: 5px; margin-bottom: 5px;" class="button-primary"
                            href="https://wordpress.org/support/plugin/wp-table-builder/reviews/#new-post"
-                           target="_blank">Sure, you deserve it.</a>
-                        <a style="margin-right: 5px;" class="wptb_HideReview_Notice button" href="javascript:void(0);">I
-                            already did.</a>
-                        <a class="wptb_HideReview_Notice button" href="javascript:void(0);">No, not good enough.</a>
+                           target="_blank"><?php echo __('Sure, you deserve it.', 'wp-table-builder'); ?></a>
+                        <a style="margin-right: 5px;" class="wptb_HideReview_Notice button" href="javascript:void(0);"><?php echo __('I already did.', 'wp-table-builder');?></a>
+                        <a class="wptb_HideReview_Notice button" href="javascript:void(0);"><?php echo __('No, not good enough.', 'wp-table-builder');?></a>
                     </li>
                 </ul>
             </div>

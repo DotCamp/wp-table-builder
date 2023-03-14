@@ -108,10 +108,10 @@ class Table_Fixer {
 				return rest_ensure_response( Rest_Response_Factory::generate_response( $fix_summary ) );
 			}
 
-			return rest_ensure_response( Rest_Response_Factory::generate_response( null, 401, 'invalid_post_body', esc_html__( 'no table ids found to operate on' ) ) );
+			return rest_ensure_response( Rest_Response_Factory::generate_response( null, 401, 'invalid_post_body', esc_html__( 'no table ids found to operate on', 'wp-table-builder' ) ) );
 		}
 
-		return rest_ensure_response( Rest_Response_Factory::generate_response( null, 401, 'invalid_post_body', esc_html__( 'invalid post request body' ) ) );
+		return rest_ensure_response( Rest_Response_Factory::generate_response( null, 401, 'invalid_post_body', esc_html__( 'invalid post request body', 'wp-table-builder' ) ) );
 	}
 
 	/**

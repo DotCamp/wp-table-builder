@@ -91,12 +91,11 @@ class Button_Element extends Element_Base {
      * @access protected
      */
     protected function _register_controls() {
-        $text_domain = NS\PLUGIN_TEXT_DOMAIN;
 
         $general_controls = [
             'buttonSizeCheckbox'      =>
             [
-                'label'        => __('Button Size', 'wp_table_builder'),
+                'label'        => __('Button Size', 'wp-table-builder'),
                 'type'         => Controls_Manager::NAMED_TOGGLE,
                 'items'        => [
                     's'  => esc_html__('S', 'wp-table-builder'),
@@ -115,7 +114,7 @@ class Button_Element extends Element_Base {
             ],
             'buttonFullWidth'         =>
             [
-                'label'     => __('Button Full Width', 'wp_table_builder'),
+                'label'     => __('Button Full Width', 'wp-table-builder'),
                 'type'      => Controls_Manager::TOGGLE,
                 'selectors' => [
                     '{{{data.container}}} .wptb-button-wrapper .wptb-link-target' => ['width', '100%', null]
@@ -123,7 +122,7 @@ class Button_Element extends Element_Base {
             ],
             'buttonBorderRadius'      =>
             [
-                'label'        => __('Button Border Radius', 'wp_table_builder'),
+                'label'        => __('Button Border Radius', 'wp-table-builder'),
                 'type'         => Controls_Manager::RANGE,
                 'selectors'    => [
                     [
@@ -140,7 +139,7 @@ class Button_Element extends Element_Base {
             ],
             'buttonColor'             =>
             [
-                'label'        => __('Button Color', 'wp_table_builder'),
+                'label'        => __('Button Color', 'wp-table-builder'),
                 'type'         => Controls_Manager::COLOR_PALETTE,
                 'selectors'    => [
                     [
@@ -158,7 +157,7 @@ class Button_Element extends Element_Base {
             ],
             'buttonTextSize'          =>
             [
-                'label'        => __('Button Text Size', 'wp_table_builder'),
+                'label'        => __('Button Text Size', 'wp-table-builder'),
                 'type'         => Controls_Manager::RANGE,
                 'selectors'    => [
                     [
@@ -175,7 +174,7 @@ class Button_Element extends Element_Base {
             ],
             'textColor'               =>
             [
-                'label'        => __('Button Text Color', 'wp_table_builder'),
+                'label'        => __('Button Text Color', 'wp-table-builder'),
                 'type'         => Controls_Manager::COLOR_PALETTE,
                 'selectors'    => [
                     [
@@ -193,7 +192,7 @@ class Button_Element extends Element_Base {
             ],
             'buttonAlignmentCheckbox' =>
             [
-                'label'        => __('Button Alignment', 'wp_table_builder'),
+                'label'        => __('Button Alignment', 'wp-table-builder'),
                 'type'         => Controls_Manager::ALIGNMENT2,
                 'selectors'    => [
                     [
@@ -210,7 +209,7 @@ class Button_Element extends Element_Base {
             ],
             'buttonContentAlignmentCheckbox' =>
             [
-                'label'        => __('Content Alignment', 'wp_table_builder'),
+                'label'        => __('Content Alignment', 'wp-table-builder'),
                 'type'         => Controls_Manager::ALIGNMENT2,
                 'selectors'    => [
                     [
@@ -227,9 +226,9 @@ class Button_Element extends Element_Base {
             ],
             'button-id'               =>
             [
-                'label'       => __('Button ID', 'wp_table_builder'),
+                'label'       => __('Button ID', 'wp-table-builder'),
                 'type'        => Controls_Manager::TEXT,
-                'placeholder' => __('Insert Button ID Here', 'wp_table_builder'),
+                'placeholder' => __('Insert Button ID Here', 'wp-table-builder'),
                 'selectors'   => [
                     '{{{data.container}}} .wptb-button-wrapper .wptb-link-target' => 'id',
                 ]
@@ -239,7 +238,7 @@ class Button_Element extends Element_Base {
         $hover_controls = [
             'hoverBgColor'     =>
             [
-                'label'        => __('Color', $text_domain),
+                'label'        => __('Color', 'wp-table-builder'),
                 'type'         => Controls_Manager::COLOR_PALETTE,
                 'selectors'    => [
                     [
@@ -252,7 +251,7 @@ class Button_Element extends Element_Base {
             ],
             'hoverTextColor'   =>
             [
-                'label'        => __('Text Color', $text_domain),
+                'label'        => __('Text Color', 'wp-table-builder'),
                 'type'         => Controls_Manager::COLOR_PALETTE,
                 'selectors'    => [
                     [
@@ -264,7 +263,7 @@ class Button_Element extends Element_Base {
                 'defaultValue' => 'null'
             ],
             'hoverButtonScale' => [
-                'label'        => __('Scale', $text_domain),
+                'label'        => __('Scale', 'wp-table-builder'),
                 'type'         => Controls_Manager::RANGE,
                 'selectors'    => [
                     [
@@ -283,7 +282,7 @@ class Button_Element extends Element_Base {
 
         $icon_controls = [
             'buttonIcon'   => [
-                'label'     => __('Button Icon', $text_domain),
+                'label'     => __('Button Icon', 'wp-table-builder'),
                 'type'      => Controls_Manager::ICON_SELECT,
                 'icons'     => $this->read_icons(),
                 'perPage'   => 20,
@@ -313,7 +312,7 @@ class Button_Element extends Element_Base {
             ],
             'iconSize'     =>
             [
-                'label'        => __('Icon Size', 'wp_table_builder'),
+                'label'        => __('Icon Size', 'wp-table-builder'),
                 'type'         => Controls_Manager::RANGE,
                 'selectors'    => [
                     [
@@ -339,17 +338,17 @@ class Button_Element extends Element_Base {
         $link_controls = [
             'buttonLink' =>
             [
-                'label'    => __('Button Link', 'wp_table_builder'),
+                'label'    => __('Button Link', 'wp-table-builder'),
                 'type'     => Controls_Manager::URL,
                 'selector' => '{{{data.container}}} .wptb-button-wrapper .wptb-link-target',
             ],
         ];
 
         $button_controls = [
-            esc_html__('general', $text_domain) => $general_controls,
-            esc_html__('link', $text_domain)    => $link_controls,
-            esc_html__('hover', $text_domain)   => $hover_controls,
-            esc_html__('icon', $text_domain)    => $icon_controls,
+            esc_html__('general', 'wp-table-builder') => $general_controls,
+            esc_html__('link', 'wp-table-builder')    => $link_controls,
+            esc_html__('hover', 'wp-table-builder')   => $hover_controls,
+            esc_html__('icon', 'wp-table-builder')    => $icon_controls,
         ];
 
         Control_Section_Group_Tabbed::add_section('buttonElementOptions', __('button options', 'wp-table-builder'), $button_controls, [
@@ -371,7 +370,7 @@ class Button_Element extends Element_Base {
         <div class="wptb-button-wrapper wptb-size-m">
             <span class="wptb-link-target">
                 <div class="wptb-button" style="position: relative;">
-                    <p>Button Text</p>
+                    <p><?php echo __('Button Text', 'wp-table-builder'); ?></p>
                     <div class="wptb-button-icon" data-wptb-button-icon-src="">
                     </div>
                 </div>

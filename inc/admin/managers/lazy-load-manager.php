@@ -246,7 +246,7 @@ class Lazy_Load_Manager extends Setting_Base {
 			'important'               => esc_html__( 'important', 'wp-table-builder' ),
 			'importantMessage'        => sprintf(
 			/* translators: 1: class name */
-				esc_html__( 'After enable, if you are getting any conflicts with your third party lazy load plugin, please whitelist table image elements with %1s class name from plugin settings.' )
+				esc_html__( 'After enable, if you are getting any conflicts with your third party lazy load plugin, please whitelist table image elements with %1s class name from plugin settings.', 'wp-table-builder' )
 				, '<span class="wptb-code">wptb-image-element-target</span>' ),
 		] );
 

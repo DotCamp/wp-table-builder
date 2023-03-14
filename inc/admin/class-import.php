@@ -239,7 +239,7 @@ class Import {
      */
     public function permission_check() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( __( 'Missing permission for you.', 'wp_table_builder' ) );
+            wp_send_json_error( __( 'Missing permission for you.', 'wp-table-builder' ) );
         }
     }
 

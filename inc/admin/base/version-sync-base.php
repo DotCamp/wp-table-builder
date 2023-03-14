@@ -212,14 +212,14 @@ abstract class Version_Sync_Base {
 
 			// no update found, give error
 			if ( $version !== $this->highest_lowest_version_available( false ) ) {
-				$return_value = new WP_Error( 501, sprintf( esc_html__( 'Version mismatch: Version %s is not available for  %s, please check for an update later.' ), $version, $this->get_version_slug() ) );
+				$return_value = new WP_Error( 501, sprintf( esc_html__( 'Version mismatch: Version %s is not available for  %s, please check for an update later.', 'wp-table-builder' ), $version, $this->get_version_slug() ) );
 			} else {
 				// update found
 				$return_value = false;
 			}
 		} else {
 			// version in check is out of stable bounds of pro addon
-			$return_value = new WP_Error( 501, sprintf( esc_html__( 'Version mismatch: Version %s is not available for %s.' ), $version, $this->get_version_slug() ) );
+			$return_value = new WP_Error( 501, sprintf( esc_html__( 'Version mismatch: Version %s is not available for %s.', 'wp-table-builder' ), $version, $this->get_version_slug() ) );
 		}
 
 		return $return_value;
