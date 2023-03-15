@@ -1,4 +1,4 @@
-# Copyright (C) 2020 wptb
+# Copyright (C) 2023 wptb
 # This file is distributed under the same license as the wptb package.
 msgid ""
 msgstr ""
@@ -8,6 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: WP Table Builder <irayhan.asif@gmail.com>\n"
 "Last-Translator: Imtiaz Rayhan <irayhan.asif@gmail.com>\n"
+"POT-Creation-Date: 2023-03-15 02:00+0000\n"
 "Report-Msgid-Bugs-To: https://github.com/imtiazrayhan/wp-table-builder/issues\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -16,79 +17,196 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../inc/admin/class-accessibility.php:32
+#: ../inc/admin/class-accessibility.php:33
 msgid "Table Role"
 msgstr ""
 
-#: ../inc/admin/class-accessibility.php:51
+#: ../inc/admin/class-accessibility.php:52
 msgid "Accessibility"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:163, ../inc/admin/class-admin-menu.php:185, ../inc/admin/class-admin-menu.php:195, ../inc/admin/views/builder/wptb-builder-left-panel.php:19
+#: ../inc/admin/class-admin-menu.php:234, ../inc/admin/class-import.php:408, ../inc/admin/class-preview.php:209
+msgid "Table"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:253, ../inc/admin/class-admin-menu.php:254, ../inc/admin/class-admin-menu.php:275, ../inc/admin/class-admin-menu.php:285, ../inc/admin/class-tables.php:201, ../inc/admin/views/builder/wptb-builder-left-panel.php:20
 msgid "WP Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:164, ../inc/admin/class-admin-menu.php:175, ../inc/admin/class-admin-menu.php:207
+#: ../inc/admin/class-admin-menu.php:265, ../inc/admin/class-admin-menu.php:297
 msgid "Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:176
+#: ../inc/admin/class-admin-menu.php:266
 msgid "Welcome Page"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:186, ../inc/admin/class-admin-menu.php:457
+#: ../inc/admin/class-admin-menu.php:276, ../inc/admin/class-admin-menu.php:590
 msgid "All Tables"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:196, ../inc/admin/class-admin-menu.php:462
+#: ../inc/admin/class-admin-menu.php:286, ../inc/admin/class-admin-menu.php:595
 msgid "Add New"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:208
+#: ../inc/admin/class-admin-menu.php:298
 msgid "Import/Export"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:303
-msgid "blank"
+#: ../inc/admin/class-admin-menu.php:515, ../inc/admin/managers/settings-manager.php:275
+msgid "WPTB plugin logo"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:304
-msgid "generate"
+#: ../inc/admin/class-admin-menu.php:516
+msgid "Import"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:305
-msgid "edit"
+#: ../inc/admin/class-admin-menu.php:517
+msgid "Export"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:306
-msgid "Search (/ to focus)"
+#: ../inc/admin/class-admin-menu.php:518
+msgid "Plugins"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:307
-msgid "For prebuilt tables and much more"
+#: ../inc/admin/class-admin-menu.php:519
+msgid "Make Table Responsive"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:308
-msgid "Go PRO"
+#: ../inc/admin/class-admin-menu.php:520
+msgid "Top Row as Header"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:309
-msgid "Delete prebuilt table?"
+#: ../inc/admin/class-admin-menu.php:521
+msgid "CSV Delimiter"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:337
+#: ../inc/admin/class-admin-menu.php:522
+msgid "Preserve table titles"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:523
+msgid "Drag and Drop Files"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:524
+msgid "Browse"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:525
+msgid "Clear"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:526
+msgid "Table Imported"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:527
+msgid "An Error Occurred"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:528
+msgid "Tables Imported"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:529
+msgid "Shortcodes Replaced"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:530
+msgid "file"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:531, ../inc/admin/managers/table-fixer.php:156, ../inc/admin/managers/upsells-dummy-controls-manager.php:447
+msgid "search"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:379, ../inc/admin/class-admin-menu.php:398
 msgid "You have unsaved changes, leave?"
 msgstr ""
 
-#: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:161, ../inc/admin/managers/version-control-manager.php:121
+#: ../inc/admin/class-admin-menu.php:380, ../inc/admin/class-admin-menu.php:399
+msgid "To embed this table on your site, please paste the following shortcode inside a post or page."
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:381, ../inc/admin/class-admin-menu.php:400
+msgid "copy to clipboard"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:382, ../inc/admin/class-admin-menu.php:401, ../inc/admin/class-wptb-listing.php:336
+msgid "copied"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:402
+msgid "shortcode"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:447
+msgid "blank"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:448
+msgid "generate"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:449
+msgid "edit"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:450
+msgid "Search (/ to focus)"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:451
+msgid "For prebuilt tables and much more"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:452
+msgid "Go PRO"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:453
+msgid "Delete prebuilt table?"
+msgstr ""
+
+#: ../inc/admin/class-admin.php:104
+msgid "Sure, you deserve it."
+msgstr ""
+
+#: ../inc/admin/class-admin.php:105
+msgid "I already did."
+msgstr ""
+
+#: ../inc/admin/class-admin.php:106
+msgid "No, not good enough."
+msgstr ""
+
+#: ../inc/admin/class-export.php:111, ../inc/admin/class-export.php:157
+msgid "you are not authorized to access this ajax endpoint"
+msgstr ""
+
+#: ../inc/admin/class-export.php:104
+msgid "success"
+msgstr ""
+
+#: ../inc/admin/class-export.php:140
+msgid "invalid export type"
+msgstr ""
+
+#: ../inc/admin/class-export.php:213
+msgid "failed in creating temp directory for export zip file"
+msgstr ""
+
+#: ../inc/admin/class-export.php:221
+msgid "your server do not support zip archives"
+msgstr ""
+
+#: ../inc/admin/class-import.php:242
+msgid "Missing permission for you."
 msgstr ""
 
 #: ../inc/admin/class-import.php:407, ../inc/admin/class-preview.php:208
 msgid "%s Preview"
-msgstr ""
-
-#: ../inc/admin/class-import.php:408, ../inc/admin/class-preview.php:209, ../inc/admin/managers/gutenberg-block-manager.php:110
-msgid "Table"
 msgstr ""
 
 #: ../inc/admin/class-preview.php:135
@@ -99,84 +217,140 @@ msgstr ""
 msgid "This is a preview of your table. This page is not publicly accessible."
 msgstr ""
 
-#: ../inc/admin/class-style-pass.php:81
+#: ../inc/admin/class-style-pass.php:179
 msgid "Disable Theme Styles For Table"
 msgstr ""
 
-#: ../inc/admin/class-style-pass.php:89
+#: ../inc/admin/class-style-pass.php:186
+msgid "Extra styles"
+msgstr ""
+
+#: ../inc/admin/class-style-pass.php:207
 msgid "styles"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:38
+#: ../inc/admin/class-tables.php:71, ../inc/admin/class-wptb-listing.php:290
 msgid "Edit"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:46, ../inc/admin/class-tables.php:51, ../inc/admin/class-wptb-listing.php:235, ../inc/admin/element-classes/elements/shortcode-element.php:40
+#: ../inc/admin/class-tables.php:79, ../inc/admin/class-tables.php:84, ../inc/admin/class-wptb-listing.php:379, ../inc/admin/element-classes/elements/shortcode-element.php:41
 msgid "Shortcode"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:50, ../inc/admin/class-wptb-listing.php:234
+#: ../inc/admin/class-tables.php:83, ../inc/admin/class-wptb-listing.php:378
 msgid "Title"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:52
+#: ../inc/admin/class-tables.php:85
 msgid "Date"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:152
+#: ../inc/admin/class-tables.php:195
 msgid "Edit Table"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:26
+#: ../inc/admin/class-wptb-listing.php:38
 msgid "WPTB Table"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:27
+#: ../inc/admin/class-wptb-listing.php:39
 msgid "WPTB Tables"
 msgstr ""
 
+#: ../inc/admin/class-wptb-listing.php:65
+msgid "All"
+msgstr ""
+
+#: ../inc/admin/class-wptb-listing.php:70, ../inc/admin/class-wptb-listing.php:293
+msgid "Trash"
+msgstr ""
+
 #. translators: %s - admin area page builder page URL.
-#: ../inc/admin/class-wptb-listing.php:142
+#: ../inc/admin/class-wptb-listing.php:225
 msgid "Whoops, you haven't created a table yet. Want to <a href=\"%s\">give it a go</a>?"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:174
+#: ../inc/admin/class-wptb-listing.php:220
+msgid "No table found in trash."
+msgstr ""
+
+#: ../inc/admin/class-wptb-listing.php:261
 msgid "Edit This Table"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:236
+#: ../inc/admin/class-wptb-listing.php:291
+msgid "Duplicate"
+msgstr ""
+
+#: ../inc/admin/class-wptb-listing.php:292, ../inc/admin/views/builder/wptb-builder-header.php:94
+msgid "Preview"
+msgstr ""
+
+#: ../inc/admin/class-wptb-listing.php:284
+msgid "Restore"
+msgstr ""
+
+#: ../inc/admin/class-wptb-listing.php:285
+msgid "Delete Permanently"
+msgstr ""
+
+#: ../inc/admin/class-wptb-listing.php:329
+msgid "copy"
+msgstr ""
+
+#: ../inc/admin/class-wptb-listing.php:380
 msgid "Created"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:237
+#: ../inc/admin/class-wptb-listing.php:381
 msgid "ID"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:311
+#: ../inc/admin/class-wptb-listing.php:469
 msgid "Table duplicate successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:325
+#: ../inc/admin/class-wptb-listing.php:483
 msgid "Table deleted successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:348
+#: ../inc/admin/class-wptb-listing.php:497
+msgid "Table restored."
+msgstr ""
+
+#: ../inc/admin/class-wptb-listing.php:511
+msgid "Table deleted permanently."
+msgstr ""
+
+#: ../inc/admin/class-wptb-listing.php:534
 msgid "Bulk Delete Performed Successfully."
 msgstr ""
 
-#: ../inc/admin/controls/control-different-border.php:47
+#: ../inc/admin/base/version-sync-base.php:222
+msgid "Version mismatch: Version %s is not available for %s."
+msgstr ""
+
+#: ../inc/admin/base/version-sync-base.php:215
+msgid "Version mismatch: Version %s is not available for  %s, please check for an update later."
+msgstr ""
+
+#: ../inc/admin/controls/control-different-border.php:49
 msgid "border width"
 msgstr ""
 
-#: ../inc/admin/controls/control-different-border.php:48
+#: ../inc/admin/controls/control-different-border.php:50
 msgid "border color"
+msgstr ""
+
+#: ../inc/admin/controls/control-image-size.php:33
+msgid "relative to"
 msgstr ""
 
 #: ../inc/admin/controls/control-sides.php:48
 msgid "top"
 msgstr ""
 
-#: ../inc/admin/controls/control-sides.php:49, ../inc/admin/managers/settings-manager.php:277, ../inc/admin/element-classes/elements/button-element.php:272
+#: ../inc/admin/controls/control-sides.php:49, ../inc/admin/managers/settings-manager.php:311, ../inc/admin/element-classes/elements/button-element.php:302
 msgid "right"
 msgstr ""
 
@@ -184,7 +358,7 @@ msgstr ""
 msgid "bottom"
 msgstr ""
 
-#: ../inc/admin/controls/control-sides.php:51, ../inc/admin/managers/settings-manager.php:273, ../inc/admin/element-classes/elements/button-element.php:271
+#: ../inc/admin/controls/control-sides.php:51, ../inc/admin/managers/settings-manager.php:307, ../inc/admin/element-classes/elements/button-element.php:301
 msgid "left"
 msgstr ""
 
@@ -194,6 +368,30 @@ msgstr ""
 
 #: ../inc/admin/controls/control-sides.php:53
 msgid "unlink values"
+msgstr ""
+
+#: ../inc/admin/controls/control-size2.php:42
+msgid "width"
+msgstr ""
+
+#: ../inc/admin/controls/control-size2.php:43
+msgid "height"
+msgstr ""
+
+#: ../inc/admin/controls/control-size2.php:44
+msgid "aspect ratio locked"
+msgstr ""
+
+#: ../inc/admin/controls/control-size2.php:45
+msgid "aspect ratio unlocked"
+msgstr ""
+
+#: ../inc/admin/controls/control-size2.php:46
+msgid "aspect ratio"
+msgstr ""
+
+#: ../inc/admin/controls/control-size2.php:47
+msgid "reset to original size"
 msgstr ""
 
 #: ../inc/admin/controls/control-tag-control.php:48
@@ -236,7 +434,152 @@ msgstr ""
 msgid "description"
 msgstr ""
 
-#: ../inc/admin/managers/screen-options-manager.php:62
+#: ../inc/admin/controls/control-url.php:92
+msgid "Insert Link Here"
+msgstr ""
+
+#: ../inc/admin/controls/control-url.php:97
+msgid "Link"
+msgstr ""
+
+#: ../inc/admin/controls/control-url.php:121
+msgid "Open in"
+msgstr ""
+
+#: ../inc/admin/controls/control-url.php:123
+msgid "New tab"
+msgstr ""
+
+#: ../inc/admin/controls/control-url.php:124
+msgid "Current window"
+msgstr ""
+
+#: ../inc/admin/controls/control-url.php:131
+msgid "Convert Relative Link to Absolute"
+msgstr ""
+
+#: ../inc/admin/managers/emoji-manager.php:165, ../inc/admin/managers/emoji-manager.php:166
+msgid "Disable emoji to image conversion"
+msgstr ""
+
+#: ../inc/admin/managers/general-styles-manager.php:35
+msgid "general styles"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:114
+msgid "lazy load settings"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:204
+msgid "An error occurred with your request, try again later."
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:202
+msgid "Lazy load options updated."
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:221
+msgid "lazy load"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:226
+msgid "Enable lazy load for table image elements"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:227
+msgid "submit"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:228
+msgid "visibility percentage"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:229
+msgid "Height of image that is visible on screen to trigger lazy load"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:230
+msgid "background color"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:231, ../inc/admin/element-classes/elements/icon-element.php:30
+msgid "Icon"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:232
+msgid "icon color"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:233
+msgid "icon size"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:234
+msgid "icon animation"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:235
+msgid "general options"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:236
+msgid "icon options"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:237
+msgid "basic options"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:238
+msgid "preview"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:239
+msgid "revert"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:240
+msgid "image load options"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:241
+msgid "animation"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:242
+msgid "speed"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:243
+msgid "direction"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:244
+msgid "perspective"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:245
+msgid "color"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:246
+msgid "important"
+msgstr ""
+
+#. translators: 1: class name
+#: ../inc/admin/managers/lazy-load-manager.php:249
+msgid "After enable, if you are getting any conflicts with your third party lazy load plugin, please whitelist table image elements with %1s class name from plugin settings."
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:255, ../inc/admin/managers/lazy-load-manager.php:258
+msgid "none"
+msgstr ""
+
+#: ../inc/admin/managers/lazy-load-manager.php:273
+msgid "For more lazy load customizations"
+msgstr ""
+
+#: ../inc/admin/managers/screen-options-manager.php:62, ../inc/admin/managers/upsells-dummy-controls-manager.php:419
 msgid "Pagination"
 msgstr ""
 
@@ -248,89 +591,169 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:241
-msgid "WPTB plugin logo"
+#: ../inc/admin/managers/settings-manager.php:237
+msgid "You do not have permission to use this ajax end-point."
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:242
+#: ../inc/admin/managers/settings-manager.php:234
+msgid "Settings Updated"
+msgstr ""
+
+#: ../inc/admin/managers/settings-manager.php:231
+msgid "Invalid Request Body"
+msgstr ""
+
+#: ../inc/admin/managers/settings-manager.php:276
 msgid "Homepage"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:243
+#: ../inc/admin/managers/settings-manager.php:277
 msgid "Revert"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:244
+#: ../inc/admin/managers/settings-manager.php:278
 msgid "Submit"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:245
+#: ../inc/admin/managers/settings-manager.php:279
 msgid "Changes Discarded"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:261, ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:69
+#: ../inc/admin/managers/settings-manager.php:295, ../inc/admin/element-classes/elements/button-element.php:348, ../inc/admin/element-classes/elements/image-element.php:148, ../inc/admin/element-classes/elements/list-element.php:203, ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:70, ../inc/admin/views/builder/table-element/table-setting-element.php:171
 msgid "general"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:267
+#: ../inc/admin/managers/settings-manager.php:301
 msgid "Allowed User Roles"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:282
+#: ../inc/admin/managers/settings-manager.php:316
 msgid "Sidebar location"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:287
+#: ../inc/admin/managers/settings-manager.php:321
 msgid "Show edit table link on frontend"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:308, ../inc/admin/managers/settings-manager.php:308
+#: ../inc/admin/managers/settings-manager.php:326
+msgid "Give Credits to WP Table Builder"
+msgstr ""
+
+#: ../inc/admin/managers/settings-manager.php:331
+msgid "Restrict Users Access to Their Tables Only"
+msgstr ""
+
+#: ../inc/admin/managers/settings-manager.php:336
+msgid "Disable theme styles"
+msgstr ""
+
+#: ../inc/admin/managers/settings-manager.php:337
+msgid "Disable theme styles for all tables"
+msgstr ""
+
+#: ../inc/admin/managers/settings-manager.php:358, ../inc/admin/managers/settings-manager.php:358
 msgid "Settings"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:121
-msgid "an error while creating term, please refresh and try again"
+#: ../inc/admin/managers/table-fixer.php:111
+msgid "no table ids found to operate on"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:132
-msgid "you need to give your term a valid name"
+#: ../inc/admin/managers/table-fixer.php:114
+msgid "invalid post request body"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:135
+#: ../inc/admin/managers/table-fixer.php:146
+msgid "table fixer"
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:150
+msgid "fix table"
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:151
+msgid "fix tables"
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:152
+msgid "tables fetched"
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:153
+msgid "title"
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:154
+msgid "table"
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:155
+msgid "modified"
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:157
+msgid "summary"
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:158
+msgid "when to use"
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:159
+msgid "Your tables might get corrupted by your browser addons. If you have any table with unexpected behaviour (cell edit disabled, etc) use this tool. If problem still persists, contact our support forums."
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:160
+msgid "We could not fix some of your tables, please drop a support request."
+msgstr ""
+
+#: ../inc/admin/managers/table-fixer.php:161
+msgid "All selected tables are fixed."
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:136
 msgid "you are not authorized to use this ajax endpoint, refresh and try again"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:240
+#: ../inc/admin/managers/tag-manager.php:133
+msgid "you need to give your term a valid name"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:122
+msgid "an error while creating term, please refresh and try again"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:243
 msgid "Filter Table Tags"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:279, ../inc/admin/managers/tag-manager.php:333, ../inc/admin/managers/tag-manager.php:356, ../inc/admin/managers/tag-manager.php:356
+#: ../inc/admin/managers/tag-manager.php:282, ../inc/admin/managers/tag-manager.php:335, ../inc/admin/managers/tag-manager.php:355, ../inc/admin/managers/tag-manager.php:355
 msgid "Table Tags"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:319
+#: ../inc/admin/managers/tag-manager.php:321
 msgid "table tags"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:379
+#: ../inc/admin/managers/tag-manager.php:378
 msgctxt "table tag name"
 msgid "Table Tags"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:380
+#: ../inc/admin/managers/tag-manager.php:379
 msgctxt "singular table tag taxonomy name"
 msgid "Table Tag"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:381
+#: ../inc/admin/managers/tag-manager.php:380
 msgid "All Table Tags"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:382
+#: ../inc/admin/managers/tag-manager.php:381
 msgid "Edit Table Tag"
 msgstr ""
 
-#: ../inc/admin/managers/tag-manager.php:383
+#: ../inc/admin/managers/tag-manager.php:382
 msgid "Add New Table Tag"
 msgstr ""
 
@@ -338,77 +761,237 @@ msgstr ""
 msgid "no terms found"
 msgstr ""
 
-#: ../inc/admin/managers/upsells-manager.php:37
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:65
+msgid "Empty Cell Enable"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:66, ../inc/admin/managers/upsells-dummy-controls-manager.php:88, ../inc/admin/managers/upsells-dummy-controls-manager.php:110, ../inc/admin/views/builder/table-element/table-cell-setting-element.php:92, ../inc/admin/views/builder/table-element/table-cell-setting-element.php:116
+msgid "Fixed"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:67, ../inc/admin/managers/upsells-dummy-controls-manager.php:89, ../inc/admin/managers/upsells-dummy-controls-manager.php:111, ../inc/admin/views/builder/table-element/table-cell-setting-element.php:93, ../inc/admin/views/builder/table-element/table-cell-setting-element.php:117
+msgid "Auto"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:76
+msgid "Empty Cell"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:87, ../inc/admin/managers/upsells-dummy-controls-manager.php:98
+msgid "Highlight Column"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:109, ../inc/admin/managers/upsells-dummy-controls-manager.php:120
+msgid "Highlight Row"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:140, ../inc/admin/managers/upsells-dummy-controls-manager.php:143, ../inc/admin/managers/upsells-dummy-controls-manager.php:163
+msgid "Duplicate Column"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:151, ../inc/admin/managers/upsells-dummy-controls-manager.php:154, ../inc/admin/managers/upsells-dummy-controls-manager.php:173
+msgid "Duplicate Row"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:210, ../inc/admin/managers/upsells-dummy-controls-manager.php:217, ../inc/admin/managers/upsells-dummy-controls-manager.php:223
+msgid "Different Border Colors"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:231
+msgid "different border colors"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:237
+msgid "Column Border Only"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:244
+msgid "Column border only"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:251
+msgid "Row Border Only"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:258
+msgid "row border only"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:264
+msgid "Table Cells Border Radius"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:275
+msgid "Table cells border radius"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:299
+msgid "Separate Columns/Rows"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:306
+msgid "Seperate Columns/Rows"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:333
+msgid "Pro feature"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:334
+msgid "Please get the <span class=\"upsell-pro-indicator\">PRO</span> add-on to unlock all exclusive features."
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:335
+msgid "unlock now"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:336
+msgid "Limited time: Use code <code style='font-size: 120%'>WPTB10</code> to get a 10% discount."
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:354, ../inc/admin/element-classes/elements/star-rating-element.php:208, ../inc/admin/element-classes/elements/text-element.php:104
+msgid "Font Color"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:359
+msgid "Link Color"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:364, ../inc/admin/element-classes/elements/list-element.php:149, ../inc/admin/element-classes/elements/text-element.php:134
+msgid "Font Size"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:374
+msgid "Global Font Style"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:378
+msgid "global font style"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:385
+msgid "Make Top Row Sticky"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:390
+msgid "Make First Column Sticky"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:396
+msgid "Sticky"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:400
+msgid "sticky"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:405
+msgid "Enable Pagination"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:409
+msgid "Rows Per Page ( 3 ~ 50)"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:414
+msgid "Let visitors change <br />rows per page"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:423
+msgid "pagination"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:428
+msgid "Enable Search"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:432
+msgid "Search Bar Position"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-dummy-controls-manager.php:443
+msgid "Search"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-manager.php:60
 msgid "For More Advanced Elements"
 msgstr ""
 
-#: ../inc/admin/managers/upsells-manager.php:41
+#: ../inc/admin/managers/upsells-manager.php:64
 msgid "For Prebuilt Tables and Using Your Own Tables as Prebuilt Tables"
 msgstr ""
 
-#: ../inc/admin/managers/upsells-manager.php:45
+#: ../inc/admin/managers/upsells-manager.php:68
 msgid "For More Advanced Options in Cell Management Mode"
 msgstr ""
 
-#: ../inc/admin/managers/upsells-manager.php:48
+#: ../inc/admin/managers/upsells-manager.php:71
 msgctxt "start of the \"Get the Pro Add-On\" sentence"
 msgid "Get the"
 msgstr ""
 
-#: ../inc/admin/managers/upsells-manager.php:48
+#: ../inc/admin/managers/upsells-manager.php:71
 msgid "Add-On."
 msgstr ""
 
-#: ../inc/admin/managers/version-control-manager.php:94, ../inc/admin/managers/version-control-manager.php:117
-msgid "an error occurred on plugin install, refresh and try again"
-msgstr ""
-
-#: ../inc/admin/managers/version-control-manager.php:126
-msgid "no download url address found for the requested version"
-msgstr ""
-
-#: ../inc/admin/managers/version-control-manager.php:131
+#: ../inc/admin/managers/version-control-manager.php:138
 msgid "You do not have authorization to use this ajax endpoint, refresh and try again"
 msgstr ""
 
-#: ../inc/admin/managers/version-control-manager.php:159
-msgid "version control"
+#: ../inc/admin/managers/version-control-manager.php:133
+msgid "no download url address found for the requested version"
 msgstr ""
 
-#: ../inc/admin/managers/version-control-manager.php:163
-msgid "install"
-msgstr ""
-
-#: ../inc/admin/managers/version-control-manager.php:164
-msgid "If you are having issues with the current version of the plugin, you can rollback to a previous version."
+#: ../inc/admin/managers/version-control-manager.php:124, ../inc/admin/managers/version-control-manager.php:97
+msgid "an error occurred on plugin install, refresh and try again"
 msgstr ""
 
 #: ../inc/admin/managers/version-control-manager.php:166
-msgid "warning"
-msgstr ""
-
-#: ../inc/admin/managers/version-control-manager.php:167
-msgid "Previous versions may be unstable and unsecure, continue with your own risk and take a backup."
-msgstr ""
-
-#: ../inc/admin/managers/version-control-manager.php:169
-msgid "your version"
+msgid "version control"
 msgstr ""
 
 #: ../inc/admin/managers/version-control-manager.php:170
-msgid "latest stable version"
+msgid "install"
 msgstr ""
 
 #: ../inc/admin/managers/version-control-manager.php:171
-msgid "update to latest version"
-msgstr ""
-
-#: ../inc/admin/managers/version-control-manager.php:172
-msgid "reload"
+msgid "If you are having issues with the current version of the plugin, you can rollback to a previous version."
 msgstr ""
 
 #: ../inc/admin/managers/version-control-manager.php:173
+msgid "warning"
+msgstr ""
+
+#: ../inc/admin/managers/version-control-manager.php:174
+msgid "Previous versions may be unstable and unsecure, continue with your own risk and take a backup."
+msgstr ""
+
+#: ../inc/admin/managers/version-control-manager.php:176
+msgid "your version"
+msgstr ""
+
+#: ../inc/admin/managers/version-control-manager.php:177
+msgid "latest stable version"
+msgstr ""
+
+#: ../inc/admin/managers/version-control-manager.php:178
+msgid "update to latest version"
+msgstr ""
+
+#: ../inc/admin/managers/version-control-manager.php:179
+msgid "reload"
+msgstr ""
+
+#: ../inc/admin/managers/version-control-manager.php:180
 msgid "Rollback to selected version?"
+msgstr ""
+
+#: ../inc/admin/managers/version-control-manager.php:287
+msgid "An error occurred while fetching wp-table-builder versions, please try again later"
+msgstr ""
+
+#: ../inc/admin/managers/what-is-new-manager.php:68
+msgid "What is new?"
 msgstr ""
 
 #: ../inc/admin/views/wptb-welcome.php:13
@@ -431,103 +1014,375 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/button-element.php:46, ../inc/admin/views/builder/additional-element.php:3
+#: ../inc/common/factory/class-rest-response-factory.php:41
+msgid "no message provided"
+msgstr ""
+
+#: ../inc/common/traits/class-init-once.php:47
+msgid "init_process function is not implemented"
+msgstr ""
+
+#: ../inc/admin/controls/dummy-controls/control-spacing-dummy.php:30
+msgid "Padding"
+msgstr ""
+
+#: ../inc/admin/controls/dummy-controls/control-spacing-dummy.php:38
+msgid "Margin"
+msgstr ""
+
+#: ../inc/admin/controls/dummy-controls/control-spacing-dummy.php:46
+msgid "Spacing"
+msgstr ""
+
+#: ../inc/admin/controls/dummy-controls/control-spacing-dummy.php:56
+msgid "spacing"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/badge-element.php:30
+msgid "Badge"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:43, ../inc/admin/views/builder/additional-element.php:3
 msgid "Button"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/button-element.php:234
+#: ../inc/admin/element-classes/elements/button-element.php:98
+msgid "Button Size"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:101
+msgid "S"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:102
+msgid "M"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:103
+msgid "L"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:104
+msgid "XL"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:117
+msgid "Button Full Width"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:125
+msgid "Button Border Radius"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:142
+msgid "Button Color"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:160
+msgid "Button Text Size"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:177
+msgid "Button Text Color"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:195
+msgid "Button Alignment"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:212
+msgid "Content Alignment"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:229
+msgid "Button ID"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:231
+msgid "Insert Button ID Here"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:241
+msgid "Color"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:254
+msgid "Text Color"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:266
+msgid "Scale"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:279
 msgid " times"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/button-element.php:268
+#: ../inc/admin/element-classes/elements/button-element.php:285
+msgid "Button Icon"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:298
 msgid "Icon Position"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/button-element.php:303
+#: ../inc/admin/element-classes/elements/button-element.php:315
+msgid "Icon Size"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:341
+msgid "Button Link"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:349, ../inc/admin/element-classes/elements/image-element.php:150
+msgid "link"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:350
+msgid "hover"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:351
+msgid "icon"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:354
 msgid "button options"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:373
+msgid "Button Text"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/circle-rating-element.php:30
+msgid "Circle Rating"
 msgstr ""
 
 #: ../inc/admin/element-classes/elements/custom-html-element.php:40
 msgid "Custom HTML"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/image-element.php:40
+#: ../inc/admin/element-classes/elements/custom-html-element.php:94
+msgid "Custom HTML Options"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/custom-html-element.php:103
+msgid "Insert HTML"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/custom-html-element.php:108
+msgid "Insert HTML Code Here"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/custom-html-element.php:126
+msgid "Insert Custom HTML"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/image-element.php:42
 msgid "Image"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:40
+#: ../inc/admin/element-classes/elements/image-element.php:96
+msgid "Replace Image"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/image-element.php:101
+msgid "Image Alignment"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/image-element.php:114
+msgid "Image Alternative Text"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/image-element.php:119
+msgid "Image Alt Text"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/image-element.php:126
+msgid "Image Size"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/image-element.php:141
+msgid "Image Link"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/image-element.php:149
+msgid "size"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/image-element.php:153
+msgid "image options"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/image-element.php:186
+msgid "Insert Image"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/list-element.php:42
 msgid "List"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:236
+#: ../inc/admin/element-classes/elements/list-element.php:96
+msgid "List Type"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/list-element.php:118
+msgid "List Icon"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/list-element.php:137
+msgid "List Font Color"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/list-element.php:170
+msgid "Item Spacing"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/list-element.php:187
+msgid "List Alignment"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/list-element.php:204
+msgid "font"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/list-element.php:205
+msgid "layout"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/list-element.php:208
+msgid "List Options"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/list-element.php:229
 msgid "List Item 1"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:242
+#: ../inc/admin/element-classes/elements/list-element.php:235
 msgid "List Item 2"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:248
+#: ../inc/admin/element-classes/elements/list-element.php:241
 msgid "List Item 3"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/star-rating-element.php:40
+#: ../inc/admin/element-classes/elements/progress-bar-element.php:30
+msgid "Progress Bar"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/ribbon-element.php:30
+msgid "Ribbon"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/shortcode-element.php:95
+msgid "Element Shortcode Options"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/shortcode-element.php:104
+msgid "Insert Shortcode"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/shortcode-element.php:109
+msgid "Insert Shortcode Here"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/star-rating-element.php:41
 msgid "Star Rating"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/text-element.php:40
+#: ../inc/admin/element-classes/elements/star-rating-element.php:95
+msgid "Star Rating Options"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/star-rating-element.php:104
+msgid "Star Size"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/star-rating-element.php:124
+msgid "Star Color"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/star-rating-element.php:140
+msgid "Star Count"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/star-rating-element.php:154
+msgid "Rating Alignment"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/star-rating-element.php:170
+msgid "Show Number Rating"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/star-rating-element.php:190
+msgid "Number Rating Size"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/styled-list-element.php:30
+msgid "Styled List"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/text-element.php:41
 msgid "Text"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/text-element.php:95
+msgid "Text Options"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/text-element.php:119
+msgid "Link Font Color"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/text-element.php:154
+msgid "Link Rel"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/text-element.php:181
+msgid "Add Text"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/text-icon-element.php:30
+msgid "Text Icon"
 msgstr ""
 
 #: ../inc/admin/views/builder/wptb-builder-header.php:14
 msgid "Enter table name here..."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:82
+#: ../inc/admin/views/builder/wptb-builder-header.php:86
 msgid "Embed"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:90
-msgid "Preview"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-header.php:96
-msgid "Save Table"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-header.php:111
-msgid "To embed this table on your site, please paste the following shortcode inside a post or page."
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:26
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:27
 msgid "elements"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:29
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:30
 msgid "settings"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:32
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:33
 msgid "responsive"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:129
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:155
 msgid "You are currently editing the table cells. Click \"Close\" to go back to editing the table."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:130
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:156
 msgid "Click on cells to select them or deselect them. Selected cells will be highlighted."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:131
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:157
 msgid "Hold \"SHIFT\" and click on cells to select multiple cells."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:134, ../inc/admin/views/builder/wptb-builder-table-setup.php:83, ../inc/admin/views/builder/wptb-builder-table-setup.php:109, ../inc/admin/views/builder/table-element/table-setting-element.php:392, ../inc/admin/views/builder/table-element/table-setting-element.php:448
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:160, ../inc/admin/views/builder/wptb-builder-table-setup.php:84, ../inc/admin/views/builder/wptb-builder-table-setup.php:111, ../inc/admin/views/builder/table-element/table-setting-element.php:442, ../inc/admin/views/builder/table-element/table-setting-element.php:498
 msgid "Close Manage Cells Mode"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:134, ../inc/admin/views/builder/wptb-builder-table-setup.php:84, ../inc/admin/views/builder/wptb-builder-table-setup.php:110
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:160, ../inc/admin/views/builder/wptb-builder-table-setup.php:85, ../inc/admin/views/builder/wptb-builder-table-setup.php:112, ../inc/admin/views/builder/table-element/table-setting-element.php:439, ../inc/admin/views/builder/table-element/table-setting-element.php:495
 msgid "Close"
 msgstr ""
 
@@ -535,104 +1390,112 @@ msgstr ""
 msgid "Responsive options will be available when a new table is generated."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:51, ../inc/admin/views/builder/table-element/table-setting-element.php:305
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:18
+msgid "Table settings will be available when a new table is generated."
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:52, ../inc/admin/views/builder/table-element/table-setting-element.php:355
 msgid "Add Column to the Start"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:52
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:53, ../inc/admin/views/builder/table-element/table-setting-element.php:351
 msgid "Add Left Column"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:55, ../inc/admin/views/builder/table-element/table-setting-element.php:316
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:56, ../inc/admin/views/builder/table-element/table-setting-element.php:366
 msgid "Add Column to the End"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:56
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:57, ../inc/admin/views/builder/table-element/table-setting-element.php:362
 msgid "Add Right Column"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:59, ../inc/admin/views/builder/table-element/table-setting-element.php:327
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:60, ../inc/admin/views/builder/table-element/table-setting-element.php:377
 msgid "Add Row to the Start"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:60
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:61, ../inc/admin/views/builder/table-element/table-setting-element.php:373
 msgid "Add Top Row"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:63, ../inc/admin/views/builder/table-element/table-setting-element.php:338
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:64, ../inc/admin/views/builder/table-element/table-setting-element.php:388
 msgid "Add Row to the End"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:64
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:65, ../inc/admin/views/builder/table-element/table-setting-element.php:384
 msgid "Add Bottom Row"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:67, ../inc/admin/views/builder/table-element/table-setting-element.php:349
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:68, ../inc/admin/views/builder/table-element/table-setting-element.php:399
 msgid "Merge Selected Cells"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:68
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:69, ../inc/admin/views/builder/table-element/table-setting-element.php:395
 msgid "Merge"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:71, ../inc/admin/views/builder/table-element/table-setting-element.php:360
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:72, ../inc/admin/views/builder/table-element/table-setting-element.php:410
 msgid "Unmerge Selected Cell"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:72
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:73, ../inc/admin/views/builder/table-element/table-setting-element.php:406
 msgid "Split"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:75, ../inc/admin/views/builder/table-element/table-setting-element.php:371
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:76, ../inc/admin/views/builder/table-element/table-setting-element.php:421
 msgid "Delete Highlighted Column"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:76
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:77, ../inc/admin/views/builder/table-element/table-setting-element.php:417
 msgid "Remove Column"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:79, ../inc/admin/views/builder/table-element/table-setting-element.php:382
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:80, ../inc/admin/views/builder/table-element/table-setting-element.php:432
 msgid "Delete Highlighted Row"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:80
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:81, ../inc/admin/views/builder/table-element/table-setting-element.php:428
 msgid "Remove Row"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:93, ../inc/admin/views/builder/table-element/table-setting-element.php:405
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:95, ../inc/admin/views/builder/table-element/table-setting-element.php:455
 msgid "Add Column After Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:94
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:96, ../inc/admin/views/builder/table-element/table-setting-element.php:451
 msgid "Insert Column After"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:97, ../inc/admin/views/builder/table-element/table-setting-element.php:416
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:99, ../inc/admin/views/builder/table-element/table-setting-element.php:466
 msgid "Add Column Before Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:98
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:100, ../inc/admin/views/builder/table-element/table-setting-element.php:462
 msgid "Insert Column Before"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:101, ../inc/admin/views/builder/table-element/table-setting-element.php:427
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:103, ../inc/admin/views/builder/table-element/table-setting-element.php:477
 msgid "Add Row After Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:102
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:104, ../inc/admin/views/builder/table-element/table-setting-element.php:473
 msgid "Insert Row After"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:105, ../inc/admin/views/builder/table-element/table-setting-element.php:438
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:107, ../inc/admin/views/builder/table-element/table-setting-element.php:488
 msgid "Add Row Before Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:106
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:108, ../inc/admin/views/builder/table-element/table-setting-element.php:484
 msgid "Insert Row Before"
 msgstr ""
 
 #: ../inc/admin/views/builder/wptb-header-toolbox.php:8
 msgid "Manage Cells"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-header-toolbox.php:9
+msgid "Background"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:39
@@ -647,14 +1510,6 @@ msgstr ""
 msgid "Column Width"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:92, ../inc/admin/views/builder/table-element/table-cell-setting-element.php:116
-msgid "Fixed"
-msgstr ""
-
-#: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:93, ../inc/admin/views/builder/table-element/table-cell-setting-element.php:117
-msgid "Auto"
-msgstr ""
-
 #: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:101
 msgid "Row Height"
 msgstr ""
@@ -663,138 +1518,222 @@ msgstr ""
 msgid "Cell Vertical Alignment"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:82
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:83
 msgid "mode options"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:98
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:88
+msgid "You can check out the layout of your table by selecting any size breakpoint from the top slider menu or from breakpoint tabs on mode options, or even input your custom size to see the reaction of your table. After selecting the breakpoint, you can work on the layout for that breakpoint."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:99
 msgid "how to"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:109
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:112
 msgid "desktop"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:113
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:116
 msgid "tablet"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:117
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:120
 msgid "mobile"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:128
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:131
 msgid "rebuilding"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:129
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:132
 msgid "enable responsive table"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:130
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:133
 msgid "Enable responsive capabilities of current table"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:131
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:134
 msgid "Cell stack direction"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:132
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:135
 msgid "Top row as header"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:133
-msgid "Static top row"
-msgstr ""
-
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:134
-msgid "Identify cells"
-msgstr ""
-
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:135
-msgid "Cells per row"
-msgstr ""
-
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:136
-msgid "Items per header"
+msgid "Repeat merged header"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:137
-msgid "Preserve row color"
+msgid "Static top row"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:138
-msgid "row"
+msgid "Identify cells"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:139
-msgid "column"
+msgid "Cells per row"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:140
-msgid "mode"
+msgid "Items per header"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:141
-msgid "auto"
+msgid "Preserve row color"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:142
-msgid "pattern"
+msgid "row"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:143
-msgid "full"
+msgid "column"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:144
-msgid "Okay"
+msgid "mode"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:145
-msgid "target width"
+msgid "auto"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:146
-msgid "window"
+msgid "pattern"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:147
-msgid "container"
+msgid "full"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:148
+msgid "Okay"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:149
-msgid "Auto: Table will be reconstructed automatically with the given options by stacking rows/columns."
+msgid "target width"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:150
-msgid "Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table."
+msgid "window"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:151
-msgid "Full: You have full control over how table will be constructed."
-msgstr ""
-
-#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:152
-msgid "The order of stacking, either by rows or by columns."
+msgid "container"
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:153
-msgid "Use the top most row of table as a header."
+msgid "Auto: Table will be reconstructed automatically with the given options by stacking rows/columns."
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:154
-msgid "Amount of cells that will be available per row. Can be further customized for different breakpoints."
+msgid "Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table."
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:155
-msgid "Your table has legacy responsive functionality. While it is still supported, enabling newer responsive system will override it. If this is not what you want, do not enable newer version."
+msgid "Full: You have full control over how table will be constructed."
 msgstr ""
 
 #: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:156
+msgid "The order of stacking, either by rows or by columns."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:157
+msgid "Use the top most row of table as a header."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:158
+msgid "Amount of cells that will be available per row. Can be further customized for different breakpoints."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:159
+msgid "Your table has legacy responsive functionality. While it is still supported, enabling newer responsive system will override it. If this is not what you want, do not enable newer version."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:160
 msgid "Preserve the original row color for cell, or use even/odd row colors"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-element/table-setting-element.php:40
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:161
+msgid "Disable breakpoint"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:57
 msgid "Table Setting"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:100
+msgid "Cell Padding"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:112
+msgid "Table Alignment"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:121, ../inc/admin/views/builder/table-element/table-setting-element.php:129
+msgid "Table Container Max Width"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:143
+msgid "Table Cell Min Auto Width"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:155
+msgid "Sortable Table Vertically"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:163
+msgid "Sortable Table Horizontally"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:183
+msgid "Table Border"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:196
+msgid "BorderColor"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:205
+msgid "Apply Inner Border"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:214
+msgid "Header Inner Border"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:224
+msgid "Inner Border Size"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:238
+msgid "border"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:249
+msgid "Enable horizontal scrolling"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:264
+msgid "Scroll"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:276
+msgid "Our Website"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:276
+msgid "Documentation"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:276
+msgid "Facebook Group"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:281
+msgid "help & support"
 msgstr ""
