@@ -1,7 +1,7 @@
 <?php
 
 use WP_Table_Builder as NS;
-use WP_Table_Builder\Inc\Admin\Database_Updater;
+use WP_Table_Builder\Inc\Admin\Managers\Database_Updater;
 
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
@@ -40,11 +40,19 @@ if (!defined('WPINC')) {
         const t0 = performance.now();
         bench.disabled = true;
         result.innerText = "Running benchmark...";
-        await fetch(`/wp-admin/admin-ajax.php?action=wptb_synthetic_benchmark&tables=${tables.value}&icon1=${v1_icon.value}&icon2=${v2_icon.value}&images=${images.value}`);
-        const t1 = performance.now();
+        const res = await fetch(`/wp-admin/admin-ajax.php?action=wptb_synthetic_benchmark&tables=${tables.value}&icon1=${v1_icon.value}&icon2=${v2_icon.value}&images=${images.value}`);
 
         bench.disabled = false;
+
+        if (!res.ok) {
+            result.innerText = res.statusText;
+            return;
+        }
+
+        const t1 = performance.now();
         result.innerText = `Benchmark complete: ${(t1 - t0)/1000}s`;
+
+        console.log(await res.json());
     });
 
     current.addEventListener("click", async () => {

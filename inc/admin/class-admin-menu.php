@@ -62,7 +62,6 @@ class Admin_Menu
         add_filter('wp-table-builder/filter/get_table', [$this, 'strip_tags'], 10, 1);
         add_filter('wp-table-builder/filter/table_html_shortcode', [$this, 'strip_tags'], 10, 1);
         add_filter('wp-table-builder/table_content', [$this, 'strip_tags'], 10, 1);
-        new Database_Updater();
     }
 
     public function create_table()

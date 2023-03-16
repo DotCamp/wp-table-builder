@@ -1,39 +1,71 @@
 <?php
 
-namespace WP_Table_Builder\Inc\Admin;
+namespace WP_Table_Builder\Inc\Admin\Managers;
 
-use DOMDocument;
+use WP_Table_Builder\Inc\Admin\Base\Setting_Base;
+use WP_Table_Builder\Inc\Common\Traits\Init_Once;
+use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use WP_Table_Builder\Inc\Core\Init;
 use WP_Query;
 use Gt\Dom\HTMLDocument;
 
-// require plugin_dir_path( __FILE__) . "vendor/autoloader.php";
-
-class Database_Updater
+class Database_Updater extends Setting_Base
 {
-    public $old_tables = [];
-    public $updated_tables = [];
+    use Singleton_Trait;
+    use Init_Once;
 
-    public function __construct()
+    /**
+     * Get id of settings.
+     *
+     * @return string settings id
+     */
+    public function get_settings_id()
     {
-        add_action("wp_ajax_update_all", array($this, 'ajax_update_all_tables'));
-        add_action("wp_ajax_simulate_update", array($this, 'ajax_simulate_update'));
-        add_action("wp_ajax_get_table_render", array($this, 'ajax_get_table_render'));
-        add_action("wp_ajax_get_tables_num", array($this, 'ajax_num_tables'));
-        add_action("wp_ajax_wptb_synthetic_benchmark", array($this, 'ajax_run_synthetic_benchmark'));
+        return 'wptb_database_updater';
     }
 
-    public function ajax_num_tables()
+    /**
+     * Get default settings.
+     *
+     * @return array default settings array
+     */
+    protected function get_default_settings()
+    {
+        return [];
+    }
+
+    /**
+     * Get sanitization rules for component options.
+     * @return array sanitization rules
+     */
+    protected function get_sanitization_rules()
+    {
+        return [];
+    }
+
+    public static $old_tables = [];
+    public static $updated_tables = [];
+
+    public static function init_process()
+    {
+        add_action("wp_ajax_update_all", array(__CLASS__, 'ajax_update_all_tables'));
+        add_action("wp_ajax_simulate_update", array(__CLASS__, 'ajax_simulate_update'));
+        add_action("wp_ajax_get_table_render", array(__CLASS__, 'ajax_get_table_render'));
+        add_action("wp_ajax_get_tables_num", array(__CLASS__, 'ajax_num_tables'));
+        add_action("wp_ajax_wptb_synthetic_benchmark", array(__CLASS__, 'ajax_run_synthetic_benchmark'));
+    }
+
+    public static function ajax_num_tables()
     {
         wp_send_json(wp_count_posts('wptb-tables')->draft);
     }
 
-    public function ajax_get_table_render()
+    public static function ajax_get_table_render()
     {
-        wp_send_json($this->generate_table());
+        wp_send_json(static::generate_table());
     }
 
-    public function generate_table()
+    public static function generate_table()
     {
         $icon1 = $_REQUEST['icon1'];
         $icon2 = $_REQUEST['icon2'];
@@ -83,34 +115,34 @@ class Database_Updater
         return ob_get_clean();
     }
 
-    public function ajax_run_synthetic_benchmark()
+    public static function ajax_run_synthetic_benchmark()
     {
         $n = $_REQUEST['tables'];
 
-        $table = $this->generate_table();
+        $table = static::generate_table();
 
         for ($i = 0; $i < $n; $i++) {
-            $this->update_table($table);
+            static::update_table($table);
         }
 
         wp_send_json_success();
     }
 
-    public function ajax_update_all_tables()
+    public static function ajax_update_all_tables()
     {
-        $this->load_tables();
-        $this->update_all_tables();
+        static::load_tables();
+        static::update_all_tables();
         wp_send_json_success();
     }
 
     public function ajax_simulate_update()
     {
-        $this->load_tables();
-        $this->simulate_update();
+        static::load_tables();
+        static::simulate_update();
         wp_send_json_success();
     }
 
-    public function load_tables()
+    public static function load_tables()
     {
         global $post;
 
@@ -120,27 +152,27 @@ class Database_Updater
 
         $query = new WP_Query($args);
 
-        $this->old_tables = [];
+        static::$old_tables = [];
 
         while ($query->have_posts()) {
             $query->the_post();
-            $this->old_tables[] = get_post_meta($post->ID, '_wptb_content_', true);
+            static::$old_tables[] = get_post_meta($post->ID, '_wptb_content_', true);
         }
         wp_reset_postdata();
     }
 
-    public function update_all_tables()
+    public static function update_all_tables()
     {
-        $this->updated_tables = [];
+        static::$updated_tables = [];
 
-        foreach ($this->old_tables as $table) {
-            $this->update_table($table);
+        foreach (static::$old_tables as $table) {
+            static::update_table($table);
         }
     }
 
-    public function print_tables($old = false)
+    public static function print_tables($old = false)
     {
-        $tables = $old ? $this->old_tables : $this->updated_tables;
+        $tables = $old ? static::$old_tables : static::$updated_tables;
 
         foreach ($tables as $table) : ?>
             <div>
@@ -150,56 +182,56 @@ class Database_Updater
         endforeach;
     }
 
-    public function echo_tables($old = false)
+    public static function echo_tables($old = false)
     {
-        $tables = $old ? $this->old_tables : $this->updated_tables;
+        $tables = $old ? static::$old_tables : static::$updated_tables;
 
         foreach ($tables as $table) {
             echo $table;
         }
     }
 
-    public function simulate_update($n = 100)
+    public static function simulate_update($n = 100)
     {
         if (isset($_REQUEST['n'])) {
             $n = $_REQUEST['n'];
         }
 
         for ($i = 0; $i < $n; $i++) {
-            foreach ($this->old_tables as $table) {
-                $this->update_table($table);
+            foreach (static::$old_tables as $table) {
+                static::update_table($table);
             }
         }
     }
 
-    public function update_table($table)
+    public static function update_table($table)
     {
         $table = new HTMLDocument($table);
 
-        $newTable = $this->update_image_element($table);
-        $newTable = $this->update_icon_element($newTable);
+        $newTable = static::update_image_element($table);
+        $newTable = static::update_icon_element($newTable);
 
-        $newTable = $this->get_clean_table($newTable);
+        $newTable = static::get_clean_table($newTable);
 
-        $this->updated_tables[] = $newTable;
+        static::$updated_tables[] = $newTable;
     }
 
-    public function update_image_element($table)
+    public static function update_image_element($table)
     {
         $image_els = $table->querySelectorAll('.wptb-image-container');
 
         foreach ($image_els as $image_el) {
-            $anchor = $image_el->querySelector("a");
+            $anchor = $image_el->querySelector('a');
 
             if (!is_null($anchor) && !$anchor->className) {
-                $anchor->classList->add("wptb-link-target");
+                $anchor->classList->add('wptb-link-target');
             }
         }
 
         return $table;
     }
 
-    public function update_icon_element($table)
+    public static function update_icon_element($table)
     {
         $icon_els = $table->querySelectorAll('.wptb-icon-container');
 
@@ -238,13 +270,13 @@ class Database_Updater
             })();
 
             (function () use ($element, $createNewIcons) {
-                if ($element->querySelectorAll("a, span")->length !== 1) return;
+                if ($element->querySelectorAll('a, span')->length !== 1) return;
 
-                $anchor = $element->querySelector("a");
+                $anchor = $element->querySelector('a');
 
-                $anchor->classList->add("wptb-icon-link-target-1");
+                $anchor->classList->add('wptb-icon-link-target-1');
 
-                $iconEl = $anchor->querySelector("->wptb-icon");
+                $iconEl = $anchor->querySelector('.wptb-icon');
                 $iconEl->classList->add("wptb-icon-1");
 
                 $createNewIcons();
@@ -254,7 +286,7 @@ class Database_Updater
         return $table;
     }
 
-    public function get_clean_table($html_string)
+    public static function get_clean_table($html_string)
     {
         return explode("</body>", explode("<body>", $html_string->__toString())[1])[0];
     }

@@ -111,7 +111,7 @@ namespace WP_Table_Builder {
      */
 
     require_once(WP_TABLE_BUILDER_DIR . 'inc/libraries/autoloader.php');
-    require_once(WP_TABLE_BUILDER_DIR .  "vendor/autoload.php");
+    require_once(WP_TABLE_BUILDER_DIR .  'vendor/autoload.php');
 
     /**
      * Helper Functions
