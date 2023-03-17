@@ -80,6 +80,7 @@ class Database_Updater
         $table = Table_Updates\Image_Element::update($table);
         $table = Table_Updates\Icon_Element::update($table);
         $table = Table_Updates\Empty_Anchor::update($table);
+        $table = Table_Updates\Button_Element::update($table);
 
         $table = static::get_clean_table($table);
 
