@@ -2,46 +2,16 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
-use WP_Table_Builder\Inc\Admin\Base\Setting_Base;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
-use WP_Table_Builder\Inc\Core\Init;
 use WP_Query;
 use Gt\Dom\HTMLDocument;
+use WP_Table_Builder\Inc\Admin\Managers\Table_Updates;
 
-class Database_Updater extends Setting_Base
+class Database_Updater
 {
     use Singleton_Trait;
     use Init_Once;
-
-    /**
-     * Get id of settings.
-     *
-     * @return string settings id
-     */
-    public function get_settings_id()
-    {
-        return 'wptb_database_updater';
-    }
-
-    /**
-     * Get default settings.
-     *
-     * @return array default settings array
-     */
-    protected function get_default_settings()
-    {
-        return [];
-    }
-
-    /**
-     * Get sanitization rules for component options.
-     * @return array sanitization rules
-     */
-    protected function get_sanitization_rules()
-    {
-        return [];
-    }
 
     public static $old_tables = [];
     public static $updated_tables = [];
@@ -58,6 +28,67 @@ class Database_Updater extends Setting_Base
     public static function ajax_num_tables()
     {
         wp_send_json(wp_count_posts('wptb-tables')->draft);
+    }
+
+    public static function ajax_update_all_tables()
+    {
+        static::load_tables();
+        static::update_all_tables();
+        wp_send_json_success();
+    }
+
+    public function ajax_simulate_update()
+    {
+        static::load_tables();
+        static::simulate_update();
+        wp_send_json_success();
+    }
+
+    public static function load_tables()
+    {
+        global $post;
+
+        $args = array(
+            'post_type' => 'wptb-tables',
+            'posts_per_page' => -1
+        );
+
+        $query = new WP_Query($args);
+
+        static::$old_tables = [];
+
+        while ($query->have_posts()) {
+            $query->the_post();
+            static::$old_tables[$post->ID] = get_post_meta($post->ID, '_wptb_content_', true);
+        }
+        wp_reset_postdata();
+    }
+
+    public static function update_all_tables()
+    {
+        static::$updated_tables = [];
+
+        foreach (static::$old_tables as $table) {
+            static::update_table($table);
+        }
+    }
+
+    public static function update_table($table)
+    {
+        $table = new HTMLDocument($table);
+
+        $table = Table_Updates\Image_Element::update($table);
+        $table = Table_Updates\Icon_Element::update($table);
+        $table = Table_Updates\Empty_Anchor::update($table);
+
+        $table = static::get_clean_table($table);
+
+        static::$updated_tables[] = $table;
+    }
+
+    public static function get_clean_table($html_string)
+    {
+        return explode("</body>", explode("<body>", $html_string->__toString())[1])[0];
     }
 
     public static function ajax_get_table_render()
@@ -128,48 +159,6 @@ class Database_Updater extends Setting_Base
         wp_send_json_success();
     }
 
-    public static function ajax_update_all_tables()
-    {
-        static::load_tables();
-        static::update_all_tables();
-        wp_send_json_success();
-    }
-
-    public function ajax_simulate_update()
-    {
-        static::load_tables();
-        static::simulate_update();
-        wp_send_json_success();
-    }
-
-    public static function load_tables()
-    {
-        global $post;
-
-        $args = array(
-            'post_type' => 'wptb-tables',
-        );
-
-        $query = new WP_Query($args);
-
-        static::$old_tables = [];
-
-        while ($query->have_posts()) {
-            $query->the_post();
-            static::$old_tables[] = get_post_meta($post->ID, '_wptb_content_', true);
-        }
-        wp_reset_postdata();
-    }
-
-    public static function update_all_tables()
-    {
-        static::$updated_tables = [];
-
-        foreach (static::$old_tables as $table) {
-            static::update_table($table);
-        }
-    }
-
     public static function print_tables($old = false)
     {
         $tables = $old ? static::$old_tables : static::$updated_tables;
@@ -202,92 +191,5 @@ class Database_Updater extends Setting_Base
                 static::update_table($table);
             }
         }
-    }
-
-    public static function update_table($table)
-    {
-        $table = new HTMLDocument($table);
-
-        $newTable = static::update_image_element($table);
-        $newTable = static::update_icon_element($newTable);
-
-        $newTable = static::get_clean_table($newTable);
-
-        static::$updated_tables[] = $newTable;
-    }
-
-    public static function update_image_element($table)
-    {
-        $image_els = $table->querySelectorAll('.wptb-image-container');
-
-        foreach ($image_els as $image_el) {
-            $anchor = $image_el->querySelector('a');
-
-            if (!is_null($anchor) && !$anchor->className) {
-                $anchor->classList->add('wptb-link-target');
-            }
-        }
-
-        return $table;
-    }
-
-    public static function update_icon_element($table)
-    {
-        $icon_els = $table->querySelectorAll('.wptb-icon-container');
-
-        foreach ($icon_els as $element) {
-            $iconElementWrapper = $element->querySelector('.wptb-icon-wrapper');
-
-            $createNewIcons = function () use ($table, $iconElementWrapper) {
-                for ($i = 2; $i <= 5; $i++) {
-                    $linkTargetElement = $table->createElement('span');
-                    $linkTargetElement->classList->add("wptb-icon-link-target-$i");
-
-                    $iconElementWrapper->appendChild($linkTargetElement);
-
-                    $icon = Init::instance()->get_icon_manager()->get_icon('star');
-
-                    $linkTargetElement->innerHTML = "<div class='wptb-icon-$i' style='display: none;'>$icon</div>";
-                }
-            };
-
-            (function () use ($table, $element, $iconElementWrapper, $createNewIcons) {
-                if (!is_null($element->querySelector('span')) || !is_null($element->querySelector('a'))) return;
-
-                if (is_null($iconElementWrapper)) return;
-
-                $linkTargetElement = $table->createElement('span');
-                $linkTargetElement->classList->add('wptb-icon-link-target-1');
-
-                $currentHtmlcontent = $element->querySelector('.wptb-icon');
-                $currentHtmlcontent->classList->add('wptb-icon-1');
-
-                $iconElementWrapper->removeChild($currentHtmlcontent);
-                $iconElementWrapper->appendChild($linkTargetElement);
-                $linkTargetElement->appendChild($currentHtmlcontent);
-
-                $createNewIcons();
-            })();
-
-            (function () use ($element, $createNewIcons) {
-                if ($element->querySelectorAll('a, span')->length !== 1) return;
-
-                $anchor = $element->querySelector('a');
-
-                $anchor->classList->add('wptb-icon-link-target-1');
-
-                $iconEl = $anchor->querySelector('.wptb-icon');
-                $iconEl->classList->add("wptb-icon-1");
-
-                $createNewIcons();
-            })();
-        }
-
-        return $table;
-    }
-
-    public static function get_clean_table($html_string)
-    {
-        return explode("</body>", explode("<body>", $html_string->__toString())[1])[0];
     }
 }

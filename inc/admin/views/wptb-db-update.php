@@ -14,7 +14,11 @@ if (!defined('WPINC')) {
 </div>
 <div>
     <div>
-        <p>Run benchmark on <input type="number" value="400" id="tables"> tables each with <input type="number" value="4" id="v1_icon"> v1 icons, <input type="number" value="4" id="v2_icon"> v2 icons, and <input type="number" value="5" id="images"> images.</p>
+        <p>Run benchmark on <input type="number" value="400" id="tables">
+            tables each with <input type="number" value="4" id="v1_icon">
+            v1 icons, <input type="number" value="4" id="v2_icon">
+            v2 icons, and <input type="number" value="5" id="images"> images.
+        </p>
         <div style="margin: .5rem 0;">
             <button id="show_table" class="button button-primary">Display generated table</button>
             <button class="button button-primary" id="bench">Run benchmark on generated tables</button>
