@@ -7,7 +7,7 @@ class Empty_Anchor
     public static $container = 'a';
     public static $table;
 
-    public static function update($table)
+    public static function update(&$table)
     {
         static::$table = $table;
 

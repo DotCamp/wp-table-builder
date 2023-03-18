@@ -6,7 +6,7 @@ class Image_Element
 {
     public static $container = '.wptb-image-container';
 
-    public static function update($table)
+    public static function update(&$table)
     {
         $elements = $table->querySelectorAll(static::$container);
 

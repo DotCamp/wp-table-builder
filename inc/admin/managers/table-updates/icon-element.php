@@ -10,7 +10,7 @@ class Icon_Element
     public static $icon_element_wrapper;
     public static $table;
 
-    public static function update($table)
+    public static function update(&$table)
     {
         static::$table = $table;
         $elements = $table->querySelectorAll(static::$container);
