@@ -28,6 +28,10 @@ if (!defined('WPINC')) {
             <button class="button button-primary" id="current">Run benchmark on tables from DB (<span id="num_tables"></span> tables)</button>
             <p style="display: inline-block;margin: 0.3rem 0.5rem;" id="current_result"></p>
         </div>
+        <div style="margin: .5rem 0;">
+            <button class="button button-primary" id="restore">Restore tables</button>
+            <p style="display: inline-block;margin: 0.3rem 0.5rem;" id="current_result"></p>
+        </div>
         <div id="table_display" style="margin: .5rem 0;"></div>
     </div>
     <?php
@@ -82,4 +86,10 @@ if (!defined('WPINC')) {
         const tables = await res.json();
         num_tables.innerText = tables;
     })();
+
+    restore.addEventListener("click", async () => {
+        restore.disabled = true;
+        await fetch(`/wp-admin/admin-ajax.php?action=restore_tables`);
+        restore.disabled = false;
+    })
 </script>

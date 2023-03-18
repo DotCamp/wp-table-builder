@@ -17,6 +17,13 @@ class Database_Updater
     {
         add_action("wp_ajax_update_all", array(__CLASS__, 'ajax_update_all_tables'));
         add_action("wp_ajax_get_tables_num", array(__CLASS__, 'ajax_num_tables'));
+        add_action("wp_ajax_restore_tables", array(__CLASS__, 'ajax_restore_tables'));
+    }
+
+    public static function ajax_restore_tables()
+    {
+        static::restore_tables();
+        wp_send_json_success();
     }
 
     public static function ajax_num_tables()

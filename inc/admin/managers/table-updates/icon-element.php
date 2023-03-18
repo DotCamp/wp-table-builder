@@ -35,7 +35,7 @@ class Icon_Element
 
             $icon = Init::instance()->get_icon_manager()->get_icon('star');
 
-            $linkTargetElement->innerHTML = "<div class='wptb-icon-$i' style='display: none;'>$icon</div>";
+            $linkTargetElement->innerHTML = "<div class='wptb-icon wptb-icon-$i' style='display: none;'>$icon</div>";
         }
     }
 
