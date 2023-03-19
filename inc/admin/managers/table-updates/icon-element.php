@@ -62,6 +62,8 @@ class Icon_Element
     {
         if ($element->querySelectorAll('a, span')->length !== 1) return;
 
+        $element->innerHTML = preg_replace('/\s{5,}/g', '', $element->innerHTML);
+
         $anchor = $element->querySelector('a');
 
         $anchor->classList->add('wptb-icon-link-target-1');
