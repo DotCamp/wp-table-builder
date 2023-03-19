@@ -90,8 +90,11 @@ class Database_Updater
         while ($query->have_posts()) {
             $query->the_post();
             $backup_table = get_post_meta($post->ID, '_wptb_content_backup_', true);
-            update_post_meta($post->ID, '_wptb_content_', $backup_table);
-            delete_post_meta($post->ID, '_wptb_content_backup_');
+
+            if ($backup_table !== false) {
+                update_post_meta($post->ID, '_wptb_content_', $backup_table);
+                delete_post_meta($post->ID, '_wptb_content_backup_');
+            }
         }
         wp_reset_postdata();
     }
