@@ -18,12 +18,44 @@ class Database_Updater
     const BACKUP_META_KEY = '_wptb_content_backup_';
     const SOLID_BACKUP_META_KEY = '_wptb_content_solid_backup_';
 
+    const DATABASE_UPDATER_OPTION_NAME = 'wptb-database-updater';
+
     public static function init_process()
     {
         add_action("wp_ajax_update_all", array(__CLASS__, 'ajax_update_all_tables'));
         add_action("wp_ajax_get_tables_num", array(__CLASS__, 'ajax_num_tables'));
         add_action("wp_ajax_restore_tables", array(__CLASS__, 'ajax_restore_tables'));
         add_action("wp_ajax_restore_solid_tables", array(__CLASS__, 'ajax_restore_solid_tables'));
+        add_filter('wp-table-builder/filter/settings_manager_frontend_data', [__CLASS__, 'settings_menu_data']);
+    }
+
+    public static function settings_menu_data($settings_data)
+    {
+        $extra_style_strings = [
+            'updaterDesc'  => esc_html__('Update the tables in you database to the latest version.', 'wp-table-builder'),
+            'updateButton' => esc_html__('Update all tables', 'wp-table-builder'),
+            'revertButton' => esc_html__('Roll back update', 'wp-table-builder'),
+            'resetUpdates' => esc_html__('Reset Updates (Restore solid tables)', 'wp-table-builder'),
+        ];
+
+        // add translation strings to script
+        $settings_data['strings'] = array_merge($settings_data['strings'], $extra_style_strings);
+
+        // security related data for general styles
+        $security = [
+            'ajaxUrl' => get_admin_url(null, 'admin-ajax.php'),
+            'nonce'   => wp_create_nonce(static::DATABASE_UPDATER_OPTION_NAME),
+            'action'  => static::DATABASE_UPDATER_OPTION_NAME,
+        ];
+
+        $settings_data['sectionsData']['databaseUpdater'] = [
+            'label'    => esc_html__('database updater', 'wp-table-builder'),
+        ];
+
+        // add general styles related data to admin settings menu frontend
+        $settings_data['data']['generalStyles'] = ['security' => $security];
+
+        return $settings_data;
     }
 
     public static function ajax_restore_solid_tables()
@@ -49,7 +81,7 @@ class Database_Updater
         wp_send_json_success();
     }
 
-    public static function load_tables($meta_key = static::TABLE_META_KEY)
+    public static function load_tables($meta_key = self::TABLE_META_KEY)
     {
         global $post;
 

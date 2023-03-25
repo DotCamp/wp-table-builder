@@ -6847,6 +6847,23 @@ label.wptb-control-row {
 
 /*endregion*/
 
+/*region database updater settings menu*/
+.wptb-database-updater-settings {
+    width: 100%;
+
+    .wptb-settings-button .wptb-settings-fetching {
+        margin-left: 8px;
+    }
+}
+
+.wptb-database-updater-buttons {
+    display: grid;
+    gap: 4px;
+    margin-top: 16px;
+    margin-left: -20px;
+}
+/* endregion */
+
 /*region panel message component*/
 .wptb-panel-message {
     color: var(--wptb-plugin-gray-600);
