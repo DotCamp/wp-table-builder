@@ -62,7 +62,7 @@ class Icon_Element
     {
         if ($element->querySelectorAll('a, span')->length !== 1) return;
 
-        $element->innerHTML = preg_replace('/\s{5,}/g', '', $element->innerHTML);
+        // $element->innerHTML = preg_replace('/\s{5,}/', '', $element->innerHTML);
 
         $anchor = $element->querySelector('a');
 

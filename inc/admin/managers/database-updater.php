@@ -20,12 +20,13 @@ class Database_Updater
 
     const DATABASE_UPDATER_OPTION_NAME = 'wptb-database-updater';
 
-    public static function init_process()
+    public static function init()
     {
         add_action("wp_ajax_update_all", array(__CLASS__, 'ajax_update_all_tables'));
         add_action("wp_ajax_get_tables_num", array(__CLASS__, 'ajax_num_tables'));
         add_action("wp_ajax_restore_tables", array(__CLASS__, 'ajax_restore_tables'));
         add_action("wp_ajax_restore_solid_tables", array(__CLASS__, 'ajax_restore_solid_tables'));
+        add_action('wp_ajax_' . static::DATABASE_UPDATER_OPTION_NAME, [__CLASS__, 'handle_request']);
         add_filter('wp-table-builder/filter/settings_manager_frontend_data', [__CLASS__, 'settings_menu_data']);
     }
 
@@ -58,27 +59,30 @@ class Database_Updater
         return $settings_data;
     }
 
-    public static function ajax_restore_solid_tables()
+    public static function handle_request()
     {
-        static::restore_tables_from_backup(true);
-        wp_send_json_success();
-    }
+        $instance = static::get_instance();
+        if (!(current_user_can('manage_options') && check_admin_referer(static::DATABASE_UPDATER_OPTION_NAME, 'nonce') && isset($_POST['req']))) {
+            $instance->set_error(esc_html__('You are not authorized to use this ajax endpoint.'));
+        }
 
-    public static function ajax_restore_tables()
-    {
-        static::restore_tables_from_backup();
-        wp_send_json_success();
-    }
+        if ($_POST['req'] === 'update') {
+            static::update_all_tables();
+            $instance->set_message(esc_html__('All tables updated', 'wp-table-builder'));
+        }
+        if ($_POST['req'] === 'revert') {
+            static::restore_tables_from_backup();
+            $instance->set_message(esc_html__('All tables restored', 'wp-table-builder'));
+        }
+        if ($_POST['req'] === 'solid') {
+            static::restore_tables_from_backup(true);
+            $instance->set_message(esc_html__('All original tables restored', 'wp-table-builder'));
+        }
+        if ($_POST['req'] === 'status') {
+            $instance->append_response_data(get_option('wptb_db_migrated'), 'all_updated');
+        }
 
-    public static function ajax_num_tables()
-    {
-        wp_send_json(wp_count_posts('wptb-tables')->draft);
-    }
-
-    public static function ajax_update_all_tables()
-    {
-        static::update_all_tables();
-        wp_send_json_success();
+        $instance->send_json();
     }
 
     public static function load_tables($meta_key = self::TABLE_META_KEY)
@@ -118,6 +122,8 @@ class Database_Updater
                 update_post_meta($id, '_wptb_content_', $newTable);
             }
         }
+
+        update_option('wptb_db_migrated', true);
     }
 
     public static function get_table_version($table)
@@ -142,7 +148,10 @@ class Database_Updater
 
     public static function update_table_version(&$table)
     {
-        $table->querySelector('table')->setAttribute('wptb-table-version', NS\PLUGIN_VERSION);
+        $el = $table->querySelector('table');
+        if (is_null($el)) return;
+
+        $el->setAttribute('wptb-table-version', NS\PLUGIN_VERSION);
         return $table;
     }
 
@@ -160,7 +169,7 @@ class Database_Updater
             update_post_meta($id, static::SOLID_BACKUP_META_KEY, $table);
         }
 
-        add_option('wptb_solid_backups', true);
+        update_option('wptb_solid_backups', true);
     }
 
     public static function restore_tables_from_backup($solid = false)
@@ -178,6 +187,8 @@ class Database_Updater
                 delete_post_meta($id, static::BACKUP_META_KEY);
         }
         wp_reset_postdata();
+
+        update_option('wptb_db_migrated', false);
     }
 
     public static function get_clean_table($dom)

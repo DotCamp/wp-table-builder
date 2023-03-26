@@ -136,13 +136,18 @@ export default {
                 throw new Error(resp.error);
             }
 
+            this.setBusy(false);
+
             return resp;
         },
     },
-    mounted() {
-        const { allUpdated, allReverted } = this.sendAJAXReq("info");
-        this.allUpdated = allUpdated;
-        this.allReverted = allReverted;
+    async mounted() {
+        const res = await this.sendAJAXReq("status");
+
+        if (res.data.all_updated) {
+            allUpdated = true;
+            allReverted = false;
+        }
     },
 };
 </script>

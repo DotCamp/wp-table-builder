@@ -32287,8 +32287,9 @@ var _default = {
                 _this5.setBusy(false);
                 throw new Error(resp.error);
               case 18:
+                _this5.setBusy(false);
                 return _context5.abrupt("return", resp);
-              case 19:
+              case 20:
               case "end":
                 return _context5.stop();
             }
@@ -32298,11 +32299,28 @@ var _default = {
     }
   },
   mounted: function mounted() {
-    var _this$sendAJAXReq = this.sendAJAXReq("info"),
-      allUpdated = _this$sendAJAXReq.allUpdated,
-      allReverted = _this$sendAJAXReq.allReverted;
-    this.allUpdated = allUpdated;
-    this.allReverted = allReverted;
+    var _this6 = this;
+    return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
+      var res;
+      return _regenerator.default.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.next = 2;
+              return _this6.sendAJAXReq("status");
+            case 2:
+              res = _context6.sent;
+              if (res.data.all_updated) {
+                allUpdated = true;
+                allReverted = false;
+              }
+            case 4:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6);
+    }))();
   }
 };
 exports.default = _default;
