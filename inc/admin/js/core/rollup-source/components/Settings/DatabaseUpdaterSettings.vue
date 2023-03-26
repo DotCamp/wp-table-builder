@@ -13,19 +13,28 @@
                         :disabled="isBusy() || allUpdated"
                     >
                         {{ strings.updateButton }}
-                        <busy-rotate v-if="isBusy() && updating" />
+                        <busy-rotate v-if="updating" />
                     </menu-button>
                     <menu-button
                         @click="revertTables"
                         :disabled="isBusy() || allReverted"
                     >
                         {{ strings.revertButton }}
-                        <busy-rotate v-if="isBusy() && reverting" />
+                        <busy-rotate v-if="reverting" />
                     </menu-button>
-                    <!-- <menu-button :disabled="buttonDisabledState">
+                    <menu-button
+                        @click="redoUpdates"
+                        :disabled="isBusy() || allReverted"
+                    >
+                        Redo Updates
+                    </menu-button>
+                    <menu-button
+                        type="danger"
+                        @click="resetTables"
+                        :disabled="isBusy()"
+                    >
                         {{ strings.resetUpdates }}
-                        <busy-rotate />
-                    </menu-button> -->
+                    </menu-button>
                 </div>
             </div>
         </menu-content>
@@ -57,70 +66,83 @@ export default {
         };
     },
     methods: {
-        updateTables() {
-            this.setBusy(true);
+        async updateTables() {
             this.updating = true;
 
-            setTimeout(() => {
+            try {
+                const { message } = await this.sendAJAXReq("update");
                 this.allUpdated = true;
                 this.allReverted = false;
-                this.setBusy(false);
-                this.updating = false;
-            }, 5000);
+                this.setMessage({ message: message });
+            } catch (e) {
+                this.setMessage({
+                    type: "error",
+                    message: `An error occurred while updating tables: ${e.message}`,
+                });
+            }
+
+            this.updating = false;
         },
-        revertTables() {
-            this.setBusy(true);
+        async revertTables() {
             this.reverting = true;
 
-            setTimeout(() => {
+            try {
+                const { message } = await this.sendAJAXReq("revert");
                 this.allUpdated = false;
                 this.allReverted = true;
-                this.setBusy(false);
-                this.reverting = false;
-            }, 5000);
+                this.setMessage({ message: message });
+            } catch (e) {
+                this.setMessage({
+                    type: "error",
+                    message: `An error occurred while reverting tables: ${e.message}`,
+                });
+            }
+
+            this.reverting = false;
         },
-        sendSavedStyles() {
-            // set application to busy state
+        async redoUpdates() {
+            await this.revertTables();
+            await this.updateTables();
+        },
+        async resetTables() {
+            await this.sendAJAXReq("solid");
+
+            this.allUpdated = false;
+            this.allReverted = true;
+        },
+        async sendAJAXReq(req) {
             this.setBusy(true);
 
-            // prepare form data that will be sent with REST request
             const { ajaxUrl, nonce, action } = this.sectionData.security;
             const formData = new FormData();
             formData.append("action", action);
             formData.append("nonce", nonce);
-            formData.append("styles", this.code);
+            formData.append("req", req);
 
-            fetch(ajaxUrl, { method: "POST", body: formData })
-                .then((res) => {
-                    if (res.ok) {
-                        return res.json();
-                    }
-                    throw new Error(
-                        `An error occurred while saving CSS code: ${res.statusText}`
-                    );
-                })
-                .then((resp) => {
-                    console.log("resp", resp);
-                    if (resp.error) {
-                        throw new Error(
-                            `An error occurred while saving CSS code: ${resp.error}`
-                        );
-                    } else {
-                        this.setMessage({ message: resp.message });
-                        this.updateCachedCode();
-                    }
-                })
-                .catch((err) => {
-                    this.setMessage({
-                        type: "error",
-                        message: err.message,
-                    });
-                })
-                .finally(() => {
-                    // get application out from busy state
-                    this.setBusy(false);
-                });
+            const res = await fetch(ajaxUrl, {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) {
+                this.setBusy(false);
+                throw new Error(res.statusText);
+            }
+
+            const resp = await res.json();
+
+            if (resp.error) {
+                this.setBusy(false);
+                throw new Error(resp.error);
+            }
+
+            return resp;
         },
+    },
+    mounted() {
+        const { allUpdated, allReverted } = this.sendAJAXReq("info");
+        this.allUpdated = allUpdated;
+        this.allReverted = allReverted;
     },
 };
 </script>

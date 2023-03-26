@@ -3,16 +3,16 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use WP_Table_Builder as NS;
-use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use WP_Query;
 use Gt\Dom\HTMLDocument;
 use WP_Table_Builder\Inc\Admin\Managers\Table_Updates;
+use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 
 class Database_Updater
 {
     use Singleton_Trait;
-    use Init_Once;
+    use Ajax_Response;
 
     const TABLE_META_KEY = '_wptb_content_';
     const BACKUP_META_KEY = '_wptb_content_backup_';
@@ -53,7 +53,7 @@ class Database_Updater
         ];
 
         // add general styles related data to admin settings menu frontend
-        $settings_data['data']['generalStyles'] = ['security' => $security];
+        $settings_data['data']['databaseUpdater'] = ['security' => $security];
 
         return $settings_data;
     }
