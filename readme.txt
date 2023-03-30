@@ -2,7 +2,7 @@
 Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
-Tested up to: 6.1
+Tested up to: 6.2
 Stable tag: 1.4.8
 Requires PHP: 5.6
 License: GPL3+
