@@ -90,6 +90,13 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.4.9 =
+
+* Compatibility with WordPress 6.2.
+* Fix: Fatal PHP error due to Freemius API.
+* Fix: Missing translations strings.
+* Update: Minimum PHP requirement to 7.4.
+
 = 1.4.8 =
 
 * FIX: Row height minimum value lowerered to 5px.

@@ -15,7 +15,7 @@
  * Plugin Name:       WP Table Builder
  * Plugin URI:        https://wptablebuilder.com/
  * Description:       Drag and Drop Responsive Table Builder Plugin for WordPress.
- * Version:           1.4.8
+ * Version:           1.4.9
  * Author:            WP Table Builder
  * Author URI:        https://wptablebuilder.com//
  * License:           GPL-3.0+
@@ -194,7 +194,7 @@ namespace WP_Table_Builder {
 		new WP_Table_Builder();
 	}
 
-	$min_php = '5.6.0';
+	$min_php = '7.4';
 
 	// Check the minimum required PHP version and run the plugin.
 	if ( version_compare( PHP_VERSION, $min_php, '>=' ) ) {
