@@ -26,16 +26,6 @@ class ComposerStaticInit75b016624a42e9e84aa68d71b0154d73
             'Symfony\\Component\\DomCrawler\\' => 29,
             'Symfony\\Component\\CssSelector\\' => 30,
         ),
-        'P' => 
-        array (
-            'Psr\\Http\\Message\\' => 17,
-        ),
-        'G' => 
-        array (
-            'Gt\\PropFunc\\' => 12,
-            'Gt\\Dom\\' => 7,
-            'Gt\\CssXPath\\' => 12,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -62,22 +52,6 @@ class ComposerStaticInit75b016624a42e9e84aa68d71b0154d73
         'Symfony\\Component\\CssSelector\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/css-selector',
-        ),
-        'Psr\\Http\\Message\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-        ),
-        'Gt\\PropFunc\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpgt/propfunc/src',
-        ),
-        'Gt\\Dom\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpgt/dom/src',
-        ),
-        'Gt\\CssXPath\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpgt/cssxpath/src',
         ),
     );
 

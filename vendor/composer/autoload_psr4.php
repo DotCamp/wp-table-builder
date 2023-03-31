@@ -12,8 +12,4 @@ return array(
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Symfony\\Component\\DomCrawler\\' => array($vendorDir . '/symfony/dom-crawler'),
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
-    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
-    'Gt\\PropFunc\\' => array($vendorDir . '/phpgt/propfunc/src'),
-    'Gt\\Dom\\' => array($vendorDir . '/phpgt/dom/src'),
-    'Gt\\CssXPath\\' => array($vendorDir . '/phpgt/cssxpath/src'),
 );
