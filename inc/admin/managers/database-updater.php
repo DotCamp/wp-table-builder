@@ -5,7 +5,7 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use WP_Query;
-use Gt\Dom\HTMLDocument;
+use \Wa72\HtmlPageDom\HtmlPageCrawler;
 use WP_Table_Builder\Inc\Admin\Managers\Table_Updates;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 
@@ -134,16 +134,16 @@ class Database_Updater
 
     public static function update_table($table)
     {
-        $table = new HTMLDocument($table);
+        $table = new HtmlPageCrawler($table);
 
-        Table_Updates\Image_Element::update($table);
+        // Table_Updates\Image_Element::update($table);
         Table_Updates\Icon_Element::update($table);
-        Table_Updates\Empty_Anchor::update($table);
-        Table_Updates\Button_Element::update($table);
+        // Table_Updates\Empty_Anchor::update($table);
+        // Table_Updates\Button_Element::update($table);
 
-        static::update_table_version($table);
+        // static::update_table_version($table);
 
-        return static::get_clean_table($table);
+        return $table->saveHTML();
     }
 
     public static function update_table_version(&$table)
@@ -189,11 +189,5 @@ class Database_Updater
         wp_reset_postdata();
 
         update_option('wptb_db_migrated', false);
-    }
-
-    public static function get_clean_table($dom)
-    {
-        return explode("</body>", explode("<body>", $dom->__toString())[1])[0];
-        // return $dom->querySelector('body')->innerHTML;
     }
 }
