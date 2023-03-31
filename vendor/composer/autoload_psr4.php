@@ -6,6 +6,12 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Wa72\\HtmlPageDom\\' => array($vendorDir . '/wa72/htmlpagedom/src'),
+    'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
+    'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
+    'Symfony\\Component\\DomCrawler\\' => array($vendorDir . '/symfony/dom-crawler'),
+    'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Gt\\PropFunc\\' => array($vendorDir . '/phpgt/propfunc/src'),
     'Gt\\Dom\\' => array($vendorDir . '/phpgt/dom/src'),

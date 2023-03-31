@@ -1,6 +1,7 @@
 {
     "name": "dotcamp/wp-table-builder",
     "require": {
-        "phpgt/dom": "^4.1"
+        "phpgt/dom": "^4.1",
+        "wa72/htmlpagedom": "2.0.1"
     }
 }
