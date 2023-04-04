@@ -124,29 +124,37 @@ export default {
                 body: formData,
             });
 
+            console.debug(res);
+
             if (!res.ok) {
                 this.setBusy(false);
                 throw new Error(res.statusText);
             }
 
-            const resp = await res.json();
-
-            if (resp.error) {
+            let res_body;
+            try {
+                res_body = await res.json();
+            } catch (e) {
                 this.setBusy(false);
-                throw new Error(resp.error);
+                throw new Error("Response is not valid json", res.body);
+            }
+
+            if (res_body.error) {
+                this.setBusy(false);
+                throw new Error(res_body.error);
             }
 
             this.setBusy(false);
 
-            return resp;
+            return res_body;
         },
     },
     async mounted() {
         const res = await this.sendAJAXReq("status");
 
         if (res.data.all_updated) {
-            allUpdated = true;
-            allReverted = false;
+            this.allUpdated = true;
+            this.allReverted = false;
         }
     },
 };

@@ -136,20 +136,26 @@ class Database_Updater
     {
         $table = new HtmlPageCrawler($table);
 
-        // Table_Updates\Image_Element::update($table);
+        Table_Updates\Image_Element::update($table);
         Table_Updates\Icon_Element::update($table);
-        // Table_Updates\Empty_Anchor::update($table);
-        // Table_Updates\Button_Element::update($table);
+        Table_Updates\Empty_Anchor::update($table);
+        Table_Updates\Button_Element::update($table);
 
-        // static::update_table_version($table);
+        static::update_table_version($table);
 
-        return $table->saveHTML();
+        $html = $table->saveHTML();
+
+        $html = preg_replace('/\s{5,}/', '', $html);
+        $html = preg_replace('/\n/', '', $html);
+
+        return $html;
     }
 
     public static function update_table_version(&$table)
     {
-        $el = $table->querySelector('table');
-        if (is_null($el)) return;
+        if ($table->filter('table')->count() !== 1) return;
+
+        $el = $table->filter('table')->first();
 
         $el->setAttribute('wptb-table-version', NS\PLUGIN_VERSION);
         return $table;
