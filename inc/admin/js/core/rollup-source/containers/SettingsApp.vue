@@ -123,6 +123,13 @@ export default {
                 return key;
             }
         });
+
+        if (
+            new URLSearchParams(window.location.search).get("section") ===
+            "updater"
+        ) {
+            this.currentSection = "databaseUpdater";
+        }
     },
     computed: {
         sectionData() {

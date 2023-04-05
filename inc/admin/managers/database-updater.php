@@ -22,12 +22,26 @@ class Database_Updater
 
     public static function init()
     {
+        if (get_option('wptb_db_version') !== NS\PLUGIN_VERSION && $_GET['page'] !== 'wp-table-builder-settings') {
+            add_action('admin_notices', array(__CLASS__, 'admin_notice'));
+        }
+
         add_action("wp_ajax_update_all", array(__CLASS__, 'ajax_update_all_tables'));
         add_action("wp_ajax_get_tables_num", array(__CLASS__, 'ajax_num_tables'));
         add_action("wp_ajax_restore_tables", array(__CLASS__, 'ajax_restore_tables'));
         add_action("wp_ajax_restore_solid_tables", array(__CLASS__, 'ajax_restore_solid_tables'));
         add_action('wp_ajax_' . static::DATABASE_UPDATER_OPTION_NAME, [__CLASS__, 'handle_request']);
         add_filter('wp-table-builder/filter/settings_manager_frontend_data', [__CLASS__, 'settings_menu_data']);
+    }
+
+    public static function admin_notice()
+    {
+        echo '<div class="notice notice-warning is-dismissible wptb-update-message"> <p>
+                WP Table Builder: Your tables may be out of date.
+                Run the Database Updater to update the tables and make them compatible with the new version of WP Table Builder.
+                <a href=' . admin_url("admin.php?page=wp-table-builder-settings&section=updater") . '>Update now</a>
+            </p>
+        </div>';
     }
 
     public static function settings_menu_data($settings_data)
@@ -123,7 +137,7 @@ class Database_Updater
             }
         }
 
-        update_option('wptb_db_migrated', true);
+        update_option('wptb_db_version', NS\PLUGIN_VERSION);
     }
 
     public static function get_table_version($table)
