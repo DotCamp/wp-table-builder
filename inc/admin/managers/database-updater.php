@@ -33,7 +33,7 @@ class Database_Updater
     public static function settings_menu_data($settings_data)
     {
         $extra_style_strings = [
-            'updaterDesc'  => esc_html__('Update the tables in you database to the latest version.', 'wp-table-builder'),
+            'updaterDesc'  => esc_html__('Update the tables in your database to the latest version.', 'wp-table-builder'),
             'updateButton' => esc_html__('Update all tables', 'wp-table-builder'),
             'revertButton' => esc_html__('Roll back update', 'wp-table-builder'),
             'resetUpdates' => esc_html__('Reset Updates (Restore solid tables)', 'wp-table-builder'),
