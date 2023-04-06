@@ -22,24 +22,22 @@ class Database_Updater
 
     public static function init()
     {
-        if (get_option('wptb_db_version') !== NS\PLUGIN_VERSION && $_GET['page'] !== 'wp-table-builder-settings') {
+        if (get_option('wptb-update-notice-disabled-' . NS\PLUGIN_VERSION) === false && get_option('wptb_db_version') !== NS\PLUGIN_VERSION && $_GET['page'] !== 'wp-table-builder-settings') {
             add_action('admin_notices', array(__CLASS__, 'admin_notice'));
         }
 
-        add_action("wp_ajax_update_all", array(__CLASS__, 'ajax_update_all_tables'));
-        add_action("wp_ajax_get_tables_num", array(__CLASS__, 'ajax_num_tables'));
-        add_action("wp_ajax_restore_tables", array(__CLASS__, 'ajax_restore_tables'));
-        add_action("wp_ajax_restore_solid_tables", array(__CLASS__, 'ajax_restore_solid_tables'));
         add_action('wp_ajax_' . static::DATABASE_UPDATER_OPTION_NAME, [__CLASS__, 'handle_request']);
         add_filter('wp-table-builder/filter/settings_manager_frontend_data', [__CLASS__, 'settings_menu_data']);
     }
 
     public static function admin_notice()
     {
+        $dismiss_url = admin_url("admin-ajax.php?action=" . static::DATABASE_UPDATER_OPTION_NAME . "&nonce=" . wp_create_nonce(static::DATABASE_UPDATER_OPTION_NAME)) . "&req=dismiss";
         echo '<div class="notice notice-warning is-dismissible wptb-update-message"> <p>
                 WP Table Builder: Your tables may be out of date.
                 Run the Database Updater to update the tables and make them compatible with the new version of WP Table Builder.
                 <a href=' . admin_url("admin.php?page=wp-table-builder-settings&section=updater") . '>Update now</a>
+                <a href=' . $dismiss_url . '>Dismiss</a>
             </p>
         </div>';
     }
@@ -76,7 +74,7 @@ class Database_Updater
     public static function handle_request()
     {
         $instance = static::get_instance();
-        if (!(current_user_can('manage_options') && check_admin_referer(static::DATABASE_UPDATER_OPTION_NAME, 'nonce') && isset($_POST['req']))) {
+        if (!(current_user_can('manage_options') && check_admin_referer(static::DATABASE_UPDATER_OPTION_NAME, 'nonce') && isset($_REQUEST['req']))) {
             $instance->set_error(esc_html__('You are not authorized to use this ajax endpoint.'));
         }
 
@@ -94,6 +92,11 @@ class Database_Updater
         }
         if ($_POST['req'] === 'status') {
             $instance->append_response_data(get_option('wptb_db_migrated'), 'all_updated');
+        }
+        if ($_GET['req'] === 'dismiss') {
+            update_option('wptb-update-notice-disabled-' . NS\PLUGIN_VERSION, true);
+            wp_redirect(admin_url());
+            exit;
         }
 
         $instance->send_json();
