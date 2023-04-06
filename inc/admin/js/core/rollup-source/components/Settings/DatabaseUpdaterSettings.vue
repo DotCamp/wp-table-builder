@@ -22,7 +22,7 @@
                         {{ strings.revertButton }}
                         <busy-rotate v-if="reverting" />
                     </menu-button>
-                    <menu-button
+                    <!-- <menu-button
                         @click="redoUpdates"
                         :disabled="isBusy() || allReverted"
                     >
@@ -34,7 +34,7 @@
                         :disabled="isBusy()"
                     >
                         {{ strings.resetUpdates }}
-                    </menu-button>
+                    </menu-button> -->
                 </div>
             </div>
         </menu-content>
