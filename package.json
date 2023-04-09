@@ -69,6 +69,7 @@
         "@vue/component-compiler-utils": "^3.1.2",
         "@wordpress/eslint-plugin": "^7.2.1",
         "@wordpress/scripts": "^12.2.1",
+        "adm-zip": "^0.5.10",
         "babel-eslint": "^10.1.0",
         "babel-plugin-proxy": "^1.1.0",
         "babel-plugin-transform-es2017-object-entries": "^0.0.5",
