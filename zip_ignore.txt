@@ -1,12 +1,7 @@
-node_modules
 .git
 .cache
-inc/admin/css/src
-inc/admin/js/core
-inc/frontend/js/frontend-only
+node_modules
 uploads
-*.js.map
-*.css.map
 .eslintrc.json
 .gitignore
 composer.json
@@ -21,3 +16,10 @@ webpack.config.js
 wp-table-builder.zip
 yarn.lock
 zip_ignore.txt
+
+inc/admin/css/src
+inc/admin/js/core
+inc/frontend/js/frontend-only
+
+*.js.map
+*.css.map
