@@ -1,8 +1,8 @@
 node_modules
 .git
 .cache
-inc\admin\css\src
-inc\admin\js\core
+inc/admin/css/src
+inc/admin/js/core
 uploads
 *.js.map
 *.css.map

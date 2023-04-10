@@ -8,7 +8,13 @@ const zip = new AdmZip();
 const ignoreList = fs
     .readFileSync("zip_ignore.txt", "utf-8")
     .split("\n")
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((ignorePath) => {
+        return ignorePath.split('/').join(path.sep);
+      })
+    .map((ignorePath) => {
+        return ignorePath.split('\\').join(path.sep);
+      });
 
 const wildcards = ignoreList
     .filter((item) => item.includes("*"))
