@@ -3,6 +3,7 @@ node_modules
 .cache
 inc/admin/css/src
 inc/admin/js/core
+inc/frontend/js/frontend-only
 uploads
 *.js.map
 *.css.map
