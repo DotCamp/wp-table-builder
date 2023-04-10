@@ -45,6 +45,8 @@ const walk = function (folderPath, zipPath) {
     });
 };
 
+console.log("Creating plugin zip...")
 walk(".", ""); // Start walking from the current directory with an empty zipPath
 
 zip.writeZip("wp-table-builder.zip");
+console.log("Plugin zip wp-table-builder.zip created")
