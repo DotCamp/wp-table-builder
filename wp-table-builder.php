@@ -33,7 +33,7 @@ namespace {
      */
     function wptb_render_table($table_id)
     {
-        echo do_shortcode("[wptb id=${table_id}]");
+        echo do_shortcode("[wptb id={$table_id}]");
     }
 }
 
