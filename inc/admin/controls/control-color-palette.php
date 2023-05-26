@@ -47,7 +47,7 @@ class Control_Color_Palette extends Base_Control {
         WPTB_ControlsManager.setControlData(uniqueItemClass, data);
         const elemContainer = data.elemContainer;
 
-        data.defaultValue = data.defaultValue || '#4A5568';
+        data.defaultValue = data.defaultValue || '#000000';
         #>
         <div id="{{{uniqueItemClass}}}">
             <color-palette-control :label="label" :selectors="selectors" :default-value="defaultValue"
