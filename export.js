@@ -1,52 +1,31 @@
 const fs = require("fs");
-const AdmZip = require("adm-zip");
 const path = require("path");
+const archiver = require("archiver");
 
-// Create a new AdmZip instance
-const zip = new AdmZip();
+const archive = archiver("zip", {
+    zlib: { level: 9 },
+});
 
-const ignoreList = fs
-    .readFileSync("zip_ignore.txt", "utf-8")
-    .split("\n")
-    .filter(Boolean)
-    .map((ignorePath) => {
-        return ignorePath.split('/').join(path.sep);
-      })
-    .map((ignorePath) => {
-        return ignorePath.split('\\').join(path.sep);
-      });
+const output = fs.createWriteStream(
+    path.join(__dirname, "wp-table-builder.zip")
+);
 
-const wildcards = ignoreList
-    .filter((item) => item.includes("*"))
-    .map((item) => item.replaceAll(".", "\\.").replace("*", ".*"));
+archive.pipe(output);
 
-// Add files and folders to the zip, excluding the ones in the ignore list
-const walk = function (folderPath, zipPath) {
-    fs.readdirSync(folderPath).forEach((item) => {
-        const itemPath = `${folderPath}/${item}`;
-        const relativePath = path.join(zipPath, item);
+const ignoreList = fs.readFileSync("zip_ignore.txt", "utf-8").split("\n");
 
-        const matched = wildcards.reduce(
-            (acc, pattern) => acc || !!relativePath.match(pattern),
-            false
-        );
+console.log("Creating plugin zip...");
 
-        if (!ignoreList.includes(relativePath) && !matched) {
-            if (fs.statSync(itemPath).isFile()) {
-                // Read the contents of the file
-                const data = fs.readFileSync(itemPath);
-                // Add the file to the zip with a different entry name to avoid creating a folder with the same name
-                // console.log(relativePath);
-                zip.addFile(relativePath, data);
-            } else {
-                walk(itemPath, relativePath);
-            }
-        }
-    });
-};
+archive.glob("**/!(*.css.map|*.js.map)", {
+    ignore: ignoreList,
+});
 
-console.log("Creating plugin zip...")
-walk(".", ""); // Start walking from the current directory with an empty zipPath
+archive.finalize();
 
-zip.writeZip("wp-table-builder.zip");
-console.log("Plugin zip wp-table-builder.zip created")
+output.on("close", () => {
+    console.log("Plugin zip wp-table-builder.zip created");
+});
+
+archive.on("error", (err) => {
+    console.error("Error creating archive:", err);
+});
