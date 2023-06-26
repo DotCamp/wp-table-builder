@@ -3,7 +3,7 @@ Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplu
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 6.2
-Stable tag: 1.4.8
+Stable tag: 1.4.10
 Requires PHP: 7.4
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -89,6 +89,12 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.4.10 =
+
+* Fixed an issue with progress bar label.
+* Fixed deprecation notices.
+* Creation of dynamic property is deprecated.
 
 = 1.4.9 =
 
