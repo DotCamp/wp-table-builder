@@ -401,7 +401,7 @@ class Button_Element extends Element_Base {
                     </div>
                     <div class="wptb-button-label" style="display: none;">
                         <div class="wptb-button-label-decorator"></div>
-                        <div class="wptb-button-label-text"></div>
+                        <div class="wptb-button-label-text">label</div>
                     </div>
                 </div>
             </span>
