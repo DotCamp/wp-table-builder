@@ -344,11 +344,37 @@ class Button_Element extends Element_Base {
             ],
         ];
 
+        $label_controls = [
+            'proButtonLabelEnable' =>
+            [
+                'label'     => __('Enable Button Label', 'wp-table-builder'),
+                'type'      => Controls_Manager::TOGGLE,
+                'selectors' => [],
+            ],
+            'proButtonLabelColor' => [
+                'label'        => __('Label Color', 'wp-table-builder'),
+                'type'         => Controls_Manager::COLOR_PALETTE,
+                'selectors'    => [],
+                'defaultValue' => '#FFFFFF'
+            ],
+            'proButtonLabelTextColor' => [
+                'label'        => __('Text Color', 'wp-table-builder'),
+                'type'         => Controls_Manager::COLOR_PALETTE,
+                'selectors'    => [],
+                'defaultValue' => '#329D3F'
+            ],
+            'buttonLabelProOverlay' => [
+                'type'        => Controls_Manager::PRO_OVERLAY,
+                'featureName' => esc_html__('Button Label', 'wp-table-builder'),
+            ]
+        ];
+
         $button_controls = [
             esc_html__('general', 'wp-table-builder') => $general_controls,
             esc_html__('link', 'wp-table-builder')    => $link_controls,
             esc_html__('hover', 'wp-table-builder')   => $hover_controls,
             esc_html__('icon', 'wp-table-builder')    => $icon_controls,
+            esc_html__('label', 'wp-table-builder')   => $label_controls,
         ];
 
         Control_Section_Group_Tabbed::add_section('buttonElementOptions', __('button options', 'wp-table-builder'), $button_controls, [
@@ -372,6 +398,10 @@ class Button_Element extends Element_Base {
                 <div class="wptb-button" style="position: relative;">
                     <p><?php echo __('Button Text', 'wp-table-builder'); ?></p>
                     <div class="wptb-button-icon" data-wptb-button-icon-src="">
+                    </div>
+                    <div class="wptb-button-label" style="display: none;">
+                        <div class="wptb-button-label-decorator"></div>
+                        <div class="wptb-button-label-text"></div>
                     </div>
                 </div>
             </span>
