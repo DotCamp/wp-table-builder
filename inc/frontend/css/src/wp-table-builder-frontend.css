@@ -290,7 +290,7 @@ table.wptb-preview-table {
 }
 
 .wptb-plugin-button-order-right .wptb-button-icon {
-    order: 2;
+    order: 0;
 }
 
 .wptb-ph-element .wptb-button p {
