@@ -1,8 +1,8 @@
 === WP Table Builder - WordPress Table Plugin ===
-Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
+Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembircan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
-Tested up to: 6.3
+Tested up to: 6.4
 Stable tag: 1.4.13
 Requires PHP: 7.4
 License: GPL3+
@@ -92,7 +92,11 @@ That's it. You're done!
 
 = 1.4.13 =
 
+* FIX: An issue with responsive builder stuck at rebuild phase.
+* FIX: An issue with progress bar in webkit browsers.
 * FIX: An issue with pro upsell popping up when trying to change background colors.
+* IMPROVE: Compatibility with WordPress 6.4.
+* PRO: IMPROVE: Label support in button element.
 
 = 1.4.12 =
 
