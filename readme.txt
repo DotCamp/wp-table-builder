@@ -94,6 +94,7 @@ That's it. You're done!
 
 * Fix: PHP deprecation error.
 * Tested with WordPress 6.5.
+* Freemius SDK update.
 
 = 1.4.13 =
 
