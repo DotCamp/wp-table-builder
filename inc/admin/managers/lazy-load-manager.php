@@ -19,7 +19,6 @@ use function current_user_can;
 use function do_action;
 use function esc_html__;
 use function get_bloginfo;
-use function mb_convert_encoding;
 use function mb_encode_numericentity;
 use function update_option;
 use function wp_create_nonce;

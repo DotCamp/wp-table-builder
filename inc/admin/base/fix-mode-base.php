@@ -7,6 +7,7 @@ use Exception;
 use function get_bloginfo;
 use function get_post_meta;
 use function get_post_type;
+use function mb_encode_numericentity;
 
 /**
  * Class for main process logic for specific fix operations.
@@ -40,7 +41,11 @@ abstract class Fix_Mode_Base {
 	protected final function create_dom_handler( $content ) {
 		if ( function_exists( 'mb_convert_encoding' ) ) {
 			$site_charset    = get_bloginfo( 'charset' );
-			$encoded_content = mb_convert_encoding( $content, "HTML-ENTITIES", $site_charset );
+			$encoded_content = mb_encode_numericentity(
+				$content,
+				[ 0x80, 0x10ffff, 0, 0xffff ],
+				$site_charset
+			);
 
 			return $this->create_dom_handler_base( $encoded_content );
 
