@@ -37,7 +37,7 @@
 			);
 
 			// only start preparing tables for scroll functionality if backend didn't
-			// main factor for that is if server didn't implement `mb_convert_encoding` function
+			// main factor for that is if server didn't implement `mb_encode_numericentity` function
 			if (frontendCalculationStatus) {
 				tableElements.map(prepareTableForScroll);
 			}

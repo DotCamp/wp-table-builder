@@ -124,15 +124,14 @@ class Lazy_Load_Manager extends Setting_Base {
 	 */
 	public static function table_html_shortcode( $html, $force = false ) {
 		// ext-mbstring check
-		if ( function_exists( 'mb_convert_encoding' ) ) {
+		if ( function_exists( 'mb_encode_numericentity' ) ) {
 			$is_lazy_load_enabled = $force || static::get_instance()->get_settings()['enabled'];
 			$dom_handler          = new DOMDocument();
 
 			$charset = get_bloginfo( 'charset' );
 
-			$converted_html = mb_encode_numericentity($html,[0x80, 0x10ffff, 0, 0xffff]);
+			$converted_html = mb_encode_numericentity( $html, [ 0x80, 0x10ffff, 0, 0xffff ], $charset );
 
-			// need to provide a to_encoding value for mb_convert_encoding since that value is nullable only for PHP 8.0+
 			$handle_status = @$dom_handler->loadHTML( $converted_html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
 
 			if ( $handle_status ) {

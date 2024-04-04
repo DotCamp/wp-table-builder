@@ -39,7 +39,7 @@ abstract class Fix_Mode_Base {
 	 * @throws Exception upon unsuccessful dom parsing result
 	 */
 	protected final function create_dom_handler( $content ) {
-		if ( function_exists( 'mb_convert_encoding' ) ) {
+		if ( function_exists( 'mb_encode_numericentity' ) ) {
 			$site_charset    = get_bloginfo( 'charset' );
 			$encoded_content = mb_encode_numericentity(
 				$content,
@@ -50,7 +50,7 @@ abstract class Fix_Mode_Base {
 			return $this->create_dom_handler_base( $encoded_content );
 
 		} else {
-			throw new Exception( esc_html__( 'no mb_convert_encoding_found' ) );
+			throw new Exception( esc_html__( 'no mb_encode_numericentity found' ) );
 		}
 	}
 

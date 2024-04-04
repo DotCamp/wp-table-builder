@@ -42,7 +42,7 @@ class Scroll_Manager {
 	 */
 	public function handle_frontend_data( $data ) {
 		$data['scrollManager'] = [
-			'frontendCalculationStatus' => ! function_exists( 'mb_convert_encoding' )
+			'frontendCalculationStatus' => ! function_exists( 'mb_encode_numericentity' )
 		];
 
 		return $data;
@@ -57,12 +57,10 @@ class Scroll_Manager {
 	 *
 	 */
 	public function process_shortcode( $shortcode_html ) {
-		if ( function_exists( 'mb_convert_encoding' ) ) {
+		if ( function_exists( 'mb_encode_numericentity' ) ) {
 			$dom_handler = new DOMDocument();
 
 			$charset = get_bloginfo( 'charset' );
-
-//			$converted_shortcode_html = mb_convert_encoding( $shortcode_html, 'HTML-ENTITIES', $charset);
 
 			$converted_shortcode_html = mb_encode_numericentity(
 				$shortcode_html,
