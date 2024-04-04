@@ -8,7 +8,7 @@ use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use function add_filter;
 use function get_bloginfo;
-use function mb_convert_encoding;
+use function mb_encode_numericentity;
 
 // if called directly, abort process
 if ( ! defined( 'WPINC' ) ) {
@@ -62,7 +62,16 @@ class Scroll_Manager {
 
 			$charset = get_bloginfo( 'charset' );
 
-			$handler_status = @$dom_handler->loadHTML( mb_convert_encoding( $shortcode_html, 'HTML-ENTITIES', $charset ), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING );
+//			$converted_shortcode_html = mb_convert_encoding( $shortcode_html, 'HTML-ENTITIES', $charset);
+
+			$converted_shortcode_html = mb_encode_numericentity(
+				$shortcode_html,
+				[ 0x80, 0x10ffff, 0, 0xffff ],
+				$charset
+			);
+
+			$handler_status = @$dom_handler->loadHTML( $converted_shortcode_html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING );
+
 
 			if ( $handler_status ) {
 				$table_element = $dom_handler->getElementsByTagName( 'table' );
