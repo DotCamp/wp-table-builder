@@ -10,6 +10,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Notification_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Scroll_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Table_Render_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Template_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Upsells_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Version_Sync_Manager;
@@ -249,6 +250,9 @@ class Init
         $template_file = trailingslashit(NS\WP_TABLE_BUILDER_DIR) . 'assets/templates/templates.csv';
         // initialize template manager
         Template_Manager::init(['template_file_path' => $template_file]);
+
+		// initialize table render manager
+		Table_Render_Manager::init();
     }
 
     /**
