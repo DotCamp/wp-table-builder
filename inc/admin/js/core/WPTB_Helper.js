@@ -1951,6 +1951,11 @@ var WPTB_Helper = {
 			}
 		}
 	},
+    sanitizeXSS() {
+        document.querySelectorAll(".wptb-custom-html-wrapper").forEach((el) => {
+            el.innerHTML = DOMPurify.sanitize(el.innerHTML);
+        });
+    },
 	// function for table saving
 	saveTable(event, startSaving, previewSaving) {
 		// show save indicator
@@ -1976,6 +1981,7 @@ var WPTB_Helper = {
 		// before save event trigger
 		WPTB_Helper.wptbDocumentEventGenerate('wptb:save:before', document);
 
+        WPTB_Helper.sanitizeXSS()
 		// clean any left over artifacts related to builder
 		WPTB_Helper.tableClean();
 

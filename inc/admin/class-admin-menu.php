@@ -423,6 +423,8 @@ class Admin_Menu {
 
 			wp_register_script('wptb-admin-builder-tinymce-jquery-js', plugin_dir_url(__FILE__) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false);
 
+			wp_register_script('wptb-admin-builder-purify', plugin_dir_url(__FILE__) . 'js/purify.min.js', array(), NS\PLUGIN_VERSION, false);
+
 			wp_enqueue_style('wp-color-picker');
 
 			Helpers::enqueue_file('inc/admin/css/admin.css', [], false, 'wptb-builder-css');
@@ -430,6 +432,7 @@ class Admin_Menu {
 			wp_enqueue_script('wptb-admin-builder-tinymce-js');
 			wp_enqueue_script('wptb-admin-builder-tinymce-jquery-js');
 			wp_enqueue_script('wptb-admin-builder-js');
+			wp_enqueue_script('wptb-admin-builder-purify');
 			if (!isset($_GET['table'])) { // enqueue file with the same handler name as pro version and with a low priority to load pro version is it is enabled instead of normal version
 				wp_enqueue_script(static::$generate_menu_script_hook, plugin_dir_url(__FILE__) . 'js/WPTB_Generate.js', [], filemtime($generate_path), true);
 				$generate_data = [

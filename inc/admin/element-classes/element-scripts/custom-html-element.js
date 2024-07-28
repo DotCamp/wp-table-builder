@@ -68,7 +68,7 @@ const tinyMceInitStart = function () {
 			});
 
 			ed.on('blur', function () {
-				ed.targetElm.innerHTML = ed.targetElm.innerText;
+				ed.targetElm.innerHTML = DOMPurify.sanitize(ed.targetElm.innerText);
 			});
 
 			ed.on('click', function () {
