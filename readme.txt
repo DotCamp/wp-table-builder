@@ -90,7 +90,7 @@ That's it. You're done!
 
 == Changelog ==
 
-= 1.4.15 =
+= 1.5.0 =
 
 * Tested with WordPress 6.6.1
 * FIX: XSS in html element
