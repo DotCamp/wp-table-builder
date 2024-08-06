@@ -75,65 +75,75 @@ class Admin_Menu {
 	}
 
 	public function save_table() {
-
 		$params = json_decode(file_get_contents('php://input'));
 
-		if (
-			current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP) && wp_verify_nonce($params->security_code, 'wptb-security-nonce') ||
-			wp_verify_nonce($params->security_code, 'wptb-import-security-nonce')
-		) {
+        $verified = current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP) && wp_verify_nonce($params->security_code, 'wptb-security-nonce');
+        $import_verified = wp_verify_nonce($params->security_code, 'wptb-import-security-nonce');
 
-			if (!property_exists($params, 'id') || !absint($params->id) || get_post_status(absint($params->id)) != 'draft') {
-				$id = wp_insert_post([
-					'post_title'   => sanitize_text_field($params->title),
-					'post_content' => '',
-					'post_type'    => 'wptb-tables',
-					'post_status'  => 'draft'
-				]);
-
-				$table_content = $this->add_table_id_to_dom($params->content, $id);
-
-				// apply table content filter
-				$table_content = apply_filters('wp-table-builder/table_content', $table_content, $params);
-				add_post_meta($id, '_wptb_content_', $table_content);
-
-				// new table id filter hook
-				$id = apply_filters('wp-table-builder/new_table_id', $id, $params);
-
-				// new table saved action hook
-				do_action('wp-table-builder/new_table_saved', $id, $params);
-
-				wp_die(json_encode(['saved', $id]));
-			} else {
-				if (Init::instance()->settings_manager->current_user_allowed_for_modifications(absint($params->id))) {
-					wp_update_post([
-						'ID'           => absint($params->id),
-						'post_title'   => sanitize_text_field($params->title),
-						'post_content' => '',
-						'post_type'    => 'wptb-tables',
-						'post_status'  => 'draft'
-					]);
-					if (isset($params->preview_saving) && !empty((int) $params->preview_saving)) {
-						update_post_meta(absint($params->id), '_wptb_preview_id_', $params->preview_saving);
-						update_post_meta(absint($params->id), '_wptb_content_preview_', $params->content);
-
-						wp_die(json_encode(['preview_edited']));
-					} else {
-						// apply table content filter
-						$table_content = apply_filters('wp-table-builder/table_content', $params->content, $params);
-						update_post_meta(absint($params->id), '_wptb_content_', $table_content);
-
-						// table edited action hook
-						do_action('wp-table-builder/table_edited', $params->id, $params);
-
-						wp_die(json_encode(['edited', absint($params->id)]));
-					}
-				}
-			}
-		} else {
+		if (!$verified && !$import_verified) {
 			wp_die(json_encode(['security_problem', '']));
-		}
+        }
+
+        if (!property_exists($params, 'id') || !absint($params->id) || get_post_status(absint($params->id)) != 'draft') {
+            $id = $this->insert_table_to_db($params);
+            wp_die(json_encode(['saved', $id]));
+        }
+
+        if (Init::instance()->settings_manager->current_user_allowed_for_modifications(absint($params->id))) {
+            $this->update_table_in_db($params);
+
+            if (isset($params->preview_saving) && !empty((int) $params->preview_saving)) {
+                wp_die(json_encode(['preview_edited']));
+            } else {
+                wp_die(json_encode(['edited', absint($params->id)]));
+            }
+        }
 	}
+
+    public function insert_table_to_db($params) {
+        $id = wp_insert_post([
+            'post_title'   => sanitize_text_field($params->title),
+            'post_content' => '',
+            'post_type'    => 'wptb-tables',
+            'post_status'  => 'draft'
+        ]);
+
+        $table_content = $this->add_table_id_to_dom($params->content, $id);
+
+        // apply table content filter
+        $table_content = apply_filters('wp-table-builder/table_content', $table_content, $params);
+        add_post_meta($id, '_wptb_content_', $table_content);
+
+        // new table id filter hook
+        $id = apply_filters('wp-table-builder/new_table_id', $id, $params);
+
+        // new table saved action hook
+        do_action('wp-table-builder/new_table_saved', $id, $params);
+
+        return $id;
+    }
+
+    public function update_table_in_db($params) {
+        wp_update_post([
+            'ID'           => absint($params->id),
+            'post_title'   => sanitize_text_field($params->title),
+            'post_content' => '',
+            'post_type'    => 'wptb-tables',
+            'post_status'  => 'draft'
+        ]);
+
+        if (isset($params->preview_saving) && !empty((int) $params->preview_saving)) {
+            update_post_meta(absint($params->id), '_wptb_preview_id_', $params->preview_saving);
+            update_post_meta(absint($params->id), '_wptb_content_preview_', $params->content);
+        } else {
+            // apply table content filter
+            $table_content = apply_filters('wp-table-builder/table_content', $params->content, $params);
+            update_post_meta(absint($params->id), '_wptb_content_', $table_content);
+
+            // table edited action hook
+            do_action('wp-table-builder/table_edited', $params->id, $params);
+        }
+    }
 
 	/**
 	 * Add necessary data to table content for getting its id from HTML element properties and classes.
