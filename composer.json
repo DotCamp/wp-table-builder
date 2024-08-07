@@ -1,0 +1,6 @@
+{
+    "name": "dotcamp/wp-table-builder",
+    "require": {
+        "rhukster/dom-sanitizer": "^1.0"
+    }
+}
