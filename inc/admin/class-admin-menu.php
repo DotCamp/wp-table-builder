@@ -10,6 +10,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Factory\Dom_Document_Factory;
 use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Core\Init;
+use Rhukster\DomSanitizer\DOMSanitizer;
 use function add_query_arg;
 use function admin_url;
 use function apply_filters;
@@ -110,6 +111,11 @@ class Admin_Menu {
 
         $table_content = $this->add_table_id_to_dom($params->content, $id);
 
+        $sanitizer = new DOMSanitizer(DOMSanitizer::HTML);
+        $table_content = $sanitizer->sanitize( $table_content, [
+            'remove-html-tags' => false,
+        ]);
+
         // apply table content filter
         $table_content = apply_filters('wp-table-builder/table_content', $table_content, $params);
         add_post_meta($id, '_wptb_content_', $table_content);
@@ -132,12 +138,22 @@ class Admin_Menu {
             'post_status'  => 'draft'
         ]);
 
+        $sanitizer = new DOMSanitizer(DOMSanitizer::HTML);
+
         if (isset($params->preview_saving) && !empty((int) $params->preview_saving)) {
             update_post_meta(absint($params->id), '_wptb_preview_id_', $params->preview_saving);
-            update_post_meta(absint($params->id), '_wptb_content_preview_', $params->content);
+            $table_preview_content = $sanitizer->sanitize( $params->content, [
+                'remove-html-tags' => false,
+            ]);
+            update_post_meta(absint($params->id), '_wptb_content_preview_', $table_preview_content);
         } else {
             // apply table content filter
             $table_content = apply_filters('wp-table-builder/table_content', $params->content, $params);
+
+            $table_content = $sanitizer->sanitize( $table_content, [
+                'remove-html-tags' => false,
+            ]);
+
             update_post_meta(absint($params->id), '_wptb_content_', $table_content);
 
             // table edited action hook
