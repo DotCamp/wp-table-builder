@@ -6,3 +6,5 @@ node_modules/
 /nbproject
 uploads
 wp-table-builder.zip
+
+vendor/php-stubs
