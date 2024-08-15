@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
+use WP_Table_Builder\Inc\Admin\Element_Classes\TableRenderer;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Dummy_Element_base;
 use WP_Table_Builder as NS;
@@ -56,5 +57,52 @@ class Circle_Rating_Element extends Dummy_Element_base {
 	 */
 	public function get_url_icon() {
 		return wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/circle-rating-star.svg' );
+	}
+    
+	public static function render($block) {
+		$props = $block['props'];
+
+		$style = TableRenderer::generate_css_string([
+			'margin' => $props['margin'] ?? '',
+			'padding' => $props['padding'] ?? '',
+		]);
+
+		$size = esc_attr($props['size'] ?? '100px');
+		$value = (float) $props['value'] ?? '37';
+		$unit = $props['ratingType'] ?? null === 'number' ? '':'%';
+		$color = esc_attr($props['color'] ?? 'rgb(48, 123, 187)');
+		$total = (float) $props['totalNumber'] ?? '100';
+
+		$angle = ($value / $total) * 360;
+
+
+		return <<<HTML
+		<div
+		  class="wptb-circle_rating-container wptb-ph-element wptb-element-circle_rating-2"
+		  data-percentage-count="{$value}"
+		  data-wptb-total-number="{$total}"
+		  style="{$style}"
+		>
+		  <div class="wptb-rating-circle-wrapper" style="font-size: {$size}">
+		    <span style="color: {$color}">{$value}{$unit}</span>
+		    <div
+		      class="wptb-rating-circle-slice"
+		      style="clip: rect(0em, 1em, 1em, 0.5em)"
+		    >
+		      <div
+		        class="wptb-rating-circle-bar"
+		        style="border-color: {$color}; transform: rotate(0deg)"
+		      ></div>
+		      <div
+		        class="wptb-rating-circle-fill"
+		        style="
+		          border-color: {$color};
+		          transform: rotate({$angle}deg);
+		        "
+		      ></div>
+		    </div>
+		  </div>
+		</div>
+		HTML;
 	}
 }

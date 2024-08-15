@@ -364,6 +364,7 @@ var WPTB_BlockSerializer = {
         ratingType:
           el.dataset.wptbRatingType === "number" ? "number" : "percent",
         value: el.dataset.percentageCount || "37",
+        total: el.dataset.wptbTotalNumber || "10",
 
         padding: el.style.padding,
         margin: el.style.margin,
@@ -547,7 +548,7 @@ var WPTB_BlockSerializer = {
     return {
       type: "progressBar",
       props: {
-        value: labelEl?.textContent || "0%",
+        value: parseInt(labelEl?.textContent || "0"),
         thickness: prBar?.style.strokeWidth,
         primaryColor: el
           .querySelector(".wptb-progress-bar-path")

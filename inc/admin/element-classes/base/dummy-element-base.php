@@ -39,7 +39,4 @@ abstract class Dummy_Element_base extends Element_Base {
 		return Elements_Manager::PRO;
 	}
 
-	public static function render($element) {
-		return '';
-	}
 }

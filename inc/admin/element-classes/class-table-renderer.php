@@ -105,8 +105,20 @@ class TableRenderer
             if ($props['stickyTopRow'] && $i == 0) {
                 $attrs = 'data-wptb-sticky-row="true"';
             }
+            $hoverColor = '';
+            if ($i === 0 && isset($props['hoverHeaderBg']) && $props['hoverHeaderBg'] !== '') {
+                $hoverColor = $props['hoverHeaderBg'];
+            } elseif ($i % 2 === 0) {
+                if (isset($props['hoverOddRowBg']) && $props['hoverOddRowBg'] !== ''){
+                    $hoverColor = $props['hoverOddRowBg'];
+                }
+            } elseif (isset($props['hoverEvenRowBg']) && $props['hoverEvenRowBg'] !== '') {
+                $hoverColor = $props['hoverEvenRowBg'];
+            }
+            
             $style = self::generate_css_string([
-                'background-color' => $row['props']['background'] ?? ''
+                'background-color' => $row['props']['background'] ?? '',
+                '--hover-bg-color' => $hoverColor,
             ]);
             $tbody .= <<<HTML
             <tr $attrs class="wptb-row {$classNames}" style="{$style}">$cells</tr>
@@ -134,7 +146,6 @@ class TableRenderer
             "height" => $props['height'] ?? "",
             "width" => $props['width'] ?? "",
             "background-color" => $props['background'] ?? '',
-
         ]);
 
         $attrs = self::generate_attrs_string([
