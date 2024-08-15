@@ -14,14 +14,17 @@ var WPTB_Stringifier = function (codeMain) {
 
   const tableProps = {
     alignment: data.wptbTableAlignment || "center",
-    enableMaxWidth: data.wptbApplyTableContainerMaxWidth ? true : false,
+    enableMaxWidth: data.wptbApplyTableContainerMaxWidth ? 1 : false,
     maxWidth: data.wptbTableContainerMaxWidth || "700",
     cellMinWidth: data.wptbTdWidthAuto || "120",
-    sortHorizontal: data.wptbSortableTableHorizontal == "1" ? true : false,
-    sortVertical: data.wptbSortableTableVertical == "1" ? true : false,
+    sortHorizontal: data.wptbSortableTableHorizontal == "1" ? 1 : false,
+    sortVertical: data.wptbSortableTableVertical == "1" ? 1 : false,
     separateCells: tableStyle.borderCollapse !== "collapse" ? true : false,
     tableSpacingX: data.borderSpacingColumns || "3",
     tableSpacingY: data.borderSpacingRows || "3",
+    cols: data.tableColumns,
+    cellsWidthAutoCount: data.wptbCellsWidthAutoCount,
+    tdSumMaxWidth: data.wptbTableTdsSumMaxWidth,
 
     // Global Font Style
     fontColor: tBodyData.globalFontColor || "#000000",
@@ -36,22 +39,23 @@ var WPTB_Stringifier = function (codeMain) {
     // columnBorderOnly: null, // It's in the directives
 
     // Other
-    scrollX: data.wptbHorizontalScrollStatus === "true" ? true : false,
-    disableThemeStyles: data.wptbDisableThemeStyles === "1" ? true : false,
+    scrollX: data.wptbHorizontalScrollStatus,
+    disableThemeStyles: data.wptbDisableThemeStyles === "1" ? 1 : false,
     extraStyles: data.wptbExtraStyles || "",
-    stickyFirstColumn: data.wptbFirstColumnSticky === "true" ? true : false,
+    stickyFirstColumn: data.wptbFirstColumnSticky,
     stickyTopRow:
       codeMain.querySelector("tr")?.dataset?.wptbStickyRow === "true"
         ? true
         : false,
-    paginationEnable: data.wptbPaginationEnable === "true" ? true : false,
-    paginationTopRowAsHeader:
-      data.wptbProPaginationTopRowHeader === "true" ? true : false,
+    paginationEnable: data.wptbPaginationEnable === "true" ? "true" : false,
+    paginationTopRowAsHeader: (
+      data.wptbProPaginationTopRowHeader === "true"
+    ).toString(),
     rowsPerPage: data.wptbRowsPerPage || "10",
-    rowsChangeable: data.wptbRowsChangeable === "true" ? true : false,
+    rowsChangeable: data.wptbRowsChangeable === "true" ? "true" : false,
 
-    searchEnable: data.wptbSearchEnable === "true" ? true : false,
-    searchKeepHeader: data.wptbProSearchTopRowHeader === "true" ? true : false,
+    searchEnable: data.wptbSearchEnable === "true" ? "true" : false,
+    searchKeepHeader: (data.wptbProSearchTopRowHeader === "true").toString(),
     searchPosition: data.wptbSearchbarPosition || "left",
     role: codeMain.getAttribute("role") || "table",
 
@@ -85,18 +89,19 @@ var WPTB_Stringifier = function (codeMain) {
       const cell = {
         props: {
           width: td.style.width,
-          autoWidth: tData.wptbCssTdAutoWidth === "true" ? true : false,
+          autoWidth: tData.wptbCssTdAutoWidth === "true" ? "true" : false,
           height: td.style.height,
-          autoHeight: tData.wptbCssTdAutoHeight === "true" ? true : false,
+          autoHeight: tData.wptbCssTdAutoHeight === "true" ? "true" : false,
           padding: td.style.padding,
           background: td.style.backgroundColor,
           ownBgColor: tData.wptbOwnBgColor,
           vAlign: tData.wptbCellVerticalAlign || "center",
           isEmpty: td.classList.contains("wptb-empty"),
-          isHighlighted: !!hMatch,
-          highlightScale: hMatch
-            ? `wptb-col-highlighted-${hMatch[1]}`
-            : undefined,
+          highlighted: `wptb-col-highlighted-${hMatch?.[1] || "none"}`,
+          xIndex: tData.xIndex,
+          yIndex: tData.yIndex,
+          xSort: tData.sortedVertical,
+          ySort: tData.sortedHorizontal,
         },
         blocks: [],
       };
@@ -164,9 +169,11 @@ var WPTB_BlockSerializer = {
     return {
       type: "image",
       props: {
-        url: imgEl?.src,
-        alignment: el.dataset.wptbImageAlignment || "left",
+        src: imgEl?.src,
+        alignment: el.dataset.wptbImageAlignment || "center",
         altText: imgEl?.getAttribute("alt"),
+        imgHeight: imgEl?.getAttribute("height"),
+        imgWidth: imgEl?.getAttribute("width"),
 
         sizeRelativeTo: el.dataset.wptbImageSizeRelative || "container",
         size: imgEl.dataset.wptbSize,
@@ -177,7 +184,7 @@ var WPTB_BlockSerializer = {
         linkTarget: lTarget?.getAttribute("target"),
         convertToAbsolute:
           lTarget?.dataset.wptbLinkEnableConvertRelative === "true"
-            ? true
+            ? "true"
             : false,
 
         padding: el.style.padding,
@@ -200,7 +207,7 @@ var WPTB_BlockSerializer = {
     return {
       type: "button",
       props: {
-        text: el.querySelector("p").outerHTML,
+        text: el.querySelector("p").innerHTML,
         size: bWrap.className.match(/wptb-size-(s|m|l|xl)/)?.[1] || "m",
         width: lTarget?.style.width,
         borderRadius: btnDiv?.style.borderRadius,
@@ -224,7 +231,7 @@ var WPTB_BlockSerializer = {
         hoverScale: btnDiv?.dataset.wptbElementHoverScale,
 
         // Icon
-        icon: iconEl?.dataset.wptbButtonIconSrc,
+        icon: iconEl?.dataset.wptbButtonIconSrc || "",
         iconPosition: btnDiv?.classList.contains(
           "wptb-plugin-button-order-right"
         )
@@ -236,6 +243,7 @@ var WPTB_BlockSerializer = {
         hasLabel: bWrap.classList.contains("wptb-button-has-label"),
         labelBg: labelEl?.style.backgroundColor,
         labelColor: labelEl?.style.color,
+        labelText: labelEl?.innerHTML,
 
         // Spacing
         padding: el.style.padding,
@@ -257,8 +265,6 @@ var WPTB_BlockSerializer = {
 
     const items = [];
 
-    const alignments = {};
-
     Array.from(el.querySelectorAll("li")).forEach((child) => {
       const toolTipEl = child.querySelector(".wptb-m-tooltip");
       const tooltipPosision =
@@ -268,38 +274,24 @@ var WPTB_BlockSerializer = {
 
       const alignment = pEl?.style.textAlign || "left";
 
-      if (!alignments[alignment]) {
-        alignments[alignment] = 1;
-      } else {
-        alignments[alignment] += 1;
-      }
-
       items.push({
-        text: pEl.outerHTML,
+        text: pEl.innerHTML,
         alignment,
         toolTip: toolTipEl?.innerHTML || "",
         tooltipPosision,
+        toolTipStyle: toolTipEl?.getAttribute("style") || "",
       });
     });
 
-    let listAlignment = "left",
-      count = 0;
-    Object.keys(alignments).forEach((key) => {
-      if (count < alignments[key]) {
-        listAlignment = key;
-        count = alignments[key];
-      }
-    });
 
     return {
       type: "list",
       props: {
         type: icon ? "unordered" : "ordered",
-        listIcon: icon,
+        listIcon: icon || "disc",
         color: firstP?.style.color,
         fontSize: firstP?.style.fontSize,
         itemSpacing: firstLi?.style.marginBottom,
-        listAlignment,
 
         padding: el.style.padding,
         margin: el.style.margin,
@@ -315,6 +307,7 @@ var WPTB_BlockSerializer = {
 
     const firstStar = el.querySelector("li");
     const ratingBox = el.querySelector(".wptb-number-rating-box");
+    const ratingEl = ratingBox?.firstElementChild;
     return {
       type: "starRating",
       props: {
@@ -323,6 +316,10 @@ var WPTB_BlockSerializer = {
         starCount: el.dataset.starCount,
         alignment: el.style.textAlign,
         showRating: ratingBox?.style.display !== "none",
+        fontSize: ratingEl?.style.fontSize,
+        color: ratingEl?.style.color,
+
+        value: Number(ratingEl?.textContent.split("/").trim() || 0),
 
         padding: el.style.padding,
         margin: el.style.margin,
@@ -335,9 +332,9 @@ var WPTB_BlockSerializer = {
       return;
     }
     return {
-      type: "custom-html",
+      type: "customHtml",
       props: {
-        html: el.innerHTML,
+        html: el.firstElementChild.innerHTML,
 
         padding: el.style.padding,
         margin: el.style.margin,

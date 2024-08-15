@@ -3,15 +3,17 @@
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base;
+use WP_Table_Builder\Inc\Admin\Element_Classes\TableRenderer;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
 	die;
 }
 
-class Text_Element extends Element_Base {
+class Text_Element extends Element_Base
+{
 
 	/**
 	 * Get element name.
@@ -23,7 +25,8 @@ class Text_Element extends Element_Base {
 	 * @access public
 	 *
 	 */
-	public function get_name() {
+	public function get_name()
+	{
 		return 'text';
 	}
 
@@ -37,8 +40,9 @@ class Text_Element extends Element_Base {
 	 * @access public
 	 *
 	 */
-	public function get_title() {
-		return esc_html_e( 'Text', 'wp-table-builder' );
+	public function get_title()
+	{
+		return esc_html_e('Text', 'wp-table-builder');
 	}
 
 	/**
@@ -51,8 +55,10 @@ class Text_Element extends Element_Base {
 	 * @access public
 	 *
 	 */
-	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/text.svg';;
+	public function get_directory_icon()
+	{
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/text.svg';
+		;
 	}
 
 	/**
@@ -65,8 +71,9 @@ class Text_Element extends Element_Base {
 	 * @access public
 	 *
 	 */
-	public function get_url_icon() {
-		return wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/text.svg' );
+	public function get_url_icon()
+	{
+		return wp_normalize_path(NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/text.svg');
 	}
 
 	/**
@@ -75,8 +82,9 @@ class Text_Element extends Element_Base {
 	 * @since 1.1.2
 	 * @access protected
 	 */
-	public function element_script() {
-		return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/text-element.js' );
+	public function element_script()
+	{
+		return wp_normalize_path(NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/text-element.js');
 	}
 
 	/**
@@ -88,12 +96,13 @@ class Text_Element extends Element_Base {
 	 *
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function _register_controls()
+	{
 		$this->add_control(
 			'section_header',
 			[
-				'label'      => __( 'Text Options', 'wp-table-builder' ),
-				'type'       => Controls_Manager::SECTION_HEADER,
+				'label' => __('Text Options', 'wp-table-builder'),
+				'type' => Controls_Manager::SECTION_HEADER,
 				'buttonBack' => true
 			]
 		);
@@ -101,13 +110,13 @@ class Text_Element extends Element_Base {
 		$this->add_control(
 			'color',
 			[
-				'label'     => __( 'Font Color', 'wp-table-builder' ),
-				'type'      => Controls_Manager::COLOR_PALETTE,
+				'label' => __('Font Color', 'wp-table-builder'),
+				'type' => Controls_Manager::COLOR_PALETTE,
 				'selectors' => [
 					[
 						'query' => '{{{data.container}}}',
-						'type'  => Controls_Manager::STYLE,
-						'key'   => 'color',
+						'type' => Controls_Manager::STYLE,
+						'key' => 'color',
 					],
 				]
 			]
@@ -116,13 +125,13 @@ class Text_Element extends Element_Base {
 		$this->add_control(
 			'linkColor',
 			[
-				'label'     => __( 'Link Font Color', 'wp-table-builder' ),
-				'type'      => Controls_Manager::COLOR_PALETTE,
+				'label' => __('Link Font Color', 'wp-table-builder'),
+				'type' => Controls_Manager::COLOR_PALETTE,
 				'selectors' => [
 					[
 						'query' => '{{{data.container}}} a',
-						'type'  => Controls_Manager::STYLE,
-						'key'   => 'color',
+						'type' => Controls_Manager::STYLE,
+						'key' => 'color',
 					]
 				]
 			]
@@ -131,38 +140,38 @@ class Text_Element extends Element_Base {
 		$this->add_control(
 			'size',
 			[
-				'label'        => __( 'Font Size', 'wp-table-builder' ),
-				'type'         => Controls_Manager::RANGE,
-				'selectors'    => [
+				'label' => __('Font Size', 'wp-table-builder'),
+				'type' => Controls_Manager::RANGE,
+				'selectors' => [
 					[
-						'query'  => '{{{data.container}}}',
-						'type'   => Controls_Manager::STYLE,
-						'key'    => 'fontSize',
+						'query' => '{{{data.container}}}',
+						'type' => Controls_Manager::STYLE,
+						'key' => 'fontSize',
 						'format' => '{$}px'
 					]
 				],
-				'min'          => 10,
-				'max'          => 50,
+				'min' => 10,
+				'max' => 50,
 				'defaultValue' => 15,
-				'postFix'      => 'px'
+				'postFix' => 'px'
 			]
 		);
 
 		$this->add_control(
 			'linkRel',
 			[
-				'label'      => __( 'Link Rel', 'wp-table-builder' ),
-				'type'       => Controls_Manager::MULTI_CHECKBOX,
+				'label' => __('Link Rel', 'wp-table-builder'),
+				'type' => Controls_Manager::MULTI_CHECKBOX,
 				'checkboxes' => [
-					'sponsored'  => 'sponsored',
-					'nofollow'   => 'nofollow',
+					'sponsored' => 'sponsored',
+					'nofollow' => 'nofollow',
 					'noreferrer' => 'noreferrer',
 				],
-				'selectors'  => [
+				'selectors' => [
 					[
 						'query' => '{{{data.container}}} a',
-						'type'  => Controls_Manager::ATTRIBUTE,
-						'key'   => 'rel'
+						'type' => Controls_Manager::ATTRIBUTE,
+						'key' => 'rel'
 					]
 				],
 			]
@@ -177,10 +186,34 @@ class Text_Element extends Element_Base {
 	 * @since 1.1.2
 	 * @access protected
 	 */
-	protected function _content_template() {
-		$text_placeholder = esc_html__( 'Add Text', 'wp-table-builder' );
+	protected function _content_template()
+	{
+		$text_placeholder = esc_html__('Add Text', 'wp-table-builder');
 		?>
-        <div><p data-placeholder="<?php echo $text_placeholder; ?>"></p></div>
+		<div>
+			<p data-placeholder="<?php echo $text_placeholder; ?>"></p>
+		</div>
 		<?php
+	}
+
+	public static function render($block)
+	{
+
+		$attrs = $block['props'];
+		$style = TableRenderer::generate_css_string([
+			"color" => $attrs['color'] ?? '',
+			"font-size" => $attrs['fontSize'] ?? '',
+			"padding" => $attrs['padding'] ?? '',
+			"margin" => $attrs['margin'] ?? '',
+		]);
+		$html = wp_kses_post($attrs['text']);
+		return <<<HTML
+			<div
+				class="wptb-text-container wptb-ph-element wptb-element-text-606"
+				style="{$style}"
+			>
+				<div>{$html}</div>
+			</div>
+		HTML;
 	}
 }

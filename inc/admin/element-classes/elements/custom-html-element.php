@@ -2,6 +2,7 @@
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base;
+use WP_Table_Builder\Inc\Admin\Element_Classes\TableRenderer;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 
@@ -126,5 +127,31 @@ class Custom_Html_Element extends Element_Base {
             <span><?php echo __('Insert Custom HTML', 'wp-table-builder'); ?></span>
         </div>
 		<?php
+	}
+
+	public static function render($block) {
+		$props = $block['props'];
+		
+		$style = TableRenderer::generate_css_string([
+			"padding" => $props['padding'] ?? '',
+			"margin" => $props['margin'] ?? '',
+		]);
+
+		$html = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $props['html']);
+
+		return <<<HTML
+		<div
+		  class="wptb-custom_html-container wptb-ph-element wptb-element-custom_html-1"
+		  style="{$style}"
+		>
+		  <div
+		    class="wptb-custom-html-wrapper"
+		    data-wptb-new-element="1"
+		    style="position: relative"
+		  >
+		    {$html}
+		  </div>
+		</div>
+		HTML;
 	}
 }

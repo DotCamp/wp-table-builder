@@ -48,6 +48,9 @@ abstract class Element_Base extends Element_Base_Object {
 	 */
 	abstract public function get_url_icon();
 
+	
+	public static function render($block) {}
+
 	/**
 	 * Render element output in the editor.
 	 *
