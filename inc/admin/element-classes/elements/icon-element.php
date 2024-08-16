@@ -72,9 +72,13 @@ class Icon_Element extends Dummy_Element_base {
 		$icons = '';
 
 		$i = 0;
+		$iconCount = (int) $props['count'] ?? 1;
 
 		foreach ($block['icons'] as $icon) {
 			$i++;
+			if ($i > $iconCount) {
+				break;
+			}
 			$lTag = 'span';
 			$lAttrs = "";
 			$color = esc_attr($icon['color'] ?? 'rgb(0, 0, 0)');
@@ -108,8 +112,7 @@ class Icon_Element extends Dummy_Element_base {
 
 		$starIcon = TableRenderer::get_icon('star');
 
-		for (; $i < 5; $i++) {
-			$i++;
+		for (; $i <= 5; $i++) {
 			$icons .= <<<HTML
 			<span class="wptb-icon-link-target-{$i}">
 			  <div
@@ -128,6 +131,7 @@ class Icon_Element extends Dummy_Element_base {
 		return <<<HTML
 		  <div
 		    class="wptb-icon-container wptb-ph-element wptb-element-icon-1"
+		    data-wptb-icon-number="{$iconCount}"
 		    style="{$style}"
 		  >
 		  <div class="wptb-icon-wrapper" style="text-align: {$align}">
