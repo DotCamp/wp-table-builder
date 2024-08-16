@@ -83,14 +83,15 @@ class Styled_List_Element extends Dummy_Element_base
 		$vSpace = esc_attr($props['itemSpacing'] ?? '5px');
 		$icSize = esc_attr($props['iconSize'] ?? '20px');
 		$icColor = esc_attr($props['iconColor'] ?? 'rgb(0, 153, 71)');
+		
+		$iconSrc = esc_attr($props['icon'] ?? 'check');
+		$icon = TableRenderer::get_icon($iconSrc);
 
 		$items = '';
 
-		foreach ($props['items'] as $item) {
+		foreach ($block['items'] as $item) {
 
 			$alignment = esc_attr($item['alignment'] ?? 'left');
-			$iconSrc = esc_attr($item['icon'] ?? 'check');
-			$icon = TableRenderer::get_icon($iconSrc);
 			$ttStyle = esc_attr($item['toolTipStyle'] ?? '');
 
 			$text = wp_kses_post($item['text'] ?? '');
