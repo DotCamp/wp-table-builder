@@ -425,7 +425,7 @@ var WPTB_BlockSerializer = {
     const inner = el.querySelector(".wptb-element-ribbon-inner");
     const colorDump = el.querySelector(".wptb-element-ribbon-color-dump");
     const pEL = inner?.querySelector("p");
-    const iconEl = el.querySelector(".wptb-ribbon-icon01-icon-wrapper");
+    const iconEl = el.querySelector("#wptbRibbonIconDump");
 
     return {
       type: "ribbon",
