@@ -108,13 +108,13 @@ class Icon_Element extends Dummy_Element_base {
 
 		$starIcon = TableRenderer::get_icon('star');
 
-		for (; $i <= 5; $i++) {
+		for (; $i < 5; $i++) {
 			$i++;
 			$icons .= <<<HTML
 			<span class="wptb-icon-link-target-{$i}">
 			  <div
 			    class="wptb-icon wptb-icon-{$i}"
-				style="width: {$size}; height: {$size}; fill: rgb(0, 0, 0);"
+				style="width: {$size}; height: {$size}; fill: rgb(0, 0, 0); display: none;"
 				data-wptb-icon-src="star"
 			  >
 			    {$starIcon}
