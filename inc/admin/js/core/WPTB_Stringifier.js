@@ -346,6 +346,10 @@ var WPTB_BlockSerializer = {
     if (!el.classList.contains("wptb-shortcode-container")) {
       return;
     }
+    return {
+      type: "shortcode",
+      props: {}
+    }
   },
 
   circleRating(el) {
@@ -429,16 +433,16 @@ var WPTB_BlockSerializer = {
         xOffset: el.dataset.wptbRibbonXOffset,
         yOffset: el.dataset.wptbRibbonYOffset,
         width: el.dataset.wptbRibbonWidth,
+        style: el.getAttribute("style"),
 
         background: (colorDump || inner)?.style.backgroundColor,
-        borderColor: colorDump?.style.borderColor,
+        borderColor: (colorDump || inner)?.style.borderColor,
         color: el.style.color,
         fontSize: pEL?.style.fontSize,
-        borderColor: inner?.style.borderColor,
         text: pEL?.innerHTML,
 
         icon: iconEl?.dataset.wptbRibbonIconSrc,
-        enableAnimation: iconEl?.dataset.enableAnimation,
+        enableAnimation: iconEl?.dataset.enableAnimation === '1'? '1' : false,
         animationType: iconEl?.dataset.wptbRibbonIconAnimationType,
       },
     };

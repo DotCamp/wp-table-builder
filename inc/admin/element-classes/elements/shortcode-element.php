@@ -129,4 +129,8 @@ class Shortcode_Element extends Element_Base {
         </wptb_shortcode_container_element>
 		<?php
 	}
+
+	public static function render($block) {
+		return 'Not Implemented';
+	}
 }
