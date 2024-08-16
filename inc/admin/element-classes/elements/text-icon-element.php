@@ -108,6 +108,7 @@ class Text_Icon_Element extends Dummy_Element_base
 		>
 		  <div class="wptb-element-text-icon-wrapper">
 		    <div
+			  id="wptbTextIconIconWrapper"
 		      class="wptb-text-icon-icon-wrapper"
 		      data-wptb-text-icon-icon-src="{$iconSrc}"
 		      style="color: {$iconColor}; width: {$iconSize}; height: {$iconSize}"
@@ -116,9 +117,10 @@ class Text_Icon_Element extends Dummy_Element_base
 		      <br />
 		    </div>
 		    <div
+		      id="wptbTextIconMainTextWrapper"
 		      style="{$txtStyle}"
 		    >
-		      <p>{$text}</p>
+		      <p id="wptbTextIconMainText">{$text}</p>
 		    </div>
 		  </div>
 		</div>
