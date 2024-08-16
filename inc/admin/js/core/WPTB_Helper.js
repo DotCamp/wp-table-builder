@@ -2017,7 +2017,6 @@ var WPTB_Helper = {
 			}
 			codeClone.columns = code.columns;
 			code = WPTB_Stringifier(codeClone);
-			code = code.outerHTML;
 		} else {
 			code = '';
 		}

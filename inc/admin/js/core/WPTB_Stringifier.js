@@ -319,7 +319,7 @@ var WPTB_BlockSerializer = {
         fontSize: ratingEl?.style.fontSize,
         color: ratingEl?.style.color,
 
-        value: Number(ratingEl?.textContent.split("/").trim() || 0),
+        value: Number(ratingEl?.textContent.split("/")?.[0].trim() || 0),
 
         padding: el.style.padding,
         margin: el.style.margin,
