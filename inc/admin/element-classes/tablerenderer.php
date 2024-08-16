@@ -44,9 +44,9 @@ class TableRenderer
     }
 
     public static function get_icon($name){
-        $icons = [];
-        if (isset($icons[$name])) {
-            return $icons[$name];
+        $path = dirname(dirname(__DIR__)) . '/frontend/views/icons/' . $name . '.svg';
+        if (file_exists($path)) {
+            return file_get_contents($path);
         }
         return '';
     }

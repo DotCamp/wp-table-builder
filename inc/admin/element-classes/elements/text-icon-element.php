@@ -91,13 +91,14 @@ class Text_Icon_Element extends Dummy_Element_base
 		$text = wp_kses_post($props['text'] ?? '');
 		$txtStyle = TableRenderer::generate_css_string([
 			'color' => $props['color'] ?? '#000000',
-		] + $iconLoc === 'left' ? [
-			'margin-left' => $space,
-			'margin-right' => '0',
-		] : [
-			'margin-left' => '0',
-			'margin-right' => $space,
-		]);
+		] + ($iconLoc === 'left' ? [
+				'margin-left' => $space,
+				'margin-right' => '0',
+			] : [
+				'margin-left' => '0',
+				'margin-right' => $space,
+			])
+		);
 
 		return <<<HTML
 		<div

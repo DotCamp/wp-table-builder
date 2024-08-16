@@ -73,6 +73,10 @@ class Circle_Rating_Element extends Dummy_Element_base {
 		$color = esc_attr($props['color'] ?? 'rgb(48, 123, 187)');
 		$total = (float) $props['totalNumber'] ?? '100';
 
+		if ($total < 1) {
+			$total = 1;
+		}
+
 		$angle = ($value / $total) * 360;
 
 

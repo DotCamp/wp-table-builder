@@ -79,7 +79,7 @@ class Icon_Element extends Dummy_Element_base {
 			$lAttrs = "";
 			$color = esc_attr($icon['color'] ?? 'rgb(0, 0, 0)');
 			$iconSrc = esc_attr($icon['icon'] ?? 'star');
-			$icon = TableRenderer::get_icon($iconSrc);
+			$iconStr = TableRenderer::get_icon($iconSrc);
 
 			if ($icon['url'] !== '') {
 				$lTag = 'a';
@@ -100,7 +100,7 @@ class Icon_Element extends Dummy_Element_base {
 			    style="width: {$size}; height: {$size}; fill: {$color}"
 			    data-wptb-icon-src="{$iconSrc}"
 			  >
-			    {$icon}
+			    {$iconStr}
 			  </div>
 			</{$lTag}>
 			HTML;
