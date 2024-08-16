@@ -79,6 +79,8 @@ class Circle_Rating_Element extends Dummy_Element_base {
 
 		$angle = ($value / $total) * 360;
 
+		$barAngle = $value * 2 > $total ? 180 : 0;
+
 
 		return <<<HTML
 		<div
@@ -95,7 +97,7 @@ class Circle_Rating_Element extends Dummy_Element_base {
 		    >
 		      <div
 		        class="wptb-rating-circle-bar"
-		        style="border-color: {$color}; transform: rotate(0deg)"
+		        style="border-color: {$color}; transform: rotate({$barAngle}deg)"
 		      ></div>
 		      <div
 		        class="wptb-rating-circle-fill"
