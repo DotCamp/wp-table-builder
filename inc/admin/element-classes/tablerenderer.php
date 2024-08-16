@@ -132,7 +132,7 @@ class TableRenderer
             style="{$style}"
             {$attrs_string}
             >
-            <tbody {$tbody_attrs}> </tbody>
+            <tbody {$tbody_attrs}>{$tbody}</tbody>
         </table>
         HTML;
     }

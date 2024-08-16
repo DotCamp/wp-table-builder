@@ -10,7 +10,7 @@ var WPTB_Stringifier = function (codeMain) {
 
   const firstTd = codeMain.querySelector("td");
   const allTr = codeMain.querySelectorAll("tr");
-  const innerBorderEl = allTr[1].firstElementChild;
+  const innerBorderEl = (allTr[1] || allTr[0])?.firstElementChild;
 
   const tableProps = {
     alignment: data.wptbTableAlignment || "center",
