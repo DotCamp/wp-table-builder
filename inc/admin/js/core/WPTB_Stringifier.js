@@ -454,8 +454,6 @@ var WPTB_BlockSerializer = {
 
     const items = [];
 
-    const alignments = {};
-
     Array.from(el.querySelectorAll("li")).forEach((child) => {
       const toolTipEl = child.querySelector(".wptb-m-tooltip");
       const tooltipPosision =
@@ -466,28 +464,16 @@ var WPTB_BlockSerializer = {
       const alignment =
         child.firstElementChild?.dataset.wptbStyledListAlignment || "left";
 
-      if (!alignments[alignment]) {
-        alignments[alignment] = 1;
-      } else {
-        alignments[alignment] += 1;
-      }
-
+      
       items.push({
-        text: pEl.outerHTML,
+        text: pEl.innerHTML,
         alignment,
         toolTip: toolTipEl?.innerHTML || "",
         tooltipPosision,
+        toolTipStyle: toolTipEl?.getAttribute("style") || "",
       });
     });
 
-    let listAlignment = "left",
-      count = 0;
-    Object.keys(alignments).forEach((key) => {
-      if (count < alignments[key]) {
-        listAlignment = key;
-        count = alignments[key];
-      }
-    });
 
     return {
       type: "styledList",
@@ -499,7 +485,6 @@ var WPTB_BlockSerializer = {
         color: firstP?.style.color,
         fontSize: firstP?.style.fontSize,
         itemSpacing: firstLi?.style.marginBottom,
-        listAlignment,
 
         padding: el.style.padding,
         margin: el.style.margin,
