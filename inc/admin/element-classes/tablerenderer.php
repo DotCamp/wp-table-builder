@@ -55,7 +55,7 @@ class TableRenderer
     {
         $props = $body['props'];
 
-        $style = self::generate_css_string([
+        $tblStyle = self::generate_css_string([
             "border" => $props['tableBorder'],
             "border-spacing" => "{$props['tableSpacingX']}px {$props['tableSpacingY']}px",
             "border-collapse" => ($props['separateCells'] ? "separate" : "collapse") . " !important"
@@ -129,9 +129,9 @@ class TableRenderer
         <table
             class="wptb-preview-table wptb-element-main-table_setting-237"
             data-reconstraction="1"
-            style="{$style}"
+            style="{$tblStyle}"
             {$attrs_string}
-            >
+        >
             <tbody {$tbody_attrs}>{$tbody}</tbody>
         </table>
         HTML;
@@ -141,7 +141,10 @@ class TableRenderer
     {
         $props = $cell['props'];
         $styles = self::generate_css_string([
-            "border" => $props['border'] ?? "",
+            "border-width" => $props['borderWidth'] ?? "",
+            "border-color" => $props['borderColor'] ?? "",
+            "border-style" => $props['borderStyle'] ?? "",
+            "border-radius" => $props['borderRadius']??'',
             "padding" => $props['padding'] ?? "",
             "height" => $props['height'] ?? "",
             "width" => $props['width'] ?? "",

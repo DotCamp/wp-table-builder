@@ -7,10 +7,9 @@ var WPTB_Stringifier = function (codeMain) {
   const data = codeMain.dataset;
   const tBodyData = codeMain.querySelector("tbody")?.dataset || {};
   const tableStyle = codeMain.style;
-
+  
   const firstTd = codeMain.querySelector("td");
   const allTr = codeMain.querySelectorAll("tr");
-  const innerBorderEl = (allTr[1] || allTr[0])?.firstElementChild;
 
   const tableProps = {
     alignment: data.wptbTableAlignment || "center",
@@ -32,9 +31,8 @@ var WPTB_Stringifier = function (codeMain) {
     fontSize: tBodyData.globalFontSize || "15",
 
     // Border
-    tableBorder: tableStyle.border || "1px solid #000000",
-    innerBorder: innerBorderEl?.style.border || "1px solid #000000",
-    headerInnerBorder: firstTd?.style.border || "1px solid #000000",
+    tableBorder: tableStyle.border,
+    headerInnerBorder: firstTd?.style.border,
     // rowBorderOnly: null, // It's in the directives
     // columnBorderOnly: null, // It's in the directives
 
@@ -59,8 +57,8 @@ var WPTB_Stringifier = function (codeMain) {
     searchPosition: data.wptbSearchbarPosition || "left",
     role: codeMain.getAttribute("role") || "table",
 
-    directives: data.wptpTableDirectives,
-    responsiveDirectives: data.wptpResponsiveDirectives,
+    directives: data.wptbTableDirectives,
+    responsiveDirectives: data.wptbResponsiveDirectives,
 
     // Colors
     headerBg: data.wptbHeaderBackgroundColor,
@@ -86,6 +84,7 @@ var WPTB_Stringifier = function (codeMain) {
     Array.from(el.children).forEach((td) => {
       const tData = td.dataset;
       const hMatch = td.className.match(/wptb-col-highlighted-([0-9]+)/);
+
       const cell = {
         props: {
           width: td.style.width,
@@ -95,6 +94,10 @@ var WPTB_Stringifier = function (codeMain) {
           padding: td.style.padding,
           background: td.style.backgroundColor,
           ownBgColor: tData.wptbOwnBgColor,
+          borderWidth: td.style.borderWidth,
+          borderColor: td.style.borderColor,
+          borderStyle: td.style.borderStyle,
+          borderRadius: td.style.borderRadius,
           vAlign: tData.wptbCellVerticalAlign || "center",
           isEmpty: td.classList.contains("wptb-empty"),
           highlighted: `wptb-col-highlighted-${hMatch?.[1] || "none"}`,
@@ -565,6 +568,8 @@ var WPTB_BlockSerializer = {
         color: wrapper?.style.color,
         background: wrapper?.style.backgroundColor,
         alignment: el.style.justifyContent,
+
+        text: wrapper?.firstElementChild?.innerHTML,
 
         padding: el.style.padding,
         margin: el.style.margin,
