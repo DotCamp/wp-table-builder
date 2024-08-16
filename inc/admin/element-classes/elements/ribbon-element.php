@@ -16,61 +16,61 @@ use WP_Table_Builder as NS;
 class Ribbon_Element extends Dummy_Element_base
 {
 
-	/**
-	 * Name for dummy element.
-	 * @return string dummy name
-	 */
-	public function dummy_name()
-	{
-		return 'ribbon';
-	}
+    /**
+     * Name for dummy element.
+     * @return string dummy name
+     */
+    public function dummy_name()
+    {
+        return 'ribbon';
+    }
 
-	/**
-	 * Get element title.
-	 * @return string element title
-	 */
-	public function get_title()
-	{
-		return esc_html_e('Ribbon', 'wp-table-builder');
-	}
+    /**
+     * Get element title.
+     * @return string element title
+     */
+    public function get_title()
+    {
+        return esc_html_e('Ribbon', 'wp-table-builder');
+    }
 
-	/**
-	 * Get directory icon.
-	 *
-	 * Retrieve directory item icon.
-	 *
-	 * @return string Directory Item icon.
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 */
-	public function get_directory_icon()
-	{
-		return wp_normalize_path(NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/ribbon-element-icon.svg');
-	}
+    /**
+     * Get directory icon.
+     *
+     * Retrieve directory item icon.
+     *
+     * @return string Directory Item icon.
+     * @since 1.1.2
+     * @access public
+     *
+     */
+    public function get_directory_icon()
+    {
+        return wp_normalize_path(NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/ribbon-element-icon.svg');
+    }
 
-	/**
-	 * Get url icon.
-	 *
-	 * Return url icon.
-	 *
-	 * @return string Url Item icon.
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 */
-	public function get_url_icon()
-	{
-		return wp_normalize_path(NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/ribbon-element-icon.svg');
-	}
+    /**
+     * Get url icon.
+     *
+     * Return url icon.
+     *
+     * @return string Url Item icon.
+     * @since 1.1.2
+     * @access public
+     *
+     */
+    public function get_url_icon()
+    {
+        return wp_normalize_path(NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/ribbon-element-icon.svg');
+    }
 
 
-	private static function render_rect($data)
-	{
-		extract($data);
-		return <<<HTML
+    private static function render_rect($data)
+    {
+        extract($data);
+        return <<<HTML
         <div
-          class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1 edit-active"
+          class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1"
           style="{$style}"
           {$attrs}
         >
@@ -106,13 +106,13 @@ class Ribbon_Element extends Dummy_Element_base
           </div>
         </div>
         HTML;
-	}
+    }
 
-	private static function render_bookmark($data)
-	{
-		extract($data);
-		$width = esc_attr($props['width'] ?? '70');
-		return <<<HTML
+    private static function render_bookmark($data)
+    {
+        extract($data);
+        $width = esc_attr($props['width'] ?? '70');
+        return <<<HTML
         <div
           class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1"
           style="{$style}"
@@ -172,14 +172,21 @@ class Ribbon_Element extends Dummy_Element_base
           </div>
         </div>
         HTML;
-	}
+    }
 
-	private static function render_corner($data)
-	{
-		extract($data);
-		return <<<HTML
+    private static function render_corner($data)
+    {
+        extract($data);
+
+        if (($props['side'] ?? '') === 'right') {
+            $sideStyle = 'rotateZ(45deg) translateY(-11.5px)';
+        } else {
+            $sideStyle = 'rotateZ(-45deg) translateY(-11.5px)';
+        }
+
+        return <<<HTML
           <div
-            class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1 edit-active"
+            class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1"
             style="{$style}"
             {$attrs}
           >
@@ -191,7 +198,7 @@ class Ribbon_Element extends Dummy_Element_base
               <div
                 id="wptbRibbonTextWrap"
                 class="wptb-element-ribbon-inner wptb-plugin-filter-box-shadow-md-close"
-                style="background-color: {$bgColor};border-color: {$borderColor};transform: rotateZ(-45deg) translateY(-11.5px);"
+                style="background-color: {$bgColor};border-color: {$borderColor};transform: {$sideStyle};"
               >
                 <p
                   style="width: 200px;font-size: 15px;position: relative;text-align: center;"
@@ -219,29 +226,34 @@ class Ribbon_Element extends Dummy_Element_base
             </div>
           </div>
           HTML;
-	}
+    }
 
-	private static function render_icon($data)
-	{
-		extract($data);
-		$iconSrc = esc_attr($props['icon'] ?? 'star');
-		$icon = TableRenderer::get_icon($iconSrc);
+    private static function render_icon($data)
+    {
+        extract($data);
+        $iconSrc = esc_attr($props['icon'] ?? 'star');
+        $icon = TableRenderer::get_icon($iconSrc);
 
 
-		$icAttrs = TableRenderer::generate_attrs_string([
-			"data-wptb-ribbon-icon-animation-type" => $props['animationType'] ?? false,
-			"data-enable-animation" => $props['enableAnimation'] ?? false,
-		]);
+        $icAttrs = TableRenderer::generate_attrs_string([
+            "data-wptb-ribbon-icon-animation-type" => $props['animationType'] ?? false,
+            "data-enable-animation" => $props['enableAnimation'] ?? false,
+        ]);
 
-		return <<<HTML
+        $sideClass = '';
+        if (($props['side'] ?? '') === 'right') {
+            $sideClass = ' flip';
+        }
+
+        return <<<HTML
           <div
-            class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1 edit-active"
+            class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1"
             style="{$style}"
             {$attrs}
           >
             <div
               id="wptbRibbonMainWrap"
-              class="wptb-element-ribbon-wrapper wptb-ribbon-icon01-main-wrap"
+              class="wptb-element-ribbon-wrapper wptb-ribbon-icon01-main-wrap{$sideClass}"
               style=""
             >
               <div
@@ -276,20 +288,24 @@ class Ribbon_Element extends Dummy_Element_base
             </div>
           </div>
           HTML;
-	}
+    }
 
-	private static function render_side($data)
-	{
-		extract($data);
-		return <<<HTML
+    private static function render_side($data)
+    {
+        extract($data);
+        $sideClass = '';
+        if (($props['side'] ?? '') === 'right') {
+            $sideClass = ' flip';
+        }
+        return <<<HTML
           <div
-            class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1 edit-active wptb-ribbon-side-fix"
+            class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1 wptb-ribbon-side-fix"
             style="{$style}"
             {$attrs}
           >
             <div
               id="wptbRibbonMainWrap"
-              class="wptb-element-ribbon-wrapper wptb-ribbon-sideFancy-main-wrap"
+              class="wptb-element-ribbon-wrapper wptb-ribbon-sideFancy-main-wrap{$sideClass}"
               style=""
             >
               <div
@@ -335,46 +351,46 @@ class Ribbon_Element extends Dummy_Element_base
             </div>
           </div>
           HTML;
-	}
+    }
 
-	public static function render($block)
-	{
-		$props = $block['props'];
-		$type = $props['type'] ?? false;
+    public static function render($block)
+    {
+        $props = $block['props'];
+        $type = $props['type'] ?? false;
 
-		$attrs = TableRenderer::generate_attrs_string([
-			"data-wptb-ribbon-type" => $type,
-			"data-wptb-ribbon-modifications" => $props['modifications'] ?? false,
-			"data-wptb-ribbon-side" => $props['side'] ?? false,
-			"data-wptb-ribbon-width" => $props['width'] ?? false,
-			"data-wptb-ribbon-x-offset" => $props['xOffset'] ?? false,
-			"data-wptb-ribbon-y-offset" => $props['yOffset'] ?? false,
-		]);
+        $attrs = TableRenderer::generate_attrs_string([
+            "data-wptb-ribbon-type" => $type,
+            "data-wptb-ribbon-modifications" => $props['modifications'] ?? false,
+            "data-wptb-ribbon-side" => $props['side'] ?? false,
+            "data-wptb-ribbon-width" => $props['width'] ?? false,
+            "data-wptb-ribbon-x-offset" => $props['xOffset'] ?? false,
+            "data-wptb-ribbon-y-offset" => $props['yOffset'] ?? false,
+        ]);
 
-		$style = esc_attr($props['style'] ?? '');
+        $style = esc_attr($props['style'] ?? '');
 
-		$bgColor = esc_attr($props['background'] ?? '');
-		$borderColor = esc_attr($props['borderColor'] ?? '');
+        $bgColor = esc_attr($props['background'] ?? '');
+        $borderColor = esc_attr($props['borderColor'] ?? '');
 
-		$fontSize = esc_attr($props['fontSize'] ?? '15px');
+        $fontSize = esc_attr($props['fontSize'] ?? '15px');
 
-		$text = wp_kses_post($props['text'] ?? '');
+        $text = wp_kses_post($props['text'] ?? '');
 
-		$data = compact('attrs', 'style', 'bgColor', 'borderColor', 'text', 'props', 'fontSize');
+        $data = compact('attrs', 'style', 'bgColor', 'borderColor', 'text', 'props', 'fontSize');
 
-		switch ($type) {
-			case 'iconRibbon':
+        switch ($type) {
+            case 'iconRibbon':
                 return self::render_icon($data);
-			case 'rectangleRibbon':
-				return self::render_rect($data);
-			case 'bookmarkRibbon':
-				return self::render_bookmark($data);
-			case 'cornerRibbon':
-				return self::render_corner($data);
-			case 'sideRibbon':
-				return self::render_side($data);
-		}
+            case 'rectangleRibbon':
+                return self::render_rect($data);
+            case 'bookmarkRibbon':
+                return self::render_bookmark($data);
+            case 'cornerRibbon':
+                return self::render_corner($data);
+            case 'sideRibbon':
+                return self::render_side($data);
+        }
 
-		return '';
-	}
+        return '';
+    }
 }
