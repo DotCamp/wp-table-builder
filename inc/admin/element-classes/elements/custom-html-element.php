@@ -5,6 +5,7 @@ use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base
 use WP_Table_Builder\Inc\Admin\Element_Classes\TableRenderer;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
+use Rhukster\DomSanitizer\DOMSanitizer;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -137,7 +138,11 @@ class Custom_Html_Element extends Element_Base {
 			"margin" => $props['margin'] ?? '',
 		]);
 
-		$html = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $props['html']);
+        $sanitizer = new DOMSanitizer(DOMSanitizer::HTML);
+
+		$html = $sanitizer->sanitize($props['html'], [
+			'remove-html-tags' => false,
+		]);;
 
 		return <<<HTML
 		<div
