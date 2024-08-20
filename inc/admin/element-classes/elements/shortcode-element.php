@@ -2,7 +2,9 @@
 
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
+use Rhukster\DomSanitizer\DOMSanitizer;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base;
+use WP_Table_Builder\Inc\Admin\Element_Classes\TableRenderer;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 
@@ -131,6 +133,24 @@ class Shortcode_Element extends Element_Base {
 	}
 
 	public static function render($block) {
-		return 'Not Implemented';
+		$props = $block['props'];
+		$style = TableRenderer::generate_css_string([
+			'margin' => $props['margin'] ?? '',
+			'padding' => $props['padding'] ?? '',
+		]);
+
+		$sanitizer = new DOMSanitizer(DOMSanitizer::HTML);
+
+		$code = $sanitizer->sanitize($props['shortcode']??'', [
+			'remove-html-tags' => false,
+		]);
+
+		return <<<HTML
+		<div class="wptb-shortcode-container wptb-ph-element wptb-element-shortcode-1" style="{$style}">
+			<wptb_shortcode_container_element>
+				<div class="" style="position: relative;">{$code}</div>
+			</wptb_shortcode_container_element>
+		</div>
+		HTML;
 	}
 }

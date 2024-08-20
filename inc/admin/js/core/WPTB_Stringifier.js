@@ -349,9 +349,16 @@ var WPTB_BlockSerializer = {
     if (!el.classList.contains("wptb-shortcode-container")) {
       return;
     }
+    const cDiv = el.querySelector('div');
+    
     return {
       type: "shortcode",
-      props: {}
+      props: {
+        "shortcode": cDiv?.innerHTML,
+
+        padding: el.style.padding,
+        margin: el.style.margin,
+      }
     }
   },
 
