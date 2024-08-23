@@ -3,7 +3,7 @@ Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembirc
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 6.5
-Stable tag: 1.5.1
+Stable tag: 1.6.0
 Requires PHP: 7.4
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -89,6 +89,10 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.6.0 =
+* FIX: Accents breaking
+* FIX: Open in new url not working for links
 
 = 1.5.1 =
 * FIX: XSS issue in table saving
