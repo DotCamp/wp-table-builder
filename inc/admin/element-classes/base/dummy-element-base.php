@@ -38,4 +38,5 @@ abstract class Dummy_Element_base extends Element_Base {
 	public function get_type() {
 		return Elements_Manager::PRO;
 	}
+
 }

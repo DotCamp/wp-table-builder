@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Tabbed;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base;
+use WP_Table_Builder\Inc\Admin\Element_Classes\TableRenderer;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 use function trailingslashit;
@@ -407,5 +408,127 @@ class Button_Element extends Element_Base {
             </span>
         </div>
 <?php
+    }
+
+    public static function render($block) {
+        $props = $block['props'];
+
+        $cStyle = TableRenderer::generate_css_string([
+            'padding' => $props['padding'],
+            'margin' => $props['margin'],
+        ]);
+
+        $btnStyle = TableRenderer::generate_css_string([
+          "border-radius" => $props['borderRadius']??'',
+          "background-color" => $props['background']??'',
+          "color" => $props['color']??'',
+          "justify-content" => $props['contentAlignment'],
+          "transform" => $props[''],
+        ]);
+
+        $hoverAttrs = TableRenderer::generate_attrs_string([
+          "data-wptb-element-hover-bg-color" => $props['hoverBg']??false,
+          "data-wptb-element-hover-text-color" => $props['hoverColor']??false,
+          "data-wptb-element-hover-scale" => $props['hoverScale']??false,
+        ]);
+
+        $btnAttrs = TableRenderer::generate_attrs_string([
+          "data-wptb-element-bg-color" => $props['background']??false,
+          "data-wptb-element-color" => $props['color']??false,
+        ]).$hoverAttrs;
+
+        $labelStyle = TableRenderer::generate_css_string([
+          "display" => $props['hasLabel']?? false ? 'inline-flex' : 'none',
+          "background-color" => $props['labelBg']??'',
+          "color" => $props['labelColor']??'',
+        ]);
+
+
+        $lTag = 'span';
+        $lAttrs = "";
+
+        if ($props['url'] !== '') {
+            $lTag = 'a';
+            if ($props['convertToAbsolute'] && !preg_match('/^https?:\/\//', $props['url'])) {
+                $props['url'] = 'https://' . ltrim($props['url'], '/');
+            }
+            $lAttrs = TableRenderer::generate_attrs_string([
+                "id" => $props['id']??false,
+                "href" => $props['url'],
+                "target" => $props['linkTarget'],
+                "rel" => $props['linkRel'],
+                "data-wptb-link-enable-convert-relative" => $props['convertToAbsolute'],
+                "style" => isset($props['width']) ? 'width: '.$props['width'].';' :  false,
+            ]);
+        }
+
+        $btnOrder = esc_attr($props['iconPosition']??'left');
+        $wrapperClass = 'wptb-size-' . esc_attr($props['size']);
+        if ($props['hasLabel']) {
+            $wrapperClass .= ' wptb-button-has-label';
+        }
+        $btnAlignment = esc_attr($props['buttonAlignment']);
+        $fontSize = esc_attr($props['fontSize']??'15px');
+        
+        $text = wp_kses_post($props['text']);
+        $labelText = wp_kses_post($props['labelText']);
+        
+        $iconSrc = esc_attr($props['icon']??'');
+        $icon = TableRenderer::get_icon($iconSrc);
+        $iconSize = esc_attr($props['iconSize']??'25px');
+        
+        
+
+        return <<<HTML
+        <div
+          class="wptb-button-container wptb-ph-element wptb-element-button-1"
+          style="{$cStyle}"
+        >
+          <div
+            class="wptb-button-wrapper {$wrapperClass}"
+            style="justify-content: {$btnAlignment}"
+          >
+            <{$lTag}
+              class="wptb-link-target"
+              {$lAttrs}
+            >
+              <div
+                class="wptb-button wptb-plugin-button-order-{$btnOrder}"
+                style="position: relative;{$btnStyle}"
+                {$btnAttrs}
+              >
+                <p style="font-size: $fontSize; margin-inline: auto !important">{$text}</p>
+                <div
+                  class="wptb-button-icon"
+                  data-wptb-button-icon-src=""
+                  {$hoverAttrs}
+                  style="width: {$iconSize}; height: {$iconSize}"
+                >
+                    {$icon}
+                </div>
+                <div
+                  class="wptb-button-label"
+                  style="{$labelStyle}"
+                  {$hoverAttrs}
+                >
+                  <div
+                    class="wptb-button-label-decorator"
+                    {$hoverAttrs}
+                    style="border-color: rgba(0, 0, 0, 0) #ffffff rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);"
+                  >
+                    <br />
+                  </div>
+                  <div
+                    class="wptb-button-label-text"
+                    {$hoverAttrs}
+                  >
+                    {$labelText}
+                  </div>
+                </div>
+              </div>
+            </{$lTag}>
+          </div>
+        </div>
+        HTML;
     }
 }

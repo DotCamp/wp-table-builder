@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Tabbed;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base;
+use WP_Table_Builder\Inc\Admin\Element_Classes\TableRenderer;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 
@@ -189,5 +190,64 @@ class Image_Element extends Element_Base {
             </span>
         </div>
 <?php
+    }
+
+    public static function render($block) {
+        $attrs = $block['props'];
+        $wrapperAttrs = TableRenderer::generate_css_string([
+            "data-wptb-image-alignment" => $attrs['alignment'],
+            "data-wptb-image-size-relative" => $attrs['sizeRelativeTo'],
+        ]);
+        $style = TableRenderer::generate_css_string([
+            "padding" => $attrs['padding']??'',
+            "margin" => $attrs['margin']??'',
+        ]);
+
+        $imgAttrs = TableRenderer::generate_attrs_string([
+            "data-wptb-size" => $attrs['size'] ?? false,
+            "height" => $attrs['imgHeight'] ?? false,
+            "width" => $attrs['imgWidth'] ?? false,
+            "src" => $attrs['src'] ?? false,
+            "alt" => $attrs['alt'] ?? false,
+        ]);
+
+        $lStyle = TableRenderer::generate_css_string([
+            "float" => $attrs['alignment'] === "center" ? "none" : $attrs['alignment'],
+            "width" => $attrs['width'] ?? "50%",
+        ]);
+
+        $lTag = 'span';
+        $lAttrs = "";
+
+        if ($attrs['url'] !== '') {
+            $lTag = 'a';
+            if ($attrs['convertToAbsolute'] && !preg_match('/^https?:\/\//', $attrs['url'])) {
+                $attrs['url'] = 'https://' . ltrim($attrs['url'], '/');
+            }
+            $lAttrs = TableRenderer::generate_attrs_string([
+                "href" => $attrs['url'],
+                "target" => $attrs['linkTarget'],
+                "rel" => $attrs['linkRel'],
+                "data-wptb-link-enable-convert-relative" => $attrs['convertToAbsolute'],
+            ]);
+        }
+
+        return <<<HTML
+        <div
+          class="wptb-image-container wptb-ph-element wptb-element-image-1"
+          {$wrapperAttrs}
+          style="{$style}"
+        >
+          <div class="wptb-image-wrapper">
+            <{$lTag} {$lAttrs} class="wptb-link-target" style="{$lStyle}">
+              <img
+                class="wptb-image-element-target"
+                {$imgAttrs}
+                style="width: 100%"
+              />
+            </{$lTag}>
+          </div>
+        </div>
+        HTML;
     }
 }
