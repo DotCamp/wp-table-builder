@@ -207,12 +207,17 @@ class Text_Element extends Element_Base
 			"margin" => $attrs['margin'] ?? '',
 		]);
 		$html = wp_kses_post($attrs['text']);
+		$elId = $attrs['elementId'] ?? '';
+		$innerAttrs = "";
+		if (isset($attrs['isFirst']) && $attrs['isFirst']) {
+			$innerAttrs = 'style="position: relative;"';
+		}
 		return <<<HTML
 			<div
-				class="wptb-text-container wptb-ph-element wptb-element-text-606"
+				class="wptb-text-container wptb-ph-element wptb-element-text-{$elId}"
 				style="{$style}"
 			>
-				<div>{$html}</div>
+				<div {$innerAttrs}>{$html}</div>
 			</div>
 		HTML;
 	}

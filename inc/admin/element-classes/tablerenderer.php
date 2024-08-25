@@ -54,17 +54,18 @@ class TableRenderer
     public static function render($body)
     {
         $props = $body['props'];
+        $separate = $props['separateCells'];
 
         $tblStyle = self::generate_css_string([
             "border" => $props['tableBorder'],
-            "border-spacing" => "{$props['tableSpacingX']}px {$props['tableSpacingY']}px",
-            "border-collapse" => ($props['separateCells'] ? "separate" : "collapse") . " !important"
+            "border-spacing" => $separate ? "{$props['tableSpacingX']}px {$props['tableSpacingY']}px":"",
+            "border-collapse" => $separate ? "separate  !important" : ""
         ]);
 
         $attrs_string = self::generate_attrs_string([
             "data-wptb-table-directives" => $props['directives'],
-            "data-wptb-responsive-directives" => $props['responsiveDirectives']?? "default",
-            "data-wptb-cells-width-auto-count" => $props['cellAutoWidthCount'],
+            "data-wptb-responsive-directives" => $props['responsiveDirectives']?? "",
+            "data-wptb-cells-width-auto-count" => $props['cellsWidthAutoCount'],
             "data-wptb-horizontal-scroll-status" => $props['scrollX'],
             "data-wptb-extra-styles" => $props['extraStyles'],
             "data-wptb-first-column-sticky" => $props['stickyFirstColumn'],
@@ -116,6 +117,10 @@ class TableRenderer
             } elseif (isset($props['hoverEvenRowBg']) && $props['hoverEvenRowBg'] !== '') {
                 $hoverColor = $props['hoverEvenRowBg'];
             }
+
+            if ($hoverColor !== '') {
+                $classNames .= ' wptb-row-has-hover';
+            }
             
             $style = self::generate_css_string([
                 'background-color' => $row['props']['background'] ?? '',
@@ -142,9 +147,7 @@ class TableRenderer
     {
         $props = $cell['props'];
         $styles = self::generate_css_string([
-            "border-width" => $props['borderWidth'] ?? "",
-            "border-color" => $props['borderColor'] ?? "",
-            "border-style" => $props['borderStyle'] ?? "",
+            "border" => $props['border'] ?? "",
             "border-radius" => $props['borderRadius']??'',
             "padding" => $props['padding'] ?? "",
             "height" => $props['height'] ?? "",
@@ -155,8 +158,8 @@ class TableRenderer
         $attrs = self::generate_attrs_string([
             "data-y-index" => $props['yIndex'] ?? '',
             "data-x-index" => $props['xIndex'] ?? '',
-            "data-sorted-vertical" => $props['sortedVertical'] ?? '',
-            "data-sorted-horizontal" => $props['sortedHorizontal'] ?? '',
+            "data-sorted-vertical" => $props['sortedVertical'] ?? false,
+            "data-sorted-horizontal" => $props['sortedHorizontal'] ?? false,
             "data-wptb-css-td-auto-width" => $props['autoWidth'],
             "data-wptb-css-td-auto-height" => $props['autoHeight'],
             "data-wptb-cell-vertical-alignment" => $props['vAlign'],
@@ -166,12 +169,17 @@ class TableRenderer
         $classNames = $props['hightLighted'] ?? '';
         $blocks = "";
 
+        $isFirst = true;
+
         if ($props['isEmpty']) {
             $classNames .= ' wptb-empty';
         } else {
             foreach ($cell['blocks'] as $block) {
+
                 switch ($block['type']) {
                     case 'text':
+                        $block['props']['isFirst'] = $isFirst;
+                        $isFirst = false;
                         $blocks .= Text_Element::render($block);
                         break;
                     case 'button':

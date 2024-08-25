@@ -94,6 +94,7 @@ var WPTB_Stringifier = function (codeMain) {
           padding: td.style.padding,
           background: td.style.backgroundColor,
           ownBgColor: tData.wptbOwnBgColor,
+          border: td.style.border,
           borderWidth: td.style.borderWidth,
           borderColor: td.style.borderColor,
           borderStyle: td.style.borderStyle,
@@ -149,6 +150,7 @@ var WPTB_BlockSerializer = {
     Array.from(el.querySelectorAll("p")).forEach((child) => {
       text += child.outerHTML;
     });
+
     return {
       type: "text",
       props: {
@@ -157,6 +159,7 @@ var WPTB_BlockSerializer = {
         fontSize: el.style.fontSize,
         padding: el.style.padding,
         margin: el.style.margin,
+        elementId: el.className.match('wptb-element-text-([0-9]+)')?.[1]
       },
     };
   },
