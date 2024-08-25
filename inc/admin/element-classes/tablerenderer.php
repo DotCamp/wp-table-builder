@@ -62,8 +62,9 @@ class TableRenderer
         ]);
 
         $attrs_string = self::generate_attrs_string([
-            "data-wptb-cells-width-auto-count" => $props['cellAutoWidthCount'],
             "data-wptb-table-directives" => $props['directives'],
+            "data-wptb-responsive-directives" => $props['responsiveDirectives']?? "default",
+            "data-wptb-cells-width-auto-count" => $props['cellAutoWidthCount'],
             "data-wptb-horizontal-scroll-status" => $props['scrollX'],
             "data-wptb-extra-styles" => $props['extraStyles'],
             "data-wptb-first-column-sticky" => $props['stickyFirstColumn'],
