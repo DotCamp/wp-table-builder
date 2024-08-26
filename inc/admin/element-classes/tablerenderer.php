@@ -43,7 +43,8 @@ class TableRenderer
         return $attrs_string;
     }
 
-    public static function get_icon($name){
+    public static function get_icon($name)
+    {
         $path = dirname(dirname(__DIR__)) . '/frontend/views/icons/' . $name . '.svg';
         if (file_exists($path)) {
             return file_get_contents($path);
@@ -54,17 +55,16 @@ class TableRenderer
     public static function render($body)
     {
         $props = $body['props'];
-        $separate = $props['separateCells'];
 
         $tblStyle = self::generate_css_string([
             "border" => $props['tableBorder'],
-            "border-spacing" => $separate ? "{$props['tableSpacingX']}px {$props['tableSpacingY']}px":"",
-            "border-collapse" => $separate ? "separate  !important" : ""
+            "border-spacing" => "{$props['tableSpacingX']}px {$props['tableSpacingY']}px",
+            "border-collapse" => $props['borderCollapse'] ?? '',
         ]);
 
         $attrs_string = self::generate_attrs_string([
             "data-wptb-table-directives" => $props['directives'],
-            "data-wptb-responsive-directives" => $props['responsiveDirectives']?? "",
+            "data-wptb-responsive-directives" => $props['responsiveDirectives'] ?? "",
             "data-wptb-cells-width-auto-count" => $props['cellsWidthAutoCount'],
             "data-wptb-horizontal-scroll-status" => $props['scrollX'],
             "data-wptb-extra-styles" => $props['extraStyles'],
@@ -111,7 +111,7 @@ class TableRenderer
             if ($i === 0 && isset($props['hoverHeaderBg']) && $props['hoverHeaderBg'] !== '') {
                 $hoverColor = $props['hoverHeaderBg'];
             } elseif ($i % 2 === 0) {
-                if (isset($props['hoverOddRowBg']) && $props['hoverOddRowBg'] !== ''){
+                if (isset($props['hoverOddRowBg']) && $props['hoverOddRowBg'] !== '') {
                     $hoverColor = $props['hoverOddRowBg'];
                 }
             } elseif (isset($props['hoverEvenRowBg']) && $props['hoverEvenRowBg'] !== '') {
@@ -121,7 +121,7 @@ class TableRenderer
             if ($hoverColor !== '') {
                 $classNames .= ' wptb-row-has-hover';
             }
-            
+
             $style = self::generate_css_string([
                 'background-color' => $row['props']['background'] ?? '',
                 '--hover-bg-color' => $hoverColor,
@@ -145,15 +145,29 @@ class TableRenderer
 
     private static function render_cell($cell)
     {
+
         $props = $cell['props'];
+        $borderCss = [];
+
+        if (isset($props['border']) && $props['border'] !== '') {
+            $borderCss = [
+                'border' => $props['border'],
+            ];
+        } else {
+            $borderCss = [
+                'border-width' => $props['borderWidth'] ?? '',
+                'border-color' => $props['borderColor'] ?? '',
+                'border-style' => $props['borderStyle'] ?? '',
+            ];
+        }
+
         $styles = self::generate_css_string([
-            "border" => $props['border'] ?? "",
-            "border-radius" => $props['borderRadius']??'',
+            "border-radius" => $props['borderRadius'] ?? '',
             "padding" => $props['padding'] ?? "",
             "height" => $props['height'] ?? "",
             "width" => $props['width'] ?? "",
             "background-color" => $props['background'] ?? '',
-        ]);
+        ] + $borderCss);
 
         $attrs = self::generate_attrs_string([
             "data-y-index" => $props['yIndex'] ?? '',

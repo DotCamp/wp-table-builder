@@ -14,6 +14,7 @@ if (!defined('WPINC')) {
 
 class Text_Element extends Element_Base
 {
+	private static $elemId = 597;
 
 	/**
 	 * Get element name.
@@ -207,7 +208,7 @@ class Text_Element extends Element_Base
 			"margin" => $attrs['margin'] ?? '',
 		]);
 		$html = wp_kses_post($attrs['text']);
-		$elId = $attrs['elementId'] ?? '';
+		$elId = self::$elemId++;
 		$innerAttrs = "";
 		if (isset($attrs['isFirst']) && $attrs['isFirst']) {
 			$innerAttrs = 'style="position: relative;"';

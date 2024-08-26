@@ -18,7 +18,7 @@ var WPTB_Stringifier = function (codeMain) {
     cellMinWidth: data.wptbTdWidthAuto || "120",
     sortHorizontal: data.wptbSortableTableHorizontal == "1" ? 1 : false,
     sortVertical: data.wptbSortableTableVertical == "1" ? 1 : false,
-    separateCells: tableStyle.borderCollapse !== "collapse" ? true : false,
+    borderCollapse: tableStyle.borderCollapse,
     tableSpacingX: data.borderSpacingColumns || "3",
     tableSpacingY: data.borderSpacingRows || "3",
     cols: data.tableColumns,
