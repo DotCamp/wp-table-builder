@@ -334,7 +334,7 @@ var WPTB_BlockSerializer = {
   },
 
   html(el) {
-    if (!el.classList.contains("wptb-custom-html-container")) {
+    if (!el.classList.contains("wptb-custom_html-container")) {
       return;
     }
     return {
