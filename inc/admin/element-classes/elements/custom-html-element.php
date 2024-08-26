@@ -142,21 +142,16 @@ class Custom_Html_Element extends Element_Base {
 
 		$html = $sanitizer->sanitize($props['html'], [
 			'remove-html-tags' => false,
-		]);;
+		]);
 
-		return <<<HTML
-		<div
-		  class="wptb-custom_html-container wptb-ph-element wptb-element-custom_html-1"
-		  style="{$style}"
-		>
-		  <div
-		    class="wptb-custom-html-wrapper"
-		    data-wptb-new-element="1"
-		    style="position: relative"
-		  >
-		    {$html}
-		  </div>
-		</div>
-		HTML;
+		// @formatter:off
+		return
+		'<div class="wptb-custom_html-container wptb-ph-element wptb-element-custom_html-1" ' .
+		'style="' . $style . '">' .
+			'<div class="wptb-custom-html-wrapper" data-wptb-new-element="1" style="position: relative">' .
+				$html .
+			'</div>' .
+		'</div>';
+		// @formatter:on
 	}
 }

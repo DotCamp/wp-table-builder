@@ -213,13 +213,6 @@ class Text_Element extends Element_Base
 		if (isset($attrs['isFirst']) && $attrs['isFirst']) {
 			$innerAttrs = 'style="position: relative;"';
 		}
-		return <<<HTML
-			<div
-				class="wptb-text-container wptb-ph-element wptb-element-text-{$elId}"
-				style="{$style}"
-			>
-				<div {$innerAttrs}>{$html}</div>
-			</div>
-		HTML;
+		return "<div class=\"wptb-text-container wptb-ph-element wptb-element-text-{$elId}\" style=\"{$style}\"><div {$innerAttrs}>{$html}</div></div>";
 	}
 }

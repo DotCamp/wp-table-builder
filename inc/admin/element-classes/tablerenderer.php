@@ -63,6 +63,11 @@ class TableRenderer
         ]);
 
         $attrs_string = self::generate_attrs_string([
+
+            "class" => "wptb-preview-table wptb-element-main-table_setting-237",
+            "style" => $tblStyle,
+
+            "data-reconstraction" => "1",
             "data-wptb-table-directives" => $props['directives'],
             "data-wptb-responsive-directives" => $props['responsiveDirectives'] ?? "",
             "data-wptb-cells-width-auto-count" => $props['cellsWidthAutoCount'],
@@ -131,16 +136,7 @@ class TableRenderer
             HTML;
         }
 
-        return <<<HTML
-        <table
-            class="wptb-preview-table wptb-element-main-table_setting-237"
-            data-reconstraction="1"
-            style="{$tblStyle}"
-            {$attrs_string}
-        >
-            <tbody {$tbody_attrs}>{$tbody}</tbody>
-        </table>
-        HTML;
+        return "<table {$attrs_string}><tbody {$tbody_attrs}>{$tbody}</tbody></table>";
     }
 
     private static function render_cell($cell)
@@ -170,6 +166,8 @@ class TableRenderer
         ] + $borderCss);
 
         $attrs = self::generate_attrs_string([
+            "style" => $styles,
+
             "data-y-index" => $props['yIndex'] ?? '',
             "data-x-index" => $props['xIndex'] ?? '',
             "data-sorted-vertical" => $props['sortedVertical'] ?? false,
@@ -240,15 +238,7 @@ class TableRenderer
             }
         }
 
-        return <<<HTML
-        <td
-            class="wptb-cell {$classNames}"
-            style="{$styles}"
-            {$attrs}
-        >
-            {$blocks}
-        </td>
-        HTML;
+        return "<td class=\"wptb-cell {$classNames}\" {$attrs}>{$blocks}</td>";
     }
 
 }

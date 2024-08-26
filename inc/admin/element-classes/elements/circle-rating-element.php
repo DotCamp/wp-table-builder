@@ -81,34 +81,21 @@ class Circle_Rating_Element extends Dummy_Element_base {
 
 		$barAngle = $value * 2 > $total ? 180 : 0;
 
+		//@formatter:off
+		return
+		'<div class="wptb-circle_rating-container wptb-ph-element wptb-element-circle_rating-2" ' .
+		'data-percentage-count="' . $value . '" ' .
+		'data-wptb-total-number="' . $total . '" ' .
+		'style="' . $style . '">' .
+			'<div class="wptb-rating-circle-wrapper" style="font-size: ' . $size . '">' .
+				'<span style="color: ' . $color . '">' . $value . $unit . '</span>' .
+				'<div class="wptb-rating-circle-slice" style="clip: rect(0em, 1em, 1em, 0.5em)">' .
+					'<div class="wptb-rating-circle-bar" style="border-color: ' . $color . '; transform: rotate(' . $barAngle . 'deg)"></div>' .
+					'<div class="wptb-rating-circle-fill" style="border-color: ' . $color . '; transform: rotate(' . $angle . 'deg);"></div>' .
+				'</div>' .
+			'</div>' .
+		'</div>';
 
-		return <<<HTML
-		<div
-		  class="wptb-circle_rating-container wptb-ph-element wptb-element-circle_rating-2"
-		  data-percentage-count="{$value}"
-		  data-wptb-total-number="{$total}"
-		  style="{$style}"
-		>
-		  <div class="wptb-rating-circle-wrapper" style="font-size: {$size}">
-		    <span style="color: {$color}">{$value}{$unit}</span>
-		    <div
-		      class="wptb-rating-circle-slice"
-		      style="clip: rect(0em, 1em, 1em, 0.5em)"
-		    >
-		      <div
-		        class="wptb-rating-circle-bar"
-		        style="border-color: {$color}; transform: rotate({$barAngle}deg)"
-		      ></div>
-		      <div
-		        class="wptb-rating-circle-fill"
-		        style="
-		          border-color: {$color};
-		          transform: rotate({$angle}deg);
-		        "
-		      ></div>
-		    </div>
-		  </div>
-		</div>
-		HTML;
+		//@formatter:on
 	}
 }

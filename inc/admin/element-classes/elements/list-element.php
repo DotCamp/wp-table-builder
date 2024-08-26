@@ -259,10 +259,10 @@ class List_Element extends Element_Base
       'padding' => $attrs['padding'],
       'margin' => $attrs['margin'],
     ]);
-    
+
     $pClass = '';
     if ($attrs['type'] == 'unordered') {
-      $pClass = "wptb-list-style-type-".esc_attr($attrs['listIcon']);
+      $pClass = "wptb-list-style-type-" . esc_attr($attrs['listIcon']);
     }
     $items = '';
     $i = 0;
@@ -270,57 +270,47 @@ class List_Element extends Element_Base
     foreach ($block['items'] as $item) {
       $i++;
       $liStyle = TableRenderer::generate_css_string([
-        'margin-bottom' => $attrs['itemSpacing']??'',
+        'margin-bottom' => $attrs['itemSpacing'] ?? '',
       ]);
 
       $pStyle = TableRenderer::generate_css_string([
-        "color" =>  $attrs['color']??'',
-        "font-size" =>  $attrs['fontSize']??'',
-        "text-align" =>  $item['alignment']??'',
+        'color' => $attrs['color'] ?? '',
+        'font-size' => $attrs['fontSize'] ?? '',
+        'text-align' => $item['alignment'] ?? '',
       ]);
       $liClass = 'wptb-in-element';
 
       if ($item['toolTip'] != '') {
-        $liClass .= ' wptb-tooltip wptb-tooltip-'.esc_attr($item['tooltipPosision']);
+        $liClass .= ' wptb-tooltip wptb-tooltip-' . esc_attr($item['tooltipPosision']);
       }
 
-
       $ttStyle = esc_attr($item['toolTipStyle']);
-
       $text = wp_kses_post($item['text']);
       $ttText = wp_kses_post($item['toolTip']);
-
-
-      $items .= <<<HTML
-      <li class="{$liClass}" style="{$liStyle}">
-        <div class="wptb-list-item-content" style="position: relative">
-          <p
-            data-list-style-type-index="{$i}."
-            style="{$pStyle}"
-            class="{$pClass}"
-          >
-            {$text}
-          </p>
-        </div>
-        <div
-          class="wptb-m-tooltip"
-          style="{$ttStyle}"
-        >
-          {$ttText}
-        </div>
-      </li>
-      HTML;
+  
+      // @formatter:off
+      $items .= 
+      '<li class="' . $liClass . '" style="' . $liStyle . '">' .
+          '<div class="wptb-list-item-content" style="position: relative">' .
+              '<p data-list-style-type-index="' . $i . '." style="' . $pStyle . '" class="' . $pClass . '">' .
+                  $text .
+              '</p>' .
+          '</div>' .
+          '<div class="wptb-m-tooltip" style="' . $ttStyle . '">' .
+              $ttText .
+          '</div>' .
+      '</li>';
+      // @formatter:on
     }
+  
+    // @formatter:off
+    return 
+    '<div class="wptb-list-container wptb-ph-element wptb-element-list-1" style="' . $listStyle . '">' .
+      '<ul>' .
+        $items .
+      '</ul>' .
+    '</div>';
+    // @formatter:on
 
-    return <<<HTML
-    <div
-        class="wptb-list-container wptb-ph-element wptb-element-list-1"
-        style="{$listStyle}"
-    >
-        <ul>
-            {$items}
-        </ul>
-    </div>
-    HTML;
   }
 }

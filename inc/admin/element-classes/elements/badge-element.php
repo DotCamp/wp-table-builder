@@ -76,18 +76,14 @@ class Badge_Element extends Dummy_Element_base {
 
         $text = wp_kses_post($props['text']??'');
 
-        return <<<HTML
-        <div
-          class="wptb-badge-container wptb-ph-element wptb-element-badge-1"
-          style="{$style}"
-        >
-          <div
-            class="wptb-badge-wrapper"
-            style="{$wrapperStyle}"
-          >
-            <p class="wptb-badge" style="position: relative">{$text}</p>
-          </div>
-        </div>
-        HTML;
+        // @formatter:off
+        return
+        '<div class="wptb-badge-container wptb-ph-element wptb-element-badge-1 style="'.$style.'">'.
+          '<div class="wptb-badge-wrapper" style="'.$wrapperStyle.'">'.
+            '<p class="wptb-badge" style="position: relative">'.$text.'</p>'.
+          '</div>'.
+        '</div>';
+        // @formatter:on
+
     }
 }
