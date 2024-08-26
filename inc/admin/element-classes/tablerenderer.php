@@ -131,9 +131,7 @@ class TableRenderer
                 'background-color' => $row['props']['background'] ?? '',
                 '--hover-bg-color' => $hoverColor,
             ]);
-            $tbody .= <<<HTML
-            <tr $attrs class="wptb-row {$classNames}" style="{$style}">$cells</tr>
-            HTML;
+            $tbody .= '<tr ' . $attrs . ' class="wptb-row ' . $classNames . '" style="' . $style . '">' . $cells . '</tr>';
         }
 
         return "<table {$attrs_string}><tbody {$tbody_attrs}>{$tbody}</tbody></table>";
