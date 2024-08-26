@@ -16,6 +16,7 @@ use WP_Table_Builder as NS;
 class Styled_List_Element extends Dummy_Element_base
 {
 
+	private static $element_id = 1;
 	/**
 	 * Name for dummy element.
 	 * @return string dummy name
@@ -127,7 +128,7 @@ class Styled_List_Element extends Dummy_Element_base
 
 		// @formatter:off
 		return 
-		'<div class="wptb-styled_list-container wptb-ph-element wptb-element-styled_list-1" style="' . $style . '">' .
+		'<div class="wptb-styled_list-container wptb-ph-element wptb-element-styled_list-'.self::$element_id++.'" style="' . $style . '">' .
 			'<ul>' .
 				$items .
 			'</ul>' .

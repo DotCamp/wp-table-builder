@@ -15,6 +15,7 @@ if (!defined('WPINC')) {
 class Star_Rating_Element extends Element_Base
 {
 
+	private static $element_id = 1;
 	/**
 	 * Get element name.
 	 *
@@ -358,7 +359,7 @@ class Star_Rating_Element extends Element_Base
 	
 		// @formatter:off
 		return 
-		'<div class="wptb-star_rating-container wptb-ph-element wptb-element-star_rating-1" data-star-count="' . $total . '" style="' . $style . '">' .
+		'<div class="wptb-star_rating-container wptb-ph-element wptb-element-star_rating-'.self::$element_id++.'" data-star-count="' . $total . '" style="' . $style . '">' .
 			'<div class="wptb-rating-stars-box">' .
 				'<ul class="wptb-rating-stars-list">' .
 					$stars .

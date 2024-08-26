@@ -17,6 +17,8 @@ if (!defined('WPINC')) {
 class Button_Element extends Element_Base
 {
 
+    private static $element_id = 1;
+
     /**
      * Get element name.
      *
@@ -489,7 +491,7 @@ class Button_Element extends Element_Base
         
         //@formatter:off
         return 
-        '<div class="wptb-button-container wptb-ph-element wptb-element-button-1" style="' . $cStyle . '">' .
+        '<div class="wptb-button-container wptb-ph-element wptb-element-button-'.self::$element_id++.'" style="' . $cStyle . '">' .
             '<div class="wptb-button-wrapper ' . $wrapperClass . '" style="justify-content: ' . $btnAlignment . '">' .
                 '<' . $lTag . ' class="wptb-link-target" ' . $lAttrs . '>' .
                     '<div class="wptb-button wptb-plugin-button-order-' . $btnOrder . '" style="position: relative;' . $btnStyle . '" ' . $btnAttrs . '>' .

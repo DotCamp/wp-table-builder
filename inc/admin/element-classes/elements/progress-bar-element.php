@@ -16,6 +16,7 @@ use WP_Table_Builder as NS;
 class Progress_Bar_Element extends Dummy_Element_base
 {
 
+    private static $element_id = 1;
     /**
      * Name for dummy element.
      * @return string dummy name
@@ -84,7 +85,7 @@ class Progress_Bar_Element extends Dummy_Element_base
 
         // @formatter:off
         return 
-        '<div class="wptb-progress_bar-container wptb-ph-element wptb-ondragenter wptb-element-progress_bar-1" style="' . $style . '">' .
+        '<div class="wptb-progress_bar-container wptb-ph-element wptb-ondragenter wptb-element-progress_bar-'.self::$element_id++.'" style="' . $style . '">' .
             '<div class="wptb-progress-bar-wrapper">' .
                 '<svg class="wptb-progress-bar" viewBox="0 0 100 10" preserveAspectRatio="none">' .
                     '<path d="M 0,5 L 100,5" class="wptb-progress-bar-trail" stroke="' . $secondaryColor . '" style="stroke-width: ' . $thickness . '"></path>' .

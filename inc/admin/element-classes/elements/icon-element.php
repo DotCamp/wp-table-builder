@@ -16,6 +16,8 @@ use WP_Table_Builder as NS;
 class Icon_Element extends Dummy_Element_base
 {
 
+	private static $element_id = 1;
+
 	/**
 	 * Name for dummy element.
 	 * @return string dummy name
@@ -130,7 +132,7 @@ class Icon_Element extends Dummy_Element_base
 		
 		// @formatter:off
 		return
-		'<div class="wptb-icon-container wptb-ph-element wptb-element-icon-1" data-wptb-icon-number="' . $iconCount . '" style="' . $style . '">' .
+		'<div class="wptb-icon-container wptb-ph-element wptb-element-icon-'.self::$element_id++.'" data-wptb-icon-number="' . $iconCount . '" style="' . $style . '">' .
 			'<div class="wptb-icon-wrapper" style="text-align: ' . $align . '">' .
 				$icons .
 			'</div>' .

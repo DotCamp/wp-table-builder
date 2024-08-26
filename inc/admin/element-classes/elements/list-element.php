@@ -16,6 +16,8 @@ if (!defined('WPINC')) {
 class List_Element extends Element_Base
 {
 
+  private static $element_id = 1;
+
   /**
    * Get element name.
    *
@@ -305,7 +307,7 @@ class List_Element extends Element_Base
   
     // @formatter:off
     return 
-    '<div class="wptb-list-container wptb-ph-element wptb-element-list-1" style="' . $listStyle . '">' .
+    '<div class="wptb-list-container wptb-ph-element wptb-element-list-'.self::$element_id++.'" style="' . $listStyle . '">' .
       '<ul>' .
         $items .
       '</ul>' .

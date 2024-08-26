@@ -16,6 +16,7 @@ if (!defined('WPINC')) {
 class Image_Element extends Element_Base
 {
 
+    private static $element_id = 1;
     /**
      * Get element name.
      *
@@ -244,7 +245,7 @@ class Image_Element extends Element_Base
 
         // @formatter:off
         return
-        '<div class="wptb-image-container wptb-ph-element wptb-element-image-1" ' . $wrapperAttrs . ' style="' . $style . '">' .
+        '<div class="wptb-image-container wptb-ph-element wptb-element-image-'.self::$element_id++.'" ' . $wrapperAttrs . ' style="' . $style . '">' .
             '<div class="wptb-image-wrapper">' .
                 '<' . $lTag . ' ' . $lAttrs . ' class="wptb-link-target" style="' . $lStyle . '">' .
                     '<img class="wptb-image-element-target" ' . $imgAttrs . ' style="width: 100%" />' .

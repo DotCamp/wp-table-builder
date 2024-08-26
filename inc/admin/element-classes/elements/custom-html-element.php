@@ -13,6 +13,8 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 class Custom_Html_Element extends Element_Base {
+
+	private static $element_id = 1;
     
     /**
 	 * Get element name.
@@ -146,7 +148,7 @@ class Custom_Html_Element extends Element_Base {
 
 		// @formatter:off
 		return
-		'<div class="wptb-custom_html-container wptb-ph-element wptb-element-custom_html-1" ' .
+		'<div class="wptb-custom_html-container wptb-ph-element wptb-element-custom_html-'.self::$element_id++.'" ' .
 		'style="' . $style . '">' .
 			'<div class="wptb-custom-html-wrapper" data-wptb-new-element="1" style="position: relative">' .
 				$html .

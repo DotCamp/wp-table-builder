@@ -16,6 +16,9 @@ use WP_Table_Builder as NS;
 class Ribbon_Element extends Dummy_Element_base
 {
 
+
+
+    private static $element_id = 1;
     /**
      * Name for dummy element.
      * @return string dummy name
@@ -70,7 +73,7 @@ class Ribbon_Element extends Dummy_Element_base
         extract($data);
         // @formatter:off
         return 
-        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1" style="' . $style . '" ' . $attrs . '>' .
+        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-'.self::$element_id++.'" style="' . $style . '" ' . $attrs . '>' .
             '<div id="wptbRibbonMainWrap" class="wptb-element-ribbon-wrapper" style="">' .
                 '<div id="wptbRibbonTextWrap" class="wptb-element-ribbon-inner wptb-ribbon-type-rectangle-text-wrap wptb-plugin-box-shadow-md" style="background-color: ' . $bgColor . '; border-color: ' . $borderColor . '">' .
                     '<p style="width: auto; font-size: ' . $fontSize . '; position: relative" class="wptb-element-ribbon-text">' .
@@ -95,7 +98,7 @@ class Ribbon_Element extends Dummy_Element_base
         $width = esc_attr($props['width'] ?? '70');
         // @formatter:off
         return 
-        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1" style="' . $style . '" ' . $attrs . '>' .
+        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-'.self::$element_id++.'" style="' . $style . '" ' . $attrs . '>' .
             '<div id="wptbRibbonMainWrap" class="wptb-element-ribbon-wrapper wptb-ribbon-bookmark-main-wrap wptb-plugin-filter-box-shadow-md" style="width: ' . $width . 'px">' .
                 '<div id="wptbRibbonTextWrap" class="wptb-element-ribbon-inner" style="background-color: ' . $bgColor . '">' .
                     '<p style="width: auto; font-size: ' . $fontSize . '; position: relative" class="wptb-element-ribbon-text">' .
@@ -131,7 +134,7 @@ class Ribbon_Element extends Dummy_Element_base
 
         // @formatter:off
         return 
-        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1" style="' . $style . '" ' . $attrs . '>' .
+        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-'.self::$element_id++.'" style="' . $style . '" ' . $attrs . '>' .
             '<div id="wptbRibbonMainWrap" class="wptb-element-ribbon-wrapper wptb-ribbon-corner-main-wrap" style="">' .
                 '<div id="wptbRibbonTextWrap" class="wptb-element-ribbon-inner wptb-plugin-filter-box-shadow-md-close" style="background-color: ' . $bgColor . ';border-color: ' . $borderColor . ';transform: ' . $sideStyle . ';">' .
                     '<p style="width: 200px;font-size: 15px;position: relative;text-align: center;" class="wptb-element-ribbon-text">' .
@@ -168,7 +171,7 @@ class Ribbon_Element extends Dummy_Element_base
 
         // @formatter:off
         return 
-        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1" style="' . $style . '" ' . $attrs . '>' .
+        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-'.self::$element_id++.'" style="' . $style . '" ' . $attrs . '>' .
             '<div id="wptbRibbonMainWrap" class="wptb-element-ribbon-wrapper wptb-ribbon-icon01-main-wrap' . $sideClass . '" style="">' .
                 '<div id="wptbRibbonTextWrap" class="wptb-element-ribbon-inner wptb-ribbon-icon01-text-wrap wptb-plugin-filter-box-shadow-md" style="">' .
                     '<p style="width: auto;font-size: ' . $fontSize . ';position: relative;background-color: ' . $bgColor . ';" class="wptb-element-ribbon-text">' .
@@ -196,7 +199,7 @@ class Ribbon_Element extends Dummy_Element_base
     
         // @formatter:off
         return 
-        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-1 wptb-ribbon-side-fix" style="' . $style . '" ' . $attrs . '>' .
+        '<div class="wptb-ribbon_element-container wptb-ph-element wptb-element-ribbon_element-'.self::$element_id++.' wptb-ribbon-side-fix" style="' . $style . '" ' . $attrs . '>' .
             '<div id="wptbRibbonMainWrap" class="wptb-element-ribbon-wrapper wptb-ribbon-sideFancy-main-wrap' . $sideClass . '" style="">' .
                 '<div id="wptbRibbonTextWrap" class="wptb-element-ribbon-inner wptb-ribbon-sideFancy-text-wrap wptb-plugin-filter-box-shadow-md" style="background-color: ' . $bgColor . '; border-color: ' . $borderColor . '">' .
                     '<p style="width: auto; font-size: 15px; position: relative" class="wptb-element-ribbon-text">' .

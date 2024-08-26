@@ -3,7 +3,6 @@
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
 use WP_Table_Builder\Inc\Admin\Element_Classes\TableRenderer;
-use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Dummy_Element_base;
 use WP_Table_Builder as NS;
 
@@ -15,6 +14,7 @@ use WP_Table_Builder as NS;
  */
 class Circle_Rating_Element extends Dummy_Element_base {
 
+	private static $element_id = 1;
 	/**
 	 * Name for dummy element.
 	 * @return string dummy name
@@ -83,7 +83,7 @@ class Circle_Rating_Element extends Dummy_Element_base {
 
 		//@formatter:off
 		return
-		'<div class="wptb-circle_rating-container wptb-ph-element wptb-element-circle_rating-2" ' .
+		'<div class="wptb-circle_rating-container wptb-ph-element wptb-element-circle_rating-'.self::$element_id++.'" ' .
 		'data-percentage-count="' . $value . '" ' .
 		'data-wptb-total-number="' . $total . '" ' .
 		'style="' . $style . '">' .

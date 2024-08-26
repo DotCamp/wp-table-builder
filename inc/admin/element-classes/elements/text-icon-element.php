@@ -16,6 +16,7 @@ use WP_Table_Builder as NS;
 class Text_Icon_Element extends Dummy_Element_base
 {
 
+	private static $element_id = 1;
 	/**
 	 * Name for dummy element.
 	 * @return string dummy name
@@ -103,7 +104,7 @@ class Text_Icon_Element extends Dummy_Element_base
 
 		// @formatter:off
 		return 
-		'<div class="wptb-text_icon_element-container wptb-ph-element mce-content-body wptb-element-text_icon_element-1" ' . $attrs . ' style="' . $style . '">' .
+		'<div class="wptb-text_icon_element-container wptb-ph-element mce-content-body wptb-element-text_icon_element-'.self::$element_id++.'" ' . $attrs . ' style="' . $style . '">' .
 			'<div class="wptb-element-text-icon-wrapper">' .
 				'<div id="wptbTextIconIconWrapper" class="wptb-text-icon-icon-wrapper" data-wptb-text-icon-icon-src="' . $iconSrc . '" style="color: ' . $iconColor . '; width: ' . $iconSize . '; height: ' . $iconSize . ';">' .
 					$icon .
