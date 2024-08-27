@@ -74,7 +74,7 @@ class TableRenderer
             "data-wptb-horizontal-scroll-status" => $props['scrollX'] ?? false,
             "data-wptb-extra-styles" => $props['extraStyles'] ?? false,
             "data-wptb-first-column-sticky" => $props['stickyFirstColumn'] ?? false,
-            "data-wptb-pro-pagination-top-row-header" => $props['paginationTopRowAsHeader'] ?? false,,
+            "data-wptb-pro-pagination-top-row-header" => $props['paginationTopRowAsHeader'] ?? false,
             "data-wptb-rows-per-page" => $props['rowsPerPage'] ?? false,
             "data-wptb-pro-search-top-row-header" => $props['searchKeepHeader'] ?? false,
             "data-wptb-searchbar-position" => $props['searchPosition'] ?? false,
