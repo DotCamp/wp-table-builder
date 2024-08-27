@@ -458,17 +458,17 @@ class Button_Element extends Element_Base
         $lTag = 'span';
         $lAttrs = "";
 
-        if ($props['url'] !== '') {
+        if ( isset($props['url']) && $props['url'] !== '') {
             $lTag = 'a';
             if ($props['convertToAbsolute'] && !preg_match('/^https?:\/\//', $props['url'])) {
                 $props['url'] = 'https://' . ltrim($props['url'], '/');
             }
             $lAttrs = TableRenderer::generate_attrs_string([
                 "id" => $props['id'] ?? false,
-                "href" => $props['url'],
-                "target" => $props['linkTarget'],
-                "rel" => $props['linkRel'],
-                "data-wptb-link-enable-convert-relative" => $props['convertToAbsolute'],
+                "href" => $props['url'] ?? false,
+                "target" => $props['linkTarget'] ?? false,
+                "rel" => $props['linkRel'] ?? false,
+                "data-wptb-link-enable-convert-relative" => $props['convertToAbsolute'] ?? false,
                 "style" => isset($props['width']) ? 'width: ' . $props['width'] . ';' : false,
             ]);
         }

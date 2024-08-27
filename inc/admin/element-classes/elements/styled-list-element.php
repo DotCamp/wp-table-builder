@@ -100,7 +100,7 @@ class Styled_List_Element extends Dummy_Element_base
 
 			$liClass = 'wptb-in-element';
 			if ($item['toolTip'] != '') {
-				$liClass .= ' wptb-tooltip wptb-tooltip-' . esc_attr($item['tooltipPosision']);
+				$liClass .= ' wptb-tooltip wptb-tooltip-' . esc_attr($item['tooltipPosision'] ?? 'top');
 			}
 		
 			// @formatter:off

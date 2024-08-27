@@ -230,16 +230,16 @@ class Image_Element extends Element_Base
         $lTag = 'span';
         $lAttrs = "";
 
-        if ($attrs['url'] !== '') {
+        if (isset($attrs['url']) && $attrs['url'] !== '') {
             $lTag = 'a';
             if ($attrs['convertToAbsolute'] && !preg_match('/^https?:\/\//', $attrs['url'])) {
                 $attrs['url'] = 'https://' . ltrim($attrs['url'], '/');
             }
             $lAttrs = TableRenderer::generate_attrs_string([
-                "href" => $attrs['url'],
-                "target" => $attrs['linkTarget'],
-                "rel" => $attrs['linkRel'],
-                "data-wptb-link-enable-convert-relative" => $attrs['convertToAbsolute'],
+                "href" => $attrs['url'] ?? false,
+                "target" => $attrs['linkTarget'] ?? false,
+                "rel" => $attrs['linkRel'] ?? false,
+                "data-wptb-link-enable-convert-relative" => $attrs['convertToAbsolute'] ?? false,
             ]);
         }
 

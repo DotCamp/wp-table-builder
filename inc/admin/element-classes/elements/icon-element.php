@@ -93,16 +93,16 @@ class Icon_Element extends Dummy_Element_base
 			$iconSrc = esc_attr($icon['icon'] ?? 'star');
 			$iconStr = TableRenderer::get_icon($iconSrc);
 
-			if ($icon['url'] !== '') {
+			if ( isset($icon['url']) && $icon['url'] !== '') {
 				$lTag = 'a';
 				if ($icon['convertToAbsolute'] && !preg_match('/^https?:\/\//', $icon['url'])) {
 					$icon['url'] = 'https://' . ltrim($icon['url'], '/');
 				}
 				$lAttrs = TableRenderer::generate_attrs_string([
-					"href" => $icon['url'],
-					"target" => $icon['linkTarget'],
-					"rel" => $icon['linkRel'],
-					"data-wptb-link-enable-convert-relative" => $icon['convertToAbsolute'],
+					"href" => $icon['url'] ?? false,
+					"target" => $icon['linkTarget'] ?? false,
+					"rel" => $icon['linkRel'] ?? false,
+					"data-wptb-link-enable-convert-relative" => $icon['convertToAbsolute'] ?? false,
 				]);
 			}
 			// @formatter:off
