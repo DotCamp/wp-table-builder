@@ -422,19 +422,19 @@ class Button_Element extends Element_Base
 
     public static function render($block)
     {
-        $props = $block['props'];
+        $props = $block['props'] ?? [];
 
         $cStyle = TableRenderer::generate_css_string([
-            'padding' => $props['padding'],
-            'margin' => $props['margin'],
+            'padding' => $props['padding'] ?? '',
+            'margin' => $props['margin'] ?? '',
         ]);
 
         $btnStyle = TableRenderer::generate_css_string([
             "border-radius" => $props['borderRadius'] ?? '',
             "background-color" => $props['background'] ?? '',
             "color" => $props['color'] ?? '',
-            "justify-content" => $props['contentAlignment'],
-            "transform" => $props[''],
+            "justify-content" => $props['contentAlignment'] ?? '',
+            "transform" => $props[''] ?? '',
         ]);
 
         $hoverAttrs = TableRenderer::generate_attrs_string([
