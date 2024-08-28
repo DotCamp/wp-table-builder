@@ -18,6 +18,7 @@ const gulpConfig = {
 	adminJs: {
 		src: [
 			'./inc/admin/js/core/*.js',
+			'./inc/admin/js/core/WPTB_innerElementSet.js',
 			'./inc/admin/js/core-premium/*.js',
 			'./inc/admin/js/core/rollup-source/WPTB_IconManager.js',
 		],
@@ -65,7 +66,7 @@ function adminJs() {
 		.pipe(sourcemaps.init())
 		.pipe(
 			babel({
-				presets: [['@babel/env', { modules: false }]],
+				presets: [['@babel/env', { modules: false, exclude: ['transform-function-name'] }]],
 				babelrc: false,
 			})
 		)
