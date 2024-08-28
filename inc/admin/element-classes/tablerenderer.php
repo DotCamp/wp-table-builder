@@ -43,7 +43,8 @@ class TableRenderer
         return $attrs_string;
     }
 
-    public static function get_icon($name){
+    public static function get_icon($name)
+    {
         $path = dirname(dirname(__DIR__)) . '/frontend/views/icons/' . $name . '.svg';
         if (file_exists($path)) {
             return file_get_contents($path);
@@ -58,27 +59,32 @@ class TableRenderer
         $tblStyle = self::generate_css_string([
             "border" => $props['tableBorder'],
             "border-spacing" => "{$props['tableSpacingX']}px {$props['tableSpacingY']}px",
-            "border-collapse" => ($props['separateCells'] ? "separate" : "collapse") . " !important"
+            "border-collapse" => $props['borderCollapse'] ?? '',
         ]);
 
         $attrs_string = self::generate_attrs_string([
-            "data-wptb-table-directives" => $props['directives'],
-            "data-wptb-responsive-directives" => $props['responsiveDirectives']?? "default",
-            "data-wptb-cells-width-auto-count" => $props['cellAutoWidthCount'],
-            "data-wptb-horizontal-scroll-status" => $props['scrollX'],
-            "data-wptb-extra-styles" => $props['extraStyles'],
-            "data-wptb-first-column-sticky" => $props['stickyFirstColumn'],
-            "data-wptb-pro-pagination-top-row-header" => $props['paginationTopRowAsHeader'],
-            "data-wptb-rows-per-page" => $props['rowsPerPage'],
-            "data-wptb-pro-search-top-row-header" => $props['searchKeepHeader'],
-            "data-wptb-searchbar-position" => $props['searchPosition'],
-            "role" => $props['role'],
-            "data-table-columns" => $props['cols'],
-            "data-wptb-table-alignment" => $props['alignment'],
-            "data-wptb-td-width-auto" => $props['cellMinWidth'],
-            "data-wptb-table-tds-sum-max-width" => $props['tdSumMaxWidth'],
-            "data-disable-theme-styles" => $props['disableThemeStyles'],
-            "data-wptb-search-enable" => $props['searchEnable'],
+
+            "class" => "wptb-preview-table wptb-element-main-table_setting-237",
+            "style" => $tblStyle,
+
+            "data-reconstraction" => "1",
+            "data-wptb-table-directives" => $props['directives'] ?? false,
+            "data-wptb-responsive-directives" => $props['responsiveDirectives'] ?? false,
+            "data-wptb-cells-width-auto-count" => $props['cellsWidthAutoCount'] ?? false,
+            "data-wptb-horizontal-scroll-status" => $props['scrollX'] ?? false,
+            "data-wptb-extra-styles" => $props['extraStyles'] ?? false,
+            "data-wptb-first-column-sticky" => $props['stickyFirstColumn'] ?? false,
+            "data-wptb-pro-pagination-top-row-header" => $props['paginationTopRowAsHeader'] ?? false,
+            "data-wptb-rows-per-page" => $props['rowsPerPage'] ?? false,
+            "data-wptb-pro-search-top-row-header" => $props['searchKeepHeader'] ?? false,
+            "data-wptb-searchbar-position" => $props['searchPosition'] ?? false,
+            "role" => $props['role'] ?? false,
+            "data-table-columns" => $props['cols'] ?? false,
+            "data-wptb-table-alignment" => $props['alignment'] ?? false,
+            "data-wptb-td-width-auto" => $props['cellMinWidth'] ?? false,
+            "data-wptb-table-tds-sum-max-width" => $props['tdSumMaxWidth'] ?? false,
+            "data-disable-theme-styles" => $props['disableThemeStyles'] ?? false,
+            "data-wptb-search-enable" => $props['searchEnable'] ?? false,
 
             "data-wptb-header-background-color" => $props['headerBg'] ?? false,
             "data-wptb-even-row-background-color" => $props['evenRowBg'] ?? false,
@@ -110,68 +116,80 @@ class TableRenderer
             if ($i === 0 && isset($props['hoverHeaderBg']) && $props['hoverHeaderBg'] !== '') {
                 $hoverColor = $props['hoverHeaderBg'];
             } elseif ($i % 2 === 0) {
-                if (isset($props['hoverOddRowBg']) && $props['hoverOddRowBg'] !== ''){
+                if (isset($props['hoverOddRowBg']) && $props['hoverOddRowBg'] !== '') {
                     $hoverColor = $props['hoverOddRowBg'];
                 }
             } elseif (isset($props['hoverEvenRowBg']) && $props['hoverEvenRowBg'] !== '') {
                 $hoverColor = $props['hoverEvenRowBg'];
             }
-            
+
+            if ($hoverColor !== '') {
+                $classNames .= ' wptb-row-has-hover';
+            }
+
             $style = self::generate_css_string([
                 'background-color' => $row['props']['background'] ?? '',
                 '--hover-bg-color' => $hoverColor,
             ]);
-            $tbody .= <<<HTML
-            <tr $attrs class="wptb-row {$classNames}" style="{$style}">$cells</tr>
-            HTML;
+            $tbody .= '<tr ' . $attrs . ' class="wptb-row ' . $classNames . '" style="' . $style . '">' . $cells . '</tr>';
         }
 
-        return <<<HTML
-        <table
-            class="wptb-preview-table wptb-element-main-table_setting-237"
-            data-reconstraction="1"
-            style="{$tblStyle}"
-            {$attrs_string}
-        >
-            <tbody {$tbody_attrs}>{$tbody}</tbody>
-        </table>
-        HTML;
+        return "<table {$attrs_string}><tbody {$tbody_attrs}>{$tbody}</tbody></table>";
     }
 
     private static function render_cell($cell)
     {
+
         $props = $cell['props'];
+        $borderCss = [];
+
+        if (isset($props['border']) && $props['border'] !== '') {
+            $borderCss = [
+                'border' => $props['border'],
+            ];
+        } else {
+            $borderCss = [
+                'border-width' => $props['borderWidth'] ?? '',
+                'border-color' => $props['borderColor'] ?? '',
+                'border-style' => $props['borderStyle'] ?? '',
+            ];
+        }
+
         $styles = self::generate_css_string([
-            "border-width" => $props['borderWidth'] ?? "",
-            "border-color" => $props['borderColor'] ?? "",
-            "border-style" => $props['borderStyle'] ?? "",
-            "border-radius" => $props['borderRadius']??'',
+            "border-radius" => $props['borderRadius'] ?? '',
             "padding" => $props['padding'] ?? "",
             "height" => $props['height'] ?? "",
             "width" => $props['width'] ?? "",
             "background-color" => $props['background'] ?? '',
-        ]);
+        ] + $borderCss);
 
         $attrs = self::generate_attrs_string([
-            "data-y-index" => $props['yIndex'] ?? '',
-            "data-x-index" => $props['xIndex'] ?? '',
-            "data-sorted-vertical" => $props['sortedVertical'] ?? '',
-            "data-sorted-horizontal" => $props['sortedHorizontal'] ?? '',
-            "data-wptb-css-td-auto-width" => $props['autoWidth'],
-            "data-wptb-css-td-auto-height" => $props['autoHeight'],
-            "data-wptb-cell-vertical-alignment" => $props['vAlign'],
+            "style" => $styles,
+
+            "data-y-index" => $props['yIndex'] ?? false,
+            "data-x-index" => $props['xIndex'] ?? false,
+            "data-sorted-vertical" => $props['sortedVertical'] ?? false,
+            "data-sorted-horizontal" => $props['sortedHorizontal'] ?? false,
+            "data-wptb-css-td-auto-width" => $props['autoWidth'] ?? false,
+            "data-wptb-css-td-auto-height" => $props['autoHeight'] ?? false,
+            "data-wptb-cell-vertical-alignment" => $props['vAlign'] ?? false,
             "data-wptb-own-bg-color" => $props['ownBgColor'] ?? false,
         ]);
 
         $classNames = $props['hightLighted'] ?? '';
         $blocks = "";
 
+        $isFirst = true;
+
         if ($props['isEmpty']) {
             $classNames .= ' wptb-empty';
         } else {
             foreach ($cell['blocks'] as $block) {
+
                 switch ($block['type']) {
                     case 'text':
+                        $block['props']['isFirst'] = $isFirst;
+                        $isFirst = false;
                         $blocks .= Text_Element::render($block);
                         break;
                     case 'button':
@@ -218,15 +236,7 @@ class TableRenderer
             }
         }
 
-        return <<<HTML
-        <td
-            class="wptb-cell {$classNames}"
-            style="{$styles}"
-            {$attrs}
-        >
-            {$blocks}
-        </td>
-        HTML;
+        return "<td class=\"wptb-cell {$classNames}\" {$attrs}>{$blocks}</td>";
     }
 
 }

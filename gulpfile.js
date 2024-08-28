@@ -65,7 +65,7 @@ function adminJs() {
 		.pipe(sourcemaps.init())
 		.pipe(
 			babel({
-				presets: [['@babel/env', { modules: false }]],
+				presets: [['@babel/env', { modules: false, exclude: ['transform-function-name'] }]],
 				babelrc: false,
 			})
 		)

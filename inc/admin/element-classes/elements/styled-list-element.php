@@ -16,6 +16,7 @@ use WP_Table_Builder as NS;
 class Styled_List_Element extends Dummy_Element_base
 {
 
+	private static $element_id = 1;
 	/**
 	 * Name for dummy element.
 	 * @return string dummy name
@@ -83,7 +84,7 @@ class Styled_List_Element extends Dummy_Element_base
 		$vSpace = esc_attr($props['itemSpacing'] ?? '5px');
 		$icSize = esc_attr($props['iconSize'] ?? '20px');
 		$icColor = esc_attr($props['iconColor'] ?? 'rgb(0, 153, 71)');
-		
+
 		$iconSrc = esc_attr($props['icon'] ?? 'check');
 		$icon = TableRenderer::get_icon($iconSrc);
 
@@ -99,55 +100,40 @@ class Styled_List_Element extends Dummy_Element_base
 
 			$liClass = 'wptb-in-element';
 			if ($item['toolTip'] != '') {
-				$liClass .= ' wptb-tooltip wptb-tooltip-'.esc_attr($item['tooltipPosision']);
+				$liClass .= ' wptb-tooltip wptb-tooltip-' . esc_attr($item['tooltipPosision'] ?? 'top');
 			}
-
-			$items .= <<<HTML
-			<li class="{$liClass}" style="margin-bottom: {$vSpace};">
-			  <div
-			    class="wptb-styled-list-li-inner-wrap"
-			    data-wptb-styled-list-alignment="{$alignment}"
-			  >
-			    <div
-			      class="wptb-styled-list-icon"
-			      data-wptb-styled-list-icon-src="{$iconSrc}"
-			      style="
-			        width: {$icSize};
-			        height: {$icSize};
-			        flex: 0 0 {$icSize};
-			        fill: {$icColor};
-			      "
-			    >
-			      {$icon}
-			    </div>
-			    <div
-			      class="wptb-styled-list-item-content"
-			      style="position: relative"
-			    >
-			      <p
-			        data-styled_list-marker=""
-			        style="$txtStyle"
-			      >
-			        {$text}
-			      </p>
-			    </div>
-			    <div class="wptb-m-tooltip" style="{$ttStyle}">{$toolTip}</div>
-			  </div>
-			  <div class="wptb-clear-both"></div>
-			</li>
-			HTML;
+		
+			// @formatter:off
+			$items .= 
+			'<li class="' . $liClass . '" style="margin-bottom: ' . $vSpace . ';">' .
+				'<div class="wptb-styled-list-li-inner-wrap" data-wptb-styled-list-alignment="' . $alignment . '">' .
+					'<div class="wptb-styled-list-icon" data-wptb-styled-list-icon-src="' . $iconSrc . '" style="width: ' . $icSize . '; height: ' . $icSize . '; flex: 0 0 ' . $icSize . '; fill: ' . $icColor . ';">' .
+						$icon .
+					'</div>' .
+					'<div class="wptb-styled-list-item-content" style="position: relative">' .
+						'<p data-styled_list-marker="" style="' . $txtStyle . '">' .
+							$text .
+						'</p>' .
+					'</div>' .
+					'<div class="wptb-m-tooltip" style="' . $ttStyle . '">' .
+						$toolTip .
+					'</div>' .
+				'</div>' .
+				'<div class="wptb-clear-both"></div>' .
+			'</li>';
+			// @formatter:on
 		}
 
 
-		return <<<HTML
-		<div
-		  class="wptb-styled_list-container wptb-ph-element wptb-element-styled_list-1"
-		  style="{$style}"
-		>
-		  <ul>
-		    {$items}
-		  </ul>
-		</div>
-		HTML;
+
+		// @formatter:off
+		return 
+		'<div class="wptb-styled_list-container wptb-ph-element wptb-element-styled_list-'.self::$element_id++.'" style="' . $style . '">' .
+			'<ul>' .
+				$items .
+			'</ul>' .
+		'</div>';
+		// @formatter:on
+
 	}
 }

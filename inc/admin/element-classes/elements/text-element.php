@@ -14,6 +14,7 @@ if (!defined('WPINC')) {
 
 class Text_Element extends Element_Base
 {
+	private static $elemId = 597;
 
 	/**
 	 * Get element name.
@@ -207,13 +208,11 @@ class Text_Element extends Element_Base
 			"margin" => $attrs['margin'] ?? '',
 		]);
 		$html = wp_kses_post($attrs['text']);
-		return <<<HTML
-			<div
-				class="wptb-text-container wptb-ph-element wptb-element-text-606"
-				style="{$style}"
-			>
-				<div>{$html}</div>
-			</div>
-		HTML;
+		$elId = self::$elemId++;
+		$innerAttrs = "";
+		if (isset($attrs['isFirst']) && $attrs['isFirst']) {
+			$innerAttrs = 'style="position: relative;"';
+		}
+		return "<div class=\"wptb-text-container wptb-ph-element wptb-element-text-{$elId}\" style=\"{$style}\"><div {$innerAttrs}>{$html}</div></div>";
 	}
 }

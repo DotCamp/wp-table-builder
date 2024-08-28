@@ -13,8 +13,10 @@ if (!defined('WPINC')) {
     die;
 }
 
-class Image_Element extends Element_Base {
+class Image_Element extends Element_Base
+{
 
+    private static $element_id = 1;
     /**
      * Get element name.
      *
@@ -25,7 +27,8 @@ class Image_Element extends Element_Base {
      * @access public
      *
      */
-    public function get_name() {
+    public function get_name()
+    {
         return 'image';
     }
 
@@ -39,7 +42,8 @@ class Image_Element extends Element_Base {
      * @access public
      *
      */
-    public function get_title() {
+    public function get_title()
+    {
         return esc_html_e('Image', 'wp-table-builder');
     }
 
@@ -53,7 +57,8 @@ class Image_Element extends Element_Base {
      * @access public
      *
      */
-    public function get_directory_icon() {
+    public function get_directory_icon()
+    {
         return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.svg';
     }
 
@@ -67,7 +72,8 @@ class Image_Element extends Element_Base {
      * @access public
      *
      */
-    public function get_url_icon() {
+    public function get_url_icon()
+    {
         return wp_normalize_path(NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/image.svg');
     }
 
@@ -77,7 +83,8 @@ class Image_Element extends Element_Base {
      * @since 1.1.2
      * @access protected
      */
-    public function element_script() {
+    public function element_script()
+    {
         return wp_normalize_path(NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/image-element.js');
     }
 
@@ -90,65 +97,66 @@ class Image_Element extends Element_Base {
      *
      * @access protected
      */
-    protected function _register_controls() {
+    protected function _register_controls()
+    {
         $general_controls = [
-            'imageReplaceButton'   =>
-            [
-                'label' => __('Replace Image', 'wp-table-builder'),
-                'type'  => Controls_Manager::BUTTON,
-            ],
-            'imageAlignment'       =>
-            [
-                'label'        => __('Image Alignment', 'wp-table-builder'),
-                'type'         => Controls_Manager::ALIGNMENT2,
-                'selectors'    => [
-                    [
-                        'query' => '{{{data.container}}}',
-                        'type'  => Controls_Manager::DATASET,
-                        'key'   => 'wptbImageAlignment',
-                    ]
+            'imageReplaceButton' =>
+                [
+                    'label' => __('Replace Image', 'wp-table-builder'),
+                    'type' => Controls_Manager::BUTTON,
                 ],
-                'defaultValue' => 'center'
-            ],
+            'imageAlignment' =>
+                [
+                    'label' => __('Image Alignment', 'wp-table-builder'),
+                    'type' => Controls_Manager::ALIGNMENT2,
+                    'selectors' => [
+                        [
+                            'query' => '{{{data.container}}}',
+                            'type' => Controls_Manager::DATASET,
+                            'key' => 'wptbImageAlignment',
+                        ]
+                    ],
+                    'defaultValue' => 'center'
+                ],
             'imageAlternativeText' =>
-            [
-                'label'       => __('Image Alternative Text', 'wp-table-builder'),
-                'type'        => Controls_Manager::TEXT,
-                'selectors'   => [
-                    '{{{data.container}}} .wptb-image-wrapper img' => 'alt',
-                ],
-                'placeholder' => __('Image Alt Text', 'wp-table-builder'),
-            ]
+                [
+                    'label' => __('Image Alternative Text', 'wp-table-builder'),
+                    'type' => Controls_Manager::TEXT,
+                    'selectors' => [
+                        '{{{data.container}}} .wptb-image-wrapper img' => 'alt',
+                    ],
+                    'placeholder' => __('Image Alt Text', 'wp-table-builder'),
+                ]
         ];
 
         $size_controls = [
             'imageSize' =>
-            [
-                'label'        => __('Image Size', 'wp-table-builder'),
-                'type'         => Controls_Manager::SIZE,
-                'selectors'    => [
-                    '{{{data.container}}} .wptb-image-wrapper .wptb-link-target' => 'width',
-                ],
-                'min'          => 10,
-                'max'          => 100,
-                'defaultValue' => 100,
-                'dimension'    => '%'
-            ]
+                [
+                    'label' => __('Image Size', 'wp-table-builder'),
+                    'type' => Controls_Manager::SIZE,
+                    'selectors' => [
+                        '{{{data.container}}} .wptb-image-wrapper .wptb-link-target' => 'width',
+                    ],
+                    'min' => 10,
+                    'max' => 100,
+                    'defaultValue' => 100,
+                    'dimension' => '%'
+                ]
         ];
 
         $link_controls = [
             'imageLink' =>
-            [
-                'label'    => __('Image Link', 'wp-table-builder'),
-                'type'     => Controls_Manager::URL,
-                'selector' => '{{{data.container}}} .wptb-image-wrapper .wptb-link-target',
-            ]
+                [
+                    'label' => __('Image Link', 'wp-table-builder'),
+                    'type' => Controls_Manager::URL,
+                    'selector' => '{{{data.container}}} .wptb-image-wrapper .wptb-link-target',
+                ]
         ];
 
         $image_controls = [
             esc_html__('general', 'wp-table-builder') => $general_controls,
-            esc_html__('size', 'wp-table-builder')    => $size_controls,
-            esc_html__('link', 'wp-table-builder')    => $link_controls,
+            esc_html__('size', 'wp-table-builder') => $size_controls,
+            esc_html__('link', 'wp-table-builder') => $link_controls,
         ];
 
         Control_Section_Group_Tabbed::add_section('imageElementOptions', __('image options', 'wp-table-builder'), $image_controls, [
@@ -165,12 +173,14 @@ class Image_Element extends Element_Base {
      * @since 1.1.2
      * @access protected
      */
-    protected function _content_template() {
-?>
+    protected function _content_template()
+    {
+        ?>
         <div class="wptb-image-wrapper">
             <span class="wptb-link-target">
                 <span class="wptb-icon-image-button">
-                    <svg class="wptb-draggable-prototype" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 489.4 489.4" width="40px" height="50px">
+                    <svg class="wptb-draggable-prototype" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 489.4 489.4"
+                        width="40px" height="50px">
                         <path d="M0 437.8c0 28.5 23.2 51.6 51.6 51.6h386.2c28.5 0 51.6-23.2 
                               51.6-51.6V51.6c0-28.5-23.2-51.6-51.6-51.6H51.6C23.1 0 0 23.2 0 
                               51.6 0 51.6 0 437.8 0 437.8zM437.8 464.9H51.6c-14.9 
@@ -184,23 +194,24 @@ class Image_Element extends Element_Base {
                               28-62.3 62.3S117.3 196.1 151.7 196.1zM151.7 96c20.9 0 37.8 17 37.8 
                               37.8s-17 37.8-37.8 37.8 -37.8-17-37.8-37.8S130.8 96 151.7 96z" />
                     </svg>
-                    <span><?php echo __('Insert Image', 'wp-table-builder');?></span>
+                    <span><?php echo __('Insert Image', 'wp-table-builder'); ?></span>
                 </span>
                 <img class="wptb-image-element-dummy">
             </span>
         </div>
-<?php
+        <?php
     }
 
-    public static function render($block) {
+    public static function render($block)
+    {
         $attrs = $block['props'];
         $wrapperAttrs = TableRenderer::generate_css_string([
             "data-wptb-image-alignment" => $attrs['alignment'],
             "data-wptb-image-size-relative" => $attrs['sizeRelativeTo'],
         ]);
         $style = TableRenderer::generate_css_string([
-            "padding" => $attrs['padding']??'',
-            "margin" => $attrs['margin']??'',
+            "padding" => $attrs['padding'] ?? '',
+            "margin" => $attrs['margin'] ?? '',
         ]);
 
         $imgAttrs = TableRenderer::generate_attrs_string([
@@ -219,35 +230,28 @@ class Image_Element extends Element_Base {
         $lTag = 'span';
         $lAttrs = "";
 
-        if ($attrs['url'] !== '') {
+        if (isset($attrs['url']) && $attrs['url'] !== '') {
             $lTag = 'a';
             if ($attrs['convertToAbsolute'] && !preg_match('/^https?:\/\//', $attrs['url'])) {
                 $attrs['url'] = 'https://' . ltrim($attrs['url'], '/');
             }
             $lAttrs = TableRenderer::generate_attrs_string([
-                "href" => $attrs['url'],
-                "target" => $attrs['linkTarget'],
-                "rel" => $attrs['linkRel'],
-                "data-wptb-link-enable-convert-relative" => $attrs['convertToAbsolute'],
+                "href" => $attrs['url'] ?? false,
+                "target" => $attrs['linkTarget'] ?? false,
+                "rel" => $attrs['linkRel'] ?? false,
+                "data-wptb-link-enable-convert-relative" => $attrs['convertToAbsolute'] ?? false,
             ]);
         }
 
-        return <<<HTML
-        <div
-          class="wptb-image-container wptb-ph-element wptb-element-image-1"
-          {$wrapperAttrs}
-          style="{$style}"
-        >
-          <div class="wptb-image-wrapper">
-            <{$lTag} {$lAttrs} class="wptb-link-target" style="{$lStyle}">
-              <img
-                class="wptb-image-element-target"
-                {$imgAttrs}
-                style="width: 100%"
-              />
-            </{$lTag}>
-          </div>
-        </div>
-        HTML;
+        // @formatter:off
+        return
+        '<div class="wptb-image-container wptb-ph-element wptb-element-image-'.self::$element_id++.'" ' . $wrapperAttrs . ' style="' . $style . '">' .
+            '<div class="wptb-image-wrapper">' .
+                '<' . $lTag . ' ' . $lAttrs . ' class="wptb-link-target" style="' . $lStyle . '">' .
+                    '<img class="wptb-image-element-target" ' . $imgAttrs . ' style="width: 100%" />' .
+                '</' . $lTag . '>' .
+            '</div>' .
+        '</div>';
+        // @formatter:on
     }
 }

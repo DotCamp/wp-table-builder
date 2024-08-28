@@ -15,6 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 class Shortcode_Element extends Element_Base {
 
+	private static $element_id = 1;
 	/**
 	 * Get element name.
 	 *
@@ -145,12 +146,14 @@ class Shortcode_Element extends Element_Base {
 			'remove-html-tags' => false,
 		]);
 
-		return <<<HTML
-		<div class="wptb-shortcode-container wptb-ph-element wptb-element-shortcode-1" style="{$style}">
-			<wptb_shortcode_container_element>
-				<div class="" style="position: relative;">{$code}</div>
-			</wptb_shortcode_container_element>
-		</div>
-		HTML;
+		// @formatter:off
+		return 
+		'<div class="wptb-shortcode-container wptb-ph-element wptb-element-shortcode-'.self::$element_id++.'" style="' . $style . '">' .
+			'<wptb_shortcode_container_element>' .
+				'<div class="" style="position: relative;">' . $code . '</div>' .
+			'</wptb_shortcode_container_element>' .
+		'</div>';
+		// @formatter:on
+
 	}
 }

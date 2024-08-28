@@ -16,6 +16,7 @@ use WP_Table_Builder as NS;
 class Text_Icon_Element extends Dummy_Element_base
 {
 
+	private static $element_id = 1;
 	/**
 	 * Name for dummy element.
 	 * @return string dummy name
@@ -89,41 +90,32 @@ class Text_Icon_Element extends Dummy_Element_base
 		$iconColor = esc_attr($props['iconColor'] ?? '#000000');
 
 		$text = wp_kses_post($props['text'] ?? '');
-		$txtStyle = TableRenderer::generate_css_string([
-			'color' => $props['color'] ?? '#000000',
-		] + ($iconLoc === 'left' ? [
-				'margin-left' => $space,
-				'margin-right' => '0',
-			] : [
-				'margin-left' => '0',
-				'margin-right' => $space,
-			])
+		$txtStyle = TableRenderer::generate_css_string(
+			[
+				'color' => $props['color'] ?? '#000000',
+			] + ($iconLoc === 'left' ? [
+					'margin-left' => $space,
+					'margin-right' => '0',
+				] : [
+					'margin-left' => '0',
+					'margin-right' => $space,
+				])
 		);
 
-		return <<<HTML
-		<div
-		  class="wptb-text_icon_element-container wptb-ph-element mce-content-body wptb-element-text_icon_element-1"
-		  {$attrs}
-		  style="{$style}"
-		>
-		  <div class="wptb-element-text-icon-wrapper">
-		    <div
-			  id="wptbTextIconIconWrapper"
-		      class="wptb-text-icon-icon-wrapper"
-		      data-wptb-text-icon-icon-src="{$iconSrc}"
-		      style="color: {$iconColor}; width: {$iconSize}; height: {$iconSize}"
-		    >
-		      {$icon}
-		      <br />
-		    </div>
-		    <div
-		      id="wptbTextIconMainTextWrapper"
-		      style="{$txtStyle}"
-		    >
-		      <p id="wptbTextIconMainText">{$text}</p>
-		    </div>
-		  </div>
-		</div>
-		HTML;
+		// @formatter:off
+		return 
+		'<div class="wptb-text_icon_element-container wptb-ph-element mce-content-body wptb-element-text_icon_element-'.self::$element_id++.'" ' . $attrs . ' style="' . $style . '">' .
+			'<div class="wptb-element-text-icon-wrapper">' .
+				'<div id="wptbTextIconIconWrapper" class="wptb-text-icon-icon-wrapper" data-wptb-text-icon-icon-src="' . $iconSrc . '" style="color: ' . $iconColor . '; width: ' . $iconSize . '; height: ' . $iconSize . ';">' .
+					$icon .
+					'<br />' .
+				'</div>' .
+				'<div id="wptbTextIconMainTextWrapper" style="' . $txtStyle . '">' .
+					'<p id="wptbTextIconMainText">' . $text . '</p>' .
+				'</div>' .
+			'</div>' .
+		'</div>';
+		// @formatter:on
+
 	}
 }

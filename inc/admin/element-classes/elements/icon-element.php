@@ -13,13 +13,17 @@ use WP_Table_Builder as NS;
  * Dummy pro element.
  * @package WP_Table_Builder\Inc\Admin\Element_Classes\Elements
  */
-class Icon_Element extends Dummy_Element_base {
+class Icon_Element extends Dummy_Element_base
+{
+
+	private static $element_id = 1;
 
 	/**
 	 * Name for dummy element.
 	 * @return string dummy name
 	 */
-	public function dummy_name() {
+	public function dummy_name()
+	{
 		return 'icon';
 	}
 
@@ -27,8 +31,9 @@ class Icon_Element extends Dummy_Element_base {
 	 * Get element title.
 	 * @return string element title
 	 */
-	public function get_title() {
-		return esc_html_e( 'Icon', 'wp-table-builder' );
+	public function get_title()
+	{
+		return esc_html_e('Icon', 'wp-table-builder');
 	}
 
 	/**
@@ -41,8 +46,9 @@ class Icon_Element extends Dummy_Element_base {
 	 * @access public
 	 *
 	 */
-	public function get_directory_icon() {
-		return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/icon.svg' );
+	public function get_directory_icon()
+	{
+		return wp_normalize_path(NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/icon.svg');
 	}
 
 	/**
@@ -55,17 +61,19 @@ class Icon_Element extends Dummy_Element_base {
 	 * @access public
 	 *
 	 */
-	public function get_url_icon() {
-		return wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/icon.svg' );
+	public function get_url_icon()
+	{
+		return wp_normalize_path(NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/icon.svg');
 	}
 
-	public static function render($block) {
-		
+	public static function render($block)
+	{
+
 		$props = $block['props'];
 
 		$style = TableRenderer::generate_css_string([
-		  'padding' => $props['padding'] ?? '',
-		  'margin' => $props['margin'] ?? '',
+			'padding' => $props['padding'] ?? '',
+			'margin' => $props['margin'] ?? '',
 		]);
 
 		$size = esc_attr($props['size'] ?? '25px');
@@ -85,59 +93,51 @@ class Icon_Element extends Dummy_Element_base {
 			$iconSrc = esc_attr($icon['icon'] ?? 'star');
 			$iconStr = TableRenderer::get_icon($iconSrc);
 
-			if ($icon['url'] !== '') {
+			if ( isset($icon['url']) && $icon['url'] !== '') {
 				$lTag = 'a';
 				if ($icon['convertToAbsolute'] && !preg_match('/^https?:\/\//', $icon['url'])) {
 					$icon['url'] = 'https://' . ltrim($icon['url'], '/');
 				}
 				$lAttrs = TableRenderer::generate_attrs_string([
-					"href" => $icon['url'],
-					"target" => $icon['linkTarget'],
-					"rel" => $icon['linkRel'],
-					"data-wptb-link-enable-convert-relative" => $icon['convertToAbsolute'],
+					"href" => $icon['url'] ?? false,
+					"target" => $icon['linkTarget'] ?? false,
+					"rel" => $icon['linkRel'] ?? false,
+					"data-wptb-link-enable-convert-relative" => $icon['convertToAbsolute'] ?? false,
 				]);
 			}
-			$icons .= <<<HTML
-			<{$lTag} {$lAttrs} class="wptb-icon-link-target-{$i}">
-			  <div
-			    class="wptb-icon wptb-icon-{$i}"
-			    style="width: {$size}; height: {$size}; fill: {$color}"
-			    data-wptb-icon-src="{$iconSrc}"
-			  >
-			    {$iconStr}
-			  </div>
-			</{$lTag}>
-			HTML;
+			// @formatter:off
+			$icons .=
+			'<' . $lTag . ' ' . $lAttrs . ' class="wptb-icon-link-target-' . $i . '">' .
+				'<div class="wptb-icon wptb-icon-' . $i . '" style="width: ' . $size . '; height: ' . $size . '; fill: ' . $color . '" data-wptb-icon-src="' . $iconSrc . '">' .
+					$iconStr .
+				'</div>' .
+			'</' . $lTag . '>';
+			// @formatter:on
 		}
 
 		$starIcon = TableRenderer::get_icon('star');
 
 		for (; $i <= 5; $i++) {
-			$icons .= <<<HTML
-			<span class="wptb-icon-link-target-{$i}">
-			  <div
-			    class="wptb-icon wptb-icon-{$i}"
-				style="width: {$size}; height: {$size}; fill: rgb(0, 0, 0); display: none;"
-				data-wptb-icon-src="star"
-			  >
-			    {$starIcon}
-			  </div>
-			</span>
-			HTML;
+			// @formatter:off
+			$icons .=
+			'<span class="wptb-icon-link-target-' . $i . '">' .
+				'<div class="wptb-icon wptb-icon-' . $i . '" style="width: ' . $size . '; height: ' . $size . '; fill: rgb(0, 0, 0); display: none;" data-wptb-icon-src="star">' .
+					$starIcon .
+				'</div>' .
+			'</span>';
+			// @formatter:on
 		}
 
-		$align = esc_attr( $props['alignment'] ?? 'center' );
+		$align = esc_attr($props['alignment'] ?? 'center');
+		
+		// @formatter:off
+		return
+		'<div class="wptb-icon-container wptb-ph-element wptb-element-icon-'.self::$element_id++.'" data-wptb-icon-number="' . $iconCount . '" style="' . $style . '">' .
+			'<div class="wptb-icon-wrapper" style="text-align: ' . $align . '">' .
+				$icons .
+			'</div>' .
+		'</div>';
+		// @formatter:on
 
-		return <<<HTML
-		  <div
-		    class="wptb-icon-container wptb-ph-element wptb-element-icon-1"
-		    data-wptb-icon-number="{$iconCount}"
-		    style="{$style}"
-		  >
-		  <div class="wptb-icon-wrapper" style="text-align: {$align}">
-		      {$icons}
-		  </div>
-		  </div>
-		HTML;
 	}
 }
