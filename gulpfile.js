@@ -18,7 +18,6 @@ const gulpConfig = {
 	adminJs: {
 		src: [
 			'./inc/admin/js/core/*.js',
-			'./inc/admin/js/core/WPTB_innerElementSet.js',
 			'./inc/admin/js/core-premium/*.js',
 			'./inc/admin/js/core/rollup-source/WPTB_IconManager.js',
 		],
