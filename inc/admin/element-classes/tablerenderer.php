@@ -164,6 +164,10 @@ class TableRenderer
         ] + $borderCss);
 
         $attrs = self::generate_attrs_string([
+
+            "colspan" => $props['colspan'] ?? false,
+            "rowspan" => $props['rowspan'] ?? false,
+
             "style" => $styles,
 
             "data-y-index" => $props['yIndex'] ?? false,

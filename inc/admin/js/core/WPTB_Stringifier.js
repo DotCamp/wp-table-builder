@@ -106,6 +106,8 @@ var WPTB_Stringifier = function (codeMain) {
           yIndex: tData.yIndex,
           xSort: tData.sortedVertical,
           ySort: tData.sortedHorizontal,
+          colspan: td.getAttribute("colspan"),
+          rowspan: td.getAttribute("rowspan"),
         },
         blocks: [],
       };
