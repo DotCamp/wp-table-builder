@@ -148,7 +148,7 @@ class Custom_Html_Element extends Element_Base {
 
 		// @formatter:off
 		return
-		'<div class="wptb-custom_html-container wptb-ph-element wptb-element-custom_html-'.self::$element_id++.'" ' .
+		'<div class="wptb-custom_html-container wptb-ph-element wptb-element-custom_html-'.self::$element_id++.' edit-active" ' .
 		'style="' . $style . '">' .
 			'<div class="wptb-custom-html-wrapper" data-wptb-new-element="1" style="position: relative">' .
 				$html .
