@@ -90,7 +90,7 @@ class Admin_Menu
 		}
 
 		try {
-			$params->content = TableRenderer::render(json_decode($params->content, true));
+			$params->content = TableRenderer::render(json_decode($params->content, true), $params->id ?? 'startedid-0');
 		} catch (\Exception $e) {
 			wp_die(json_encode(['error', $e->getMessage()]));
 		}

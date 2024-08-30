@@ -106,6 +106,8 @@ var WPTB_Stringifier = function (codeMain) {
           yIndex: tData.yIndex,
           xSort: tData.sortedVertical,
           ySort: tData.sortedHorizontal,
+          colspan: td.getAttribute("colspan"),
+          rowspan: td.getAttribute("rowspan"),
         },
         blocks: [],
       };
@@ -177,7 +179,7 @@ var WPTB_BlockSerializer = {
       props: {
         src: imgEl?.src,
         alignment: el.dataset.wptbImageAlignment || "center",
-        altText: imgEl?.getAttribute("alt"),
+        alt: imgEl?.getAttribute("alt"),
         imgHeight: imgEl?.getAttribute("height"),
         imgWidth: imgEl?.getAttribute("width"),
 

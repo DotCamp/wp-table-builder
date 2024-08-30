@@ -52,7 +52,7 @@ class TableRenderer
         return '';
     }
 
-    public static function render($body)
+    public static function render($body, $tblId)
     {
         $props = $body['props'];
 
@@ -60,17 +60,23 @@ class TableRenderer
             "border" => $props['tableBorder'],
             "border-spacing" => "{$props['tableSpacingX']}px {$props['tableSpacingY']}px",
             "border-collapse" => $props['borderCollapse'] ?? '',
+            "min-width" => $props['minWidth'] ?? '',
         ]);
 
         $attrs_string = self::generate_attrs_string([
 
-            "class" => "wptb-preview-table wptb-element-main-table_setting-237",
+            "class" => "wptb-preview-table wptb-element-main-table_setting-".$tblId,
             "style" => $tblStyle,
 
             "data-reconstraction" => "1",
             "data-wptb-table-directives" => $props['directives'] ?? false,
             "data-wptb-responsive-directives" => $props['responsiveDirectives'] ?? false,
             "data-wptb-cells-width-auto-count" => $props['cellsWidthAutoCount'] ?? false,
+
+            
+            "data-wptb-apply-table-container-max-width" => $props['enableMaxWidth'] ?? false,
+            "data-wptb-table-container-max-width" => $props['maxWidth'] ?? false,
+
             "data-wptb-horizontal-scroll-status" => $props['scrollX'] ?? false,
             "data-wptb-extra-styles" => $props['extraStyles'] ?? false,
             "data-wptb-first-column-sticky" => $props['stickyFirstColumn'] ?? false,
@@ -164,6 +170,10 @@ class TableRenderer
         ] + $borderCss);
 
         $attrs = self::generate_attrs_string([
+
+            "colspan" => $props['colspan'] ?? false,
+            "rowspan" => $props['rowspan'] ?? false,
+
             "style" => $styles,
 
             "data-y-index" => $props['yIndex'] ?? false,
