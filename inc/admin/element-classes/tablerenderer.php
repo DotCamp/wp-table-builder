@@ -52,7 +52,7 @@ class TableRenderer
         return '';
     }
 
-    public static function render($body)
+    public static function render($body, $tblId)
     {
         $props = $body['props'];
 
@@ -64,7 +64,7 @@ class TableRenderer
 
         $attrs_string = self::generate_attrs_string([
 
-            "class" => "wptb-preview-table wptb-element-main-table_setting-237",
+            "class" => "wptb-preview-table wptb-element-main-table_setting-".$tblId,
             "style" => $tblStyle,
 
             "data-reconstraction" => "1",
