@@ -491,12 +491,12 @@ class Button_Element extends Element_Base
         
         //@formatter:off
         return 
-        '<div class="wptb-button-container wptb-ph-element wptb-element-button-'.self::$element_id++.'" style="' . $cStyle . '">' .
+        '<div class="wptb-button-container wptb-ph-element wptb-element-button-'.self::$element_id++.' edit-active" style="' . $cStyle . '">' .
             '<div class="wptb-button-wrapper ' . $wrapperClass . '" style="justify-content: ' . $btnAlignment . '">' .
                 '<' . $lTag . ' class="wptb-link-target" ' . $lAttrs . '>' .
                     '<div class="wptb-button wptb-plugin-button-order-' . $btnOrder . '" style="position: relative;' . $btnStyle . '" ' . $btnAttrs . '>' .
                         '<p style="font-size: ' . $fontSize . '; margin-inline: auto !important">' . $text . '</p>' .
-                        '<div class="wptb-button-icon" data-wptb-button-icon-src="" ' . $hoverAttrs . ' style="width: ' . $iconSize . '; height: ' . $iconSize . '">' .
+                        '<div class="wptb-button-icon" data-wptb-button-icon-src="'.$iconSrc.'" ' . $hoverAttrs . ' style="width: ' . $iconSize . '; height: ' . $iconSize . '">' .
                             $icon .
                         '</div>' .
                         '<div class="wptb-button-label" style="' . $labelStyle . '" ' . $hoverAttrs . '>' .
