@@ -179,7 +179,7 @@ var WPTB_BlockSerializer = {
       props: {
         src: imgEl?.src,
         alignment: el.dataset.wptbImageAlignment || "center",
-        altText: imgEl?.getAttribute("alt"),
+        alt: imgEl?.getAttribute("alt"),
         imgHeight: imgEl?.getAttribute("height"),
         imgWidth: imgEl?.getAttribute("width"),
 
