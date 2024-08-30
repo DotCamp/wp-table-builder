@@ -60,6 +60,7 @@ class TableRenderer
             "border" => $props['tableBorder'],
             "border-spacing" => "{$props['tableSpacingX']}px {$props['tableSpacingY']}px",
             "border-collapse" => $props['borderCollapse'] ?? '',
+            "min-width" => $props['minWidth'] ?? '',
         ]);
 
         $attrs_string = self::generate_attrs_string([
@@ -71,6 +72,11 @@ class TableRenderer
             "data-wptb-table-directives" => $props['directives'] ?? false,
             "data-wptb-responsive-directives" => $props['responsiveDirectives'] ?? false,
             "data-wptb-cells-width-auto-count" => $props['cellsWidthAutoCount'] ?? false,
+
+            
+            "data-wptb-apply-table-container-max-width" => $props['enableMaxWidth'] ?? false,
+            "data-wptb-table-container-max-width" => $props['maxWidth'] ?? false,
+
             "data-wptb-horizontal-scroll-status" => $props['scrollX'] ?? false,
             "data-wptb-extra-styles" => $props['extraStyles'] ?? false,
             "data-wptb-first-column-sticky" => $props['stickyFirstColumn'] ?? false,
