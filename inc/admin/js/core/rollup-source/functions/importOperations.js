@@ -156,7 +156,6 @@ function ImportOperations(options) {
 	function tableImportedSave(table, id) {
 		const http = new XMLHttpRequest();
 		const url = `${options.ajaxUrl}?action=save_table`;
-		let code;
 
 		if (id) {
 			if (table.classList.contains('wptb-element-main-table_setting-startedid-0')) {
@@ -164,13 +163,12 @@ function ImportOperations(options) {
 				table.classList.add(`wptb-element-main-table_setting-${id}`);
 			}
 		}
-		code = WPTB_Stringifier(table);
 
 		// remove export operation specific properties from table
-		code.removeAttribute('data-wptb-table-title');
-		code.removeAttribute('data-wptb-export-version');
+		table.removeAttribute('data-wptb-table-title');
+		table.removeAttribute('data-wptb-export-version');
 
-		code = code.outerHTML;
+		let code = WPTB_Stringifier(table);
 
 		let params = {
 			content: code,
