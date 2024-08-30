@@ -3,7 +3,7 @@ Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembirc
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 6.5
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 Requires PHP: 7.4
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -89,6 +89,16 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.6.2 =
+* FIX: HTML element issues
+* FIX: Cell merging
+* FIX: Cells missing in rows with merged cells
+* FIX: Maximum width of table
+* FIX: CSV imports
+* FIX: Image element alt text
+* FIX: Button icon issue
+* FIX: Table loading issue in editor
 
 = 1.6.1 =
 * FIX: Hover colors
