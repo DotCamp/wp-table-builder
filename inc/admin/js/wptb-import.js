@@ -136,7 +136,6 @@
                 }
             }
             code = WPTB_Stringifier( table );
-            code = code.outerHTML;
 
             let params = {
                 content: code,
@@ -615,7 +614,6 @@
                 }
             }
             code = WPTB_Stringifier( tableDOMElem );
-            code = code.outerHTML;
 
             let params = {
                 title: title,
