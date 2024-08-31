@@ -212,10 +212,13 @@ var WPTB_BlockSerializer = {
     const iconEl = el.querySelector(".wptb-button-icon");
     const labelEl = el.querySelector(".wptb-button-label");
 
+    const pEl = el.querySelector("p");
+
     return {
       type: "button",
       props: {
-        text: el.querySelector("p").innerHTML,
+        text: pEl?.innerHTML,
+        fontSize: pEl?.style.fontSize,
         size: bWrap.className.match(/wptb-size-(s|m|l|xl)/)?.[1] || "m",
         width: lTarget?.style.width,
         borderRadius: btnDiv?.style.borderRadius,
