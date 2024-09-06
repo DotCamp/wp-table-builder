@@ -191,6 +191,10 @@ class TableRenderer
 
         $isFirst = true;
 
+        if ($props['hideOnMobile'] ?? false) {
+            $classNames .= ' wptb-hide-on-mobile';
+        }
+
         if ($props['isEmpty']) {
             $classNames .= ' wptb-empty';
         } else {

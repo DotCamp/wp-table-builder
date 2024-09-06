@@ -108,6 +108,7 @@ var WPTB_Stringifier = function (codeMain) {
           ySort: tData.sortedHorizontal,
           colspan: td.getAttribute("colspan"),
           rowspan: td.getAttribute("rowspan"),
+          hideOnMobile: td.classList.contains("wptb-hide-on-mobile"),
         },
         blocks: [],
       };
