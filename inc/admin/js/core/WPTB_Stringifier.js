@@ -14,8 +14,8 @@ var WPTB_Stringifier = function (codeMain) {
   const tableProps = {
     alignment: data.wptbTableAlignment || "center",
     enableMaxWidth: data.wptbApplyTableContainerMaxWidth ? 1 : false,
-    maxWidth: data.wptbTableContainerMaxWidth || "700",
-    cellMinWidth: data.wptbTdWidthAuto || "120",
+    maxWidth: data.wptbTableContainerMaxWidth,
+    cellMinWidth: data.wptbTdWidthAuto,
     sortHorizontal: data.wptbSortableTableHorizontal == "1" ? 1 : false,
     sortVertical: data.wptbSortableTableVertical == "1" ? 1 : false,
     borderCollapse: tableStyle.borderCollapse,
