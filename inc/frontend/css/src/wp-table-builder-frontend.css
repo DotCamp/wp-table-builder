@@ -659,6 +659,11 @@ table.wptb-preview-table {
 }
 
 @media only screen and (max-width: 600px) {
+    .wptb-table-container table td.wptb-hide-on-mobile,
+    .wptb-table-container table th.wptb-hide-on-mobile {
+        display: none;
+    }
+
     .wptb-table-container table {
         min-width: auto;
     }
