@@ -178,8 +178,8 @@ class TableRenderer
 
             "data-y-index" => $props['yIndex'] ?? false,
             "data-x-index" => $props['xIndex'] ?? false,
-            "data-sorted-vertical" => $props['sortedVertical'] ?? false,
-            "data-sorted-horizontal" => $props['sortedHorizontal'] ?? false,
+            "data-sorted-vertical" => $props['ySort'] ?? false,
+            "data-sorted-horizontal" => $props['xSort'] ?? false,
             "data-wptb-css-td-auto-width" => $props['autoWidth'] ?? false,
             "data-wptb-css-td-auto-height" => $props['autoHeight'] ?? false,
             "data-wptb-cell-vertical-alignment" => $props['vAlign'] ?? false,
