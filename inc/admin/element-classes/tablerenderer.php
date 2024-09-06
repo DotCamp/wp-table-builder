@@ -73,6 +73,9 @@ class TableRenderer
             "data-wptb-responsive-directives" => $props['responsiveDirectives'] ?? false,
             "data-wptb-cells-width-auto-count" => $props['cellsWidthAutoCount'] ?? false,
 
+            "data-wptb-sortable-table-vertical" => $props['sortVertical'] ?? false,
+            "data-wptb-sortable-table-horizontal" => $props['sortHorizontal'] ?? false,
+
             
             "data-wptb-apply-table-container-max-width" => $props['enableMaxWidth'] ?? false,
             "data-wptb-table-container-max-width" => $props['maxWidth'] ?? false,

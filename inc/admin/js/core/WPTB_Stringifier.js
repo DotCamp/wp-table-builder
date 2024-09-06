@@ -149,15 +149,12 @@ var WPTB_BlockSerializer = {
     if (!el.classList.contains("wptb-text-container")) {
       return;
     }
-    let text = "";
-    Array.from(el.querySelectorAll("p")).forEach((child) => {
-      text += child.outerHTML;
-    });
+  
 
     return {
       type: "text",
       props: {
-        text,
+        text: el.firstElementChild?.innerHTML,
         color: el.style.color,
         fontSize: el.style.fontSize,
         padding: el.style.padding,
