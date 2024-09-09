@@ -264,7 +264,7 @@ class List_Element extends Element_Base
 
     $pClass = '';
     if ($attrs['type'] == 'unordered') {
-      $pClass = "wptb-list-style-type-" . esc_attr($attrs['listIcon']);
+      $pClass = esc_attr($attrs['listIcon']);
     }
     $items = '';
     $i = 0;
@@ -281,6 +281,7 @@ class List_Element extends Element_Base
         'text-align' => $item['alignment'] ?? '',
       ]);
       $liClass = 'wptb-in-element';
+      $item['toolTip'] = trim($item['toolTip']);
 
       if ($item['toolTip'] != '') {
         $liClass .= ' wptb-tooltip wptb-tooltip-' . esc_attr($item['tooltipPosision']);
