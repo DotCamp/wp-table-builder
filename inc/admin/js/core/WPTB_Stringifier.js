@@ -32,6 +32,9 @@ var WPTB_Stringifier = function (codeMain) {
 
     // Border
     tableBorder: tableStyle.border,
+    borderWidth: tableStyle.borderWidth,
+    borderColor: tableStyle.borderColor,
+    borderStyle: tableStyle.borderStyle,
     headerInnerBorder: firstTd?.style.border,
     // rowBorderOnly: null, // It's in the directives
     // columnBorderOnly: null, // It's in the directives

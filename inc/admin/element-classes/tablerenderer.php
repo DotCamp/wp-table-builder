@@ -56,12 +56,25 @@ class TableRenderer
     {
         $props = $body['props'];
 
+        $borderCss = [];
+
+        if (isset($props['tableBorder']) && $props['tableBorder'] !== '') {
+            $borderCss = [
+                'border' => $props['tableBorder'],
+            ];
+        } else {
+            $borderCss = [
+                'border-width' => $props['borderWidth'] ?? '',
+                'border-color' => $props['borderColor'] ?? '',
+                'border-style' => $props['borderStyle'] ?? '',
+            ];
+        }
+
         $tblStyle = self::generate_css_string([
-            "border" => $props['tableBorder'],
             "border-spacing" => "{$props['tableSpacingX']}px {$props['tableSpacingY']}px",
             "border-collapse" => $props['borderCollapse'] ?? '',
             "min-width" => $props['minWidth'] ?? '',
-        ]);
+        ] + $borderCss);
 
         $attrs_string = self::generate_attrs_string([
 
