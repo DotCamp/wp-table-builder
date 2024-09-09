@@ -73,6 +73,9 @@ class TableRenderer
             "data-wptb-responsive-directives" => $props['responsiveDirectives'] ?? false,
             "data-wptb-cells-width-auto-count" => $props['cellsWidthAutoCount'] ?? false,
 
+            "data-wptb-sortable-table-vertical" => $props['sortVertical'] ?? false,
+            "data-wptb-sortable-table-horizontal" => $props['sortHorizontal'] ?? false,
+
             
             "data-wptb-apply-table-container-max-width" => $props['enableMaxWidth'] ?? false,
             "data-wptb-table-container-max-width" => $props['maxWidth'] ?? false,
@@ -178,8 +181,8 @@ class TableRenderer
 
             "data-y-index" => $props['yIndex'] ?? false,
             "data-x-index" => $props['xIndex'] ?? false,
-            "data-sorted-vertical" => $props['sortedVertical'] ?? false,
-            "data-sorted-horizontal" => $props['sortedHorizontal'] ?? false,
+            "data-sorted-vertical" => $props['ySort'] ?? false,
+            "data-sorted-horizontal" => $props['xSort'] ?? false,
             "data-wptb-css-td-auto-width" => $props['autoWidth'] ?? false,
             "data-wptb-css-td-auto-height" => $props['autoHeight'] ?? false,
             "data-wptb-cell-vertical-alignment" => $props['vAlign'] ?? false,
@@ -190,6 +193,10 @@ class TableRenderer
         $blocks = "";
 
         $isFirst = true;
+
+        if ($props['hideOnMobile'] ?? false) {
+            $classNames .= ' wptb-hide-on-mobile';
+        }
 
         if ($props['isEmpty']) {
             $classNames .= ' wptb-empty';

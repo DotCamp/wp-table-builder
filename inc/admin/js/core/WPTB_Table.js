@@ -1,3 +1,4 @@
+/* eslint-disable */
 var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
 
     /* The members of the class */
@@ -181,12 +182,12 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         }
 
         /**
-         * empty cell | highlight setting
+         * empty cell | highlight setting | hide column on mobile
          */
 
         const infArr = thisElem.className.match(/wptb-element-table_cell_setting-((.+-)\d+)/i);
         if (infArr && infArr.length > 1) {
-            let controlKeys = [ 'emptyCell', 'highlightRow', 'highlightColumn'];
+            let controlKeys = [ 'emptyCell', 'highlightRow', 'highlightColumn', 'hideColumnOnMobile'];
             for(let i in controlKeys) {   
                 const settingId = `wptb-el-table_cell_setting-${infArr[1]}-${controlKeys[i]}`;
                 const settingElem = document.getElementById(settingId);
@@ -226,6 +227,8 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                             highlightColInput[0].value = highlightValue;
                             highlightColInput[1].value = highlightValue;
                         }
+                    } else if(controlKeys[i] == 'hideColumnOnMobile') {
+                        settingElem.querySelector('input[type="checkbox"]').checked = thisElem.classList.contains('wptb-hide-on-mobile');
                     }
                 }
             }

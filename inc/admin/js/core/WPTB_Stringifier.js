@@ -14,8 +14,8 @@ var WPTB_Stringifier = function (codeMain) {
   const tableProps = {
     alignment: data.wptbTableAlignment || "center",
     enableMaxWidth: data.wptbApplyTableContainerMaxWidth ? 1 : false,
-    maxWidth: data.wptbTableContainerMaxWidth || "700",
-    cellMinWidth: data.wptbTdWidthAuto || "120",
+    maxWidth: data.wptbTableContainerMaxWidth,
+    cellMinWidth: data.wptbTdWidthAuto,
     sortHorizontal: data.wptbSortableTableHorizontal == "1" ? 1 : false,
     sortVertical: data.wptbSortableTableVertical == "1" ? 1 : false,
     borderCollapse: tableStyle.borderCollapse,
@@ -108,6 +108,7 @@ var WPTB_Stringifier = function (codeMain) {
           ySort: tData.sortedHorizontal,
           colspan: td.getAttribute("colspan"),
           rowspan: td.getAttribute("rowspan"),
+          hideOnMobile: td.classList.contains("wptb-hide-on-mobile"),
         },
         blocks: [],
       };
@@ -148,15 +149,12 @@ var WPTB_BlockSerializer = {
     if (!el.classList.contains("wptb-text-container")) {
       return;
     }
-    let text = "";
-    Array.from(el.querySelectorAll("p")).forEach((child) => {
-      text += child.outerHTML;
-    });
+  
 
     return {
       type: "text",
       props: {
-        text,
+        text: el.firstElementChild?.innerHTML,
         color: el.style.color,
         fontSize: el.style.fontSize,
         padding: el.style.padding,

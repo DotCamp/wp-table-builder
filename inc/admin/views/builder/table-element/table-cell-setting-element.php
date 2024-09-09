@@ -128,5 +128,13 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
                 '{{{data.container}}}' => 'data-wptb-cell-vertical-alignment'
             ]
         ]);
+
+        $this->add_control(
+            'hideColumnOnMobile',
+            [
+                'label'    => __('Hide This Column On Mobile', 'wp-table-builder'),
+                'type'     => Controls_Manager::TOGGLE
+            ]
+        );
     }
 }

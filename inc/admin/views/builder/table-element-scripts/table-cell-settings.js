@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 function controlsChange( inputs, element ) {
     if( inputs && typeof inputs === 'object' ) {
         let table = WPTB_Helper.findAncestor( element, 'wptb-preview-table' ),
@@ -40,6 +40,21 @@ function controlsChange( inputs, element ) {
                     table.addRowHeight( height );
                 } else {
                     table.addRowHeight( false, true );
+                }
+            } else if (inputs.hasOwnProperty("hideColumnOnMobile")) {
+                const siblings = [...highlighted.parentNode.children];
+                const index = siblings.indexOf(highlighted);
+                const tableData = [...table.querySelectorAll("td")];
+                const columnNum = table.columns;
+                const colSiblings = tableData.filter((td, tdIndex) => tdIndex % columnNum == index);
+                if (inputs.hideColumnOnMobile == "checked") {
+                  colSiblings.map(sibling => {
+                    sibling.classList.add("wptb-hide-on-mobile");
+                  });
+                } else {
+                  colSiblings.map(sibling => {
+                    sibling.classList.remove("wptb-hide-on-mobile");
+                  });
                 }
             }
         }
