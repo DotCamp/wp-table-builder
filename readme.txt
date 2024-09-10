@@ -90,6 +90,14 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.6.3 =
+* NEW: Added option for hiding column on mobile
+* FIX: Button font size not saving
+* FIX: Sorting not saving
+* FIX: Table size getting smaller
+* FIX: Saving unordered list
+* FIX: Border not loading in some tables
+
 = 1.6.2 =
 * FIX: HTML element issues
 * FIX: Cell merging
