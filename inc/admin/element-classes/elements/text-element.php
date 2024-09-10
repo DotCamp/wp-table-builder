@@ -207,7 +207,8 @@ class Text_Element extends Element_Base
 			"padding" => $attrs['padding'] ?? '',
 			"margin" => $attrs['margin'] ?? '',
 		]);
-		$html = wp_kses_post($attrs['text']);
+		// $html = wp_kses_post($attrs['text']);
+		$html = $attrs['text']; // TODO: Fix this
 		$elId = self::$elemId++;
 		$innerAttrs = "";
 		if (isset($attrs['isFirst']) && $attrs['isFirst']) {
