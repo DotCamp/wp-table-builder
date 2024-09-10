@@ -97,6 +97,7 @@ That's it. You're done!
 * FIX: Table size getting smaller
 * FIX: Saving unordered list
 * FIX: Border not loading in some tables
+* FIX: Link color not getting saved
 
 = 1.6.2 =
 * FIX: HTML element issues
