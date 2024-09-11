@@ -100,6 +100,7 @@ That's it. You're done!
 * FIX: Link color not getting saved
 * FIX: Button width & id when no link
 * FIX: Button content alignment
+* FIX: Button label not getting saved properly
 
 = 1.6.2 =
 * FIX: HTML element issues

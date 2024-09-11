@@ -255,7 +255,7 @@ var WPTB_BlockSerializer = {
         hasLabel: bWrap.classList.contains("wptb-button-has-label"),
         labelBg: labelEl?.style.backgroundColor,
         labelColor: labelEl?.style.color,
-        labelText: labelEl?.innerHTML,
+        labelText: labelEl?.querySelector('.wptb-button-label-text')?.innerHTML,
 
         // Spacing
         padding: el.style.padding,
