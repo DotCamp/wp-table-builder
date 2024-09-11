@@ -454,22 +454,40 @@ class Button_Element extends Element_Base
             "color" => $props['labelColor'] ?? '',
         ]);
 
+        $pStyle = TableRenderer::generate_css_string([
+            'font-size' => esc_attr($props['fontSize'] ?? '15px')
+        ]);
+
+        switch ($props['contentAlignment']) {
+            case 'flex-start':
+                $pStyle .= 'margin-right: auto !important;';
+                break;
+            case 'flex-end':
+                $pStyle .= 'margin-left: auto !important;';
+                break;
+            default:
+                $pStyle .= 'margin-inline: auto !important;';
+                break;
+
+        }
+
 
         $lTag = 'span';
-        $lAttrs = "";
+        $lAttrs = TableRenderer::generate_attrs_string([
+            "id" => $props['id'] ?? false,
+            "style" => isset($props['width']) ? 'width: ' . $props['width'] . ';' : false,
+        ]);
 
-        if ( isset($props['url']) && $props['url'] !== '') {
+        if (isset($props['url']) && $props['url'] !== '') {
             $lTag = 'a';
             if ($props['convertToAbsolute'] && !preg_match('/^https?:\/\//', $props['url'])) {
                 $props['url'] = 'https://' . ltrim($props['url'], '/');
             }
-            $lAttrs = TableRenderer::generate_attrs_string([
-                "id" => $props['id'] ?? false,
+            $lAttrs .= TableRenderer::generate_attrs_string([
                 "href" => $props['url'] ?? false,
                 "target" => $props['linkTarget'] ?? false,
                 "rel" => $props['linkRel'] ?? false,
                 "data-wptb-link-enable-convert-relative" => $props['convertToAbsolute'] ?? false,
-                "style" => isset($props['width']) ? 'width: ' . $props['width'] . ';' : false,
             ]);
         }
 
@@ -479,7 +497,6 @@ class Button_Element extends Element_Base
             $wrapperClass .= ' wptb-button-has-label';
         }
         $btnAlignment = esc_attr($props['buttonAlignment']);
-        $fontSize = esc_attr($props['fontSize'] ?? '15px');
 
         $text = wp_kses_post($props['text']);
         $labelText = wp_kses_post($props['labelText']);
@@ -495,7 +512,7 @@ class Button_Element extends Element_Base
             '<div class="wptb-button-wrapper ' . $wrapperClass . '" style="justify-content: ' . $btnAlignment . '">' .
                 '<' . $lTag . ' class="wptb-link-target" ' . $lAttrs . '>' .
                     '<div class="wptb-button wptb-plugin-button-order-' . $btnOrder . '" style="position: relative;' . $btnStyle . '" ' . $btnAttrs . '>' .
-                        '<p style="font-size: ' . $fontSize . '; margin-inline: auto !important">' . $text . '</p>' .
+                        '<p style="'.$pStyle.'">' . $text . '</p>' .
                         '<div class="wptb-button-icon" data-wptb-button-icon-src="'.$iconSrc.'" ' . $hoverAttrs . ' style="width: ' . $iconSize . '; height: ' . $iconSize . '">' .
                             $icon .
                         '</div>' .

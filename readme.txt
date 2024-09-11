@@ -98,6 +98,8 @@ That's it. You're done!
 * FIX: Saving unordered list
 * FIX: Border not loading in some tables
 * FIX: Link color not getting saved
+* FIX: Button width & id when no link
+* FIX: Button content alignment
 
 = 1.6.2 =
 * FIX: HTML element issues
