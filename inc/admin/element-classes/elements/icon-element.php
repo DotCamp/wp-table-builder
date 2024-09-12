@@ -80,7 +80,7 @@ class Icon_Element extends Dummy_Element_base
 		$icons = '';
 
 		$i = 0;
-		$iconCount = (int) $props['count'] ?? 1;
+		$iconCount = max((int) $props['count'] ?? 1, 1);
 
 		foreach ($block['icons'] as $icon) {
 			$i++;
