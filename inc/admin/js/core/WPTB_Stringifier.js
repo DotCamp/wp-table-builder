@@ -409,6 +409,7 @@ var WPTB_BlockSerializer = {
       const divEl = child.firstElementChild;
       icons.push({
         icon: divEl?.dataset.wptbIconSrc || "star",
+        color: divEl?.style.fill,
         url: child?.href,
         linkRel: child?.getAttribute("rel"),
         linkTarget: child?.getAttribute("target"),
