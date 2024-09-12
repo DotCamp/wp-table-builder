@@ -101,6 +101,8 @@ That's it. You're done!
 * FIX: Button width & id when no link
 * FIX: Button content alignment
 * FIX: Button label not getting saved properly
+* FIX: Saving icon color properly
+* FIX: Image wrapper attributes
 
 = 1.6.2 =
 * FIX: HTML element issues
