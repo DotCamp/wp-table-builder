@@ -205,7 +205,7 @@ class Image_Element extends Element_Base
     public static function render($block)
     {
         $attrs = $block['props'];
-        $wrapperAttrs = TableRenderer::generate_css_string([
+        $wrapperAttrs = TableRenderer::generate_attrs_string([
             "data-wptb-image-alignment" => $attrs['alignment'],
             "data-wptb-image-size-relative" => $attrs['sizeRelativeTo'],
         ]);
