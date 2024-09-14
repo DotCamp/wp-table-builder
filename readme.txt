@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.6.4 =
+* FIX: Save tooptip position properly
+
+
 = 1.6.3 =
 * NEW: Added option for hiding column on mobile
 * FIX: Button font size not saving
