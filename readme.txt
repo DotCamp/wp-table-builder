@@ -92,6 +92,7 @@ That's it. You're done!
 
 = 1.6.4 =
 * FIX: Save tooptip position properly
+* FIX: Some cells becoming empty on edit
 
 
 = 1.6.3 =
