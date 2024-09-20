@@ -27,7 +27,7 @@ var WPTB_Parser = function (code) {
         /\s?wptb-element-text-([0-9]+)/,
         ""
       );
-      all[i].classList.add(`wptb-element-text-${id++}`);
+      all[i].classList.add(`wptb-element-text-${id}`);
       id++;
     }
   }
