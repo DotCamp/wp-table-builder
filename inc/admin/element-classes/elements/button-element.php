@@ -498,10 +498,10 @@ class Button_Element extends Element_Base
         if ($props['hasLabel']) {
             $wrapperClass .= ' wptb-button-has-label';
         }
-        $btnAlignment = esc_attr($props['buttonAlignment']);
+        $btnAlignment = esc_attr($props['buttonAlignment'] ?? 'center');
 
-        $text = wp_kses_post($props['text']);
-        $labelText = wp_kses_post($props['labelText']);
+        $text = wp_kses_post($props['text']  ?? '');
+        $labelText = wp_kses_post($props['labelText']  ?? '');
 
         $iconSrc = esc_attr($props['icon'] ?? '');
         $icon = TableRenderer::get_icon($iconSrc);
