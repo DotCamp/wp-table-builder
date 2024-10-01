@@ -140,11 +140,7 @@ class Custom_Html_Element extends Element_Base {
 			"margin" => $props['margin'] ?? '',
 		]);
 
-        $sanitizer = new DOMSanitizer(DOMSanitizer::HTML);
-
-		$html = $sanitizer->sanitize($props['html'], [
-			'remove-html-tags' => false,
-		]);
+		$html = TableRenderer::strip_xss($props['html']);
 
 		// @formatter:off
 		return

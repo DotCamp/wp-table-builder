@@ -52,6 +52,31 @@ class TableRenderer
         return '';
     }
 
+    public static function strip_xss($html)
+    {
+        $dom = new \DOMDocument();
+
+        @$dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+        $xpath = new \DOMXPath($dom);
+        $elements = $xpath->query('//*');
+
+        foreach ($elements as $element) {
+            foreach ($element->attributes as $attr) {
+                if (strpos($attr->name, 'on') === 0) {
+                    $element->removeAttribute($attr->name);
+                }
+            }
+        }
+
+        $script_tags = $dom->getElementsByTagName('script');
+        while ($script_tags->length > 0) {
+            $script_tags->item(0)->parentNode->removeChild($script_tags->item(0));
+        }
+
+        return $dom->saveHTML();
+    }
+
     public static function render($body, $tblId)
     {
         $props = $body['props'];
@@ -78,7 +103,7 @@ class TableRenderer
 
         $attrs_string = self::generate_attrs_string([
 
-            "class" => "wptb-preview-table wptb-element-main-table_setting-".$tblId,
+            "class" => "wptb-preview-table wptb-element-main-table_setting-" . $tblId,
             "style" => $tblStyle,
 
             "data-reconstraction" => "1",
@@ -89,7 +114,7 @@ class TableRenderer
             "data-wptb-sortable-table-vertical" => $props['sortVertical'] ?? false,
             "data-wptb-sortable-table-horizontal" => $props['sortHorizontal'] ?? false,
 
-            
+
             "data-wptb-apply-table-container-max-width" => $props['enableMaxWidth'] ?? false,
             "data-wptb-table-container-max-width" => $props['maxWidth'] ?? false,
 
