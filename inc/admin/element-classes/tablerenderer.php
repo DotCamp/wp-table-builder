@@ -54,7 +54,8 @@ class TableRenderer
 
     public static function strip_xss($html)
     {
-        $dom = new \DOMDocument();
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
 
         @$dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
