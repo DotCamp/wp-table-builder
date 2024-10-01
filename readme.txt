@@ -93,6 +93,9 @@ That's it. You're done!
 = 1.6.4 =
 * FIX: Save tooptip position properly
 * FIX: Some cells becoming empty on edit
+* FIX: PHP Warning for button label
+* FIX: Text corruption in custom html element
+* FIX: Any element getting removed in editor for some tables
 
 
 = 1.6.3 =
