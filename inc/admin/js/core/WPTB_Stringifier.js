@@ -19,7 +19,7 @@ var WPTB_Stringifier = function (codeMain) {
     cellMinWidth: data.wptbTdWidthAuto,
     sortHorizontal: data.wptbSortableTableHorizontal == "1" ? 1 : false,
     sortVertical: data.wptbSortableTableVertical == "1" ? 1 : false,
-    borderCollapse: tableStyle.borderCollapse,
+    borderCollapse: `${tableStyle.borderCollapse} !important`,
     tableSpacingX: data.borderSpacingColumns || "3",
     tableSpacingY: data.borderSpacingRows || "3",
     cols: data.tableColumns,

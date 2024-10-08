@@ -111,6 +111,9 @@ class TableRenderer
             "class" => "wptb-preview-table wptb-element-main-table_setting-" . $tblId,
             "style" => $tblStyle,
 
+            "data-border-spacing-columns" => $props['tableSpacingX'] ?? false,
+            "data-border-spacing-rows" => $props['tableSpacingY'] ?? false,
+
             "data-reconstraction" => "1",
             "data-wptb-table-directives" => $props['directives'] ?? false,
             "data-wptb-responsive-directives" => $props['responsiveDirectives'] ?? false,
