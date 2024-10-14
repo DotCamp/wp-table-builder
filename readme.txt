@@ -97,6 +97,8 @@ That's it. You're done!
 * FIX: Text corruption in custom html element
 * FIX: Any element getting removed in editor for some tables
 * FIX: Saving table row/col spacing properly
+* FIX: Saving row/col radius
+* FIX: Saving cell vertical alignment
 
 
 = 1.6.3 =
