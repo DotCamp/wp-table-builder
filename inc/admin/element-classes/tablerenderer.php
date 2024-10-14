@@ -197,6 +197,7 @@ class TableRenderer
 
         $props = $cell['props'];
         $borderCss = [];
+        $radiusCss = [];
 
         if (isset($props['border']) && $props['border'] !== '') {
             $borderCss = [
@@ -210,13 +211,25 @@ class TableRenderer
             ];
         }
 
+        if (isset($props['borderRadius']) && $props['borderRadius'] !== '') {
+            $radiusCss = [
+                'border-radius' => $props['borderRadius'],
+            ];
+        } else {
+            $radiusCss = [
+                'border-top-left-radius' => $props['borderTopLeftRadius'] ?? '',
+                'border-top-right-radius' => $props['borderTopRightRadius'] ?? '',
+                'border-bottom-right-radius' => $props['borderBottomRightRadius'] ?? '',
+                'border-bottom-left-radius' => $props['borderBottomLeftRadius'] ?? '',
+            ];
+        }
+
         $styles = self::generate_css_string([
-            "border-radius" => $props['borderRadius'] ?? '',
             "padding" => $props['padding'] ?? "",
             "height" => $props['height'] ?? "",
             "width" => $props['width'] ?? "",
             "background-color" => $props['background'] ?? '',
-        ] + $borderCss);
+        ] + $borderCss + $radiusCss);
 
         $attrs = self::generate_attrs_string([
 
