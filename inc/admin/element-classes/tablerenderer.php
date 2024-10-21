@@ -162,7 +162,7 @@ class TableRenderer
             foreach ($row['cells'] as $cell) {
                 $cells .= self::render_cell($cell);
             }
-            $classNames = $row['props']['hightLighted'] ?? '';
+            $classNames = $row['props']['highlighted'] ? 'wptb-row-highlighted-' . $row['props']['highlighted'] : '';
             $attrs = "";
             if ($props['stickyTopRow'] && $i == 0) {
                 $attrs = 'data-wptb-sticky-row="true"';
@@ -248,13 +248,13 @@ class TableRenderer
             "data-wptb-own-bg-color" => $props['ownBgColor'] ?? false,
         ]);
 
-        $classNames = $props['hightLighted'] ?? '';
+        $classNames = $props['highlighted'] ? 'wptb-col-highlighted-' . $props['highlighted'] . ' wptb-highlighted ' : '';
         $blocks = "";
 
         $isFirst = true;
 
         if ($props['hideOnMobile'] ?? false) {
-            $classNames .= ' wptb-hide-on-mobile';
+            $classNames .= 'wptb-hide-on-mobile';
         }
 
         if ($props['isEmpty']) {

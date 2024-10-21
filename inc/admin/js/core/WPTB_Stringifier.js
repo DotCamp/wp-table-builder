@@ -109,7 +109,7 @@ var WPTB_Stringifier = function (codeMain) {
           borderBottomRightRadius: td.style.borderBottomRightRadius,
           vAlign: tData.wptbCellVerticalAlignment || "center",
           isEmpty: td.classList.contains("wptb-empty"),
-          highlighted: `wptb-col-highlighted-${hMatch?.[1] || "none"}`,
+          highlighted: hMatch?.[1],
           xIndex: tData.xIndex,
           yIndex: tData.yIndex,
           xSort: tData.sortedVertical,
