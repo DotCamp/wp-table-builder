@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.6.5 =
+* FIX: PRO: Save circle rating properly
+* FIX: PRO: Save Row/Col highlight properly
+
 = 1.6.4 =
 * FIX: Save tooptip position properly
 * FIX: Some cells becoming empty on edit
@@ -99,7 +103,6 @@ That's it. You're done!
 * FIX: Saving table row/col spacing properly
 * FIX: Saving row/col radius
 * FIX: Saving cell vertical alignment
-
 
 = 1.6.3 =
 * NEW: Added option for hiding column on mobile
