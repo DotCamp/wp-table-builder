@@ -12,14 +12,16 @@ use WP_Table_Builder as NS;
  * Dummy pro element.
  * @package WP_Table_Builder\Inc\Admin\Element_Classes\Elements
  */
-class Circle_Rating_Element extends Dummy_Element_base {
+class Circle_Rating_Element extends Dummy_Element_base
+{
 
 	private static $element_id = 1;
 	/**
 	 * Name for dummy element.
 	 * @return string dummy name
 	 */
-	public function dummy_name() {
+	public function dummy_name()
+	{
 		return 'circle_rating';
 	}
 
@@ -27,8 +29,9 @@ class Circle_Rating_Element extends Dummy_Element_base {
 	 * Get element title.
 	 * @return string element title
 	 */
-	public function get_title() {
-		return esc_html_e( 'Circle Rating', 'wp-table-builder' );
+	public function get_title()
+	{
+		return esc_html_e('Circle Rating', 'wp-table-builder');
 	}
 
 	/**
@@ -41,8 +44,9 @@ class Circle_Rating_Element extends Dummy_Element_base {
 	 * @access public
 	 *
 	 */
-	public function get_directory_icon() {
-		return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/circle-rating-star.svg' );
+	public function get_directory_icon()
+	{
+		return wp_normalize_path(NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/circle-rating-star.svg');
 	}
 
 	/**
@@ -55,11 +59,13 @@ class Circle_Rating_Element extends Dummy_Element_base {
 	 * @access public
 	 *
 	 */
-	public function get_url_icon() {
-		return wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/circle-rating-star.svg' );
+	public function get_url_icon()
+	{
+		return wp_normalize_path(NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/circle-rating-star.svg');
 	}
-    
-	public static function render($block) {
+
+	public static function render($block)
+	{
 		$props = $block['props'];
 
 		$style = TableRenderer::generate_css_string([
@@ -69,17 +75,27 @@ class Circle_Rating_Element extends Dummy_Element_base {
 
 		$size = esc_attr($props['size'] ?? '100px');
 		$value = (float) $props['value'] ?? '37';
-		$unit = $props['ratingType'] ?? null === 'number' ? '':'%';
+		$unit = $props['ratingType'] ?? null === 'number' ? '' : '%';
 		$color = esc_attr($props['color'] ?? 'rgb(48, 123, 187)');
-		$total = (float) $props['totalNumber'] ?? '100';
 
-		if ($total < 1) {
-			$total = 1;
+		if ($unit === '%') {
+			$total = 100;
+		} else {
+			$total = (float) $props['totalNumber'] ?? '100';
+			if ($total < 1) {
+				$total = 1;
+			}
 		}
 
 		$angle = ($value / $total) * 360;
 
-		$barAngle = $value * 2 > $total ? 180 : 0;
+		if ($value * 2 > $total) {
+			$barAngle = 180;
+			$clip = "rect(0em, 1em, 1em, 0.5em)";
+		} else {
+			$barAngle = 0;
+			$clip = "rect(auto, auto, auto, auto)";
+		}
 
 		//@formatter:off
 		return
@@ -89,7 +105,7 @@ class Circle_Rating_Element extends Dummy_Element_base {
 		'style="' . $style . '">' .
 			'<div class="wptb-rating-circle-wrapper" style="font-size: ' . $size . '">' .
 				'<span style="color: ' . $color . '">' . $value . $unit . '</span>' .
-				'<div class="wptb-rating-circle-slice" style="clip: rect(0em, 1em, 1em, 0.5em)">' .
+				'<div class="wptb-rating-circle-slice" style="clip: '.$clip.'">' .
 					'<div class="wptb-rating-circle-bar" style="border-color: ' . $color . '; transform: rotate(' . $barAngle . 'deg)"></div>' .
 					'<div class="wptb-rating-circle-fill" style="border-color: ' . $color . '; transform: rotate(' . $angle . 'deg);"></div>' .
 				'</div>' .
