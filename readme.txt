@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.6.5 =
 * FIX: PRO: Save circle rating properly
 * FIX: PRO: Save Row/Col highlight properly
+* FIX: PRO: Save tooltip position properly
 
 = 1.6.4 =
 * FIX: Save tooptip position properly

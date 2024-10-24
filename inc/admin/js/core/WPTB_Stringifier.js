@@ -486,7 +486,7 @@ var WPTB_BlockSerializer = {
     Array.from(el.querySelectorAll("li")).forEach((child) => {
       const toolTipEl = child.querySelector(".wptb-m-tooltip");
       const tooltipPosision =
-        child.className.match(/wptb-tooltip-(top|bottom|left|right)/)?.[0] ||
+        child.className.match(/wptb-tooltip-(top|bottom|left|right)/)?.[1] ||
         "top";
       const pEl = child.querySelector("p");
 
