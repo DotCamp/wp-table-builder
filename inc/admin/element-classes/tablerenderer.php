@@ -129,8 +129,12 @@ class TableRenderer
             "data-wptb-horizontal-scroll-status" => $props['scrollX'] ?? false,
             "data-wptb-extra-styles" => $props['extraStyles'] ?? false,
             "data-wptb-first-column-sticky" => $props['stickyFirstColumn'] ?? false,
+
+            "data-wptb-pagination-enable" => $props['paginationEnable'] ?? false,
             "data-wptb-pro-pagination-top-row-header" => $props['paginationTopRowAsHeader'] ?? false,
             "data-wptb-rows-per-page" => $props['rowsPerPage'] ?? false,
+            "data-wptb-rows-changeable" => $props['rowsChangeable'] ?? false,
+
             "data-wptb-pro-search-top-row-header" => $props['searchKeepHeader'] ?? false,
             "data-wptb-searchbar-position" => $props['searchPosition'] ?? false,
             "role" => $props['role'] ?? false,
@@ -140,6 +144,8 @@ class TableRenderer
             "data-wptb-table-tds-sum-max-width" => $props['tdSumMaxWidth'] ?? false,
             "data-disable-theme-styles" => $props['disableThemeStyles'] ?? false,
             "data-wptb-search-enable" => $props['searchEnable'] ?? false,
+
+
 
             "data-wptb-header-background-color" => $props['headerBg'] ?? false,
             "data-wptb-even-row-background-color" => $props['evenRowBg'] ?? false,
