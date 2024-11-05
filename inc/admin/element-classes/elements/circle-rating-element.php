@@ -75,32 +75,34 @@ class Circle_Rating_Element extends Dummy_Element_base
 
 		$size = esc_attr($props['size'] ?? '100px');
 		$value = (float) $props['value'] ?? '37';
-		$unit = $props['ratingType'] ?? null === 'number' ? '' : '%';
+		$unit = ($props['ratingType'] ?? null) === 'number' ? '' : '%';
 		$color = esc_attr($props['color'] ?? 'rgb(48, 123, 187)');
 
 		if ($unit === '%') {
 			$total = 100;
 		} else {
-			$total = (float) $props['totalNumber'] ?? '100';
+			$total = (float) $props['total'] ?? '100';
 			if ($total < 1) {
 				$total = 1;
 			}
 		}
 
 		$angle = ($value / $total) * 360;
+		$angle %= 360;
 
-		if ($value * 2 > $total) {
+		if ($angle > 180) {
 			$barAngle = 180;
-			$clip = "rect(0em, 1em, 1em, 0.5em)";
+			$clip = "rect(auto, auto, auto, auto)";
 		} else {
 			$barAngle = 0;
-			$clip = "rect(auto, auto, auto, auto)";
+			$clip = "rect(0em, 1em, 1em, 0.5em)";
 		}
 
 		//@formatter:off
 		return
 		'<div class="wptb-circle_rating-container wptb-ph-element wptb-element-circle_rating-'.self::$element_id++.'" ' .
 		'data-percentage-count="' . $value . '" ' .
+		'data-wptb-rating-number="' . $value . '" ' .
 		'data-wptb-total-number="' . $total . '" ' .
 		'style="' . $style . '">' .
 			'<div class="wptb-rating-circle-wrapper" style="font-size: ' . $size . '">' .

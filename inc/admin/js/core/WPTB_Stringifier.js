@@ -7,7 +7,7 @@ var WPTB_Stringifier = function (codeMain) {
   const data = codeMain.dataset;
   const tBodyData = codeMain.querySelector("tbody")?.dataset || {};
   const tableStyle = codeMain.style;
-  
+
   const firstTd = codeMain.querySelector("td");
   const allTr = codeMain.querySelectorAll("tr");
 
@@ -157,7 +157,6 @@ var WPTB_BlockSerializer = {
     if (!el.classList.contains("wptb-text-container")) {
       return;
     }
-  
 
     return {
       type: "text",
@@ -167,7 +166,7 @@ var WPTB_BlockSerializer = {
         fontSize: el.style.fontSize,
         padding: el.style.padding,
         margin: el.style.margin,
-        elementId: el.className.match('wptb-element-text-([0-9]+)')?.[1]
+        elementId: el.className.match("wptb-element-text-([0-9]+)")?.[1],
       },
     };
   },
@@ -260,7 +259,7 @@ var WPTB_BlockSerializer = {
         hasLabel: bWrap.classList.contains("wptb-button-has-label"),
         labelBg: labelEl?.style.backgroundColor,
         labelColor: labelEl?.style.color,
-        labelText: labelEl?.querySelector('.wptb-button-label-text')?.innerHTML,
+        labelText: labelEl?.querySelector(".wptb-button-label-text")?.innerHTML,
 
         // Spacing
         padding: el.style.padding,
@@ -299,7 +298,6 @@ var WPTB_BlockSerializer = {
         toolTipStyle: toolTipEl?.getAttribute("style") || "",
       });
     });
-
 
     return {
       type: "list",
@@ -363,17 +361,17 @@ var WPTB_BlockSerializer = {
     if (!el.classList.contains("wptb-shortcode-container")) {
       return;
     }
-    const cDiv = el.querySelector('div');
-    
+    const cDiv = el.querySelector("div");
+
     return {
       type: "shortcode",
       props: {
-        "shortcode": cDiv?.innerHTML,
+        shortcode: cDiv?.innerHTML,
 
         padding: el.style.padding,
         margin: el.style.margin,
-      }
-    }
+      },
+    };
   },
 
   circleRating(el) {
@@ -383,17 +381,20 @@ var WPTB_BlockSerializer = {
 
     const wrapper = el.querySelector(".wptb-rating-circle-wrapper");
     const bar = el.querySelector(".wptb-rating-circle-bar");
+    const ratingType =
+      el.dataset.wptbRatingType === "number" ? "number" : "percent";
 
     return {
       type: "circleRating",
       props: {
         size: wrapper?.style.fontSize,
         color: bar?.style.borderColor,
-        ratingType:
-          el.dataset.wptbRatingType === "number" ? "number" : "percent",
-        value: el.dataset.percentageCount || "37",
+        ratingType,
+        value:
+          (ratingType === "number"
+            ? el.dataset.wptbRatingNumber
+            : el.dataset.percentageCount) || "37",
         total: el.dataset.wptbTotalNumber || "10",
-
         padding: el.style.padding,
         margin: el.style.margin,
       },
@@ -467,7 +468,7 @@ var WPTB_BlockSerializer = {
         text: pEL?.innerHTML,
 
         icon: iconEl?.dataset.wptbRibbonIconSrc,
-        enableAnimation: iconEl?.dataset.enableAnimation === '1'? '1' : false,
+        enableAnimation: iconEl?.dataset.enableAnimation === "1" ? "1" : false,
         animationType: iconEl?.dataset.wptbRibbonIconAnimationType,
       },
     };
@@ -493,7 +494,6 @@ var WPTB_BlockSerializer = {
       const alignment =
         child.firstElementChild?.dataset.wptbStyledListAlignment || "left";
 
-      
       items.push({
         text: pEl.innerHTML,
         alignment,
@@ -502,7 +502,6 @@ var WPTB_BlockSerializer = {
         toolTipStyle: toolTipEl?.getAttribute("style") || "",
       });
     });
-
 
     return {
       type: "styledList",

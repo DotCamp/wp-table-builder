@@ -95,6 +95,7 @@ That's it. You're done!
 * FIX: PRO: Save Row/Col highlight properly
 * FIX: PRO: Save tooltip position properly
 * FIX: PRO: Pagination not working
+* FIX: PRO: Display circle rating correctly
 
 = 1.6.4 =
 * FIX: Save tooptip position properly
