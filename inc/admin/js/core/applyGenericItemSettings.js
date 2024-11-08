@@ -73,7 +73,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             if (node.children.length === 1) {
                 let elemChild = node.children[0].lastChild;
                 
-                if (elemChild.children.length === 1) {
+                if (elemChild?.children?.length === 1) {
                     if (elemChild.innerHTML === '<br>') {
                         elemChild.innerHTML = '';
                     }
