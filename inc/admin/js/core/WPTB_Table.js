@@ -218,10 +218,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                         const isHighlighted = (className.indexOf("wptb-col-highlighted") > -1
                             && className.indexOf("wptb-col-highlighted-none") == -1);
                         if(isHighlighted) {
-                            const className = [...thisElem.classList].pop();
 
                             // Extract the current highlight value
-                            const highlightValue = thisElem.classList[0].substr(21);
+                            const highlightValue = thisElem.className.match(/wptb-col-highlighted-([0-9]+)/)?.[1] || "100";
                             const highlightColInput = document.querySelectorAll(`.wptb-el-table_cell_setting-${infArr[1]}-columnTransformScale`);
                             settingElem.querySelector('input[type="checkbox"]').click();
                             highlightColInput[0].value = highlightValue;

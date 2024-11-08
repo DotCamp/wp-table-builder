@@ -96,6 +96,7 @@ That's it. You're done!
 * FIX: PRO: Save tooltip position properly
 * FIX: PRO: Pagination not working
 * FIX: PRO: Display circle rating correctly
+* FIX: PRO: Set correct highlight value on control
 
 = 1.6.4 =
 * FIX: Save tooptip position properly
