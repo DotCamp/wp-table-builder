@@ -1,5 +1,5 @@
 === WP Table Builder - WordPress Table Plugin ===
-Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembircan, ultimateblocks, wpcdplugin, wpleaders1
+Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembircan, protibimbok, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 6.6
@@ -97,6 +97,7 @@ That's it. You're done!
 * FIX: PRO: Pagination not working
 * FIX: PRO: Display circle rating correctly
 * FIX: PRO: Set correct highlight value on control
+* FIX: Escape strings properly when exporting CSV
 
 = 1.6.4 =
 * FIX: Save tooptip position properly
