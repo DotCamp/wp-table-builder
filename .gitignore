@@ -8,3 +8,11 @@ uploads
 wp-table-builder.zip
 
 vendor/php-stubs
+
+# v2
+v2/*
+!v2/build
+!v2/dist
+!v2/inc
+!v2/vendor
+!v2/wp-table-builder.php

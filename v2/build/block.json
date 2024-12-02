@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "2.0.0",
+  "name": "wptb/table",
+  "title": "WPTB",
+  "category": "design",
+  "description": "WP Table Builder - Drag and Drop Responsive Table Builder Plugin for WordPress",
+  "keywords": [
+    "table",
+    "wp-table-builder",
+    "wptb",
+    "cell",
+    "row",
+    "column"
+  ],
+  "allowedBlocks": [],
+  "attributes": {
+    "id": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "textdomain": "wptb",
+  "editorStyle": "file:./editor.css"
+}
