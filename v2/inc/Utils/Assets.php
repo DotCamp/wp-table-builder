@@ -6,7 +6,7 @@ use WPTableBuilder\WPTableBuilder;
 class Assets
 {
 
-    private const CDN_HOST = WPTB_PLUGIN_URL.'/v2';
+    private const CDN_HOST = WPTB_PLUGIN_URL . '/v2';
 
     private $cdn_host = '';
     private $dev_url = '';
@@ -48,10 +48,6 @@ class Assets
             do_action('wptb_enqueue_pro_assets');
 
             $assets->register('src/index.tsx');
-
-            $assets->enqueue_style('wptb-style.css');
-            $assets->enqueue_style('wptb-frontend-style.css');
-
 
             echo '<script type="text/javascript">var WPTB_CFG = ' . json_encode(self::$data) . ';</script>';
             echo self::$preloads;
@@ -102,6 +98,11 @@ class Assets
         if (isset($entry['has_loaded'])) {
             return;
         }
+        if (isset($entry['css'])) {
+            foreach ($entry['css'] as $css) {
+                $this->enqueue_style($css);
+            }
+        }
         $entry['has_loaded'] = true;
         if (isset($entry['imports'])) {
             foreach ($entry['imports'] as $import) {
@@ -120,7 +121,7 @@ class Assets
 
     public function enqueue_style($file)
     {
-        wp_enqueue_style($file, $this->cdn_host . '/dist/' . $file, [], WPTableBuilder::VERSION);
+        wp_enqueue_style('wptb_' . $file, $this->cdn_host . '/dist/' . $file, [], WPTableBuilder::VERSION);
     }
 
 }
