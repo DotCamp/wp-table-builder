@@ -97,6 +97,7 @@ That's it. You're done!
 * FIX: PRO: Pagination not working
 * FIX: PRO: Display circle rating correctly
 * FIX: PRO: Set correct highlight value on control
+* FIX: PRO: Problem in badge element
 * FIX: Escape strings properly when exporting CSV
 
 = 1.6.4 =

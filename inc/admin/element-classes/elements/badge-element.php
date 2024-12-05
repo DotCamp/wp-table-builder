@@ -85,7 +85,7 @@ class Badge_Element extends Dummy_Element_base
 
         // @formatter:off
         return
-        '<div class="wptb-badge-container wptb-ph-element wptb-element-badge-'.self::$element_id++.' style="'.$style.'">'.
+        '<div class="wptb-badge-container wptb-ph-element wptb-element-badge-'.self::$element_id++.'" style="'.$style.'">'.
           '<div class="wptb-badge-wrapper" style="'.$wrapperStyle.'">'.
             '<p class="wptb-badge" style="position: relative">'.$text.'</p>'.
           '</div>'.
