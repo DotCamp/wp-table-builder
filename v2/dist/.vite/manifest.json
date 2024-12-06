@@ -1,6 +1,6 @@
 {
-  "_utils-B4D-u9EB.js": {
-    "file": "assets/utils-B4D-u9EB.js",
+  "_utils-CT8BRS6N.js": {
+    "file": "assets/utils-CT8BRS6N.js",
     "name": "utils"
   },
   "src/index.tsx": {
@@ -9,7 +9,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_utils-B4D-u9EB.js"
+      "_utils-CT8BRS6N.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -24,7 +24,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_utils-B4D-u9EB.js"
+      "_utils-CT8BRS6N.js"
     ],
     "css": [
       "wptb-common.css"
