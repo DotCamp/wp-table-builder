@@ -13,7 +13,7 @@
         "prod:legacy:build": "cross-env NODE_ENV=production npm run bundle:build && npm run gulp:build && npm run gutenberg:legacy:build",
         "prod:build:watch": "cross-env NODE_ENV=production concurrently 'npm:bundle:watch' 'npm:gulp:watch' 'npm:gutenberg:dev'",
         "gutenberg:dev": "wp-scripts start",
-        "gutenberg:build": "cross-env NODE_OPTIONS=--openssl-legacy-provider wp-scripts build",
+        "gutenberg:build": "cross-env wp-scripts build",
         "gutenberg:legacy:dev": "wp-scripts start",
         "gutenberg:legacy:build": "wp-scripts build",
         "lint": "eslint ./inc/admin/js/core/rollup-source --ignore-pattern '/inc/admin/js/core/rollup-source/functions/importOperations.js' --ext .js,.vue",
