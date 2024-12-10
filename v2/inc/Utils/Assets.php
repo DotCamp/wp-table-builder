@@ -59,6 +59,7 @@ class Assets
                 && $current_screen->is_block_editor()
             ) {
                 echo '<script type="module" src="' . self::CDN_HOST . '/build/index.js"></script>';
+                echo '<link rel="stylesheet" type="text/css" href="' . self::CDN_HOST . '/build/editor.css"/>';
             }
 
         });
