@@ -1,7 +1,7 @@
 {
-  "_utils-CT8BRS6N.js": {
-    "file": "assets/utils-CT8BRS6N.js",
-    "name": "utils"
+  "_index-qb27bMxp.js": {
+    "file": "assets/index-qb27bMxp.js",
+    "name": "index"
   },
   "src/index.tsx": {
     "file": "wptb-main.js",
@@ -9,7 +9,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_utils-CT8BRS6N.js"
+      "_index-qb27bMxp.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -24,7 +24,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_utils-CT8BRS6N.js"
+      "_index-qb27bMxp.js"
     ],
     "css": [
       "wptb-common.css"
