@@ -11,12 +11,9 @@ class WPTableBuilder
 {
 
     const VERSION = '1.0.0';
-    private static $IS_PRO = false;
 
     public static function init()
     {
-        self::$IS_PRO = class_exists(WPTableBuilderPro::class) && WPTableBuilderPro::is_active();
-
         Assets::enqueue();
         add_action('init', function () {
             ApiHandler::init();
@@ -27,7 +24,7 @@ class WPTableBuilder
 
     public static function is_pro()
     {
-        return self::$IS_PRO;
+        return class_exists(WPTableBuilderPro::class) && WPTableBuilderPro::is_active();
     }
 
     public function __construct()
