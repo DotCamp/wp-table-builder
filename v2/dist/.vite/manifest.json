@@ -1,6 +1,6 @@
 {
-  "_index-8edPr04B.js": {
-    "file": "assets/index-8edPr04B.js",
+  "_index-CPBCWDXx.js": {
+    "file": "assets/index-CPBCWDXx.js",
     "name": "index"
   },
   "src/index.tsx": {
@@ -9,7 +9,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-8edPr04B.js"
+      "_index-CPBCWDXx.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -24,7 +24,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-8edPr04B.js"
+      "_index-CPBCWDXx.js"
     ],
     "css": [
       "wptb-common.css"
