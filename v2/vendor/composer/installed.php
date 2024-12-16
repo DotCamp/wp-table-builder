@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'dotcamp/wp-table-builder',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '6f18ecf30c32c4f692a4f21c4a80b46a0a78ad13',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'b9914f75f28448bdf504e7a787bab1a7e4f30aa4',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'dotcamp/wp-table-builder' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '6f18ecf30c32c4f692a4f21c4a80b46a0a78ad13',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'b9914f75f28448bdf504e7a787bab1a7e4f30aa4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

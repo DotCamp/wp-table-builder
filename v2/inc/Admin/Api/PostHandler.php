@@ -5,6 +5,38 @@ use WP_REST_Response;
 
 class PostHandler
 {
+    public static function register($apiBase)
+    {
+        register_rest_route($apiBase, '/trash', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'trash_table'],
+        ]);
+
+        register_rest_route($apiBase, '/delete', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'delete_permanently'],
+        ]);
+
+        register_rest_route($apiBase, '/restore', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'restore_table'],
+        ]);
+
+        register_rest_route($apiBase, '/duplicate', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'duplicate_table'],
+        ]);
+
+        register_rest_route($apiBase, '/trash_bulk', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'trash_table_bulk'],
+        ]);
+
+        register_rest_route($apiBase, '/restore_bulk', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'restore_table_bulk'],
+        ]);
+    }
 
     private static function duplicate_table_internal($id)
     {

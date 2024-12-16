@@ -3,9 +3,29 @@
 namespace WPTableBuilder\Admin\Api;
 use WP_Query;
 use WP_REST_Response;
+use WPTableBuilder\WPTableBuilder;
 
 class GetHandler
 {
+
+    public static function register($apiBase)
+    {
+        register_rest_route($apiBase, '/table', [
+            'methods' => 'GET',
+            'callback' => [self::class, 'get_table'],
+        ]);
+
+        register_rest_route($apiBase, '/tables', [
+            'methods' => 'GET',
+            'callback' => [self::class, 'get_tables'],
+        ]);
+
+        register_rest_route($apiBase, '/patterns', [
+            'methods' => 'GET',
+            'callback' => [self::class, 'get_patterns'],
+        ]);
+    }
+
     public static function get_table($req)
     {
         $id = absint($req->get_param('id'));
@@ -91,5 +111,79 @@ class GetHandler
             'current_page' => $page,
             'per_page' => $per_page,
         ];
+    }
+
+    public static function get_patterns($req)
+    {
+
+        $name = isset($req['name']) ? sanitize_text_field($req['name']) : '';
+
+        if ($name) {
+            $pattern = false;
+            $pattern_path = WPTB_PLUGIN_DIR . '/assets/patterns/free/' . $name . '.json';
+            if (!file_exists($pattern_path)) {
+                $pattern = apply_filters('wptb_get_pattern', $name);
+            } else {
+                $pattern = json_decode(file_get_contents($pattern_path), true);
+            }
+
+            if (!$pattern) {
+                return [
+                    'error' => __('Pattern was not found', 'wptb')
+                ];
+            }
+
+            return [
+                'pattern' => $pattern
+            ];
+        }
+
+        $free_patterns = WPTB_PLUGIN_DIR . '/assets/patterns/free';
+        if (!file_exists($free_patterns)) {
+            return [
+                'patterns' => [],
+                'total_count' => 0,
+                'error' => __('No patterns found', 'wptb')
+            ];
+        }
+
+        $patterns = [];
+        foreach (scandir($free_patterns) as $value) {
+            if (is_dir($free_patterns . '/' . $value) || !preg_match('/\.json$/', $value)) {
+                continue;
+            }
+            $pattern = json_decode(file_get_contents($free_patterns . '/' . $value), true);
+            $patterns[] = [
+                'name' => str_replace('.json', '', $value),
+                'title' => $pattern['title'],
+                'height' => $pattern['height'],
+                'width' => $pattern['width']
+            ];
+        }
+
+        if (WPTableBuilder::is_pro()) {
+            $patterns = apply_filters('wptb_get_patterns', $patterns);
+        } else {
+            $upsells_dir = WPTB_PLUGIN_DIR . '/assets/patterns/upsells';
+            foreach (scandir($upsells_dir) as $value) {
+                if (is_dir($upsells_dir . '/' . $value) || !preg_match('/\.json$/', $value)) {
+                    continue;
+                }
+
+                $pattern = json_decode(file_get_contents($upsells_dir . '/' . $value), true);
+                $patterns[] = [
+                    'name' => str_replace('.json', '', $value),
+                    'title' => $pattern['title'],
+                    'height' => $pattern['height'],
+                    'width' => $pattern['width'],
+                    'is_upsell' => true
+                ];
+            }
+        }
+
+        return [
+            'patterns' => $patterns
+        ];
+
     }
 }
