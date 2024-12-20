@@ -100,6 +100,7 @@ That's it. You're done!
 * FIX: PRO: Problem in badge element
 * FIX: Escape strings properly when exporting CSV
 * FIX: Textdomain loaded before init notice
+* FIX: Responsive issue on some mobile devices
 
 = 1.6.4 =
 * FIX: Save tooptip position properly
