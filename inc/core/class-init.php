@@ -268,7 +268,7 @@ class Init
 
         $plugin_i18n = new Internationalization_I18n($this->plugin_text_domain);
 
-        $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
+        $this->loader->add_action('init', $plugin_i18n, 'load_plugin_textdomain');
     }
 
     /**
