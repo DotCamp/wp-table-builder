@@ -1366,7 +1366,6 @@
 		 */
 		this.rebuildTable = (el, size, tableObj) => {
 			const directive = this.getDirective(el);
-
 			if (directive) {
 				if (!isMainResponsiveEnabled(directive)) {
 					// this.buildDefault(tableObj);
@@ -1422,7 +1421,7 @@
 		 * @return {number} inner size width
 		 */
 		const calculateInnerSize = (tableElement) => {
-			let innerSize = window.innerWidth;
+			let innerSize = document.body.clientWidth;
 
 			const directives = this.getDirective(tableElement);
 
@@ -1431,7 +1430,7 @@
 				switch (directives.relativeWidth) {
 					case 'window':
 						// eslint-disable-next-line no-param-reassign
-						innerSize = window.innerWidth;
+						innerSize = document.body.clientWidth;
 						break;
 					case 'container':
 						// get the size of the container table is in
@@ -1440,7 +1439,7 @@
 						break;
 					default:
 						// eslint-disable-next-line no-param-reassign
-						innerSize = window.innerWidth;
+						innerSize = document.body.clientWidth;
 						break;
 				}
 			}

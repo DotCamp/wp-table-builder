@@ -1,3 +1,4 @@
+/* eslint-disable */
 document.addEventListener('DOMContentLoaded', function () {
 	const tableContainers = document.getElementsByClassName('wptb-table-container');
 
@@ -749,7 +750,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	WPTB_ExtraStyles.applyStyles(WPTB_ExtraStyles.modes.frontEnd, WptbFrontendData.generalStyles);
 
 	// rebuild tables according to current responsive mode
-	responsiveFront.rebuildTables();
+	responsiveFront.rebuildTables();	
 
 	// initialize lazy load module
 	WPTB_LazyLoad.init(WptbFrontendData.lazyLoad);
