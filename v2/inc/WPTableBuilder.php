@@ -15,11 +15,10 @@ class WPTableBuilder
     public static function init()
     {
         Assets::enqueue();
-        add_action('init', function () {
-            ApiHandler::init();
-            Gutenberg::init();
-            new self();
-        });
+        ApiHandler::init();
+        Gutenberg::init();
+        new self();
+
     }
 
     public static function is_pro()

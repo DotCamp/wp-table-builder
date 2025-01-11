@@ -6,4 +6,7 @@ define('WPTB_PLUGIN_URL', plugins_url('', WPTB_PLUGIN_FILE_LEGACY));
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-\WPTableBuilder\WPTableBuilder::init();
+add_action('init', [
+    \WPTableBuilder\WPTableBuilder::class,
+    'init'
+]);

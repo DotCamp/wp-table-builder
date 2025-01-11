@@ -93,6 +93,7 @@
         "gulp-uglify": "^3.0.2",
         "gulp-watch": "^4.2.4",
         "gulp-wp-pot": "^2.0.4",
+        "minimatch": "^10.0.1",
         "parcel-bundler": "^1.12.4",
         "prettier": "^2.0.5",
         "sass": "^1.49.7",
