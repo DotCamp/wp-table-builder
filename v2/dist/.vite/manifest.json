@@ -1,6 +1,6 @@
 {
-  "_index-LBfuGn_T.js": {
-    "file": "assets/index-LBfuGn_T.js",
+  "_index-C1RBpECS.js": {
+    "file": "assets/index-C1RBpECS.js",
     "name": "index"
   },
   "src/index.tsx": {
@@ -9,7 +9,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-LBfuGn_T.js"
+      "_index-C1RBpECS.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -24,7 +24,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-LBfuGn_T.js"
+      "_index-C1RBpECS.js"
     ],
     "css": [
       "wptb-common.css"
