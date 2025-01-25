@@ -1,5 +1,6 @@
 **/.git/**
 **/.cache/**
+**/.vscode
 **/node_modules/**
 **/uploads/**
 **/.eslintrc.json
