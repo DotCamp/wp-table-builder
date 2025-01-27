@@ -96,6 +96,12 @@ function addToArchive(baseDir, relativePath = "") {
 
 addToArchive(__dirname);
 
+// Listen for the 'progress' event to show progress
+archive.on("progress", (progress) => {
+  const percentComplete = ((progress.fs.processedBytes / progress.fs.totalBytes) * 100).toFixed(2);
+  process.stdout.write(`Progress: ${percentComplete}% \r`);
+});
+
 archive.finalize();
 
 output.on("close", () => {
