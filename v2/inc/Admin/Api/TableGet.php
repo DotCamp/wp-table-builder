@@ -5,7 +5,7 @@ use WP_Query;
 use WP_REST_Response;
 use WPTableBuilder\WPTableBuilder;
 
-class GetHandler
+class TableGet
 {
 
     public static function register($apiBase)

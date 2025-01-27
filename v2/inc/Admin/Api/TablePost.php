@@ -3,7 +3,7 @@
 namespace WPTableBuilder\Admin\Api;
 use WP_REST_Response;
 
-class PostHandler
+class TablePost
 {
     public static function register($apiBase)
     {

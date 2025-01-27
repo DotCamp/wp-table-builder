@@ -41,6 +41,19 @@ class Assets
                 'TEST' => __("Create Table", "wptb"),
                 'SECURITY_CODE' => wp_create_nonce('wptb-import-security-nonce'),
                 'EXPORT_KEY' => wp_create_nonce('wptb_table_export_main_export'),
+                'SETTINGS' => [
+                    'version' => WPTableBuilder::VERSION,
+                    'general' => get_option('wp_table_builder_settings'),
+                    'table_style' => get_option('wptb-general-styles'),
+                    'lazy_load' => get_option('wptb_lazy_load'),
+                    'lazy_load_pro' => get_option('wptb_lazy_load_pro'),
+                    'nonce' => [
+                        'general' => wp_create_nonce('wp_table_builder_settings'),
+                        'styles' => wp_create_nonce('wptb-general-styles'),
+                        'version' => wp_create_nonce('version_control_manager'),
+                        'lazy_load' => wp_create_nonce('wptb_lazy_load'),
+                    ],
+                ]
             ];
 
             $assets->register('src/wptb-common.ts');

@@ -10,7 +10,7 @@ use WPTableBuilderPro\WPTableBuilderPro;
 class WPTableBuilder
 {
 
-    const VERSION = '1.0.0';
+    const VERSION = '2.0.0';
 
     public static function init()
     {
@@ -86,6 +86,16 @@ class WPTableBuilder
             __('Export', 'wp-table-builder'),
             'manage_options',
             'wptb-alt-export',
+            [$this, 'wptb_page']
+        );
+
+
+        add_submenu_page(
+            'wptb-alt',
+            __('WP Table Builder', 'wp-table-builder'),
+            __('Settings', 'wp-table-builder'),
+            'manage_options',
+            'wptb-alt-settings',
             [$this, 'wptb_page']
         );
     }

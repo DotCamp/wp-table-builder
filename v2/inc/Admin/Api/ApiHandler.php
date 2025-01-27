@@ -14,8 +14,8 @@ class ApiHandler
 
     public static function register_routes()
     {
-        GetHandler::register(self::ROUTE_NAMESPACE);
-        PostHandler::register(self::ROUTE_NAMESPACE);
+        TableGet::register(self::ROUTE_NAMESPACE);
+        TablePost::register(self::ROUTE_NAMESPACE);
     }
 
 

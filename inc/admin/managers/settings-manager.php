@@ -64,6 +64,7 @@ class Settings_Manager {
 		'give_credits_to_wp_table_builder' => false,
 		'restrict_users_to_their_tables'   => false,
 		'disable_theme_styles_for_all'     => false,
+		'take_over_entire_screen'          => false,
 	];
 
 	/**
@@ -77,6 +78,7 @@ class Settings_Manager {
 		'give_credits_to_wp_table_builder' => 'sanitize_text_field',
 		'restrict_users_to_their_tables'   => 'sanitize_text_field',
 		'disable_theme_styles_for_all'     => 'sanitize_text_field',
+		'take_over_entire_screen'          => 'sanitize_text_field',
 	];
 
 	const ALLOWED_ROLE_META_CAP = "wptb_allowed_cap";
