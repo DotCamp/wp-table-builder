@@ -35,67 +35,67 @@ class WPTableBuilder
     {
         add_menu_page(
             'WP Table Builder',
-            'WPTB',
+            'WP Table Builder',
             'manage_options',
-            'wptb-alt',
+            'wptb',
             [$this, 'wptb_page'],
             'dashicons-editor-table',
             50
         );
 
         add_submenu_page(
-            'wptb-alt',
+            'wptb',
             __('WP Table Builder', 'wp-table-builder'),
             __('All Tables', 'wp-table-builder'),
             'manage_options',
-            'wptb-alt-tables',
+            'wptb',
             [$this, 'wptb_page']
         );
 
         add_submenu_page(
-            'wptb-alt',
+            'wptb',
             __('WP Table Builder', 'wp-table-builder'),
             __('Add New', 'wp-table-builder'),
             'manage_options',
-            'wptb-alt-create',
+            'wptb-create',
             [$this, 'wptb_page']
         );
 
         add_submenu_page(
-            'wptb-alt',
+            null,
             __('WP Table Builder', 'wp-table-builder'),
             __('Builder', 'wp-table-builder'),
             'manage_options',
-            'wptb-alt-builder',
+            'wptb-builder',
             [$this, 'wptb_page']
         );
 
         add_submenu_page(
-            'wptb-alt',
+            'wptb',
             __('WP Table Builder', 'wp-table-builder'),
             __('Import', 'wp-table-builder'),
             'manage_options',
-            'wptb-alt-import',
+            'wptb-import',
             [$this, 'wptb_page']
         );
 
 
         add_submenu_page(
-            'wptb-alt',
+            'wptb',
             __('WP Table Builder', 'wp-table-builder'),
             __('Export', 'wp-table-builder'),
             'manage_options',
-            'wptb-alt-export',
+            'wptb-export',
             [$this, 'wptb_page']
         );
 
 
         add_submenu_page(
-            'wptb-alt',
+            'wptb',
             __('WP Table Builder', 'wp-table-builder'),
             __('Settings', 'wp-table-builder'),
             'manage_options',
-            'wptb-alt-settings',
+            'wptb-settings',
             [$this, 'wptb_page']
         );
     }

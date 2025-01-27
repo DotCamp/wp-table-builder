@@ -53,7 +53,11 @@ class Admin_Menu
 		add_filter('set-screen-option', function ($status, $option, $value) {
 			return ($option == 'tables_per_page') ? (int) $value : $status;
 		}, 10, 3);
-		add_action('admin_menu', array($this, 'register_menus'), 9);
+
+		if (\WP_Table_Builder\WP_Table_Builder::$use_legacy_builder) {
+			add_action('admin_menu', array($this, 'register_menus'), 9);
+		}
+
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
 		add_action('wp_ajax_create_table', array($this, 'create_table'));
 		add_action('wp_ajax_save_table', array($this, 'save_table'));
@@ -373,6 +377,9 @@ class Admin_Menu
 
 	public function enqueue_scripts($hook)
 	{
+		if (!\WP_Table_Builder\WP_Table_Builder::$use_legacy_builder) {
+			return;
+		}
 		/*
 		 * This function is provided for demonstration purposes only.
 		 *

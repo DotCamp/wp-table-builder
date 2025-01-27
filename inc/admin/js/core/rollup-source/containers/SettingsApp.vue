@@ -1,6 +1,10 @@
 <template>
 	<div class="wptb-settings-wrapper">
 		<menu-header :logo-src="pluginInfo.logo" :logo-alt="strings.logoAlt" :plugin-name="pluginInfo.pluginName">
+			<button type="button" @click="switchToNewBuilder" class="wptb-v2-switch-to-new-builder">
+				<template v-if="!isChanging">Switch to New Builder</template>
+				<template v-else>Switching...</template>
+			</button>
 			<a :href="pluginInfo.pluginHomepage">{{ strings.homepage }}</a>
 		</menu-header>
 		<sections :items="sections" v-model="currentSection" :disabled="isBusy()"></sections>
@@ -53,6 +57,7 @@ export default {
 			resetActive: false,
 			canSubmit: false,
 			fetching: false,
+			isChanging: false,
 		};
 	},
 	watch: {
@@ -164,6 +169,32 @@ export default {
 				.finally(() => {
 					this.fetching = false;
 				});
+		},
+		async switchToNewBuilder() {
+			if (this.isChanging) {
+				return;
+			}
+			this.isChanging = true;
+			try {
+				const fd = new FormData();
+				fd.append('nonce', this.settings.nonce);
+				fd.append('action', 'wptb_toggle_legacy_builder');
+				const res = await fetch(this.settings.ajaxUrl, {
+					method: 'POST',
+					body: fd,
+				});
+				const data = await res.json();
+				if (!res.ok) {
+					return;
+				}
+				if (data.error) {
+					return;
+				}
+				window.location.replace(window.location.href.replace('wp-table-builder-settings', 'wptb-settings'));
+			} catch (_) {
+				// Empty
+			}
+			this.isChanging = false;
 		},
 	},
 };

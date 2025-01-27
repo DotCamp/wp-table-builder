@@ -18,6 +18,7 @@ class Assets
 
     public static function enqueue()
     {
+        wp_enqueue_media();
         load_plugin_textdomain('wp-table-builder', false, 'wp-table-builder/v2/languages');
         wp_register_script(
             'wptb-i18n',

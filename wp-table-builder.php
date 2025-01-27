@@ -29,10 +29,9 @@
 namespace {
 
 
-    define('WPTB_PLUGIN_DIR_LEGACY', __DIR__.'/v2');
+    define('WPTB_PLUGIN_DIR_LEGACY', __DIR__);
     define('WPTB_PLUGIN_FILE_LEGACY', __FILE__);
 
-    require_once __DIR__ . '/v2/wp-table-builder.php';
     /**
      * Inline render a table to DOM.
      *
@@ -183,9 +182,15 @@ namespace WP_Table_Builder {
          * @var      Init $init Instance of the plugin.
          */
         public static $init;
+        public static $use_legacy_builder = false;
 
         public function __construct()
         {
+            $config = get_option('wp_table_builder_settings');
+            self::$use_legacy_builder = isset($config['use_legacy_builder']) && $config['use_legacy_builder'];
+            if (!self::$use_legacy_builder) {
+                require_once __DIR__ . '/v2/wp-table-builder.php';
+            }
             self::$init = Inc\Core\Init::instance();
             self::$init->run();
         }
