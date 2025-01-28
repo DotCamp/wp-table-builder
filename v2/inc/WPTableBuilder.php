@@ -17,7 +17,6 @@ class WPTableBuilder
         Assets::enqueue();
         ApiHandler::init();
         Gutenberg::init();
-        new self();
 
     }
 
@@ -26,19 +25,15 @@ class WPTableBuilder
         return class_exists(WPTableBuilderPro::class) && WPTableBuilderPro::is_active();
     }
 
-    public function __construct()
-    {
-        add_action('admin_menu', [$this, 'add_menu']);
-    }
 
-    public function add_menu()
+    public static function add_menu()
     {
         add_menu_page(
             'WP Table Builder',
             'WP Table Builder',
             'manage_options',
             'wptb',
-            [$this, 'wptb_page'],
+            [self::class, 'wptb_page'],
             'dashicons-editor-table',
             50
         );
@@ -49,7 +44,7 @@ class WPTableBuilder
             __('All Tables', 'wp-table-builder'),
             'manage_options',
             'wptb',
-            [$this, 'wptb_page']
+            [self::class, 'wptb_page']
         );
 
         add_submenu_page(
@@ -58,7 +53,7 @@ class WPTableBuilder
             __('Add New', 'wp-table-builder'),
             'manage_options',
             'wptb-create',
-            [$this, 'wptb_page']
+            [self::class, 'wptb_page']
         );
 
         add_submenu_page(
@@ -67,7 +62,7 @@ class WPTableBuilder
             __('Builder', 'wp-table-builder'),
             'manage_options',
             'wptb-builder',
-            [$this, 'wptb_page']
+            [self::class, 'wptb_page']
         );
 
         add_submenu_page(
@@ -76,7 +71,7 @@ class WPTableBuilder
             __('Import', 'wp-table-builder'),
             'manage_options',
             'wptb-import',
-            [$this, 'wptb_page']
+            [self::class, 'wptb_page']
         );
 
 
@@ -86,7 +81,7 @@ class WPTableBuilder
             __('Export', 'wp-table-builder'),
             'manage_options',
             'wptb-export',
-            [$this, 'wptb_page']
+            [self::class, 'wptb_page']
         );
 
 
@@ -96,12 +91,12 @@ class WPTableBuilder
             __('Settings', 'wp-table-builder'),
             'manage_options',
             'wptb-settings',
-            [$this, 'wptb_page']
+            [self::class, 'wptb_page']
         );
     }
 
 
-    public function wptb_page()
+    public static function wptb_page()
     {
         echo '<div id="wptb-app-root" class="wptb-app-root"></div>';
         Assets::print();

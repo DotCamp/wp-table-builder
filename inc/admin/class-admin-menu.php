@@ -54,9 +54,7 @@ class Admin_Menu
 			return ($option == 'tables_per_page') ? (int) $value : $status;
 		}, 10, 3);
 
-		if (\WP_Table_Builder\WP_Table_Builder::$use_legacy_builder) {
-			add_action('admin_menu', array($this, 'register_menus'), 9);
-		}
+		add_action('admin_menu', array($this, 'register_menus'), 9);
 
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
 		add_action('wp_ajax_create_table', array($this, 'create_table'));
@@ -278,6 +276,11 @@ class Admin_Menu
 	 */
 	public function register_menus()
 	{
+
+		if (!\WP_Table_Builder\WP_Table_Builder::$use_legacy_builder) {
+			\WPTableBuilder\WPTableBuilder::add_menu();
+			return;
+		}
 
 		global $builder_page, $tables_overview, $table_list, $builder_tool_page;
 		$menu_cap = Helpers::wptb_get_capability_manage_options();
