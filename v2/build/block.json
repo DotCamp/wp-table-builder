@@ -21,5 +21,11 @@
       "default": ""
     }
   },
-  "textdomain": "wp-table-builder"
+  "textdomain": "wp-table-builder",
+  "editorStyle": [
+    "wptb-v2-frontend-style",
+    "wptb-v2-editor-style",
+    "wptb-v2-gutenberg-style",
+    "wptb-v2-pro-style"
+  ]
 }

@@ -1,7 +1,12 @@
 {
-  "_index-COLUoSPm.js": {
-    "file": "assets/index-COLUoSPm.js",
+  "_index-DtJ75BJT.js": {
+    "file": "assets/index-DtJ75BJT.js",
     "name": "index"
+  },
+  "src/editor.scss": {
+    "file": "wptb-style.css",
+    "src": "src/editor.scss",
+    "isEntry": true
   },
   "src/index.tsx": {
     "file": "wptb-main.js",
@@ -9,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-COLUoSPm.js"
+      "_index-DtJ75BJT.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -18,16 +23,18 @@
     "src": "src/public/i18n.ts",
     "isEntry": true
   },
+  "src/styles.scss": {
+    "file": "wptb-frontend-style.css",
+    "src": "src/styles.scss",
+    "isEntry": true
+  },
   "src/wptb-common.ts": {
     "file": "wptb-common.js",
     "name": "wptb-common",
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-COLUoSPm.js"
-    ],
-    "css": [
-      "wptb-common.css"
+      "_index-DtJ75BJT.js"
     ]
   }
 }

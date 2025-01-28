@@ -104,5 +104,6 @@ class WPTableBuilder
     public function wptb_page()
     {
         echo '<div id="wptb-app-root" class="wptb-app-root"></div>';
+        Assets::print();
     }
 }
