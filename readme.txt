@@ -90,6 +90,9 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.6.6 =
+* FIX: Undefined key: highlighted warning
+
 = 1.6.5 =
 * FIX: PRO: Save circle rating properly
 * FIX: PRO: Save Row/Col highlight properly
