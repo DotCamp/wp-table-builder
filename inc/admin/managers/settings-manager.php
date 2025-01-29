@@ -262,7 +262,7 @@ class Settings_Manager
 		$data = [];
 		if (current_user_can('manage_options') && check_ajax_referer($this->options_root, 'nonce', false)) {
 			$encoded_data = get_option($this->options_root);
-			$encoded_data['use_legacy_builder'] = !\WP_Table_Builder\WP_Table_Builder::$use_legacy_builder;
+			$encoded_data['use_legacy_builder'] = !WPTB_LEGACY_BUILDER;
 			update_option($this->options_root, $encoded_data);
 			$data['message'] = esc_html__('Settings Updated', 'wp-table-builder');
 		} else {

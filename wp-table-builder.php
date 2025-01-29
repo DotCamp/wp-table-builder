@@ -33,6 +33,10 @@ namespace {
     define('WPTB_PLUGIN_FILE_LEGACY', __FILE__);
     
     require_once __DIR__ . '/v2/wp-table-builder.php';
+
+    
+    $config = get_option('wp_table_builder_settings');
+    define('WPTB_LEGACY_BUILDER', isset($config['use_legacy_builder']) && $config['use_legacy_builder']);
     /**
      * Inline render a table to DOM.
      *
@@ -71,7 +75,7 @@ namespace WP_Table_Builder {
                     'has_paid_plans' => false,
                     'is_org_compliant' => false,
                     'menu' => array(
-                        'slug' => 'wptb-overview',
+                        'slug' => WPTB_LEGACY_BUILDER ? 'wptb-overview' : 'wptb',
                         'first-path' => 'admin.php?page=wp-table-builder-welcome',
                         'account' => true,
                         'contact' => false,
@@ -183,12 +187,9 @@ namespace WP_Table_Builder {
          * @var      Init $init Instance of the plugin.
          */
         public static $init;
-        public static $use_legacy_builder = false;
 
         public function __construct()
         {
-            $config = get_option('wp_table_builder_settings');
-            self::$use_legacy_builder = isset($config['use_legacy_builder']) && $config['use_legacy_builder'];
             self::$init = Inc\Core\Init::instance();
             self::$init->run();
         }

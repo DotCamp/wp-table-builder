@@ -277,7 +277,7 @@ class Admin_Menu
 	public function register_menus()
 	{
 
-		if (!\WP_Table_Builder\WP_Table_Builder::$use_legacy_builder) {
+		if (!WPTB_LEGACY_BUILDER) {
 			\WPTableBuilder\WPTableBuilder::add_menu();
 			return;
 		}
@@ -380,7 +380,7 @@ class Admin_Menu
 
 	public function enqueue_scripts($hook)
 	{
-		if (!\WP_Table_Builder\WP_Table_Builder::$use_legacy_builder) {
+		if (!WPTB_LEGACY_BUILDER) {
 			return;
 		}
 		/*
