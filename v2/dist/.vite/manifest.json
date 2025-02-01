@@ -1,6 +1,6 @@
 {
-  "_index-DV8Dj1MJ.js": {
-    "file": "assets/index-DV8Dj1MJ.js",
+  "_index-Q71O9rWY.js": {
+    "file": "assets/index-Q71O9rWY.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-DV8Dj1MJ.js"
+      "_index-Q71O9rWY.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-DV8Dj1MJ.js"
+      "_index-Q71O9rWY.js"
     ]
   }
 }

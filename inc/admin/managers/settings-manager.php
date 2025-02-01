@@ -65,7 +65,7 @@ class Settings_Manager
 		'give_credits_to_wp_table_builder' => false,
 		'restrict_users_to_their_tables' => false,
 		'disable_theme_styles_for_all' => false,
-		'take_over_entire_screen' => false,
+		'take_over_entire_screen' => true,
 		'use_legacy_builder' => false,
 	];
 
