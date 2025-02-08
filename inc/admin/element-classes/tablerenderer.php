@@ -58,29 +58,35 @@ class TableRenderer
             return '';
         }
 
-        $dom = new \DOMDocument('1.0', 'UTF-8');
-        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        $wrapper = '<div>' . $html . '</div>';
 
-        @$dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom = new \DOMDocument();
+        $dom->encoding = 'UTF-8';
+        $dom->loadHTML(mb_convert_encoding($wrapper, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         $xpath = new \DOMXPath($dom);
-        $elements = $xpath->query('//*');
 
-        foreach ($elements as $element) {
-            foreach ($element->attributes as $attr) {
-                if (strpos($attr->name, 'on') === 0) {
-                    $element->removeAttribute($attr->name);
-                }
+        foreach ($xpath->query('//@*') as $attr) {
+            if (stripos($attr->nodeName, 'on') === 0) {
+                $attr->ownerElement->removeAttribute($attr->nodeName);
             }
         }
 
-        $script_tags = $dom->getElementsByTagName('script');
-        while ($script_tags->length > 0) {
-            $script_tags->item(0)->parentNode->removeChild($script_tags->item(0));
+
+        while (($script = $dom->getElementsByTagName('script'))->length) {
+            $script->item(0)->parentNode->removeChild($script->item(0));
         }
 
-        return $dom->saveHTML();
+
+        $body = $dom->getElementsByTagName('div')->item(0);
+        $innerHTML = '';
+        foreach ($body->childNodes as $child) {
+            $innerHTML .= $dom->saveHTML($child);
+        }
+
+        return $innerHTML;
     }
+
 
     public static function render($body, $tblId)
     {
