@@ -92,6 +92,7 @@ That's it. You're done!
 
 = 1.6.6 =
 * FIX: Undefined key: highlighted warning
+* FIX: Some html getting corrupted in xss protection
 
 = 1.6.5 =
 * FIX: PRO: Save circle rating properly
