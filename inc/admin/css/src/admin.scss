@@ -224,8 +224,13 @@ body > img {
     opacity: 0.4;
 }
 
+.wptb-switch {
+    height: 100%;
+}
+
 .wptb-embed-btn,
 .wptb-preview-btn,
+.wptb-switch-v2-btn,
 .wptb-save-btn {
     height: 100%;
     display: flex;
@@ -234,8 +239,15 @@ body > img {
     text-decoration: none;
 }
 
+.wptb-switch-v2-btn {
+    border: 0;
+    border-right: 1px solid var(--wptb-plugin-theme-sidebar-bg);
+    position: relative;
+}
+
 .wptb-embed,
 .wptb-preview,
+.wptb-switch-v2,
 .wptb-save {
     display: flex;
     justify-content: center;

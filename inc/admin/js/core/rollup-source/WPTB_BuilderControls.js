@@ -27,6 +27,7 @@ import WPTB_ColorPaletteControl from '$MountPoints/WPTB_ColorPaletteControl';
 import WPTB_Embed from '$MountPoints/WPTB_Embed';
 import WPTB_ProOverlay from '$MountPoints/WPTB_ProOverlay';
 import WPTB_SaveButton from '$MountPoints/WPTB_SaveButton';
+import WPTB_SwitchButton from '$MountPoints/WPTB_SwitchButton';
 import WPTB_Toggle3Control from '$MountPoints/WPTB_Toggle3Control';
 import WPTB_ManageCellsMoveUpsells from '$MountPoints/WPTB_ManageCellsMoveUpsells';
 import { setupGlobalStore } from '$Functions/globalStore';
@@ -72,6 +73,7 @@ const controls = [
 	WPTB_Embed,
 	WPTB_ProOverlay,
 	WPTB_SaveButton,
+	WPTB_SwitchButton,
 	WPTB_Toggle3Control,
 	WPTB_ManageCellsMoveUpsells,
 ];

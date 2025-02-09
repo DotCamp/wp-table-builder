@@ -426,6 +426,7 @@ class Admin_Menu
 			$admin_object = [
 				'ajaxurl' => admin_url('admin-ajax.php'),
 				'security_code' => wp_create_nonce('wptb-security-nonce'),
+				'general_nonce' => wp_create_nonce('wp_table_builder_settings'),
 				'strings' => $strings,
 				'store' => [
 					'tableId' => $table_id,
