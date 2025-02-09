@@ -1,6 +1,6 @@
 {
-  "_index-B27ep0RJ.js": {
-    "file": "assets/index-B27ep0RJ.js",
+  "_index-CEp5RWkQ.js": {
+    "file": "assets/index-CEp5RWkQ.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-B27ep0RJ.js"
+      "_index-CEp5RWkQ.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-B27ep0RJ.js"
+      "_index-CEp5RWkQ.js"
     ]
   }
 }
