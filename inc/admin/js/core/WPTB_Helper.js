@@ -2286,14 +2286,19 @@ var WPTB_Helper = {
       }
     }
   },
+
+  getSanitizedHtml(html) {
+    return DOMPurify.sanitize(html, {
+      ADD_TAGS: ["iframe"],
+      ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "src"],
+      FORBID_ATTR: ["on*"],
+      FORBID_TAGS: ["script", "style", "object", "embed", "link"],
+    })
+  },
+
   sanitizeXSS() {
     document.querySelectorAll(".wptb-custom-html-wrapper").forEach((el) => {
-      el.innerHTML = DOMPurify.sanitize(el.innerHTML, {
-        ADD_TAGS: ["iframe"],
-        ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "src"],
-        FORBID_ATTR: ["on*"],
-        FORBID_TAGS: ["script", "style", "object", "embed", "link"],
-      });
+      el.innerHTML = WPTB_Helper.getSanitizedHtml(el.innerHTML);
     });
   },
   // function for table saving
