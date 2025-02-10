@@ -60,23 +60,37 @@ class TableRenderer
 
         $wrapper = '<div>' . $html . '</div>';
 
+        libxml_use_internal_errors(true);
+
         $dom = new \DOMDocument();
         $dom->encoding = 'UTF-8';
         $dom->loadHTML(mb_convert_encoding($wrapper, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         $xpath = new \DOMXPath($dom);
 
-        foreach ($xpath->query('//@*') as $attr) {
-            if (stripos($attr->nodeName, 'on') === 0) {
-                $attr->ownerElement->removeAttribute($attr->nodeName);
+
+        $dangerousTags = ['script', 'object', 'embed', 'link', 'style', 'iframe'];
+        $tagsQuery = '//' . implode(' | //', $dangerousTags);
+
+        foreach ($xpath->query($tagsQuery) as $node) {
+            if ($node->nodeName === 'iframe') {
+                $src = $node->getAttribute('src');
+                if (!preg_match('#^https://(www\.)?youtube\.com/embed/[\w-]+$#', $src)) {
+                    $node->parentNode->removeChild($node);
+                }
+            } else {
+                $node->parentNode->removeChild($node);
             }
         }
 
 
-        while (($script = $dom->getElementsByTagName('script'))->length) {
-            $script->item(0)->parentNode->removeChild($script->item(0));
+        foreach ($xpath->query('//*[@*]') as $node) {
+            foreach (iterator_to_array($node->attributes) as $attr) {
+                if (self::isDangerousAttribute($attr)) {
+                    $node->removeAttribute($attr->nodeName);
+                }
+            }
         }
-
 
         $body = $dom->getElementsByTagName('div')->item(0);
         $innerHTML = '';
@@ -84,8 +98,27 @@ class TableRenderer
             $innerHTML .= $dom->saveHTML($child);
         }
 
+        libxml_clear_errors();
+
         return $innerHTML;
     }
+
+
+    private static function isDangerousAttribute($attr)
+    {
+        $name = strtolower($attr->nodeName);
+        $value = strtolower($attr->nodeValue);
+        return (
+            strpos($name, 'on') === 0 ||
+            strpos($value, 'javascript:') !== false
+            // || ($name === 'style' && (
+            //     strpos($value, 'expression(') !== false ||
+            //     strpos($value, 'javascript:') !== false
+            // ))
+        );
+    }
+
+
 
 
     public static function render($body, $tblId)
