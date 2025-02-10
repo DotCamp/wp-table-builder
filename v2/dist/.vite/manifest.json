@@ -1,6 +1,6 @@
 {
-  "_index-CEp5RWkQ.js": {
-    "file": "assets/index-CEp5RWkQ.js",
+  "_index-ClkZYsrS.js": {
+    "file": "assets/index-ClkZYsrS.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-CEp5RWkQ.js"
+      "_index-ClkZYsrS.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-CEp5RWkQ.js"
+      "_index-ClkZYsrS.js"
     ]
   }
 }
