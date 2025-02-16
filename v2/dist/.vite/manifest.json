@@ -1,6 +1,6 @@
 {
-  "_index-DN85J7vR.js": {
-    "file": "assets/index-DN85J7vR.js",
+  "_index-CJwThir3.js": {
+    "file": "assets/index-CJwThir3.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-DN85J7vR.js"
+      "_index-CJwThir3.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-DN85J7vR.js"
+      "_index-CJwThir3.js"
     ]
   }
 }
