@@ -1,21 +1,17 @@
 {
     "name": "wp-table-builder",
-    "version": "1.6.6",
+    "version": "2.0.0",
     "description": "Best Table Builder Plugin for WordPress",
     "scripts": {
         "pot": "wp-pot --src '**/*.php' --dest-file 'languages/wp-table-builder.pot' --package 'wptb' --domain 'wp-table-builder' --last-translator 'Imtiaz Rayhan <irayhan.asif@gmail.com>' --team 'WP Table Builder <irayhan.asif@gmail.com>' --bug-report 'https://github.com/imtiazrayhan/wp-table-builder/issues'",
         "bundle:watch": "parcel watch ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-hmr",
         "bundle:build": " parcel build ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-source-maps",
-        "dev:build": "cross-env NODE_ENV=development npm run bundle:build & npm run gulp:build & npm run gutenberg:build",
-        "dev:build:watch": "cross-env NODE_ENV=development concurrently 'npm:bundle:watch' 'npm:gulp:watch' 'npm:gutenberg:dev'",
-        "dev:legacy:build:watch": "cross-env NODE_ENV=development concurrently 'npm:bundle:watch' 'npm:gulp:watch' 'npm:gutenberg:legacy:dev'",
-        "prod:build": "cross-env NODE_ENV=production npm run bundle:build && npm run gulp:build && npm run gutenberg:build",
-        "prod:legacy:build": "cross-env NODE_ENV=production npm run bundle:build && npm run gulp:build && npm run gutenberg:legacy:build",
-        "prod:build:watch": "cross-env NODE_ENV=production concurrently 'npm:bundle:watch' 'npm:gulp:watch' 'npm:gutenberg:dev'",
-        "gutenberg:dev": "wp-scripts start",
-        "gutenberg:build": "cross-env wp-scripts build",
-        "gutenberg:legacy:dev": "wp-scripts start",
-        "gutenberg:legacy:build": "wp-scripts build",
+        "dev:build": "cross-env NODE_ENV=development npm run bundle:build & npm run gulp:build",
+        "dev:build:watch": "cross-env NODE_ENV=development concurrently 'npm:bundle:watch' 'npm:gulp:watch'",
+        "dev:legacy:build:watch": "cross-env NODE_ENV=development concurrently 'npm:bundle:watch' 'npm:gulp:watch'",
+        "prod:build": "cross-env NODE_ENV=production npm run bundle:build && npm run gulp:build",
+        "prod:legacy:build": "cross-env NODE_ENV=production npm run bundle:build && npm run gulp:build",
+        "prod:build:watch": "cross-env NODE_ENV=production concurrently 'npm:bundle:watch' 'npm:gulp:watch'",
         "lint": "eslint ./inc/admin/js/core/rollup-source --ignore-pattern '/inc/admin/js/core/rollup-source/functions/importOperations.js' --ext .js,.vue",
         "gulp:build": "gulp default",
         "gulp:watch": "gulp watch",
@@ -97,6 +93,7 @@
         "gulp-uglify": "^3.0.2",
         "gulp-watch": "^4.2.4",
         "gulp-wp-pot": "^2.0.4",
+        "minimatch": "^10.0.1",
         "parcel-bundler": "^1.12.4",
         "prettier": "^2.0.5",
         "sass": "^1.49.7",
@@ -125,5 +122,6 @@
         "vue-fragment": "1.5.1",
         "vue-hot-reload-api": "^2.3.4",
         "vuex": "^3.6.2"
-    }
+    },
+    "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
 }

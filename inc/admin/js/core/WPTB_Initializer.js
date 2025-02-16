@@ -113,6 +113,7 @@ var WPTB_Initializer = function () {
 
     // call table embed
     WPTB_ControlsManager.callControlScript('SaveButton', 'saveButton');
+    WPTB_ControlsManager.callControlScript('SwitchButton', 'switchButton');
 
     // @deprecated
     // // add scroll operation calculations to window

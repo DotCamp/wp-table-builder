@@ -80,6 +80,9 @@ do_action( 'wptb_before_header' );
                 <!--                        <div id="wptbPanelNightMode"></div>-->
                 <!--                    </div>-->
                 <div class="wptb-panel-sub-container-buttons">
+                    <div id="switchButton" class="wptb-switch">
+                        <switch-button></switch-button>
+                    </div>
                     <div class="wptb-embed">
                         <a href="#"
                            class="static-active wptb-button-grey wptb-embed-btn wptb-settings-section-item <?php echo $wptb_button_disable_class; ?>">

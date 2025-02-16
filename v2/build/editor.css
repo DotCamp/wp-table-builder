@@ -1,0 +1,158 @@
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ../../node_modules/.pnpm/css-loader@6.11.0_webpack@5.95.0/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!../../node_modules/.pnpm/postcss-loader@6.2.1_postcss@8.4.41_webpack@5.95.0/node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!../../node_modules/.pnpm/sass-loader@12.6.0_sass@1.79.4_webpack@5.95.0/node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/editor.scss ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.wptb-builder-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f1;
+  padding: 5px;
+  overflow: hidden;
+}
+.wptb-builder-modal .wptb-app-root {
+  margin-left: -10px;
+  margin-top: -15px;
+  overflow: hidden;
+}
+.wptb-builder-modal .wptb-app-root .wptb-builder-page {
+  height: calc(100vh - 40px);
+  width: calc(100vw - 40px);
+  padding: 0 !important;
+  position: static;
+}
+.wptb-builder-modal .wptb-app-root .wptb-builder-page .wptb-builder-sidebar .wptb-control-panel {
+  top: 0;
+}
+.wptb-builder-modal .wptb-app-root .wptb-builder-page .wptb-builder-sidebar .wptb-control-panel .wptb-controls {
+  height: calc(100vh - 70px);
+}
+.wptb-builder-modal .wptb-app-root .wptb-builder-page .wptb-builder-content .wptb-builder-preview-area {
+  padding-top: 100px;
+}
+.wptb-builder-modal .wptb-app-root .wptb-builder-page table th::after,
+.wptb-builder-modal .wptb-app-root .wptb-builder-page table td::after {
+  pointer-events: none;
+  content: "" !important;
+}
+
+.wptb-gutenberg .wptb-mini-picker {
+  background: white;
+  border: 1px solid #c7d8db;
+  border-radius: 5px;
+}
+.wptb-gutenberg .wptb-mini-picker-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #c7d8db;
+  gap: 20px;
+}
+.wptb-gutenberg .wptb-mini-picker-top h2 {
+  margin: 0;
+  margin-left: 5px;
+  font-size: 1rem;
+  color: black;
+  font-weight: bold;
+}
+.wptb-gutenberg .wptb-mini-picker-search {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+.wptb-gutenberg .wptb-mini-picker-search svg {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 10px;
+}
+.wptb-gutenberg .wptb-mini-picker-search:has(input:focus) svg {
+  color: #0011df;
+}
+.wptb-gutenberg .wptb-mini-picker-search input {
+  flex-grow: 1;
+  padding: 0;
+  border-radius: 5px;
+  border: 1px solid #e1e1e1;
+  background: transparent;
+  padding: 5px;
+  padding-left: 35px;
+}
+.wptb-gutenberg .wptb-mini-picker-search input:focus {
+  border: 1px solid #0011df;
+  outline: none;
+  box-shadow: 0 0 3px #0011df;
+}
+.wptb-gutenberg .wptb-mini-picker-tabs {
+  display: flex;
+  gap: 10px;
+}
+.wptb-gutenberg .wptb-mini-picker-tabs button {
+  padding: 5px;
+  border: none;
+  border-radius: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.wptb-gutenberg .wptb-mini-picker-tabs button.active {
+  border-bottom: 2px solid #1000ff;
+  color: #1000ff;
+}
+.wptb-gutenberg .wptb-mini-picker-tabs button:hover {
+  color: #9690ef;
+}
+.wptb-gutenberg .wptb-mini-picker-tabs button svg {
+  width: 20px;
+  height: 20px;
+  margin-bottom: -3px;
+  color: gray;
+}
+.wptb-gutenberg .wptb-mini-picker-content {
+  padding: 10px;
+}
+.wptb-gutenberg .wptb-table-loading-icon {
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border: 1px solid #a1a1a1;
+  border-radius: 5px;
+}
+.wptb-gutenberg .wptb-table-loading-icon svg {
+  width: 120px;
+  height: 120px;
+}
+.wptb-gutenberg table th::after,
+.wptb-gutenberg table td::after {
+  pointer-events: none;
+  content: "" !important;
+}
+.wptb-gutenberg {
+  color: black;
+}
+
+.wptb-open-editor-btn {
+  width: 100%;
+  --wp-components-color-accent: rgb(39, 39, 39);
+  --wp-components-color-accent-darker-10: black;
+  justify-content: center !important;
+  font-weight: 500;
+  color: white;
+}
+
+.wptb-show-picker-btn {
+  width: 100%;
+  justify-content: center !important;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+/*# sourceMappingURL=editor.css.map*/

@@ -5,7 +5,6 @@ namespace WP_Table_Builder\Inc\Core;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Admin\Accessibility;
-use WP_Table_Builder\Inc\Admin\Managers\Gutenberg_Block_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Notification_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
@@ -225,10 +224,6 @@ class Init
         $icon_dir_url  = trailingslashit(NS\WP_TABLE_BUILDER_URL) . 'inc/frontend/views/icons';
 
         $this->icon_manager = new Icon_Manager($icon_dir_path, $icon_dir_url);
-
-        // initialize gutenberg block manager
-        new Gutenberg_Block_Manager('wptb/table-block');
-
 
         // wait plugins loaded action hook to check availability of pro version
         add_action('plugins_loaded', function () {
