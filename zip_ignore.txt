@@ -20,3 +20,14 @@
 **/inc/admin/css/src/**
 **/inc/admin/js/core/**
 **/inc/frontend/js/frontend-only/**
+
+**/v2/.turbo/**
+**/v2/assets/icons/**
+**/v2/src/**
+**/v2/node_modules/**
+**/v2/tmp/**
+**/v2/composer.json
+**/v2/composer.lock
+**/v2/eslint.config.js
+**/v2/tsconfig.json
+**/v2/vite.config.ts

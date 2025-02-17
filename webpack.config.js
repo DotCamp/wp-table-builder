@@ -2,8 +2,8 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const fs = require('fs');
 const path = require('path');
 
-const entryDir = path.resolve(__dirname, 'inc', 'admin', 'js', 'core', 'gutenberg-src');
-const outputDir = path.resolve(__dirname, 'inc', 'admin', 'js', 'gutenberg-build');
+const entryDir = path.resolve(__dirname, 'inc', 'admin', 'js', 'core');
+const outputDir = path.resolve(__dirname, 'inc', 'admin', 'js');
 
 const entryFiles = fs.readdirSync(entryDir);
 

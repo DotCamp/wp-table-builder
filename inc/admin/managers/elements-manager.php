@@ -171,10 +171,13 @@ class Elements_Manager extends Elements_Manager_Base {
             <?php echo json_encode($directories_icons); ?>
         </script>
 
-        // code javascript for for preloading icons
+        <!-- code javascript for for preloading icons -->
         <script type="text/javascript">
             (function() {
                 window.onload = function() {
+                    if (typeof WPTB_Helper !== 'object') {
+                        return;
+                    }
                     let wptbElementIconsDirectories = 'wptb-element-icons-directories';
                     let tmplIconsDirectories = wp.template(wptbElementIconsDirectories);
                     let data = {};
