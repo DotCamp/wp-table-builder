@@ -277,13 +277,24 @@ class Admin_Menu
 	public function register_menus()
 	{
 
+		
+		global $builder_page, $tables_overview, $table_list, $builder_tool_page;
+		$menu_cap = Helpers::wptb_get_capability_manage_options();
+		// Add Welcome sub menu item.
+		$builder_page = add_submenu_page(
+			'',
+			esc_html__('Table Builder', 'wp-table-builder'),
+			esc_html__('Welcome Page', 'wp-table-builder'),
+			$menu_cap,
+			'wp-table-builder-welcome',
+			array($this, 'welcome')
+		);
+
 		if (!WPTB_LEGACY_BUILDER) {
 			\WPTableBuilder\WPTableBuilder::add_menu();
 			return;
 		}
 
-		global $builder_page, $tables_overview, $table_list, $builder_tool_page;
-		$menu_cap = Helpers::wptb_get_capability_manage_options();
 
 		// Default Tables top level menu item.
 		$tables_overview = add_menu_page(
@@ -296,15 +307,7 @@ class Admin_Menu
 			apply_filters('wptb_menu_position', '50')
 		);
 
-		// Add Welcome sub menu item.
-		$builder_page = add_submenu_page(
-			'',
-			esc_html__('Table Builder', 'wp-table-builder'),
-			esc_html__('Welcome Page', 'wp-table-builder'),
-			$menu_cap,
-			'wp-table-builder-welcome',
-			array($this, 'welcome')
-		);
+		
 
 		// All Tables sub menu item.
 		$table_list = add_submenu_page(
@@ -380,7 +383,10 @@ class Admin_Menu
 
 	public function enqueue_scripts($hook)
 	{
-		if (!WPTB_LEGACY_BUILDER) {
+		if (!WPTB_LEGACY_BUILDER && (
+			!isset( $_GET['page'] ) ||
+			$_GET['page'] !== 'wp-table-builder-welcome'
+		)) {
 			return;
 		}
 		/*
