@@ -31,7 +31,10 @@ class TableGet
         $id = absint($req->get_param('id'));
         $post = get_post($id);
         $table = get_post_meta($id, '_wptb_content_', true);
-        $name = $post?->post_title;
+        $name = '';
+        if ($post) {
+            $name = $post->post_title;
+        }
         return new WP_REST_Response(compact('table', 'name'));
     }
 

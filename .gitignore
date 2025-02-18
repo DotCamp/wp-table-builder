@@ -15,6 +15,7 @@ v2/*
 !v2/dist
 !v2/inc
 !v2/vendor
+v2/vendor/php-stubs
 !v2/wp-table-builder.php
 !v2/assets
 v2/assets/icons

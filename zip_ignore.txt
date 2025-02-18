@@ -26,6 +26,7 @@
 **/v2/src/**
 **/v2/node_modules/**
 **/v2/tmp/**
+**/v2/vendor/php-stubs/**
 **/v2/composer.json
 **/v2/composer.lock
 **/v2/eslint.config.js
