@@ -259,11 +259,12 @@ class Admin_Menu
 	public function add_wp_admin_bar_new_table_create_page($wp_admin_bar)
 	{
 		if (current_user_can('manage_options')) {
+			$new_link = WPTB_LEGACY_BUILDER ? 'wptb-builder':'wptb-create';
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'new-content',
 				'id' => 'wptb-add-new',
 				'title' => __('Table', 'wp-table-builder'),
-				'href' => esc_url(admin_url('admin.php?page=wptb-builder')),
+				'href' => esc_url(admin_url('admin.php?page='.$new_link)),
 			));
 		}
 	}
