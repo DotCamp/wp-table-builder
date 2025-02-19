@@ -26,12 +26,12 @@ class WPTableBuilder
     }
 
 
-    public static function add_menu()
+    public static function add_menu($menu_cap)
     {
         add_menu_page(
             'WP Table Builder',
             'WP Table Builder',
-            'manage_options',
+            $menu_cap,
             'wptb',
             [self::class, 'wptb_page'],
             'dashicons-editor-table',
@@ -42,7 +42,7 @@ class WPTableBuilder
             'wptb',
             __('WP Table Builder', 'wp-table-builder'),
             __('All Tables', 'wp-table-builder'),
-            'manage_options',
+            $menu_cap,
             'wptb',
             [self::class, 'wptb_page']
         );
@@ -51,7 +51,7 @@ class WPTableBuilder
             'wptb',
             __('WP Table Builder', 'wp-table-builder'),
             __('Add New', 'wp-table-builder'),
-            'manage_options',
+            $menu_cap,
             'wptb-create',
             [self::class, 'wptb_page']
         );
@@ -60,7 +60,7 @@ class WPTableBuilder
             null,
             __('WP Table Builder', 'wp-table-builder'),
             __('Builder', 'wp-table-builder'),
-            'manage_options',
+            $menu_cap,
             'wptb-builder',
             [self::class, 'wptb_page']
         );
@@ -69,7 +69,7 @@ class WPTableBuilder
             'wptb',
             __('WP Table Builder', 'wp-table-builder'),
             __('Import', 'wp-table-builder'),
-            'manage_options',
+            $menu_cap,
             'wptb-import',
             [self::class, 'wptb_page']
         );
@@ -79,7 +79,7 @@ class WPTableBuilder
             'wptb',
             __('WP Table Builder', 'wp-table-builder'),
             __('Export', 'wp-table-builder'),
-            'manage_options',
+            $menu_cap,
             'wptb-export',
             [self::class, 'wptb_page']
         );

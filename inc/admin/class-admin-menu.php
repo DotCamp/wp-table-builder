@@ -292,7 +292,7 @@ class Admin_Menu
 		);
 
 		if (!WPTB_LEGACY_BUILDER) {
-			\WPTableBuilder\WPTableBuilder::add_menu();
+			\WPTableBuilder\WPTableBuilder::add_menu($menu_cap);
 			return;
 		}
 

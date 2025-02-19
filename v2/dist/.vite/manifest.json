@@ -1,6 +1,6 @@
 {
-  "_index-CJwThir3.js": {
-    "file": "assets/index-CJwThir3.js",
+  "_index-CTMp1xvA.js": {
+    "file": "assets/index-CTMp1xvA.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-CJwThir3.js"
+      "_index-CTMp1xvA.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-CJwThir3.js"
+      "_index-CTMp1xvA.js"
     ]
   }
 }
