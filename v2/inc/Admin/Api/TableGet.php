@@ -32,10 +32,16 @@ class TableGet
         $post = get_post($id);
         $table = get_post_meta($id, '_wptb_content_', true);
         $name = '';
+        $tags = [];
         if ($post) {
             $name = $post->post_title;
+            $terms = wp_get_post_terms( $id, Tags::TAX_ID );
+            $tags = [];
+            foreach ($terms as $term) {
+                $tags[] = $term->term_id;
+            }
         }
-        return new WP_REST_Response(compact('table', 'name'));
+        return new WP_REST_Response(compact('table', 'name', 'tags'));
     }
 
     public static function get_tables($request)

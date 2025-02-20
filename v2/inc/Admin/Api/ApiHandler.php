@@ -16,6 +16,7 @@ class ApiHandler
     {
         TableGet::register(self::ROUTE_NAMESPACE);
         TablePost::register(self::ROUTE_NAMESPACE);
+        Tags::register(self::ROUTE_NAMESPACE);
     }
 
 
