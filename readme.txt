@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 2.0.2 =
+* FIX: New builder not visible to non admin users
+* FIX: Tags functionality was missing
+
 = 2.0.1 =
 * FIX: remove nullsafe operator (php 7.4)
 * FIX: New table page link in toolbar
