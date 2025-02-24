@@ -93,6 +93,7 @@ That's it. You're done!
 = 2.0.2 =
 * FIX: New builder not visible to non admin users
 * FIX: Tags functionality was missing
+* FIX: Theme color not applying properly
 
 = 2.0.1 =
 * FIX: remove nullsafe operator (php 7.4)
