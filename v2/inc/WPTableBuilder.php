@@ -57,7 +57,7 @@ class WPTableBuilder
         );
 
         add_submenu_page(
-            null,
+            '',
             __('WP Table Builder', 'wp-table-builder'),
             __('Builder', 'wp-table-builder'),
             $menu_cap,
