@@ -1,6 +1,6 @@
 {
-  "_index-DPYou873.js": {
-    "file": "assets/index-DPYou873.js",
+  "_index-ls1NGFJl.js": {
+    "file": "assets/index-ls1NGFJl.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-DPYou873.js"
+      "_index-ls1NGFJl.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-DPYou873.js"
+      "_index-ls1NGFJl.js"
     ]
   }
 }
