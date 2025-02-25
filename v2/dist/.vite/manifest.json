@@ -1,6 +1,6 @@
 {
-  "_index-xIRlBZJR.js": {
-    "file": "assets/index-xIRlBZJR.js",
+  "_index-DPYou873.js": {
+    "file": "assets/index-DPYou873.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-xIRlBZJR.js"
+      "_index-DPYou873.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-xIRlBZJR.js"
+      "_index-DPYou873.js"
     ]
   }
 }

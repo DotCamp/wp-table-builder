@@ -94,6 +94,8 @@ That's it. You're done!
 * FIX: New builder not visible to non admin users
 * FIX: Tags functionality was missing
 * FIX: Theme color not applying properly
+* FIX: Link url not updating
+* FIX: Improved ColorPicker UX
 
 = 2.0.1 =
 * FIX: remove nullsafe operator (php 7.4)
