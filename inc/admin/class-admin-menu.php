@@ -291,7 +291,7 @@ class Admin_Menu
 			array($this, 'welcome')
 		);
 
-		if (!WPTB_LEGACY_BUILDER) {
+		if (!WPTB_LEGACY_BUILDER && (!isset($_GET['wptb-force-builder']) || $_GET['wptb-force-builder'] !== 'legacy')) {
 			\WPTableBuilder\WPTableBuilder::add_menu($menu_cap);
 			return;
 		}
@@ -386,7 +386,13 @@ class Admin_Menu
 	{
 		if (!WPTB_LEGACY_BUILDER && (
 			!isset( $_GET['page'] ) ||
-			$_GET['page'] !== 'wp-table-builder-welcome'
+			(
+				$_GET['page'] !== 'wp-table-builder-welcome'
+				&& !(
+					isset( $_GET['wptb-force-builder'] )
+					&& $_GET['wptb-force-builder'] === 'legacy'
+				)
+			)
 		)) {
 			return;
 		}
