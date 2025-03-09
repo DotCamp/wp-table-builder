@@ -3,6 +3,7 @@
 namespace WPTableBuilder\Admin\Api;
 use WP_Query;
 use WP_REST_Response;
+use WPTableBuilder\Admin\Authorization;
 use WPTableBuilder\WPTableBuilder;
 
 class TableGet
@@ -13,16 +14,19 @@ class TableGet
         register_rest_route($apiBase, '/table', [
             'methods' => 'GET',
             'callback' => [self::class, 'get_table'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
 
         register_rest_route($apiBase, '/tables', [
             'methods' => 'GET',
             'callback' => [self::class, 'get_tables'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
 
         register_rest_route($apiBase, '/patterns', [
             'methods' => 'GET',
             'callback' => [self::class, 'get_patterns'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
     }
 

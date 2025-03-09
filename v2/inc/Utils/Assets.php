@@ -68,6 +68,7 @@ class Assets
                 ],
             ],
             'NONCE' => [
+                'wp_rest' => wp_create_nonce('wp_rest'),
                 'table' => wp_create_nonce('wptb_nonce_table'),
                 'preview' => wp_create_nonce('wptb_nonce_table_preview'),
                 'create_term' => wp_create_nonce('wptb_create_term'),

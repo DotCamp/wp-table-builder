@@ -2,6 +2,7 @@
 
 namespace WPTableBuilder\Admin\Api;
 use WP_REST_Response;
+use WPTableBuilder\Admin\Authorization;
 
 class TablePost
 {
@@ -10,31 +11,37 @@ class TablePost
         register_rest_route($apiBase, '/trash', [
             'methods' => 'POST',
             'callback' => [self::class, 'trash_table'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-
+        
         register_rest_route($apiBase, '/delete', [
             'methods' => 'POST',
             'callback' => [self::class, 'delete_permanently'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-
+        
         register_rest_route($apiBase, '/restore', [
             'methods' => 'POST',
             'callback' => [self::class, 'restore_table'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-
+        
         register_rest_route($apiBase, '/duplicate', [
             'methods' => 'POST',
             'callback' => [self::class, 'duplicate_table'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-
+        
         register_rest_route($apiBase, '/trash_bulk', [
             'methods' => 'POST',
             'callback' => [self::class, 'trash_table_bulk'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-
+        
         register_rest_route($apiBase, '/restore_bulk', [
             'methods' => 'POST',
             'callback' => [self::class, 'restore_table_bulk'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
     }
 

@@ -2,6 +2,8 @@
 
 namespace WPTableBuilder\Admin\Api;
 
+use WPTableBuilder\Admin\Authorization;
+
 class Tags
 {
 
@@ -12,6 +14,7 @@ class Tags
         register_rest_route($apiBase, '/tags', [
             'methods' => 'GET',
             'callback' => [self::class, 'get_tags'],
+            'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
     }
 
