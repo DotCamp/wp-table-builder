@@ -92,6 +92,7 @@ That's it. You're done!
 
 = 2.0.3 =
 * FIX: Rest route warning
+* FIX: Image link label
 
 = 2.0.2 =
 * FIX: New builder not visible to non admin users
