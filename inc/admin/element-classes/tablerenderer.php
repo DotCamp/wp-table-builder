@@ -209,7 +209,7 @@ class TableRenderer
             }
             $classNames = isset($row['props']['highlighted']) ? 'wptb-row-highlighted-' . $row['props']['highlighted'] : '';
             $attrs = "";
-            if ($props['stickyTopRow'] && $i == 0) {
+            if ($props['stickyTopRow'] ?? false && $i == 0) {
                 $attrs = 'data-wptb-sticky-row="true"';
             }
             $hoverColor = '';
@@ -302,7 +302,7 @@ class TableRenderer
             $classNames .= 'wptb-hide-on-mobile';
         }
 
-        if ($props['isEmpty']) {
+        if ($props['isEmpty'] ?? false) {
             $classNames .= ' wptb-empty';
         } else {
             foreach ($cell['blocks'] as $block) {
