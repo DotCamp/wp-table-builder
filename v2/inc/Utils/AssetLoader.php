@@ -64,13 +64,13 @@ class AssetLoader
         if ($pre) {
             self::$preloads .= '<link rel="modulepreload" href="' . $url . '"/>';
         } else {
-            self::$modules .= '<script type="module" src="' . $url . '"></script>';
+            self::$modules .= '<script type="module" src="' . $url . '?v=' . WPTableBuilder::VERSION . '"></script>';
         }
     }
 
     public function register_path($path)
     {
-        self::$modules .= '<script type="module" src="' . $this->cdn_host . '/' . $path . '"></script>';
+        self::$modules .= '<script type="module" src="' . $this->cdn_host . '/' . $path . '?v=' . WPTableBuilder::VERSION . '"></script>';
     }
 
     public function register_style($handle, $file)

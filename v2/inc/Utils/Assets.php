@@ -23,7 +23,7 @@ class Assets
         self::enqueue_config();
         self::enqueue_i18n();
 
-        $assets = new AssetLoader(self::CDN_HOST, WPTB_PLUGIN_DIR . '/dist/.vite/manifest.json', WPTB_PLUGIN_DIR . '/tmp/.hotfile');
+        $assets = new AssetLoader(self::CDN_HOST, WPTB_PLUGIN_DIR . '/dist/vite/manifest.json', WPTB_PLUGIN_DIR . '/tmp/.hotfile');
 
         $assets->register('src/wptb-common.ts');
         $assets->register_style('wptb-v2-editor-style', 'src/editor.scss');
