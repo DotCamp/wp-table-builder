@@ -2,7 +2,6 @@
 
 namespace WPTableBuilder\Admin\Api;
 use WP_Query;
-use WP_REST_Response;
 use WPTableBuilder\Admin\Authorization;
 use WPTableBuilder\WPTableBuilder;
 
@@ -46,7 +45,7 @@ class TableGet
                 $tags[] = $term->term_id;
             }
         }
-        return new WP_REST_Response(compact('table', 'name', 'tags', 'is_template'));
+        return ApiHandler::response(compact('table', 'name', 'tags', 'is_template'));
     }
 
     public static function get_tables($request)
@@ -119,13 +118,13 @@ class TableGet
         $total_pages = $query->max_num_pages;
         $total_count = $query->found_posts;
 
-        return [
+        return ApiHandler::response([
             'posts' => $post_data,
             'total_count' => $total_count,
             'total_pages' => $total_pages,
             'current_page' => $page,
             'per_page' => $per_page,
-        ];
+        ]);
     }
 
     public static function get_patterns($req)
@@ -196,9 +195,9 @@ class TableGet
             }
         }
 
-        return [
+        return ApiHandler::response([
             'patterns' => $patterns
-        ];
+        ]);
 
     }
 }

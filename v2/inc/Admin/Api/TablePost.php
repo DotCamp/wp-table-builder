@@ -1,7 +1,6 @@
 <?php
 
 namespace WPTableBuilder\Admin\Api;
-use WP_REST_Response;
 use WPTableBuilder\Admin\Authorization;
 
 class TablePost
@@ -13,31 +12,31 @@ class TablePost
             'callback' => [self::class, 'trash_table'],
             'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-        
+
         register_rest_route($apiBase, '/delete', [
             'methods' => 'POST',
             'callback' => [self::class, 'delete_permanently'],
             'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-        
+
         register_rest_route($apiBase, '/restore', [
             'methods' => 'POST',
             'callback' => [self::class, 'restore_table'],
             'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-        
+
         register_rest_route($apiBase, '/duplicate', [
             'methods' => 'POST',
             'callback' => [self::class, 'duplicate_table'],
             'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-        
+
         register_rest_route($apiBase, '/trash_bulk', [
             'methods' => 'POST',
             'callback' => [self::class, 'trash_table_bulk'],
             'permission_callback' => [Authorization::class, 'can_edit'],
         ]);
-        
+
         register_rest_route($apiBase, '/restore_bulk', [
             'methods' => 'POST',
             'callback' => [self::class, 'restore_table_bulk'],
@@ -88,7 +87,7 @@ class TablePost
     {
         $data = $request->get_json_params();
         if (!isset($data['id'])) {
-            return new WP_REST_Response(['message' => 'Table ID is required.'], 400);
+            return ApiHandler::response(['message' => 'Table ID is required.'], 400);
         }
 
         $id = absint($data['id']);
@@ -103,7 +102,7 @@ class TablePost
             ];
         }
 
-        return new WP_REST_Response(['message' => 'Failed to duplicate table.'], 500);
+        return ApiHandler::response(['message' => 'Failed to duplicate table.'], 500);
     }
 
     public static function trash_table($req)
@@ -115,7 +114,7 @@ class TablePost
                 'message' => 'Table trashed successfully.',
             ];
         }
-        return new WP_REST_Response(['message' => 'Table not found.'], 404);
+        return ApiHandler::response(['message' => 'Table not found.'], 404);
     }
     public static function restore_table($req)
     {
@@ -126,7 +125,7 @@ class TablePost
                 'message' => 'Table restored successfully.',
             ];
         }
-        return new WP_REST_Response(['message' => 'Table not found.'], 404);
+        return ApiHandler::response(['message' => 'Table not found.'], 404);
     }
 
     public static function delete_permanently($req)
@@ -138,7 +137,7 @@ class TablePost
                 'message' => 'Table deleted permanently.',
             ];
         }
-        return new WP_REST_Response(['message' => 'Table not found.'], 404);
+        return ApiHandler::response(['message' => 'Table not found.'], 404);
     }
 
     public static function duplicate_table_bulk($request)
@@ -152,15 +151,15 @@ class TablePost
             $dup = self::duplicate_table_internal($post_id);
             if (!is_array($dup)) {
                 $wpdb->query('ROLLBACK');
-                return new WP_REST_Response(['message' => 'Failed to duplicate table.'], $dup);
+                return ApiHandler::response(['message' => 'Failed to duplicate table.'], $dup);
             }
             $posts[] = $dup;
         }
         $wpdb->query('COMMIT');
-        return [
+        return ApiHandler::response([
             'message' => 'Table(s) duplicated successfully.',
             'posts' => $posts
-        ];
+        ]);
     }
 
     public static function trash_table_bulk($req)
@@ -172,14 +171,14 @@ class TablePost
         foreach ($post_ids as $id) {
             if (!get_post_type($id) === 'wptb-tables') {
                 $wpdb->query('ROLLBACK');
-                return new WP_REST_Response(['message' => 'Failed to trash table(s).']);
+                return ApiHandler::response(['message' => 'Failed to trash table(s).']);
             }
             wp_trash_post($id);
         }
         $wpdb->query('COMMIT');
-        return [
+        return ApiHandler::response([
             'message' => 'Table(s) trashed successfully.',
-        ];
+        ]);
     }
 
     public static function restore_table_bulk($req)
@@ -191,13 +190,13 @@ class TablePost
         foreach ($post_ids as $id) {
             if (!get_post_type($id) === 'wptb-tables') {
                 $wpdb->query('ROLLBACK');
-                return new WP_REST_Response(['message' => 'Failed to restore table(s).']);
+                return ApiHandler::response(['message' => 'Failed to restore table(s).']);
             }
             wp_untrash_post($id);
         }
         $wpdb->query('COMMIT');
-        return [
+        return ApiHandler::response([
             'message' => 'Table(s) restored successfully.',
-        ];
+        ]);
     }
 }

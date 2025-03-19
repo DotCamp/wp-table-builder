@@ -30,8 +30,8 @@ class Tags
             $tags[$term->term_id] = $term->name;
         }
 
-        return [
+        return ApiHandler::response([
             'tags' => $tags,
-        ];
+        ]);
     }
 }
