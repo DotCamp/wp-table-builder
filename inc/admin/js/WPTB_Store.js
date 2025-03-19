@@ -2,3 +2,4 @@ parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcel
 var global = arguments[3];
 var r=arguments[3];!function(r,e,n){e[r]=n()}("WPTB_Store",self||r,function(){return BuilderStore});
 },{}]},{},["CGUw"], null)
+//# sourceMappingURL=/WPTB_Store.js.map
