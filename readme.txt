@@ -94,6 +94,7 @@ That's it. You're done!
 * FIX: Loading tables & patterns despite permalink config
 * FIX: target attribute getting removed in custom html
 * FIX: Frontend assets loading after every update
+* FIX: Column sizing when fixed width is set with colspan
 
 = 2.0.3 =
 * FIX: Rest route warning
