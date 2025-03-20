@@ -95,6 +95,7 @@ That's it. You're done!
 * FIX: target attribute getting removed in custom html
 * FIX: Frontend assets loading after every update
 * FIX: Column sizing when fixed width is set with colspan
+* FIX: Saving linkrel of image & button
 
 = 2.0.3 =
 * FIX: Rest route warning
