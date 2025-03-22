@@ -96,6 +96,8 @@ That's it. You're done!
 * FIX: Frontend assets loading after every update
 * FIX: Column sizing when fixed width is set with colspan
 * FIX: Saving linkrel of image & button
+* FIX: Display button size accurately in the editor
+* FIX: Star rating block displaying more than 2 digits
 
 = 2.0.3 =
 * FIX: Rest route warning
