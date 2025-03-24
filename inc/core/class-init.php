@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Core;
 
+use DotCamp\Promoter\Promoter;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Admin\Accessibility;
@@ -248,6 +249,30 @@ class Init
 
 		// initialize table render manager
 		Table_Render_Manager::init();
+
+        // initialize promoter
+        $this->initialize_promoter();
+    }
+
+    /**
+     * Initialize the promoter.
+     *
+     * @access    private
+     */
+    private function initialize_promoter()
+    {
+        $default_promotions = Promoter::generate_default_promotions(NS\PLUGIN__FILE__, 'WP Table Builder', 'wp-table-builder/wp-table-builder.php');
+
+        $filtered_promotions = array();
+
+        // remove tableberg promotions from default ones
+        array_walk($default_promotions, function($promotion) use (&$filtered_promotions) {
+            if('tableberg/tableberg.php' !== $promotion->promotion_target_id){
+                $filtered_promotions[] = $promotion;
+            }
+        });
+
+        Promoter::add_promotions($filtered_promotions, NS\PLUGIN__FILE__);
     }
 
     /**
