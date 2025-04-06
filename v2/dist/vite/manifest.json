@@ -1,6 +1,6 @@
 {
-  "_index-CBcLj1_n.js": {
-    "file": "assets/index-CBcLj1_n.js",
+  "_index-Cu50btKS.js": {
+    "file": "assets/index-Cu50btKS.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-CBcLj1_n.js"
+      "_index-Cu50btKS.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-CBcLj1_n.js"
+      "_index-Cu50btKS.js"
     ]
   }
 }

@@ -3,7 +3,7 @@ Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembirc
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 6.7
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 Requires PHP: 7.4
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -89,6 +89,11 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 2.0.5 =
+* FIX: 'h.json' not found error on table list Actions
+* FIX: broken special chars in table list title
+* FIX: Column becomes hidden if width is 0
 
 = 2.0.4 =
 * FIX: Loading tables & patterns despite permalink config
