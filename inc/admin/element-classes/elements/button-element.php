@@ -448,7 +448,7 @@ class Button_Element extends Element_Base
             "data-wptb-element-color" => $props['color'] ?? false,
         ]) . $hoverAttrs;
 
-        $labelBg = $props['labelBg'] ?? '#ffffff';
+        $labelBg = esc_attr($props['labelBg'] ?? '#ffffff');
 
         $labelStyle = TableRenderer::generate_css_string([
             "display" => $props['hasLabel'] ?? false ? 'inline-flex' : 'none',

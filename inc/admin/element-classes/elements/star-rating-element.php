@@ -343,7 +343,7 @@ class Star_Rating_Element extends Element_Base
 		$total = (int) $props['starCount'] ?? 0;
 		$value = (float) $props['value'] ?? 0;
 
-		$ratingDisplay = $props['showRating'] ?? false ? 'block' : 'none';
+		$ratingDisplay = esc_attr($props['showRating'] ?? false ? 'block' : 'none');
 
 		$stars = '';
 

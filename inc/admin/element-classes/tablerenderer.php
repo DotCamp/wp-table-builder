@@ -207,7 +207,7 @@ class TableRenderer
             foreach ($row['cells'] as $cell) {
                 $cells .= self::render_cell($cell);
             }
-            $classNames = isset($row['props']['highlighted']) ? 'wptb-row-highlighted-' . $row['props']['highlighted'] : '';
+            $classNames = isset($row['props']['highlighted']) ? 'wptb-row-highlighted-' . esc_attr($row['props']['highlighted']) : '';
             $attrs = "";
             if ($props['stickyTopRow'] ?? false && $i == 0) {
                 $attrs = 'data-wptb-sticky-row="true"';
@@ -293,7 +293,7 @@ class TableRenderer
             "data-wptb-own-bg-color" => $props['ownBgColor'] ?? false,
         ]);
 
-        $classNames = isset($props['highlighted']) ? 'wptb-col-highlighted-' . $props['highlighted'] . ' wptb-highlighted ' : '';
+        $classNames = isset($props['highlighted']) ? 'wptb-col-highlighted-' . esc_attr($props['highlighted']) . ' wptb-highlighted ' : '';
         $blocks = "";
 
         $isFirst = true;
