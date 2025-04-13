@@ -94,6 +94,8 @@ That's it. You're done!
 * FIX: 'h.json' not found error on table list Actions
 * FIX: broken special chars in table list title
 * FIX: Column becomes hidden if width is 0
+* FIX: Error when different instance of same block is selected right after one another
+* IMPROVE: Remove hover styles from the preview
 
 = 2.0.4 =
 * FIX: Loading tables & patterns despite permalink config
