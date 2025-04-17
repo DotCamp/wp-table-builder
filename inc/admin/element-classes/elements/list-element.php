@@ -258,12 +258,12 @@ class List_Element extends Element_Base
 
     $attrs = $block['props'];
     $listStyle = TableRenderer::generate_css_string([
-      'padding' => $attrs['padding'],
-      'margin' => $attrs['margin'],
+      'padding' => $attrs['padding'] ?? null,
+      'margin' => $attrs['margin'] ?? null,
     ]);
 
     $pClass = '';
-    if ($attrs['type'] == 'unordered') {
+    if (isset($attrs['type']) && $attrs['type'] == 'unordered') {
       $pClass = esc_attr($attrs['listIcon']);
     }
     $items = '';
@@ -281,13 +281,13 @@ class List_Element extends Element_Base
         'text-align' => $item['alignment'] ?? '',
       ]);
       $liClass = 'wptb-in-element';
-      $item['toolTip'] = trim($item['toolTip']);
+      $item['toolTip'] = trim($item['toolTip'] ?? '');
 
       if ($item['toolTip'] != '') {
-        $liClass .= ' wptb-tooltip wptb-tooltip-' . esc_attr($item['tooltipPosision']);
+        $liClass .= ' wptb-tooltip wptb-tooltip-' . esc_attr($item['tooltipPosision'] ?? 'top');
       }
 
-      $ttStyle = esc_attr($item['toolTipStyle']);
+      $ttStyle = esc_attr($item['toolTipStyle'] ?? '');
       $text = wp_kses_post($item['text']);
       $ttText = wp_kses_post($item['toolTip']);
   
