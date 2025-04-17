@@ -277,7 +277,7 @@ class WPTB_Listing extends WP_List_Table {
 		$server_request_url = remove_query_arg( '_wpnonce', $server_request_url );
 		$server_request_url = remove_query_arg( 'action', $server_request_url );
 		$server_request_url = remove_query_arg( 'table_id', $server_request_url );
-		$query              = parse_url( $server_request_url, PHP_URL_QUERY );
+		$query              = esc_url(parse_url( $server_request_url, PHP_URL_QUERY ));
 
 		if ( $this->is_status_trash() ) {
 			$actions = [
