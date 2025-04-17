@@ -307,7 +307,7 @@ class WPTB_Listing extends WP_List_Table {
 	 * @return string action item HTML
 	 */
 	protected final function prepare_action_item( $target_href, $title, $target = '_self' ) {
-		return sprintf( '<a href="%1$s" target="%3$s">%2$s</a>', $target_href, $title, esc_attr( $target ) );
+		return sprintf( '<a href="%1$s" target="%3$s">%2$s</a>', esc_attr($target_href), $title, esc_attr( $target ) );
 	}
 
 	/**
