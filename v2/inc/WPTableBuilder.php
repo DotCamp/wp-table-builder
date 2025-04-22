@@ -10,7 +10,7 @@ use WPTableBuilderPro\WPTableBuilderPro;
 class WPTableBuilder
 {
 
-    const VERSION = '2.0.5';
+    const VERSION = '2.0.6';
 
     public static function init()
     {
