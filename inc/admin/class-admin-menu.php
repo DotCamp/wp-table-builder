@@ -115,8 +115,12 @@ class Admin_Menu
 
 	public function insert_table_to_db($params)
 	{
+		$title = '';
+		if (isset($params->title) && !empty($params->title)) {
+			$title = sanitize_text_field($params->title);
+		}
 		$id = wp_insert_post([
-			'post_title' => sanitize_text_field($params->title),
+			'post_title' => $title,
 			'post_content' => '',
 			'post_type' => 'wptb-tables',
 			'post_status' => 'draft'
@@ -139,9 +143,13 @@ class Admin_Menu
 
 	public function update_table_in_db($params)
 	{
+		$title = '';
+		if (isset($params->title) && !empty($params->title)) {
+			$title = sanitize_text_field($params->title);
+		}
 		wp_update_post([
 			'ID' => absint($params->id),
-			'post_title' => sanitize_text_field($params->title),
+			'post_title' => $title,
 			'post_content' => '',
 			'post_type' => 'wptb-tables',
 			'post_status' => 'draft'
