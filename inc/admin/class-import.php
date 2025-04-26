@@ -163,6 +163,29 @@ class Import {
         }
     }
 
+    private function normalize_path(string $path): string
+    {
+        $path = str_replace('\\', '/', $path);
+        $parts = explode('/', $path);
+        $safe_parts = [];
+    
+        foreach ($parts as $part) {
+            if ($part === '' || $part === '.') {
+                continue;
+            }
+            if ($part === '..') {
+                if (!empty($safe_parts)) {
+                    array_pop($safe_parts);
+                }
+                // else: trying to go above root, ignore it
+                continue;
+            }
+            $safe_parts[] = $part;
+        }
+    
+        return implode('/', $safe_parts);
+    }
+
     public function zip_unpacker() {
         if ( current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP) && isset( $_POST ) && isset( $_POST['security_code'] ) &&
              wp_verify_nonce( $_POST['security_code'], 'wptb-import-security-nonce' ) ) {
@@ -183,7 +206,8 @@ class Import {
                  */
                 $data = array();
                 foreach( $files as $file ){
-                    $file_name = $file['name'];
+                    $safe_name = $this->normalize_path( $file['name'] );
+                    $file_name = $safe_name;
                     if( move_uploaded_file( $file['tmp_name'], "$uploaddir/$file_name" ) ){
                         if ( true === $zip_file->open( "$uploaddir/$file_name" ) ) {
                             for ( $file_idx = 0; $file_idx < $zip_file->numFiles; $file_idx++ ) {
@@ -210,10 +234,10 @@ class Import {
                             };
                             $zip_file->close();
                         } else {
-                            @unlink( $uploaddir. '/' . $file['name'] );
+                            @unlink( $uploaddir. '/' . $safe_name );
                         }
                     }
-                    @unlink( $uploaddir. '/' . $file['name'] );
+                    @unlink( $uploaddir. '/' . $safe_name );
                 }
 
                 rmdir( $uploaddir );
