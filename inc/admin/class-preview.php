@@ -127,7 +127,9 @@ class Preview {
                     } else {
                         $time_over = true;
                     }
-                } 
+                }
+
+                $url = esc_url(get_site_url() . $_SERVER['REQUEST_URI']);
                 
                 if( $preview_id_meta != $preview_id && ! $time_over ) {
                     echo '<div style="display:table; width:100%; height:100%;">'
@@ -135,7 +137,7 @@ class Preview {
                     . '<p>' . __( 'Generating preview...', 'wp-table-builder' ) . '</p></div>'
                     . '</div>';
                     echo '<script>setTimeout( function() {'
-                    . 'let newHref = new URL( "' . get_site_url() . $_SERVER['REQUEST_URI'] . '" );'
+                    . 'let newHref = new URL( "' . $url . '" );'
                     . 'newHref.searchParams.set( "ts", ' . $ts . ' );'
                     . 'window.location.href=newHref.toString();'
                     . '} , 1000 );</script>';
