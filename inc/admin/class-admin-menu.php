@@ -57,7 +57,6 @@ class Admin_Menu
 		add_action('admin_menu', array($this, 'register_menus'), 9);
 
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
-		add_action('wp_ajax_create_table', array($this, 'create_table'));
 		add_action('wp_ajax_save_table', array($this, 'save_table'));
 		add_action('wp_ajax_get_table', array($this, 'get_table'));
 		add_action('admin_bar_menu', array($this, 'add_wp_admin_bar_new_table_create_page'), 500);
@@ -65,19 +64,6 @@ class Admin_Menu
 		add_filter('wp-table-builder/filter/get_table', [$this, 'strip_tags'], 10, 1);
 		add_filter('wp-table-builder/filter/table_html_shortcode', [$this, 'strip_tags'], 10, 1);
 		add_filter('wp-table-builder/table_content', [$this, 'strip_tags'], 10, 1);
-	}
-
-	public function create_table()
-	{
-		if (current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP)) {
-			$id = wp_insert_post([
-				'post_title' => '',
-				'post_content' => '',
-				'post_type' => 'wptb-tables',
-				'post_status' => 'draft'
-			]);
-			wp_die(json_encode(['created', $id]));
-		}
 	}
 
 	public function save_table()
