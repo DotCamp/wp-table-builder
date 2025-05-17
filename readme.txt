@@ -94,6 +94,7 @@ That's it. You're done!
 * FIX: Improved XSS security
 * FIX: Potential path traversal vulnerability
 * FIX: ZIP not importing in UNIX systems
+* FIX: Dynamic roles in allowed roles option
 
 = 2.0.6 =
 * FIX: Fixed XSS issue
