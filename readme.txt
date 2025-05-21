@@ -96,6 +96,7 @@ That's it. You're done!
 * FIX: ZIP not importing in UNIX systems
 * FIX: Dynamic roles in allowed roles option
 * FIX: Import CSV without delimiter
+* IMPROVE: Updated Freemius sdk
 
 = 2.0.6 =
 * FIX: Fixed XSS issue
