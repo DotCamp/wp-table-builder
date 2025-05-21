@@ -1,6 +1,6 @@
 {
-  "_index-CmJSFkLU.js": {
-    "file": "assets/index-CmJSFkLU.js",
+  "_index-B-DJZwaD.js": {
+    "file": "assets/index-B-DJZwaD.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-CmJSFkLU.js"
+      "_index-B-DJZwaD.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-CmJSFkLU.js"
+      "_index-B-DJZwaD.js"
     ]
   }
 }

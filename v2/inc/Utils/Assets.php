@@ -11,14 +11,13 @@ class Assets
 
     public static function enqueue()
     {
-        add_action('enqueue_block_editor_assets', function () {
+        add_action('enqueue_block_editor_assets', function() {
             self::print(true);
         });
     }
 
 
-    public static function print($gutenberg = false)
-    {
+    public static function print($gutenberg = false){
         wp_enqueue_media();
 
         self::enqueue_config();
@@ -34,7 +33,7 @@ class Assets
 
         if ($gutenberg) {
             $assets->register_path('build/index.js');
-            $assets->register_style_path('wptb-v2-gutenberg-style', 'build/editor.css');
+            $assets->register_style_path('wptb-v2-gutenberg-style','build/editor.css');
         } else {
             $assets->register('src/index.tsx');
             AssetLoader::enqueue_styles();
@@ -45,12 +44,6 @@ class Assets
 
     public static function enqueue_config()
     {
-        $import_iframe_url = add_query_arg(
-            [
-                'post_type' => 'wptb-tables-import'
-            ],
-            home_url()
-        );
         $data = [
             'API_BASE' => rest_url('wp-table-builder'),
             'PLUGIN_URL' => WPTB_PLUGIN_URL,
@@ -60,10 +53,9 @@ class Assets
             'TEST' => __("Create Table", "wptb"),
             'SECURITY_CODE' => wp_create_nonce('wptb-import-security-nonce'),
             'EXPORT_KEY' => wp_create_nonce('wptb_table_export_main_export'),
-            'IMPORT_IFRAME_URL' => $import_iframe_url,
             'SETTINGS' => [
                 'all_roles' => get_editable_roles(),
-                'is_authorized' => current_user_can('manage_options'),
+                'is_authorized'=> current_user_can('manage_options'),
                 'version' => WPTableBuilder::VERSION,
                 'general' => get_option('wp_table_builder_settings'),
                 'table_style' => get_option('wptb-general-styles'),
