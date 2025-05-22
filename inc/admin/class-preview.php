@@ -129,7 +129,7 @@ class Preview {
                     }
                 }
 
-                $url = esc_url(get_site_url() . $_SERVER['REQUEST_URI']);
+                $url = sanitize_url(get_site_url() . $_SERVER['REQUEST_URI']);
                 
                 if( $preview_id_meta != $preview_id && ! $time_over ) {
                     echo '<div style="display:table; width:100%; height:100%;">'
