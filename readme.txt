@@ -98,6 +98,8 @@ That's it. You're done!
 * FIX: Import CSV without delimiter
 * FIX: Preview not working in some cases
 * FIX: Responsive preview not working properly
+* FIX: Different sizes in builder & frontend on some cases
+* FIX: headers already sent warning
 * IMPROVE: Updated Freemius sdk
 
 = 2.0.6 =
