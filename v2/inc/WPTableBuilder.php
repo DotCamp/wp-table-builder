@@ -14,7 +14,7 @@ class WPTableBuilder
 
     public static function init()
     {
-        Assets::enqueue();
+        Assets::init();
         ApiHandler::init();
         Gutenberg::init();
 
@@ -99,6 +99,6 @@ class WPTableBuilder
     public static function wptb_page()
     {
         echo '<div id="wptb-app-root" class="wptb-app-root"></div>';
-        Assets::print();
+        Assets::enqueue();
     }
 }

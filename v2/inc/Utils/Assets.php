@@ -9,15 +9,19 @@ class Assets
     private const CDN_HOST = WPTB_PLUGIN_URL . '/v2';
 
 
-    public static function enqueue()
+    public static function init()
     {
         add_action('enqueue_block_editor_assets', function() {
-            self::print(true);
+            self::enqueue(true);
+        });
+
+        add_action('admin_print_footer_scripts', function() {
+            echo AssetLoader::get_scripts();
         });
     }
 
 
-    public static function print($gutenberg = false){
+    public static function enqueue($is_block_editor = false) {
         wp_enqueue_media();
 
         self::enqueue_config();
@@ -31,18 +35,16 @@ class Assets
 
         do_action('wptb_enqueue_pro_assets');
 
-        if ($gutenberg) {
+        if ($is_block_editor) {
             $assets->register_path('build/index.js');
             $assets->register_style_path('wptb-v2-gutenberg-style','build/editor.css');
         } else {
             $assets->register('src/index.tsx');
             AssetLoader::enqueue_styles();
         }
-
-        echo AssetLoader::get_scripts();
     }
 
-    public static function enqueue_config()
+    private static function enqueue_config()
     {
         $data = [
             'API_BASE' => rest_url('wp-table-builder'),
@@ -80,7 +82,7 @@ class Assets
         echo '<script type="text/javascript">var WPTB_CFG = ' . json_encode($data) . ';</script>';
     }
 
-    public static function enqueue_i18n()
+    private static function enqueue_i18n()
     {
         load_plugin_textdomain('wp-table-builder', false, 'wp-table-builder/v2/languages');
         wp_register_script(
