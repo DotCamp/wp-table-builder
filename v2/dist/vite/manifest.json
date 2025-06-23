@@ -1,6 +1,6 @@
 {
-  "_index-CDEbBdaF.js": {
-    "file": "assets/index-CDEbBdaF.js",
+  "_index-33gNOJcC.js": {
+    "file": "assets/index-33gNOJcC.js",
     "name": "index"
   },
   "src/editor.scss": {
@@ -14,7 +14,7 @@
     "src": "src/index.tsx",
     "isEntry": true,
     "imports": [
-      "_index-CDEbBdaF.js"
+      "_index-33gNOJcC.js"
     ]
   },
   "src/public/i18n.ts": {
@@ -34,7 +34,7 @@
     "src": "src/wptb-common.ts",
     "isEntry": true,
     "imports": [
-      "_index-CDEbBdaF.js"
+      "_index-33gNOJcC.js"
     ]
   }
 }

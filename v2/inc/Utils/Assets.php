@@ -16,6 +16,7 @@ class Assets
         });
 
         add_action('admin_print_footer_scripts', function() {
+            self::enqueue_config();
             echo AssetLoader::get_scripts();
         });
     }
@@ -24,7 +25,6 @@ class Assets
     public static function enqueue($is_block_editor = false) {
         wp_enqueue_media();
 
-        self::enqueue_config();
         self::enqueue_i18n();
 
         $assets = new AssetLoader(self::CDN_HOST, WPTB_PLUGIN_DIR . '/dist/vite/manifest.json', WPTB_PLUGIN_DIR . '/tmp/.hotfile');
