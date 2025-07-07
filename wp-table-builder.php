@@ -97,7 +97,7 @@ namespace WP_Table_Builder {
      * Define Constants
      */
 
-    $current_version = '2.0.7';
+    $current_version = '2.0.8';
 
 
     define(__NAMESPACE__ . '\NS', __NAMESPACE__ . '\\');
