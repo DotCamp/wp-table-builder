@@ -88,7 +88,6 @@ class Circle_Rating_Element extends Dummy_Element_base
 		}
 
 		$angle = ($value / $total) * 360;
-		$angle %= 360;
 
 		if ($angle > 180) {
 			$barAngle = 180;
