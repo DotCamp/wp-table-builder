@@ -214,8 +214,6 @@ namespace WP_Table_Builder {
 
     // Check the minimum required PHP version and run the plugin.
     if (version_compare(PHP_VERSION, $min_php, '>=')) {
-        add_action('init', function() {
-            wp_table_builder_init();
-        });
+        wp_table_builder_init();
     }
 }
