@@ -24,7 +24,7 @@ class Accessibility {
 	 * Accessibility constructor.
 	 */
 	public function __construct() {
-		$this->add_controls();
+		add_action('init', [$this, 'add_controls']);
 	}
 
 	public function add_controls() {

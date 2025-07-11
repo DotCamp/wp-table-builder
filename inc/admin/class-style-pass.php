@@ -52,7 +52,8 @@ class Style_Pass {
 
 		add_action( 'wp_ajax_' . static::GENERAL_STYLES_OPTION_NAME, [ __CLASS__, 'update_general_styles' ] );
 
-		static::add_setting_controls();
+		add_action('init', [ __CLASS__, 'add_setting_controls' ]);
+		
 	}
 
 	/**

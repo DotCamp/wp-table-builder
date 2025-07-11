@@ -23,7 +23,9 @@ class Template_Manager {
 		$instance = static::get_instance( $options );
 		add_filter( 'wp-table-builder/filter/generate_data', [ $instance, 'prepare_template_frontend_data' ], 10, 1 );
 
-		Frontend_Data_Manager::add_builder_translations( $instance->template_translations() );
+		add_action('init', function() use ($instance) {
+			Frontend_Data_Manager::add_builder_translations( $instance->template_translations() );
+		});
 	}
 
 	/**

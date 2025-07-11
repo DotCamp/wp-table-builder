@@ -111,7 +111,9 @@ class Lazy_Load_Manager extends Setting_Base {
 		add_filter( 'wp-table-builder/filter/wptb_frontend_data', [ __CLASS__, 'prepare_frontend_data' ] );
 		add_filter( 'wp-table-builder/filter/table_html_shortcode', [ __CLASS__, 'table_html_shortcode' ] );
 
-		static::get_instance()->register_settings( esc_html__( 'lazy load settings', 'wp-table-builder' ) );
+		add_action('init', function(){
+			static::get_instance()->register_settings( esc_html__( 'lazy load settings', 'wp-table-builder' ) );
+		});
 	}
 
 	/**
