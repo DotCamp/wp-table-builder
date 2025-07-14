@@ -16,17 +16,19 @@ class Upsells_Dummy_Controls_Manager extends Manager_Base {
      * Function to be called during initialization process.
      */
     protected function init_process() {
-        // add upsell pro controls
-        $this->add_element_controls();
-
-        // add upsell table setting controls
-        $this->add_settings_controls();
-
-        // add upsell manage cells controls
-        $this->add_manage_cells_controls();
-
-        // add builder related data to frontend
-        $this->add_builder_data();
+        add_action('init', function(){
+            // add upsell pro controls
+            $this->add_element_controls();
+            
+            // add upsell table setting controls
+            $this->add_settings_controls();
+            
+            // add upsell manage cells controls
+            $this->add_manage_cells_controls();
+            
+            // add builder related data to frontend
+            $this->add_builder_data();
+        });
     }
 
     /**

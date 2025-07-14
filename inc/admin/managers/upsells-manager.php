@@ -57,19 +57,37 @@ class Upsells_Manager {
         if (!Addon_Manager::check_pro_status()) {
             static::$upsell_messages = [
                 'after_elements'  => [
-                    'message' => esc_html__('For More Advanced Elements', 'wp-table-builder'),
+                    'message' => 'For More Advanced Elements',
                     'url'     => 'https://wptablebuilder.com/pricing/?utm_source=dashboard&utm_medium=elements-section&utm_campaign=wptb'
                 ],
                 'generate_menu'   => [
-                    'message' => esc_html__('For Prebuilt Tables and Using Your Own Tables as Prebuilt Tables', 'wp-table-builder'),
+                    'message' => 'For Prebuilt Tables and Using Your Own Tables as Prebuilt Tables',
                     'url'     => 'https://wptablebuilder.com/pricing/?utm_source=dashboard&utm_medium=generate-menu&utm_campaign=wptb'
                 ],
                 'cell_management' => [
-                    'message' => esc_html__('For More Advanced Options in Cell Management Mode', 'wp-table-builder'),
+                    'message' => 'For More Advanced Options in Cell Management Mode',
                     'url'     => 'https://wptablebuilder.com/pricing/?utm_source=dashboard&utm_medium=cell-management&utm_campaign=wptb'
                 ],
-                'generic_end'     => wp_sprintf('<br><div>%s %s %s</div>', esc_html_x('Get the', 'start of the "Get the Pro Add-On" sentence', 'wp-table-builder'), '<span class="wptb-upsells-pro-label">PRO</span>', esc_html__('Add-On.', 'wp-table-builder'))
+                'generic_end'     => ''
             ];
+
+            add_action('init', function(){
+                static::$upsell_messages = [
+                    'after_elements'  => [
+                        'message' => esc_html__('For More Advanced Elements', 'wp-table-builder'),
+                        'url'     => 'https://wptablebuilder.com/pricing/?utm_source=dashboard&utm_medium=elements-section&utm_campaign=wptb'
+                    ],
+                    'generate_menu'   => [
+                        'message' => esc_html__('For Prebuilt Tables and Using Your Own Tables as Prebuilt Tables', 'wp-table-builder'),
+                        'url'     => 'https://wptablebuilder.com/pricing/?utm_source=dashboard&utm_medium=generate-menu&utm_campaign=wptb'
+                    ],
+                    'cell_management' => [
+                        'message' => esc_html__('For More Advanced Options in Cell Management Mode', 'wp-table-builder'),
+                        'url'     => 'https://wptablebuilder.com/pricing/?utm_source=dashboard&utm_medium=cell-management&utm_campaign=wptb'
+                    ],
+                    'generic_end'     => wp_sprintf('<br><div>%s %s %s</div>', esc_html_x('Get the', 'start of the "Get the Pro Add-On" sentence', 'wp-table-builder'), '<span class="wptb-upsells-pro-label">PRO</span>', esc_html__('Add-On.', 'wp-table-builder'))
+                ];
+            });
 
             // @deprecated
             //			add_action( 'wp-table-builder/action/after_cell_notselected_left_panel', [

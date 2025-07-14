@@ -495,7 +495,7 @@ class Button_Element extends Element_Base
 
         $btnOrder = esc_attr($props['iconPosition'] ?? 'left');
         $wrapperClass = 'wptb-size-' . esc_attr($props['size']);
-        if ($props['hasLabel']) {
+        if ($props['hasLabel'] ?? false) {
             $wrapperClass .= ' wptb-button-has-label';
         }
         $btnAlignment = esc_attr($props['buttonAlignment'] ?? 'center');
