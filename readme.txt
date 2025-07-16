@@ -3,7 +3,7 @@ Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembirc
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 6.8
-Stable tag: 2.0.10
+Stable tag: 2.0.11
 Requires PHP: 7.4
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -89,6 +89,9 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 2.0.11 =
+* FIX: _load_textdomain_just_in_time warning
 
 = 2.0.10 =
 * FIX: Rollback textdomain notice fix because it was causing a lot of issues
