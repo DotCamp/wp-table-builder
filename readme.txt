@@ -3,7 +3,7 @@ Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembirc
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 6.8
-Stable tag: 2.0.11
+Stable tag: 2.0.12
 Requires PHP: 7.4
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -89,6 +89,18 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 2.0.12 =
+* FIX: Disable theme style not loading correctly
+* FIX: Corner Ribbon not styled correctly when positioned right
+* FIX: Added logo in the gutenberg block
+* FIX: Special chars not displaying correctly in some table list
+* FIX: Updated Freemius sdk to 2.12.1
+* IMPROVE: Render large tables
+* IMPROVE: Changed table font style label
+* IMPROVE: Color picker consistency in border control
+* IMPROVE: Make hex the default color format
+* IMPROVE: Added label in the embed button
 
 = 2.0.11 =
 * FIX: _load_textdomain_just_in_time warning
