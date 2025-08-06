@@ -149,14 +149,17 @@ class Tables {
 	}
 
 	public function get_table( $args ) {
-		if ( ! $this->table_exists( $args['id'] ) ) {
-			return '[wptb id="' . $args['id'] . '" not found ]';
+		// Validate and sanitize the ID parameter
+		$table_id = isset( $args['id'] ) ? absint( $args['id'] ) : 0;
+		
+		if ( ! $table_id || ! $this->table_exists( $table_id ) ) {
+			return '[wptb id="' . esc_attr( $table_id ) . '" not found ]';
 		}
 
 		// @deprecated
 //		do_action( 'wptb_frontend_enqueue_style' );
 //		do_action( 'wptb_frontend_enqueue_script' );
-		$html = get_post_meta( $args['id'], '_wptb_content_', true );
+		$html = get_post_meta( $table_id, '_wptb_content_', true );
 
 		if ( preg_match_all( '|<wptb_shortcode_container_element(.+)</wptb_shortcode_container_element>|isU', $html, $arr ) ) {
 			foreach ( $arr[1] as $value ) {
@@ -192,7 +195,7 @@ class Tables {
 
 		if ( current_user_can( 'manage_options' ) && $settings_manager->get_option_value( 'allow_edit_link_frontend' ) ) {
 			$post_edit_link = '<div class="wptb-frontend-table-edit-link">'
-			                  . '<a href="' . admin_url( 'admin.php?page=wptb-builder&table=' . $args['id'] ) . '">' . __( "Edit Table", 'wp-table-builder' ) . '</a></div>';
+			                  . '<a href="' . admin_url( 'admin.php?page=wptb-builder&table=' . $table_id ) . '">' . __( "Edit Table", 'wp-table-builder' ) . '</a></div>';
 		}
 
 		if ( $settings_manager->get_option_value( 'give_credits_to_wp_table_builder' ) ) {
@@ -206,7 +209,7 @@ class Tables {
 			$after_table = '<div class="wptb-frontend-table-after">' . $post_edit_link . $post_give_credit . '</div>';
 		}
 
-		$html = sprintf( '<div class="wptb-table-container wptb-table-%1$d"><div class="wptb-table-container-matrix" id="wptb-table-id-%1$d" data-wptb-version="%4$s" data-wptb-pro-status="%5$s">%2$s</div></div>%3$s', esc_attr( $args['id'] ), $html, $after_table, esc_attr( get_plugin_data( NS\PLUGIN__FILE__ )['Version'] ), esc_attr( Addon_Manager::check_pro_status() ? 'true' : 'false' ) );
+		$html = sprintf( '<div class="wptb-table-container wptb-table-%1$d"><div class="wptb-table-container-matrix" id="wptb-table-id-%1$d" data-wptb-version="%4$s" data-wptb-pro-status="%5$s">%2$s</div></div>%3$s', $table_id, $html, $after_table, esc_attr( get_plugin_data( NS\PLUGIN__FILE__ )['Version'] ), esc_attr( Addon_Manager::check_pro_status() ? 'true' : 'false' ) );
 
 		$html = apply_filters( 'wp-table-builder/filter/table_html_shortcode', $html );
 

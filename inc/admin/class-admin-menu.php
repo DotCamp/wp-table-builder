@@ -197,10 +197,12 @@ class Admin_Menu
 
 	public function get_table()
 	{
-		if (current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP) && Init::instance()->settings_manager->current_user_allowed_for_modifications($_REQUEST['id'])) {
-			$post = get_post(absint($_REQUEST['id']));
+		$table_id = isset($_REQUEST['id']) ? absint($_REQUEST['id']) : 0;
+		
+		if ($table_id && current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP) && Init::instance()->settings_manager->current_user_allowed_for_modifications($table_id)) {
+			$post = get_post($table_id);
 
-			$table_html = get_post_meta(absint($_REQUEST['id']), '_wptb_content_', true);
+			$table_html = get_post_meta($table_id, '_wptb_content_', true);
 			$table_html = apply_filters('wp-table-builder/filter/get_table', $table_html);
 
 			$name = $post->post_title;
