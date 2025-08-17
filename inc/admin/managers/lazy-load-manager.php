@@ -186,7 +186,11 @@ class Lazy_Load_Manager extends Setting_Base {
 	 * @return array lazy load settings
 	 */
 	public static function get_lazy_load_settings() {
-		$settings = array_merge( static::get_instance()->get_settings(), static::$frontend_options );
+		$settings = static::get_instance()->get_settings();
+		if ( ! $settings ) {
+			$settings = [];
+		}
+		$settings = array_merge( $settings, static::$frontend_options );
 
 		return apply_filters( 'wp-table-builder/filter/lazy_load_settings', $settings );
 	}
