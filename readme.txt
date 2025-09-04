@@ -90,7 +90,7 @@ That's it. You're done!
 
 == Changelog ==
 
-= 2.0.15 -
+= 2.0.15 =
 * FIX: Redo/Undo breaks the editor with more than 30 rows
 * FIX: Updated the plugin title
 
