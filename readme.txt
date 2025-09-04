@@ -1,4 +1,4 @@
-=== WP Table Builder - WordPress Table Plugin ===
+=== WP Table Builder – Drag & Drop Table Builder ===
 Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembircan, protibimbok, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
