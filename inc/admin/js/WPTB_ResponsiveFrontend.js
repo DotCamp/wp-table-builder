@@ -452,8 +452,8 @@
 				headerDatasetColor !== undefined
 					? headerDatasetColor
 					: rows[0].style.backgroundColor === ''
-					? null
-					: rows[0].style.backgroundColor;
+						? null
+						: rows[0].style.backgroundColor;
 
 			// calculate needed number of rows to get even and odd row background colors
 			// eslint-disable-next-line no-nested-ternary
@@ -616,6 +616,24 @@
 		};
 
 		/**
+		 * Get cells at a given column.
+		 *
+		 * @param {number} columnId column id
+		 * @param {boolean} returnObj return an array of CellObject instead
+		 * @return {Array} cells in row
+		 */
+		this.getCellsAtColumn = (columnId, returnObj = false) => {
+			const cells = [];
+			for (let c = 0; c < this.maxColumns(); c += 1) {
+				const tempCell = this.getCell(c, columnId, returnObj);
+				if (tempCell) {
+					cells.push(tempCell);
+				}
+			}
+			return cells;
+		};
+
+		/**
 		 * Append the cell with given ids to a cached row
 		 *
 		 * @param {number} cellRowId cell row id
@@ -675,6 +693,7 @@
 			appendElementToRow: this.appendElementToRow,
 			appendObjectToRow: this.appendObjectToRow,
 			getCellsAtRow: this.getCellsAtRow,
+			getCellsAtColumn: this.getCellsAtColumn,
 			el: this.tableElement,
 			rowColors: this.rowColors,
 			getParsedTable: this.getParsedTable,
@@ -953,75 +972,58 @@
 				}
 				// cell stack direction is selected as column
 				else {
-					const allCellsByCol = [];
-					let rowStartIndex = 0;
-
-					// static top row option is enabled
-					if (staticTopRow) {
-						const topCells = tableObj.getCellsAtRow(0, true);
-
-						const baseCells = topCells.filter((t) => !t.isReference());
-
-						if (baseCells.length > 0) {
-							rowStartIndex += 1;
+					tableObj.getCellsAtColumn(0, true).map((h, r) => {
+						h.resetAllAttributes();
+						if (!h.el.style.backgroundColor || isBackgroundTransparent(h.el)) {
+							const colorIndex = r % 2 === 0 ? 'even' : 'odd';
+							h.setAttribute('style', `background-color: ${tableObj.rowColors[colorIndex]}`, true, ';');
 						}
+						return h;
+					});
 
-						// eslint-disable-next-line array-callback-return
-						baseCells.map((b) => {
+					const itemsPerHeader = cellsPerRow;
+	
+					// Calculate number of groups needed
+					const dataColumns = columns; // excluding header column
+					const numberOfGroups = Math.ceil(dataColumns / itemsPerHeader);
+	
+					// Create groups
+					for (let groupIndex = 0; groupIndex < numberOfGroups; groupIndex++) {
+						const startColumn = groupIndex * itemsPerHeader;
+						const endColumn = Math.min(startColumn + itemsPerHeader, columns);
+	
+						// For each row, create a new row in the output table
+						for (let r = 0; r < rows; r += 1) {
 							const rowObj = tableObj.addRow('wptb-row');
-
-							tableObj.appendObjectToRow(b, rowObj.id);
-
-							if (!b.el.style.backgroundColor || isBackgroundTransparent(b.el)) {
-								// eslint-disable-next-line no-param-reassign
-								b.el.style.backgroundColor = tableObj.rowColors.header
-									? tableObj.rowColors.header
-									: getComputedStyle(rowObj.el).backgroundColor;
-							}
-							rowObj.el.style.backgroundColor = '#ffffff00';
-
-							b.setAttribute('colSpan', cellsPerRow);
-						});
-					}
-
-					// read all cells column by column
-					for (let c = 0; c < columns; c += 1) {
-						for (let r = rowStartIndex; r < rows; r += 1) {
-							const tCell = tableObj.getCell(r, c, true);
-							// only use non reference cells to avoid duplication for non top row as header tables
-							if (tCell && !tCell.isReference()) {
-								allCellsByCol.push(tCell);
-							}
-						}
-					}
-
-					const cellCount = allCellsByCol.length;
-
-					for (let c = 0, r = 0; c < cellCount; c += cellsPerRow, r += 1) {
-						const rowObj = tableObj.addRow('wptb-row');
-
-						for (let cR = 0; cR < cellsPerRow; cR += 1) {
-							const tempCell = allCellsByCol[c + cR];
-
-							if (tempCell) {
-								tableObj.appendElementToRow(tempCell.getElement(), rowObj.id);
-
-								tempCell.resetAllAttributes();
-								tempCell.setAttribute('style', 'width: 100% !important', true, ';');
-								tempCell.setAttribute('colSpan', 1);
-								tempCell.setAttribute('rowSpan', 1);
-
-								if (!tempCell.el.style.backgroundColor || isBackgroundTransparent(tempCell.el)) {
-									const currentTableColor =
-										tableObj.rowColors[(rowStartIndex + r) % 2 === 0 ? 'odd' : 'even'];
-									tempCell.el.style.backgroundColor =
-										currentTableColor || getComputedStyle(rowObj.el).backgroundColor;
+	
+							// Add data cells for this group
+							for (let c = startColumn; c < endColumn; c += 1) {
+								const cell = tableObj.getCell(r, c, true);
+								if (cell && !cell.isReference()) {
+									// Reset cell attributes
+									cell.resetAllAttributes();
+									cell.setAttribute('style', 'width: 100% !important', true, ';');
+									cell.setAttribute('colSpan', 1);
+									cell.setAttribute('rowSpan', 1);
+	
+									// Apply row color
+									if (!cell.el.style.backgroundColor || isBackgroundTransparent(cell.el)) {
+										const colorIndex = r % 2 === 0 ? 'even' : 'odd';
+										cell.setAttribute(
+											'style',
+											`background-color: ${tableObj.rowColors[colorIndex]}`,
+											true,
+											';'
+										);
+									}
+									
+									tableObj.appendElementToRow(cell.getElement(), rowObj.id);
 								}
 							}
+	
+							// Clear row background to let cell colors show
+							rowObj.el.style.backgroundColor = '#ffffff00';
 						}
-
-						// preserve original row colors for even and odd rows
-						rowObj.el.style.backgroundColor = '#ffffff00';
 					}
 				}
 			}
@@ -1036,16 +1038,6 @@
 		 * @param {boolean} repeatMergedHeader repeat merged header
 		 */
 		this.headerBuild = (tableObj, direction, itemsPerHeader = 1, repeatMergedHeader = true) => {
-			// cells at header
-			// applying header row color to cells
-			const headerCells = tableObj.getCellsAtRow(0, true).map((h) => {
-				h.resetAllAttributes();
-				if (!h.el.style.backgroundColor || isBackgroundTransparent(h.el)) {
-					h.setAttribute('style', `background-color: ${tableObj.rowColors.header}`, true, ';');
-				}
-				return h;
-			});
-
 			const stackedAsColumn = direction === 'column';
 
 			// row count
@@ -1057,96 +1049,68 @@
 
 			// stack direction is column
 			if (stackedAsColumn) {
-				/**
-				 * Add header cells as new row to table.
-				 *
-				 * @param {boolean} addBorder add top border to header row
-				 */
-				// eslint-disable-next-line no-inner-declarations
-				function addHeaderCells(addBorder = false) {
-					const rowObj = tableObj.addRow('wptb-row');
-
-					if (addBorder) {
-						rowObj.el.style.borderTop = rowBorderStyle;
+				// cells at header
+				// applying header row color to cells
+				tableObj.getCellsAtColumn(0, true).map((h, r) => {
+					h.resetAllAttributes();
+					if (!h.el.style.backgroundColor || isBackgroundTransparent(h.el)) {
+						const colorIndex = r % 2 === 0 ? 'even' : 'odd';
+						h.setAttribute('style', `background-color: ${tableObj.rowColors[colorIndex]}`, true, ';');
 					}
+					return h;
+				});
 
-					// eslint-disable-next-line array-callback-return
-					headerCells.map((h) => {
-						// clone header cell to reuse it for multiple rows
-						const cellClone = h.el.cloneNode(true);
-						tableObj.appendElementToRow(cellClone, rowObj.id);
-						if (!cellClone.style.backgroundColor || isBackgroundTransparent(cellClone)) {
-							cellClone.style.backgroundColor = `${getComputedStyle(rowObj.el).backgroundColor}`;
-							if (cellClone.style.backgroundColor) cellClone.style.backgroundColor += ' !important';
-						}
-					});
-					rowObj.el.style.backgroundColor = '#ffffff00';
-				}
+				// Calculate number of groups needed
+				const dataColumns = columns - 1; // excluding header column
+				const numberOfGroups = Math.ceil(dataColumns / itemsPerHeader);
 
-				// count of header rows that will be created
-				let headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+				// Create groups
+				for (let groupIndex = 0; groupIndex < numberOfGroups; groupIndex++) {
+					const startColumn = 1 + (groupIndex * itemsPerHeader);
+					const endColumn = Math.min(startColumn + itemsPerHeader, columns);
 
-				// in a situation where no cells are bind to header, only render header
-				headerCount = headerCount === 0 ? 1 : headerCount;
-
-				// row index on original table
-				let currentOriginalRow = 1;
-				for (let r = 0; r < headerCount; r += 1) {
-					// create header row and add to table
-					addHeaderCells(r > 0);
-					for (let c = 0; c < itemsPerHeader; c += 1) {
-						// break iteration when current row surpasses original row amount
-						if (currentOriginalRow >= rows) {
-							break;
-						}
+					// For each row, create a new row in the output table
+					for (let r = 0; r < rows; r += 1) {
 						const rowObj = tableObj.addRow('wptb-row');
+						
+						// Add header cell (column 0) to each row
+						const headerCell = tableObj.getCell(r, 0, true);
+						if (headerCell && !headerCell.isReference()) {
+							const clonedHeaderCell = headerCell.getElement().cloneNode(true);
+							tableObj.appendElementToRow(clonedHeaderCell, rowObj.id);
+						}
 
-						// apply row color relative to current header row
-						rowObj.el.style.backgroundColor = '#ffffff00';
-						for (let cc = 0; cc < columns; cc += 1) {
-							const currentCell = tableObj.getCell(currentOriginalRow, cc, true);
+						// Add data cells for this group
+						for (let c = startColumn; c < endColumn; c += 1) {
+							const cell = tableObj.getCell(r, c, true);
+							if (cell && !cell.isReference()) {
+								// Reset cell attributes
+								cell.resetAllAttributes();
+								cell.setAttribute('style', 'width: 100% !important', true, ';');
+								cell.setAttribute('colSpan', 1);
+								cell.setAttribute('rowSpan', 1);
 
-							if (currentCell) {
-								currentCell.resetAllAttributes();
-
-								// status to decide whether render cell or not
-								let cellAddStatus = true;
-
-								const rowSpan = currentCell.getSpan(CellObject.spanTypes.row);
-								// eslint-disable-next-line no-unused-vars
-								const colSpan = currentCell.getSpan(CellObject.spanTypes.column);
-
-								if (rowSpan > 1) {
-									// items remaining in current header
-									const remainingItems = itemsPerHeader - c;
-
-									// calculate whether to apply full rowspan value or remaining item value depending on the current position of the cell
-									const currentRowSpan = Math.min(rowSpan, remainingItems);
-
-									cellAddStatus = currentCell.setSpan(CellObject.spanTypes.row, currentRowSpan);
-									// reset render status of cell to visible for future use
-									currentCell.setMergedRenderStatus(true);
+								// Apply row color
+								if (!cell.el.style.backgroundColor || isBackgroundTransparent(cell.el)) {
+									const colorIndex = r % 2 === 0 ? 'even' : 'odd';
+									cell.setAttribute(
+										'style',
+										`background-color: ${tableObj.rowColors[colorIndex]}`,
+										true,
+										';'
+									);
 								}
-
-								if (cellAddStatus) {
-									if (
-										!currentCell.el.style.backgroundColor ||
-										isBackgroundTransparent(currentCell.el)
-									) {
-										currentCell.setAttribute(
-											'style',
-											`background-color: ${tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd']}`,
-											true,
-											';'
-										);
-									}
-									tableObj.appendObjectToRow(currentCell, rowObj.id);
-								}
+								
+								tableObj.appendElementToRow(cell.getElement(), rowObj.id);
 							}
 						}
-						currentOriginalRow += 1;
+
+						// Clear row background to let cell colors show
+						rowObj.el.style.backgroundColor = '#ffffff00';
 					}
 				}
+
+
 			} else {
 				// stack direction is row
 				// number of headers that will be created
@@ -1180,9 +1144,8 @@
 									!clonedHeaderCell.style.backgroundColor ||
 									isBackgroundTransparent(clonedHeaderCell)
 								) {
-									clonedHeaderCell.style.backgroundColor = `${
-										getComputedStyle(rowObj.el).backgroundColor
-									}`;
+									clonedHeaderCell.style.backgroundColor = `${getComputedStyle(rowObj.el).backgroundColor
+										}`;
 									if (clonedHeaderCell.style.backgroundColor)
 										clonedHeaderCell.style.backgroundColor += ' !important';
 								}
