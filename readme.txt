@@ -94,6 +94,8 @@ That's it. You're done!
 * FIX: Redo/Undo breaks the editor with more than 30 rows
 * FIX: Updated the plugin title
 * FIX: Responsiveness edge case with single row
+* FIX: Responsiveness issue with enabled first row/col as header
+* FIX: Responsiveness issue in the frontend with direction = column
 
 = 2.0.14 =
 * IMPROVE: Display proper message in table import page
