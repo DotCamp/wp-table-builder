@@ -487,11 +487,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 				table.classList.remove('wptb-table-preview-static-indic');
 
-				table.mergingСellsHorizontally = false;
+				table.merginCellsHorizontally = false;
 				const tds = table.querySelectorAll('td');
 				for (let j = 0; j < tds.length; j++) {
 					if (tds[j].colSpan > 1) {
-						table.mergingСellsHorizontally = true;
+						table.mergingCellsHorizontally = true;
 					}
 				}
 				const wptbTableContainerWidth = wptbTableContainer.offsetWidth;
@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							//                            frontendEditLink[i].style.minWidth = wptbTableTdsSumMaxWidth + 'px';
 							//                        }
 
-							if (table.mergingСellsHorizontally) {
+							if (table.mergingCellsHorizontally) {
 								table.style.width = 'auto';
 								const tableTdsWidthAutoCommon = wptbTableContainerWidth - wptbFixedWidthSize;
 								tableTdWidthAuto = tableTdsWidthAutoCommon / wptbCellsWidthAutoCount;
