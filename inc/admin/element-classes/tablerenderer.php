@@ -145,6 +145,8 @@ class TableRenderer
             "min-width" => $props['minWidth'] ?? '',
         ] + $borderCss);
 
+        $enableMaxWidth = $props['enableMaxWidth'] ?? false;
+
         $attrs_string = self::generate_attrs_string([
 
             "class" => "wptb-preview-table wptb-element-main-table_setting-" . $tblId,
@@ -162,8 +164,8 @@ class TableRenderer
             "data-wptb-sortable-table-horizontal" => $props['sortHorizontal'] ?? false,
 
 
-            "data-wptb-apply-table-container-max-width" => $props['enableMaxWidth'] ?? false,
-            "data-wptb-table-container-max-width" => $props['maxWidth'] ?? false,
+            "data-wptb-apply-table-container-max-width" => $enableMaxWidth,
+            "data-wptb-table-container-max-width" => $enableMaxWidth ? $props['maxWidth'] ?? false : false,
 
             "data-wptb-horizontal-scroll-status" => $props['scrollX'] ?? false,
             "data-wptb-extra-styles" => $props['extraStyles'] ?? false,
