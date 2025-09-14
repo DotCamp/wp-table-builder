@@ -3,7 +3,7 @@ Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembirc
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 6.8
-Stable tag: 2.0.15
+Stable tag: 2.0.16
 Requires PHP: 7.4
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -90,12 +90,23 @@ That's it. You're done!
 
 == Changelog ==
 
+= 2.0.16 =
+* FIX: Responsiveness issue with enabled first row/col as header
+* FIX: Responsiveness issue in the frontend with direction = column
+* FIX: Disable max width not working properly
+* FIX: Cell background not working properly in responsive mode
+* FIX: Potential issue with cell border & radius
+* IMPROVE: Mobile Device starts from 375px
+* IMPROVE: Couple responsive tab with device preview button
+* IMPROVE: Updated edit table label in gutenberg
+* IMPROVE: Font size inconsistency in some websites
+* IMPROVE: Updated patterns
+* PRO: IMPROVE: Added border radius in badge
+
 = 2.0.15 =
 * FIX: Redo/Undo breaks the editor with more than 30 rows
 * FIX: Updated the plugin title
 * FIX: Responsiveness edge case with single row
-* FIX: Responsiveness issue with enabled first row/col as header
-* FIX: Responsiveness issue in the frontend with direction = column
 
 = 2.0.14 =
 * IMPROVE: Display proper message in table import page
