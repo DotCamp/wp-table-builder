@@ -79,6 +79,7 @@ class Badge_Element extends Dummy_Element_base
             "font-size" => $props['fontSize'] ?? '',
             "color" => $props['color'] ?? '',
             "background-color" => $props['background'] ?? '',
+            "border-radius" => $props['borderRadius'] ?? '',
         ]);
 
         $text = wp_kses_post($props['text'] ?? '');
