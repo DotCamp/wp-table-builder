@@ -72,26 +72,9 @@
             this.mergedRenderStatus = status;
         };
 
-        /**
-         * Add merged cells.
-         *
-         * @param {string} mergeType merge type
-         * @param {CellObject} cellObj cell object instance
-         */
-        this.addToMergedCells = (mergeType, cellObj) => {
-            this.mergedCells[mergeType].push(cellObj);
-        };
 
-        /**
-         * Determine if current cell is a reference to a main cell.
-         *
-         * @return {boolean} a reference or not
-         */
-        this.isReference = () => {
-            return this.referenceObject !== null;
-        };
 
-        if (this.isReference()) {
+        if (this.referenceObject !== null) {
             this.element = cellElement.cloneNode(true);
         }
 
@@ -143,13 +126,6 @@
             throw new Error(`no span value found with the given type of [${spanType}]`);
         };
 
-        this.getRemainingSpans = (spanType) => {
-            return this.remainingSpans[spanType];
-        };
-
-        this.setRemainingSpans = (spanType, value) => {
-            this.remainingSpans[spanType] = value;
-        };
 
         /**
          * Get cell element.
@@ -160,19 +136,10 @@
             return this.element;
         };
 
-        /**
-         * Create a cell element.
-         *
-         * @private
-         * @return {HTMLTableDataCellElement} created cell element
-         */
-        this.createCellElement = () => {
-            return document.createElement('td');
-        };
 
         // create a new cell element if no cellElement argument is given with constructor function
         if (!cellElement) {
-            this.element = this.createCellElement();
+            this.element = document.createElement('td');
         }
 
         /**
@@ -225,13 +192,13 @@
          */
         this.setSpan = (spanType, value) => {
             // working on main cell
-            if (!this.isReference()) {
+            if (this.referenceObject === null) {
                 const valueToApply = this.getSpan(spanType) - value < 0 ? this.getSpan(spanType) : value;
 
                 this.setAttribute(`${spanType}Span`, valueToApply);
 
                 // calculate remaining cells amount to merge in this span type
-                this.setRemainingSpans(spanType, this.getSpan(spanType) - valueToApply);
+                this.remainingSpans[spanType] = this.getSpan(spanType) - valueToApply;
 
                 // set visibility of connected merge group cells to false to not render them since we added necessary span values to main cell which will leak into their position
                 for (let mc = 0; mc < valueToApply - 1; mc += 1) {
@@ -248,7 +215,7 @@
                 return false;
             }
 
-            const remainingVal = this.referenceObject.getRemainingSpans(spanType);
+            const remainingVal = this.referenceObject.remainingSpans[spanType];
 
             // no space left to put cell
             if (remainingVal === 0) {
@@ -258,7 +225,7 @@
             const valueToApply = remainingVal - value < 0 ? remainingVal : value;
 
             const remainingParentSpans = remainingVal - valueToApply;
-            this.referenceObject.setRemainingSpans(spanType, remainingParentSpans);
+            this.referenceObject.remainingSpans[spanType] = remainingParentSpans;
 
             this.setAttribute(`${spanType}Span`, valueToApply);
 
@@ -307,10 +274,6 @@
             resetAllAttributes: this.resetAllAttributes,
             getSpan: this.getSpan,
             setSpan: this.setSpan,
-            getRemainingSpans: this.getRemainingSpans,
-            setRemainingSpans: this.setRemainingSpans,
-            isReference: this.isReference,
-            addToMergedCells: this.addToMergedCells,
             mergedCells: this.mergedCells,
             setMergedRenderStatus: this.setMergedRenderStatus,
             getMergedRenderStatus: this.getMergedRenderStatus,
@@ -416,14 +379,14 @@
                     if (spanRow > 1) {
                         for (let sr = 1; sr < spanRow; sr += 1) {
                             const referenceCell = new CellObject(c, currentCellObject);
-                            currentCellObject.addToMergedCells('row', referenceCell);
+                            currentCellObject.mergedCells.row.push(referenceCell);
                             this.addToParsed(ri + sr, ci, referenceCell);
                         }
                     }
                     if (spanCol > 1) {
                         for (let sc = 1; sc < spanCol; sc += 1) {
                             const referenceCell = new CellObject(c, currentCellObject);
-                            currentCellObject.addToMergedCells('column', referenceCell);
+                            currentCellObject.mergedCells.column.push(referenceCell);
                             this.addToParsed(ri, currentIndex, referenceCell);
                             currentIndex += 1;
                         }
@@ -441,7 +404,7 @@
          */
         this.parseRowColors = (rows) => {
             if (!rows || rows.length <= 0) {
-                logToConsole('no rows are found to parse their colors', 'error');
+                return;
             }
 
             // get row colors if they are defined as datasets on table element
@@ -451,7 +414,6 @@
 
             // header row color
             this.rowColors.header =
-                // eslint-disable-next-line no-nested-ternary
                 headerDatasetColor !== undefined
                     ? headerDatasetColor
                     : rows[0].style.backgroundColor === ''
@@ -459,13 +421,11 @@
                     : rows[0].style.backgroundColor;
 
             // calculate needed number of rows to get even and odd row background colors
-            // eslint-disable-next-line no-nested-ternary
             const rowsNeeded = rows.length / 3 >= 1 ? 0 : rows.length === 1 ? 2 : (rows.length - 1) % 2;
 
             // create additional rows and add them to table to get their row background colors since table row count may be lower to get even/odd rows
             for (let rn = 0; rn < rowsNeeded; rn += 1) {
                 const tempRow = document.createElement('tr');
-
                 this.tableElement.querySelector('tbody').appendChild(tempRow);
                 rows.push(tempRow);
             }
@@ -526,51 +486,8 @@
             this.tableElement.querySelector('tbody').innerHTML = '';
         };
 
-        /**
-         * Get row element from cache.
-         *
-         * @param {number} id row id
-         * @return {null|HTMLElement} row element if present or null if not
-         */
-        this.getRow = (id) => {
-            if (this.rowCache[id]) {
-                return this.rowCache[id];
-            }
 
-            // eslint-disable-next-line no-console
-            logToConsole(`no row with id [${id}] found in the cache.`, 'warn');
-            return null;
-        };
 
-        /**
-         * Get maximum number of rows available at table.
-         *
-         * @return {number} maximum amount of rows
-         */
-        this.maxRows = () => {
-            return this.parsedTable.length;
-        };
-
-        /**
-         * Get the number of maximum available column count in the table.
-         *
-         * @param {boolean} mergedHeader if header is merged or not
-         * @return {number} maximum available column count
-         */
-        this.maxColumns = (mergedHeader) => {
-            if (mergedHeader) {
-                return this.parsedTable[0].length;
-            }
-
-            return this.parsedTable.reduce((p, c) => {
-                if (c.length > p) {
-                    // eslint-disable-next-line no-param-reassign
-                    p = c.length;
-                }
-
-                return p;
-            }, 0);
-        };
 
         /**
          * Get the table cell at specified row-column location.
@@ -600,58 +517,8 @@
             return null;
         };
 
-        /**
-         * Get cells at a given row.
-         *
-         * @param {number} rowId row id
-         * @param {boolean} returnObj return an array of CellObject instead
-         * @return {Array} cells in row
-         */
-        this.getCellsAtRow = (rowId, returnObj = false) => {
-            const cells = [];
-            for (let c = 0; c < this.maxColumns(); c += 1) {
-                const tempCell = this.getCell(rowId, c, returnObj);
-                if (tempCell) {
-                    cells.push(tempCell);
-                }
-            }
-            return cells;
-        };
 
-        /**
-         * Get cells at a given column.
-         *
-         * @param {number} columnId column id
-         * @param {boolean} returnObj return an array of CellObject instead
-         * @return {Array} cells in row
-         */
-        this.getCellsAtColumn = (columnId, returnObj = false) => {
-            const cells = [];
-            for (let c = 0; c < this.maxColumns(); c += 1) {
-                const tempCell = this.getCell(c, columnId, returnObj);
-                if (tempCell) {
-                    cells.push(tempCell);
-                }
-            }
-            return cells;
-        };
 
-        /**
-         * Append the cell with given ids to a cached row
-         *
-         * @param {number} cellRowId cell row id
-         * @param {number} cellColumnId cell column id
-         * @param {number} rowId id of row in row cache
-         */
-        this.appendToRow = (cellRowId, cellColumnId, rowId) => {
-            const cachedRow = this.getRow(rowId);
-            const cell = this.getCell(cellRowId, cellColumnId, true);
-
-            if (cell && cachedRow) {
-                cachedRow.appendChild(cell.getElement());
-            }
-            return cell;
-        };
 
         /**
          * Append html element to a cached row.
@@ -660,25 +527,13 @@
          * @param {number} rowId if of row in row cache
          */
         this.appendElementToRow = (el, rowId) => {
-            const cachedRow = this.getRow(rowId);
+            const cachedRow = this.rowCache[rowId];
 
             if (el && cachedRow) {
                 cachedRow.appendChild(el);
             }
         };
 
-        /**
-         * Add cell object to a cached row.
-         *
-         * @param {CellObject} cellObj cell object
-         * @param {number} rowId row id
-         */
-        this.appendObjectToRow = (cellObj, rowId) => {
-            const cachedRow = this.getRow(rowId);
-            if (cellObj && cachedRow) {
-                cachedRow.appendChild(cellObj.getElement());
-            }
-        };
 
         this.getParsedTable = () => {
             return this.parsedTable;
@@ -687,16 +542,10 @@
         this.parseTable();
 
         return {
-            maxRows: this.maxRows,
-            maxColumns: this.maxColumns,
             addRow: this.addRow,
             clearTable: this.clearTable,
             getCell: this.getCell,
-            appendToRow: this.appendToRow,
             appendElementToRow: this.appendElementToRow,
-            appendObjectToRow: this.appendObjectToRow,
-            getCellsAtRow: this.getCellsAtRow,
-            getCellsAtColumn: this.getCellsAtColumn,
             el: this.tableElement,
             rowColors: this.rowColors,
             getParsedTable: this.getParsedTable,
@@ -706,8 +555,6 @@
     // default options for responsive class
     const responsiveClassDefaultOptions = {
         query: '.wptb-preview-table',
-        defaultClasses: ['wptb-plugin-responsive-base'],
-        bindToResize: false,
     };
 
     /**
@@ -718,7 +565,6 @@
      */
     function ResponsiveFront(options = {}) {
         // merge default options with user sent options
-        // this.options = { ...responsiveClassDefaultOptions, ...options };
         this.options = { ...responsiveClassDefaultOptions, ...options };
 
         this.elements = Array.from(document.querySelectorAll(this.options.query));
@@ -730,32 +576,7 @@
             };
         });
 
-        /**
-         * Whether given element's background is transparent or not.
-         *
-         * @param {HTMLElement} element html element
-         * @return {boolean} transparent or not
-         */
-        const isBackgroundTransparent = (element) => {
-            let status = false;
-            if (element.style.backgroundColor) {
-                const regexp = new RegExp(/^rgba\(\s?0\s?,\s?0\s?,\s?0\s?,\s?0\s?\)$/g);
 
-                status = element.style.backgroundColor.match(regexp) !== null;
-            }
-
-            return status;
-        };
-
-        /**
-         * Bind rebuilding of tables to window resize event.
-         */
-        this.bindRebuildToResize = () => {
-            // eslint-disable-next-line @wordpress/no-global-event-listener
-            window.addEventListener('resize', () => {
-                this.rebuildTables();
-            });
-        };
 
         /**
          * Get responsive directives of table element.
@@ -774,25 +595,7 @@
             return JSON.parse(atob(directiveString));
         };
 
-        /**
-         * Add default classes to rebuilt tables.
-         *
-         * This classes are added to lay out a base style for the responsive table.
-         *
-         * @param {HTMLElement} el table element
-         */
-        this.addDefaultClasses = (el) => {
-            el.classList.add(this.options.defaultClasses);
-        };
 
-        /**
-         * Remove default classes from target table.
-         *
-         * @param {HTMLElement} el table element
-         */
-        this.removeDefaultClasses = (el) => {
-            el.classList.remove(this.options.defaultClasses);
-        };
 
         /**
          * Scroll operation related adjustments to responsive process.
@@ -851,7 +654,6 @@
             if (sizeRange === 'desktop') {
                 scrollOperations(tableEl, true);
                 this.buildDefault(tableObj);
-                this.removeDefaultClasses(tableEl);
             } else {
                 scrollOperations(tableEl, false);
                 this.autoDirectionBuild(
@@ -862,7 +664,6 @@
                     cellsPerRow,
                     repeatMergedHeader,
                 );
-                this.addDefaultClasses(tableEl);
             }
         };
 
@@ -876,7 +677,7 @@
             const parsedTable = tableObj.getParsedTable();
 
             const rowCount = parsedTable.length;
-            const colCount = tableObj.maxColumns();
+            const colCount = parsedTable.reduce((max, row) => Math.max(max, row.length), 0);
 
             const tableRec = {};
             const futColInit = {};
@@ -1078,7 +879,6 @@
          * @param {TableObject} tableObj table object for building
          */
         this.buildTableFromCells = (tableData, tableObj) => {
-            console.log(tableObj);
             for (let i = 0; i < tableData.length; i++) {
                 const rowObj = tableObj.addRow('wptb-row');
                 for (let j = 0; j < tableData[i].length; j++) {
@@ -1151,200 +951,6 @@
             this.buildTableFromCells(transformedTable, tableObj);
         };
 
-        /**
-         * Build table with top row assigned as header.
-         *
-         * @param {TableObject} tableObj table object
-         * @param {string} direction cell stack direction, possible options are [row, column]
-         * @param {number} itemsPerHeader items bound to each header element
-         * @param {boolean} repeatMergedHeader repeat merged header
-         */
-        this.headerBuild = (tableObj, direction, itemsPerHeader = 1, repeatMergedHeader = true) => {
-            const stackedAsColumn = direction === 'column';
-
-            // row count
-            const rows = tableObj.maxRows();
-            // column count
-            const columns = tableObj.maxColumns();
-
-            const rowBorderStyle = '3px solid gray';
-
-            // stack direction is column
-            if (stackedAsColumn) {
-                // cells at header
-                // applying header row color to cells
-                tableObj.getCellsAtColumn(0, true).map((h, r) => {
-                    h.resetAllAttributes();
-                    if (!h.el.style.backgroundColor || isBackgroundTransparent(h.el)) {
-                        const colorIndex = r % 2 === 0 ? 'even' : 'odd';
-                        h.setAttribute('style', `background-color: ${tableObj.rowColors[colorIndex]}`, true, ';');
-                    }
-                    return h;
-                });
-
-                // Calculate number of groups needed
-                const dataColumns = columns - 1; // excluding header column
-                const numberOfGroups = Math.ceil(dataColumns / itemsPerHeader);
-
-                // Create groups
-                for (let groupIndex = 0; groupIndex < numberOfGroups; groupIndex++) {
-                    const startColumn = 1 + groupIndex * itemsPerHeader;
-                    const endColumn = Math.min(startColumn + itemsPerHeader, columns);
-
-                    // For each row, create a new row in the output table
-                    for (let r = 0; r < rows; r += 1) {
-                        const rowObj = tableObj.addRow('wptb-row');
-
-                        // Add header cell (column 0) to each row
-                        const headerCell = tableObj.getCell(r, 0, true);
-                        if (headerCell && !headerCell.isReference()) {
-                            const clonedHeaderCell = headerCell.getElement().cloneNode(true);
-                            tableObj.appendElementToRow(clonedHeaderCell, rowObj.id);
-                        }
-
-                        // Add data cells for this group
-                        for (let c = startColumn; c < endColumn; c += 1) {
-                            const cell = tableObj.getCell(r, c, true);
-                            if (cell && !cell.isReference()) {
-                                // Reset cell attributes
-                                cell.resetAllAttributes();
-                                cell.setAttribute('style', 'width: 100% !important', true, ';');
-                                cell.setAttribute('colSpan', 1);
-                                cell.setAttribute('rowSpan', 1);
-
-                                // Apply row color
-                                if (!cell.el.style.backgroundColor || isBackgroundTransparent(cell.el)) {
-                                    const colorIndex = r % 2 === 0 ? 'even' : 'odd';
-                                    cell.setAttribute(
-                                        'style',
-                                        `background-color: ${tableObj.rowColors[colorIndex]}`,
-                                        true,
-                                        ';',
-                                    );
-                                }
-
-                                tableObj.appendElementToRow(cell.getElement(), rowObj.id);
-                            }
-                        }
-
-                        // Clear row background to let cell colors show
-                        rowObj.el.style.backgroundColor = '#ffffff00';
-                    }
-                }
-            } else {
-                // stack direction is row
-                // number of headers that will be created
-                let headerCount = Math.ceil((rows - 1) / itemsPerHeader);
-
-                // in a situation where no cells are bind to header, only render header
-                headerCount = headerCount === 0 ? 1 : headerCount;
-
-                let currentOriginalRow = 1;
-
-                for (let hc = 0; hc < headerCount; hc += 1) {
-                    for (let c = 0; c < columns; c += 1) {
-                        const rowObj = tableObj.addRow('wptb-row');
-
-                        if (hc > 0 && c === 0) {
-                            rowObj.el.style.borderTop = rowBorderStyle;
-                        }
-
-                        if (repeatMergedHeader || hc === 0) {
-                            const headerCellObject = tableObj.getCell(0, c, true);
-                            // const clonedHeaderCell = headerCells[c]?.el.cloneNode(true);
-
-                            if (!headerCellObject.isReference()) {
-                                const clonedHeaderCell = headerCellObject.el.cloneNode(true);
-
-                                // apply header row color to header cell
-                                clonedHeaderCell.style.backgroundColor = `${tableObj.rowColors.header} !important`;
-                                tableObj.appendElementToRow(clonedHeaderCell, rowObj.id);
-
-                                if (
-                                    !clonedHeaderCell.style.backgroundColor ||
-                                    isBackgroundTransparent(clonedHeaderCell)
-                                ) {
-                                    clonedHeaderCell.style.backgroundColor = `${
-                                        getComputedStyle(rowObj.el).backgroundColor
-                                    }`;
-                                    if (clonedHeaderCell.style.backgroundColor)
-                                        clonedHeaderCell.style.backgroundColor += ' !important';
-                                }
-
-                                if (!repeatMergedHeader) {
-                                    clonedHeaderCell.setAttribute('rowSpan', columns * headerCount);
-                                } else {
-                                    clonedHeaderCell.setAttribute('rowSpan', clonedHeaderCell.getAttribute('colSpan'));
-                                }
-
-                                clonedHeaderCell.setAttribute('colSpan', 1);
-                            }
-                        }
-
-                        // clear out row color to override row color with cell colors
-                        rowObj.el.style.backgroundColor = '#ffffff00';
-
-                        for (let r = 0; r < itemsPerHeader; r += 1) {
-                            if (currentOriginalRow + r >= rows) {
-                                break;
-                            }
-
-                            // const currentCell = tableObj.appendToRow(currentOriginalRow + r, c, rowObj.id);
-                            const currentCell = tableObj.getCell(currentOriginalRow + r, c, true);
-
-                            if (currentCell) {
-                                currentCell.resetAllAttributes();
-
-                                let cellAddStatus = true;
-
-                                const rowSpan = currentCell.getSpan(CellObject.spanTypes.row);
-                                const colSpan = currentCell.getSpan(CellObject.spanTypes.column);
-
-                                if (rowSpan > 1 || colSpan > 1) {
-                                    const remainingItems = itemsPerHeader - r;
-
-                                    const currentRowSpan = Math.min(rowSpan, remainingItems);
-
-                                    cellAddStatus = currentCell.setSpan(CellObject.spanTypes.row, currentRowSpan);
-
-                                    const rS = currentCell.el.getAttribute('rowSpan');
-                                    const cS = currentCell.el.getAttribute('colSpan');
-
-                                    // switch span values
-                                    currentCell.setAttribute('rowSpan', cS);
-                                    currentCell.setAttribute('colSpan', rS);
-
-                                    currentCell.setMergedRenderStatus(true);
-                                }
-                                if (cellAddStatus) {
-                                    // color index for the cell, this will be used to reflect table row colors to cells. currently, grouping up the same items with the same color code
-                                    let colorIndex = (currentOriginalRow + r + hc) % 2 === 0 ? 'even' : 'odd';
-
-                                    // for better visuals and distinction for tables with 1 item per header, using this calculation for color index
-                                    if (itemsPerHeader === 1) {
-                                        colorIndex = currentOriginalRow % 2 === 0 ? 'even' : 'odd';
-                                    }
-
-                                    if (
-                                        !currentCell.el.style.backgroundColor ||
-                                        isBackgroundTransparent(currentCell.el)
-                                    ) {
-                                        currentCell.setAttribute(
-                                            'style',
-                                            `background-color: ${tableObj.rowColors[colorIndex]}`,
-                                            true,
-                                            ';',
-                                        );
-                                    }
-                                    tableObj.appendObjectToRow(currentCell, rowObj.id);
-                                }
-                            }
-                        }
-                    }
-                    currentOriginalRow += itemsPerHeader;
-                }
-            }
-        };
 
         /**
          * Build table in its default form.
@@ -1354,8 +960,9 @@
          * @param {TableObject} tableObj table object
          */
         this.buildDefault = (tableObj) => {
-            const rows = tableObj.maxRows();
-            const columns = tableObj.maxColumns();
+            const parsedTable = tableObj.getParsedTable();
+            const rows = parsedTable.length;
+            const columns = parsedTable.reduce((max, row) => Math.max(max, row.length), 0);
 
             for (let r = 0; r < rows; r += 1) {
                 const rowId = tableObj.addRow('', true, r).id;
@@ -1363,7 +970,7 @@
                     const tempCell = tableObj.getCell(r, c, true);
 
                     // only render cell if a valid cell is found and it is not a reference
-                    if (tempCell && !tempCell.isReference()) {
+                    if (tempCell && tempCell.referenceObject === null) {
                         // reset all modified attributes of cell to their default values
                         tempCell.resetAllAttributes();
                         tableObj.appendElementToRow(tempCell.getElement(), rowId);
@@ -1395,18 +1002,6 @@
             return rangeId;
         };
 
-        /**
-         * Add html related indicators for responsive operation.
-         *
-         * @param {Node} tableElement target table element
-         * @param {string} breakpointId current breakpoint for responsive process
-         */
-        const htmlResponsiveIndicators = (tableElement, breakpointId) => {
-            if (tableElement && breakpointId) {
-                // eslint-disable-next-line no-param-reassign
-                tableElement.dataset.wptbBreakpoint = breakpointId;
-            }
-        };
 
         /**
          * Status of responsive enabled property.
@@ -1479,7 +1074,6 @@
             if (!isCurrentBreakpointEnabled(directive, size)) {
                 tableObj.clearTable();
                 this.buildDefault(tableObj);
-                this.removeDefaultClasses(el);
             } else {
                 buildCallable.call(this, el, sizeRangeId, modeOptions, tableObj);
             }
@@ -1495,7 +1089,9 @@
             el.dispatchEvent(tabEvent);
 
             // add html indicators to target table
-            htmlResponsiveIndicators(el, sizeRangeId);
+            if (el && sizeRangeId) {
+                el.dataset.wptbBreakpoint = sizeRangeId;
+            }
         };
 
         /**
@@ -1548,17 +1144,10 @@
             });
         };
 
-        /**
-         * Get range id for target table.
-         *
-         * @param {HTMLTableElement} tableElement target table element
-         */
-        this.calculateRangeIdFromTable = (tableElement) => {
-            const directives = this.getDirective(tableElement);
-            const innerSize = calculateInnerSize(tableElement);
 
-            return this.calculateRangeId(innerSize, directives.breakpoints);
-        };
+
+
+
 
         /**
          * Check if current breakpoint is enabled for responsive operations.
@@ -1575,51 +1164,23 @@
             );
         };
 
+        /**
+         * Bind rebuilding of tables to window resize event.
+         */
+        this.bindRebuildToResize = () => {
+            // eslint-disable-next-line @wordpress/no-global-event-listener
+            window.addEventListener('resize', () => {
+                this.rebuildTables();
+            });
+        };
+
         if (this.options.bindToResize) {
             this.bindRebuildToResize();
         }
 
-        /**
-         * Get cached table element object.
-         *
-         * @param {number} tableId table id to look for
-         * @return {null | Object} table element object
-         */
-        this.getTableElementObject = (tableId) => {
-            const [filteredObjects] = this.elementObjects.filter(({ el }) => {
-                const matrixWrapper = el.parentNode;
-
-                const regex = new RegExp(/^wptb-table-id-(\d+)$/);
-                const matches = regex.exec(matrixWrapper.getAttribute('id'));
-
-                return matches && matches[1] && Number.parseInt(matches[1], 10) === tableId;
-            });
-
-            return filteredObjects;
-        };
-
-        /**
-         * Hide/show target row element for responsive calculations.
-         *
-         * @param {HTMLTableRowElement} rowElement row element
-         * @param {boolean} status status
-         */
-        this.markRowForResponsive = (rowElement, status) => {
-            // eslint-disable-next-line no-param-reassign
-            rowElement.dataset.wptbResponsiveIgnore = JSON.stringify(status);
-        };
-
         return {
             rebuildTables: this.rebuildTables,
-            rebuildTable: this.rebuildTable,
-            getDirective: this.getDirective,
-            calculateRangeId: this.calculateRangeId,
-            calculateRangeIdFromTable: this.calculateRangeIdFromTable,
             isResponsiveEnabledForCurrentBreakpoint: this.isResponsiveEnabledForCurrentBreakpoint,
-            getTableElementObject: this.getTableElementObject,
-            markRowForResponsive: this.markRowForResponsive,
-            calculateInnerSize,
-            TableObject,
         };
     }
 
