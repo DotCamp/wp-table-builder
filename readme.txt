@@ -91,8 +91,7 @@ That's it. You're done!
 == Changelog ==
 
 = 2.0.16 =
-* FIX: Responsiveness issue with enabled first row/col as header
-* FIX: Responsiveness issue in the frontend with direction = column
+* FIX: Re-implement responsive algorithm to cover all tables
 * FIX: Disable max width not working properly
 * FIX: Cell background not working properly in responsive mode
 * FIX: Potential issue with cell border & radius
