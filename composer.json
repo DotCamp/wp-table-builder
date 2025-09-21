@@ -1,9 +1,16 @@
 {
     "name": "dotcamp/wp-table-builder",
     "require": {
-        "rhukster/dom-sanitizer": "^1.0"
+        "rhukster/dom-sanitizer": "^1.0",
+        "dotcamp/promoter": "^1.0"
     },
     "require-dev": {
         "php-stubs/wordpress-stubs": "^6.6"
+    },
+    "repositories": [
+    {
+      "type": "path",
+      "url": "vendor/dotcamp/promoter"
     }
+  ]
 }
