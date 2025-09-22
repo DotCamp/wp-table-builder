@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Core;
 
+use DotCamp\Promoter\Promotion;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Admin\Accessibility;
@@ -20,6 +21,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Table_Elements_Manager as Table_Elements_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager as Settings_Manager;
+use DotCamp\Promoter\Promoter;
 use function add_action;
 use function trailingslashit;
 
@@ -248,6 +250,31 @@ class Init
 
 		// initialize table render manager
 		Table_Render_Manager::init();
+
+        $this->initialize_promoter();
+    }
+
+    /**
+    * Initialize the promoter.
+    *
+    * @access    private
+    */
+    private function initialize_promoter()
+    {
+        $default_promotions = Promoter::generate_default_promotions(NS\PLUGIN__FILE__, 'WP Table Builder', 'wp-table-builder/wp-table-builder.php');
+
+        $galleryberg_promotion = new Promotion('Ultimate Blocks', 'ultimate-blocks/ultimate-blocks.php', 'Galleryberg', 'galleryberg-gallery-block/galleryberg-gallery-block.php', 'Galleryberg is a free Gutenberg Gallery Block plugin that transforms your WordPress site with beautiful, responsive image galleries. No coding required.', array('core/gallery'), 'https://galleryberg.com/', 'Learn More' );
+
+        $filtered_promotions = array($galleryberg_promotion);
+
+        // remove tableberg promotions from default ones
+        array_walk($default_promotions, function($promotion) use (&$filtered_promotions) {
+            if('tableberg/tableberg.php' !== $promotion->promotion_target_id){
+                $filtered_promotions[] = $promotion;
+            }
+        });
+
+        Promoter::add_promotions($filtered_promotions, NS\PLUGIN__FILE__);
     }
 
     /**

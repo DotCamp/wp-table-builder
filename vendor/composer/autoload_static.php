@@ -11,12 +11,26 @@ class ComposerStaticInit6ad11c241e860d6ccdbf7d94e71ccbb4
         array (
             'Rhukster\\DomSanitizer\\' => 22,
         ),
+        'D' => 
+        array (
+            'DotCamp\\Promoter\\Tests\\' => 23,
+            'DotCamp\\Promoter\\' => 17,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'Rhukster\\DomSanitizer\\' => 
         array (
             0 => __DIR__ . '/..' . '/rhukster/dom-sanitizer/src',
+        ),
+        'DotCamp\\Promoter\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dotcamp/promoter/__tests__',
+        ),
+        'DotCamp\\Promoter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dotcamp/promoter/inc',
+            1 => __DIR__ . '/..' . '/dotcamp/promoter/__tests__/php/unit/inc',
         ),
     );
 

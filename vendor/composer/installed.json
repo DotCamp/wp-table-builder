@@ -1,6 +1,124 @@
 {
     "packages": [
         {
+            "name": "dotcamp/promoter",
+            "version": "1.0.3",
+            "version_normalized": "1.0.3.0",
+            "dist": {
+                "type": "path",
+                "url": "vendor/dotcamp/promoter",
+                "reference": "ff99ae0f8977bf16e7bef3a432133e18f40883fd"
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "brain/monkey": "^2.6",
+                "phpcompatibility/phpcompatibility-wp": "*",
+                "phpunit/phpunit": "^12.0",
+                "wp-coding-standards/wpcs": "^3.0"
+            },
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "DotCamp\\Promoter\\": [
+                        "inc/",
+                        "__tests__/php/unit/inc"
+                    ],
+                    "DotCamp\\Promoter\\Tests\\": "__tests__/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ],
+                "lint": [
+                    "@phpcs-check"
+                ],
+                "lint-fix": [
+                    "@phpcs-fix"
+                ],
+                "phpcs-check": [
+                    "phpcs -p --standard=.phpcs.xml --extensions=php __tests__ inc"
+                ],
+                "phpcs-fix": [
+                    "phpcbf -p --standard=.phpcs.xml --extensions=php __tests__ inc"
+                ],
+                "compress": [
+                    "composer archive --format=zip --dir=./zip --file=./dotcamp-promoter"
+                ],
+                "release": [
+                    "pnpm run production && composer run test && composer run lint-fix && composer run compress"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erdem Bircan",
+                    "email": "erdem.erdembircan@gmail.com"
+                }
+            ],
+            "description": "Promoter library for DotCamp products.",
+            "transport-options": {
+                "relative": true
+            },
+            "install-path": "../dotcamp/promoter"
+        },
+        {
+            "name": "php-stubs/wordpress-stubs",
+            "version": "v6.6.0",
+            "version_normalized": "6.6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/wordpress-stubs.git",
+                "reference": "86e8753e89d59849276dcdd91b9a7dd78bb4abe2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/86e8753e89d59849276dcdd91b9a7dd78bb4abe2",
+                "reference": "86e8753e89d59849276dcdd91b9a7dd78bb4abe2",
+                "shasum": ""
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "nikic/php-parser": "^4.13",
+                "php": "^7.4 || ^8.0",
+                "php-stubs/generator": "^0.8.3",
+                "phpdocumentor/reflection-docblock": "^5.4.1",
+                "phpstan/phpstan": "^1.10.49",
+                "phpunit/phpunit": "^9.5",
+                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^1.0",
+                "wp-coding-standards/wpcs": "3.1.0 as 2.3.0"
+            },
+            "suggest": {
+                "paragonie/sodium_compat": "Pure PHP implementation of libsodium",
+                "symfony/polyfill-php80": "Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions",
+                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
+            },
+            "time": "2024-07-17T08:50:38+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WordPress function and class declaration stubs for static analysis.",
+            "homepage": "https://github.com/php-stubs/wordpress-stubs",
+            "keywords": [
+                "PHPStan",
+                "static analysis",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.6.0"
+            },
+            "install-path": "../php-stubs/wordpress-stubs"
+        },
+        {
             "name": "rhukster/dom-sanitizer",
             "version": "1.0.7",
             "version_normalized": "1.0.7.0",
@@ -50,5 +168,7 @@
         }
     ],
     "dev": true,
-    "dev-package-names": []
+    "dev-package-names": [
+        "php-stubs/wordpress-stubs"
+    ]
 }
