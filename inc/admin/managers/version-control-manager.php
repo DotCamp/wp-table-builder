@@ -125,8 +125,8 @@ class Version_Control_Manager extends Version_Sync_Base {
 						'wp-table-builder' ) );
 				} else {
 					activate_plugin( 'ultimate-blocks/ultimate-blocks.php' );
-					static::instance()->set_message( esc_html__( sprintf( 'plugin version %1$s is installed successfully',
-						$version_to_install ), 'wp-table-builder' ) );
+					static::instance()->set_message( esc_html( sprintf( __( 'plugin version %1$s is installed successfully',
+						'wp-table-builder' ), $version_to_install ) ) );
 				}
 			} else {
 				// handle no download link error
