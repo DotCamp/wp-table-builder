@@ -72,8 +72,6 @@
             this.mergedRenderStatus = status;
         };
 
-
-
         if (this.referenceObject !== null) {
             this.element = cellElement.cloneNode(true);
         }
@@ -126,7 +124,6 @@
             throw new Error(`no span value found with the given type of [${spanType}]`);
         };
 
-
         /**
          * Get cell element.
          *
@@ -135,7 +132,6 @@
         this.getElement = () => {
             return this.element;
         };
-
 
         // create a new cell element if no cellElement argument is given with constructor function
         if (!cellElement) {
@@ -486,9 +482,6 @@
             this.tableElement.querySelector('tbody').innerHTML = '';
         };
 
-
-
-
         /**
          * Get the table cell at specified row-column location.
          *
@@ -517,9 +510,6 @@
             return null;
         };
 
-
-
-
         /**
          * Append html element to a cached row.
          *
@@ -533,7 +523,6 @@
                 cachedRow.appendChild(el);
             }
         };
-
 
         this.getParsedTable = () => {
             return this.parsedTable;
@@ -576,8 +565,6 @@
             };
         });
 
-
-
         /**
          * Get responsive directives of table element.
          *
@@ -594,8 +581,6 @@
 
             return JSON.parse(atob(directiveString));
         };
-
-
 
         /**
          * Scroll operation related adjustments to responsive process.
@@ -740,7 +725,7 @@
                 }
                 finalTable.push(row);
             }
-            
+
             return finalTable;
         };
 
@@ -774,7 +759,7 @@
                 const row = [];
                 for (let c = 0; c < oldTable[r].length; c++) {
                     row.push({
-                        ...oldTable[r][c]
+                        ...oldTable[r][c],
                     });
                 }
                 table.push(row);
@@ -886,7 +871,7 @@
                     if (cellData.hidden) {
                         continue;
                     }
-                    
+
                     let cellEl = cellData.value?.el;
                     if (!cellEl) {
                         cellEl = document.createElement('td');
@@ -951,7 +936,6 @@
             this.buildTableFromCells(transformedTable, tableObj);
         };
 
-
         /**
          * Build table in its default form.
          *
@@ -1001,7 +985,6 @@
 
             return rangeId;
         };
-
 
         /**
          * Status of responsive enabled property.
@@ -1144,10 +1127,17 @@
             });
         };
 
+        /**
+         * Get range id for target table.
+         *
+         * @param {HTMLTableElement} tableElement target table element
+         */
+        this.calculateRangeIdFromTable = (tableElement) => {
+            const directives = this.getDirective(tableElement);
+            const innerSize = calculateInnerSize(tableElement);
 
-
-
-
+            return this.calculateRangeId(innerSize, directives.breakpoints);
+        };
 
         /**
          * Check if current breakpoint is enabled for responsive operations.
@@ -1178,9 +1168,47 @@
             this.bindRebuildToResize();
         }
 
+        /**
+         * Get cached table element object.
+         *
+         * @param {number} tableId table id to look for
+         * @return {null | Object} table element object
+         */
+        this.getTableElementObject = (tableId) => {
+            const [filteredObjects] = this.elementObjects.filter(({ el }) => {
+                const matrixWrapper = el.parentNode;
+
+                const regex = new RegExp(/^wptb-table-id-(\d+)$/);
+                const matches = regex.exec(matrixWrapper.getAttribute('id'));
+
+                return matches && matches[1] && Number.parseInt(matches[1], 10) === tableId;
+            });
+
+            return filteredObjects;
+        };
+
+        /**
+         * Hide/show target row element for responsive calculations.
+         *
+         * @param {HTMLTableRowElement} rowElement row element
+         * @param {boolean} status status
+         */
+        this.markRowForResponsive = (rowElement, status) => {
+            // eslint-disable-next-line no-param-reassign
+            rowElement.dataset.wptbResponsiveIgnore = JSON.stringify(status);
+        };
+
         return {
             rebuildTables: this.rebuildTables,
+            rebuildTable: this.rebuildTable,
+            getDirective: this.getDirective,
+            calculateRangeId: this.calculateRangeId,
+            calculateRangeIdFromTable: this.calculateRangeIdFromTable,
             isResponsiveEnabledForCurrentBreakpoint: this.isResponsiveEnabledForCurrentBreakpoint,
+            getTableElementObject: this.getTableElementObject,
+            markRowForResponsive: this.markRowForResponsive,
+            calculateInnerSize,
+            TableObject,
         };
     }
 
