@@ -3,7 +3,7 @@ Contributors: dotcamp, wptb, imtiazrayhan, istiakrayhan, permafrost06, erdembirc
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 6.8
-Stable tag: 2.0.17
+Stable tag: 2.0.18
 Requires PHP: 7.4
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -89,6 +89,13 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 2.0.18 =
+* FIX: Sticky first column not persisting
+* FIX: Table spacing not working properly for large tables
+* FIX: Incorrect versions are shown in the rollback option
+* IMPROVE: Hard limit highlight scaling between 100-105%
+* IMPROVE: Make the default items per head = 1 for mobile
 
 = 2.0.17 -
 * FIX: Scrollable in mobile devices when responsive is enabled
