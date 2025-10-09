@@ -68,7 +68,7 @@ class Tables {
 
 		if ( $post->post_type == "wptb-tables" ) {
 			unset( $actions['inline hide-if-no-js'] );
-			$actions['edit'] = '<a href="' . esc_url( menu_page_url( 'wptb-builder', false ) ) . '&table=' . $post->ID . '">' . esc_html_e( 'Edit', 'wp-table-builder' ) . '</a>';
+			$actions['edit'] = '<a href="' . esc_url( menu_page_url( 'wptb-builder', false ) ) . '&table=' . $post->ID . '">' . esc_html__( 'Edit', 'wp-table-builder' ) . '</a>';
 		}
 
 		return $actions;
