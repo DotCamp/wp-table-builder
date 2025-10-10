@@ -94,10 +94,11 @@ That's it. You're done!
 * FIX: Sticky first column not persisting
 * FIX: Table spacing not working properly for large tables
 * FIX: Incorrect versions are shown in the rollback option
+* FIX: Error when saving shortcode element
 * IMPROVE: Hard limit highlight scaling between 100-105%
 * IMPROVE: Make the default items per head = 1 for mobile
 
-= 2.0.17 -
+= 2.0.17 =
 * FIX: Scrollable in mobile devices when responsive is enabled
 * PRO: FIX: Search & Sort feature not working properly
 

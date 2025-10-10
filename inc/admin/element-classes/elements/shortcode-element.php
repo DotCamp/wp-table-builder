@@ -9,11 +9,12 @@ use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
 	die;
 }
 
-class Shortcode_Element extends Element_Base {
+class Shortcode_Element extends Element_Base
+{
 
 	private static $element_id = 1;
 	/**
@@ -26,7 +27,8 @@ class Shortcode_Element extends Element_Base {
 	 * @access public
 	 *
 	 */
-	public function get_name() {
+	public function get_name()
+	{
 		return 'shortcode';
 	}
 
@@ -40,8 +42,9 @@ class Shortcode_Element extends Element_Base {
 	 * @access public
 	 *
 	 */
-	public function get_title() {
-		return esc_html_e( 'Shortcode', 'wp-table-builder' );
+	public function get_title()
+	{
+		return esc_html_e('Shortcode', 'wp-table-builder');
 	}
 
 	/**
@@ -54,8 +57,10 @@ class Shortcode_Element extends Element_Base {
 	 * @access public
 	 *
 	 */
-	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/shortcode.svg';;
+	public function get_directory_icon()
+	{
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/shortcode.svg';
+		;
 	}
 
 	/**
@@ -68,8 +73,9 @@ class Shortcode_Element extends Element_Base {
 	 * @access public
 	 *
 	 */
-	public function get_url_icon() {
-		return wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/shortcode.svg' );
+	public function get_url_icon()
+	{
+		return wp_normalize_path(NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/shortcode.svg');
 	}
 
 	/**
@@ -78,8 +84,9 @@ class Shortcode_Element extends Element_Base {
 	 * @since 1.1.2
 	 * @access protected
 	 */
-	public function element_script() {
-		return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/shortcode-element.js' );
+	public function element_script()
+	{
+		return wp_normalize_path(NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/shortcode-element.js');
 	}
 
 	/**
@@ -91,12 +98,13 @@ class Shortcode_Element extends Element_Base {
 	 *
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function _register_controls()
+	{
 		$this->add_control(
 			'section_header',
 			[
-				'label'      => __( 'Element Shortcode Options', 'wp-table-builder' ),
-				'type'       => Controls_Manager::SECTION_HEADER,
+				'label' => __('Element Shortcode Options', 'wp-table-builder'),
+				'type' => Controls_Manager::SECTION_HEADER,
 				'buttonBack' => true
 			]
 		);
@@ -104,15 +112,15 @@ class Shortcode_Element extends Element_Base {
 		$this->add_control(
 			'textarea',
 			[
-				'label'        => __( 'Insert Shortcode', 'wp-table-builder' ),
-				'type'         => Controls_Manager::TEXTAREA,
-				'selectors'    => [
+				'label' => __('Insert Shortcode', 'wp-table-builder'),
+				'type' => Controls_Manager::TEXTAREA,
+				'selectors' => [
 					'{{{data.container}}} div',
 				],
-				'placeholder'  => __( 'Insert Shortcode Here', 'wp-table-builder' ),
-				'rows'         => 5,
+				'placeholder' => __('Insert Shortcode Here', 'wp-table-builder'),
+				'rows' => 5,
 				'defaultValue' => '[Shortcode]',
-				'allowHTML'    => false
+				'allowHTML' => false
 			]
 		);
 	}
@@ -125,26 +133,36 @@ class Shortcode_Element extends Element_Base {
 	 * @since 1.1.2
 	 * @access protected
 	 */
-	protected function _content_template() {
+	protected function _content_template()
+	{
 		?>
-        <wptb_shortcode_container_element>
-            <div>[Shortcode]</div>
-        </wptb_shortcode_container_element>
+		<wptb_shortcode_container_element>
+			<div>[Shortcode]</div>
+		</wptb_shortcode_container_element>
 		<?php
 	}
 
-	public static function render($block) {
+	public static function render($block)
+	{
 		$props = $block['props'];
 		$style = TableRenderer::generate_css_string([
 			'margin' => $props['margin'] ?? '',
 			'padding' => $props['padding'] ?? '',
 		]);
 
-		$sanitizer = new DOMSanitizer(DOMSanitizer::HTML);
+		$shortcode = trim($props['shortcode'] ?? '');
 
-		$code = $sanitizer->sanitize($props['shortcode']??'', [
-			'remove-html-tags' => false,
-		]);
+		if (empty($shortcode)) {
+			$code = '';
+		} else {
+			$sanitizer = new DOMSanitizer(DOMSanitizer::HTML);
+
+			$code = $sanitizer->sanitize($shortcode, [
+				'remove-html-tags' => false,
+			]);
+		}
+
+		
 
 		// @formatter:off
 		return 
