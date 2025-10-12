@@ -95,6 +95,7 @@ That's it. You're done!
 * FIX: Table spacing not working properly for large tables
 * FIX: Incorrect versions are shown in the rollback option
 * FIX: Error when saving shortcode element
+* FIX: Device detection logic for responsiveness
 * IMPROVE: Hard limit highlight scaling between 100-105%
 * IMPROVE: Make the default items per head = 1 for mobile
 
