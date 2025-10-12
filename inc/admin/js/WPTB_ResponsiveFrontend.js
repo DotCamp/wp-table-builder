@@ -590,6 +590,7 @@
          */
         const scrollOperations = (tableElement, revertToOriginal) => {
             const scrollFunctionalityStatus = tableElement.dataset.wptbHorizontalScrollStatus;
+            
 
             if (scrollFunctionalityStatus) {
                 const matrixContainer = tableElement.parentNode;
@@ -971,19 +972,13 @@
          * @return {string} range id
          */
         this.calculateRangeId = (val, stops) => {
-            // eslint-disable-next-line prefer-destructuring
-            const sortedStops = Object.keys(stops).sort((a, b) => stops[a].width - stops[b].width);
-
-            let rangeId = sortedStops[0];
-
-            // eslint-disable-next-line array-callback-return
-            sortedStops.map((s) => {
-                if (val >= stops[s].width) {
-                    rangeId = s;
-                }
-            });
-
-            return rangeId;
+           let rangeId = 'desktop';
+           if (val <= stops.mobile.width) {
+            rangeId = 'mobile';
+           } else if (val <= stops.tablet.width) {
+            rangeId = 'tablet';
+           }
+           return rangeId;
         };
 
         /**

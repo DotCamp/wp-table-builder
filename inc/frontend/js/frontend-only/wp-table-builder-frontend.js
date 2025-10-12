@@ -553,30 +553,33 @@ document.addEventListener('DOMContentLoaded', function () {
                     } else {
                         table.style.maxWidth = null;
                         table.style.minWidth = `${table.dataset.wptbTableTdsSumMaxWidth}px`;
+                        
                         table.style.width = 'auto';
                         tableTdWidthAuto = table.dataset.wptbTdWidthAuto ? table.dataset.wptbTdWidthAuto : '100';
                         styleElementCreate = true;
                         // Doing this for ability to early return
                         (() => {
                             const responsiveness = JSON.parse(atob(table.dataset.wptbResponsiveDirectives) || 'false');
+                            
 
                             if (!responsiveness || !responsiveness.responsiveEnabled) {
                                 return;
                             }
 
-                            const device =
-                                wptbTableContainerWidth <= responsiveness.breakpoints.mobile.width
-                                    ? 'mobile'
-                                    : wptbTableContainerWidth <= responsiveness.breakpoints.tablet.width
-                                    ? 'tablet'
-                                    : 'desktop';
+                            const targetWidth = responsiveness.relativeWidth !== 'window' ? wptbTableContainerWidth : document.body.clientWidth;
+
+                            let device = 'desktop';
+                            if (targetWidth <= responsiveness.breakpoints.mobile.width) {
+                                device = 'mobile';
+                            } else if (targetWidth <= responsiveness.breakpoints.tablet.width) {
+                                device = 'tablet';
+                            }
+                                
                             const isDisabled = responsiveness.modeOptions.auto.disabled[device];
                             if (isDisabled || device === 'desktop') {
                                 return;
                             }
-
 							table.style.minWidth = null;
-
                         })();
                     }
                 };
