@@ -79,14 +79,14 @@ That's it. You're done!
 
 == Screenshots ==
 
-1. Creating new table in WP Table Builder.
-2. First Table In WP Table Builder.
-3. Text In WP Table Builder.
-4. Images In WP Table Builder.
-5. Text 2 In WP Table Builder.
-6. List Options In WP Table Builder.
-7. Button In WP Table Builder.
-8. Shortcode in WP Table Builder.
+1. New Table.
+2. Table Interface
+3. Images in the Table.
+4. Lists in the Table.
+5. Star Ratings in the Table.
+6. Buttons in the Table.
+7. Customize the Table.
+8. Responsive Tables.
 
 == Changelog ==
 
